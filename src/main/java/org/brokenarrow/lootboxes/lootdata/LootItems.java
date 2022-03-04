@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.lootdata;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -8,9 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LootItems {
 
@@ -40,6 +39,56 @@ public class LootItems {
 		}
 	}
 
+	public void save(String fileToSave) {
+		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "tables");
+		final File[] dataFolders = dataFolder.listFiles();
+		if (dataFolder.exists() && dataFolders != null) {
+			for (File file : dataFolders) {
+				String fileName = this.yamlFiles.getFileName(file.getName());
+
+				if (fileName.equals(fileToSave)) {
+					customConfig = YamlConfiguration.loadConfiguration(file);
+					Map<String, LootData> settings = this.settings.get(fileName);
+					if (settings != null) {
+						for (String keys : settings.keySet()) {
+							System.out.println("key " + fileName + "settings " + keys + settings.get(keys).getString());
+
+							customConfig.set("items." + keys + ".chance", settings.get(keys).getChance());
+							customConfig.set("items." + keys + ".minimum", settings.get(keys).getMinimum());
+							customConfig.set("items." + keys + ".maximum", settings.get(keys).getMaximum());
+							customConfig.set("items." + keys + ".haveMetadata", settings.get(keys).getItemdata());
+							customConfig.set("items." + keys + ".itemdata", settings.get(keys).getItemdata());
+							try {
+								customConfig.save(file);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+
+			}
+		}
+	}
+
+	public static String toStringFormatted(Map<?, ?> serialize) {
+		final List<String> lines = new ArrayList<>();
+
+		lines.add("{");
+
+		for (final Map.Entry<?, ?> entry : serialize.entrySet()) {
+			final Object value = entry.getValue();
+
+			if (value != null && !value.toString().equals("[]") && !value.toString().equals("{}") && !value.toString().isEmpty() && !value.toString().equals("0.0") && !value.toString().equals("false"))
+
+				lines.add("\t'" + entry.getKey() + "' = '" + value + "'");
+		}
+
+		lines.add("}");
+
+		return String.join("\n", lines);
+	}
+
 	private void getFilesData() {
 		try {
 			for (File key : yamlFiles.getYamlFiles("tables", "yml")) {
@@ -55,30 +104,30 @@ public class LootItems {
 		}
 	}
 
-	protected void loadSettingsFromYaml(File key, Set<String> value) {
-		System.out.println("Test ndddddd " + value);
+	protected void loadSettingsFromYaml(File key, Set<String> values) {
+		System.out.println("Test ndddddd " + values);
 		Map<String, LootData> data = new HashMap<>();
-		for (String val : value) {
-			ConfigurationSection configs = customConfig.getConfigurationSection(val);
+		for (String value : values) {
+			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 
 			if (configs != null)
-				for (String va : configs.getKeys(false)) {
-					System.out.println("Test 4444444ndddddd " + va);
-					int chance = customConfig.getInt(va + ".chance");
-					int minimum = customConfig.getInt(va + ".minimum");
-					
-					int maximum = customConfig.getInt(va + ".maximum");
-					boolean haveMetadata = customConfig.getBoolean(va + ".metadata");
-					String itemdata = customConfig.getString(va + ".itemdata");
+				for (String childrenKey : configs.getKeys(false)) {
+					System.out.println("Test 4444444ndddddd " + childrenKey);
+					int chance = customConfig.getInt(value + "." + childrenKey + ".chance");
+					int minimum = customConfig.getInt(value + "." + childrenKey + ".minimum");
 
-					data.put(va, new LootData(chance, minimum, maximum, itemdata, haveMetadata));
+					int maximum = customConfig.getInt(value + "." + childrenKey + ".maximum");
+					boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".metadata");
+					String itemdata = customConfig.getString(value + "." + childrenKey + ".itemdata");
+					System.out.println("chance " + chance);
+					data.put(childrenKey, new LootData(chance, minimum, maximum, itemdata, haveMetadata));
 				}
 			int minimum = 0;
 			int maximum = 0;
-			if (val.equals("minimum"))
-				minimum = customConfig.getInt(val);
-			else if (val.equals("maximum"))
-				maximum = customConfig.getInt(val);
+			if (value.equals("minimum"))
+				minimum = customConfig.getInt(value);
+			else if (value.equals("maximum"))
+				maximum = customConfig.getInt(value);
 			LootData globalValues = data.get("Global_Values");
 			if (globalValues != null) {
 				if (globalValues.getMinimum() > 0)
@@ -93,7 +142,7 @@ public class LootItems {
 		System.out.println("settings map " + this.settings);
 		System.out.println("settings map " + this.settings.get("test").get("Global_Values").getMinimum());
 		System.out.println("settings map " + this.settings.get("test").get("Global_Values").getMaximum());
-
+		save("test");
 	}
 
 	public static class LootData {
@@ -130,5 +179,16 @@ public class LootItems {
 		public String getItemdata() {
 			return itemdata;
 		}
+
+		public String getString() {
+			return "{" +
+					"\t'chance '=' " + chance + "'\n" +
+					"\t'minimum '=' " + minimum + "'\n" +
+					"\t'maximum '=' " + maximum + "'\n" +
+					"\t'itemdata '=' " + itemdata + "'\n" +
+					"\t'haveMetadata '=' " + haveMetadata + "'\n" +
+					'}';
+		}
+
 	}
 }
