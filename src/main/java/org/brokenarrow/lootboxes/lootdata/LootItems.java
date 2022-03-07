@@ -50,14 +50,14 @@ public class LootItems {
 					customConfig = YamlConfiguration.loadConfiguration(file);
 					Map<String, LootData> settings = this.settings.get(fileName);
 					if (settings != null) {
-						for (String keys : settings.keySet()) {
-							System.out.println("key " + fileName + "settings " + keys + settings.get(keys).getString());
-
-							customConfig.set("items." + keys + ".chance", settings.get(keys).getChance());
-							customConfig.set("items." + keys + ".minimum", settings.get(keys).getMinimum());
-							customConfig.set("items." + keys + ".maximum", settings.get(keys).getMaximum());
-							customConfig.set("items." + keys + ".haveMetadata", settings.get(keys).getItemdata());
-							customConfig.set("items." + keys + ".itemdata", settings.get(keys).getItemdata());
+						for (String childrenKey : settings.keySet()) {
+							System.out.println("key " + fileName + "settings " + childrenKey);
+							LootData data = settings.get(childrenKey);
+							customConfig.set("items." + childrenKey + ".Chance", data.getChance());
+							customConfig.set("items." + childrenKey + ".Minimum", data.getMinimum());
+							customConfig.set("items." + childrenKey + ".Maximum", data.getMaximum());
+							customConfig.set("items." + childrenKey + ".Metadata", data.isHaveMetadata());
+							customConfig.set("items." + childrenKey + ".Itemdata", data.getItemdata());
 							try {
 								customConfig.save(file);
 							} catch (IOException e) {
@@ -105,7 +105,6 @@ public class LootItems {
 	}
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
-		System.out.println("Test ndddddd " + values);
 		Map<String, LootData> data = new HashMap<>();
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
@@ -113,13 +112,13 @@ public class LootItems {
 			if (configs != null)
 				for (String childrenKey : configs.getKeys(false)) {
 					System.out.println("Test 4444444ndddddd " + childrenKey);
-					int chance = customConfig.getInt(value + "." + childrenKey + ".chance");
-					int minimum = customConfig.getInt(value + "." + childrenKey + ".minimum");
+					int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
+					int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
 
-					int maximum = customConfig.getInt(value + "." + childrenKey + ".maximum");
-					boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".metadata");
-					String itemdata = customConfig.getString(value + "." + childrenKey + ".itemdata");
-					System.out.println("chance " + chance);
+					int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
+					boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".Metadata");
+					String itemdata = customConfig.getString(value + "." + childrenKey + ".Itemdata");
+
 					data.put(childrenKey, new LootData(chance, minimum, maximum, itemdata, haveMetadata));
 				}
 			int minimum = 0;
@@ -139,9 +138,6 @@ public class LootItems {
 			data.put("Global_Values", new LootData(0, minimum, maximum, "", false));
 		}
 		this.settings.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
-		System.out.println("settings map " + this.settings);
-		System.out.println("settings map " + this.settings.get("test").get("Global_Values").getMinimum());
-		System.out.println("settings map " + this.settings.get("test").get("Global_Values").getMaximum());
 		save("test");
 	}
 

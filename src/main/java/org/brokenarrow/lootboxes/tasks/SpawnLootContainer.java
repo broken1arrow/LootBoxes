@@ -72,7 +72,7 @@ public class SpawnLootContainer {
 
 		Location locationSubtracted = new Location(location.getWorld(), numberX, numberY, numberZ);
 
-		if (this.settings.isSpawnOnSurface()) {
+		if (this.settings != null && this.settings.isSpawnOnSurface()) {
 			World world = location.getWorld();
 			int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 			return new Location(location.getWorld(), numberX, highestBlock + 1, numberZ);
@@ -87,7 +87,7 @@ public class SpawnLootContainer {
 		World world = location.getWorld();
 		int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 
-		if (this.settings.getAmountOfBlocksBelowSurface() > 0)
+		if (this.settings != null && this.settings.getAmountOfBlocksBelowSurface() > 0)
 			hight = hight + this.settings.getAmountOfBlocksBelowSurface();
 
 		if (hight < highestBlock && !location.getBlock().isLiquid() && !checkBlock(location.getBlock()) &&
