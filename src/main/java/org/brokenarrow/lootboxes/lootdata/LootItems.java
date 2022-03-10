@@ -1,11 +1,15 @@
 package org.brokenarrow.lootboxes.lootdata;
 
+import com.google.common.base.Enums;
+import lombok.Getter;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,14 +17,29 @@ import java.util.*;
 
 public class LootItems {
 
-
+	@Getter
+	public static final LootItems instance = new LootItems();
 	private final AllYamlFilesInFolder yamlFiles;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
-	private final Map<String, Map<String, LootData>> settings = new HashMap<>();
+	private boolean isUpperCase;
+	private final Map<String, Map<Object, LootData>> settings = new HashMap<>();
 
 	public LootItems() {
 		this.yamlFiles = new AllYamlFilesInFolder("tables", true);
+	}
+
+	public Map<String, Map<Object, LootData>> getSettings() {
+		return settings;
+	}
+
+	public ItemStack[] getItems() {
+		List<ItemStack> items = new ArrayList<>();
+		for (Map<Object, LootData> values : settings.values())
+			for (Object key : values.keySet())
+				if (key instanceof Material)
+					items.add(new ItemStack((Material) key));
+		return items.toArray(new ItemStack[0]);
 	}
 
 	public void reload() {
@@ -48,16 +67,24 @@ public class LootItems {
 
 				if (fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
-					Map<String, LootData> settings = this.settings.get(fileName);
+					Map<Object, LootData> settings = this.settings.get(fileName);
 					if (settings != null) {
-						for (String childrenKey : settings.keySet()) {
+						for (Object childrenKey : settings.keySet()) {
 							System.out.println("key " + fileName + "settings " + childrenKey);
 							LootData data = settings.get(childrenKey);
-							customConfig.set("items." + childrenKey + ".Chance", data.getChance());
-							customConfig.set("items." + childrenKey + ".Minimum", data.getMinimum());
-							customConfig.set("items." + childrenKey + ".Maximum", data.getMaximum());
-							customConfig.set("items." + childrenKey + ".Metadata", data.isHaveMetadata());
-							customConfig.set("items." + childrenKey + ".Itemdata", data.getItemdata());
+							if (!isUpperCase)
+								childrenKey = childrenKey.toString().toLowerCase();
+							//final Material material = (Material) childrenKey;
+							if (childrenKey.toString().equals("global_values") || childrenKey.toString().equals("GLOBAL_VALUES")) {
+								customConfig.set("Global_Values." + ".Minimum", data.getMinimum());
+								customConfig.set("Global_Values." + ".Maximum", data.getMaximum());
+							} else {
+								customConfig.set("Items." + childrenKey + ".Chance", data.getChance());
+								customConfig.set("Items." + childrenKey + ".Minimum", data.getMinimum());
+								customConfig.set("Items." + childrenKey + ".Maximum", data.getMaximum());
+								customConfig.set("Items." + childrenKey + ".Metadata", data.isHaveMetadata());
+								customConfig.set("Items." + childrenKey + ".Itemdata", data.getItemdata());
+							}
 							try {
 								customConfig.save(file);
 							} catch (IOException e) {
@@ -105,37 +132,46 @@ public class LootItems {
 	}
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
-		Map<String, LootData> data = new HashMap<>();
+		Map<Object, LootData> data = new HashMap<>();
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 
-			if (configs != null)
-				for (String childrenKey : configs.getKeys(false)) {
-					System.out.println("Test 4444444ndddddd " + childrenKey);
-					int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
-					int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
+			if (value.equals("Items")) {
+				if (configs != null)
+					for (String childrenKey : configs.getKeys(false)) {
+						if (childrenKey == null) continue;
 
-					int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
-					boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".Metadata");
-					String itemdata = customConfig.getString(value + "." + childrenKey + ".Itemdata");
+						String matrial = childrenKey.toUpperCase();
+						isUpperCase = childrenKey.equals(matrial);
+						Material item = Enums.getIfPresent(Material.class, matrial).orNull();
+						if (item == null)
+							continue;
 
-					data.put(childrenKey, new LootData(chance, minimum, maximum, itemdata, haveMetadata));
+						System.out.println("Test 4444444ndddddd " + childrenKey + "  " + matrial);
+						int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
+						int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
+
+						int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
+						boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".Metadata");
+						String itemdata = customConfig.getString(value + "." + childrenKey + ".Itemdata");
+
+						data.put(item, new LootData(chance, minimum, maximum, itemdata, haveMetadata));
+					}
+			} else if (value.equals("Global_Values")) {
+				int minimum = customConfig.getInt(value + ".Minimum");
+				int maximum = customConfig.getInt(value + ".Maximum");
+
+				LootData globalValues = data.get("Global_Values");
+				if (globalValues != null) {
+					if (globalValues.getMinimum() > 0)
+						minimum = globalValues.getMinimum();
+					if (globalValues.getMaximum() > 0)
+						maximum = globalValues.getMaximum();
 				}
-			int minimum = 0;
-			int maximum = 0;
-			if (value.equals("minimum"))
-				minimum = customConfig.getInt(value);
-			else if (value.equals("maximum"))
-				maximum = customConfig.getInt(value);
-			LootData globalValues = data.get("Global_Values");
-			if (globalValues != null) {
-				if (globalValues.getMinimum() > 0)
-					minimum = globalValues.getMinimum();
-				if (globalValues.getMaximum() > 0)
-					maximum = globalValues.getMaximum();
-			}
 
-			data.put("Global_Values", new LootData(0, minimum, maximum, "", false));
+				System.out.println("Global_Values " + value + "   " + maximum);
+				data.put(value, new LootData(0, minimum, maximum, "", false));
+			}
 		}
 		this.settings.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
 		save("test");
