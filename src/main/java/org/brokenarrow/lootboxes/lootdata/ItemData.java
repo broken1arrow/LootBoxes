@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.lootdata;
 
+import lombok.Getter;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class ItemData {
+
+	@Getter
+	public static final ItemData instance = new ItemData();
 	private final AllYamlFilesInFolder yamlFiles;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
@@ -20,6 +24,10 @@ public class ItemData {
 
 	public ItemData() {
 		this.yamlFiles = new AllYamlFilesInFolder("itemdata", true);
+	}
+
+	public Map<String, ItemStack[]> getCacheItemData() {
+		return cacheItemData;
 	}
 
 	public void reload() {
