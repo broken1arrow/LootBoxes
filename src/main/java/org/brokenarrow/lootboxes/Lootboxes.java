@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes;
 
+import brokenarrow.menu.lib.RegisterMenuAPI;
 import org.brokenarrow.lootboxes.commands.CommandsGroup;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -27,8 +28,10 @@ public class Lootboxes extends JavaPlugin {
 		this.spawnLootContainer = new SpawnLootContainer();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
-		new LootItems().reload();
-		new ItemData().reload();
+
+		LootItems.getInstance().reload();
+		ItemData.getInstance().reload();
+		new RegisterMenuAPI(this);
 		commandRegister = new CommandRegister(this, "lootbox", new CommandsGroup());
 
 		this.getLogger().log(Level.INFO, "Start Lootboxes");
