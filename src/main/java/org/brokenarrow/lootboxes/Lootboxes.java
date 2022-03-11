@@ -32,6 +32,7 @@ public class Lootboxes extends JavaPlugin {
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
 		new RegisterMenuAPI(this);
+
 		commandRegister = new CommandRegister(this, "lootbox", new CommandsGroup());
 
 		this.getLogger().log(Level.INFO, "Start Lootboxes");
