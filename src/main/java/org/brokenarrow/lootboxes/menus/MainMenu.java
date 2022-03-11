@@ -11,10 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class MainMenu extends MenuHolder {
 
@@ -24,7 +21,7 @@ public class MainMenu extends MenuHolder {
 	private final ItemData itemData = ItemData.getInstance();
 
 	public MainMenu() {
-
+		setMenuSize(45);
 		editAndCreateTable = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -33,7 +30,7 @@ public class MainMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return null;
+				return new ItemStack(Material.HOPPER);
 			}
 		};
 		defultSettings = new MenuButton() {
@@ -44,7 +41,7 @@ public class MainMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return null;
+				return new ItemStack(Material.CHEST);
 			}
 		};
 
@@ -68,6 +65,8 @@ public class MainMenu extends MenuHolder {
 
 		public EditAndCreateTable() {
 			super(new ArrayList<>(lootItems.getSettings().keySet()));
+			setFillSpace(Arrays.asList(1, 2, 3));
+			setMenuSize(45);
 
 			newTable = new MenuButton() {
 				@Override
@@ -77,17 +76,20 @@ public class MainMenu extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					return null;
+					return new ItemStack(Material.CHAIN);
 				}
 			};
 			listOfTables = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					System.out.println("objekt " + object);
 					if (object instanceof ItemStack) {
 						ItemStack itemStack = data.get(object);
 						ItemMeta itemMeta = itemStack.getItemMeta();
+						System.out.println("objekt " + itemMeta);
+						System.out.println("objekt " + itemMeta.hasDisplayName());
 						if (itemMeta != null && itemMeta.hasDisplayName())
-							new EditAndCreateItems(itemMeta.getDisplayName());
+							new EditAndCreateItems(itemMeta.getDisplayName()).menuOpen(player);
 					}
 				}
 
@@ -122,7 +124,7 @@ public class MainMenu extends MenuHolder {
 		@Override
 		public ItemStack getItemAt(int slot) {
 
-			if (slot == 5)
+			if (slot == 40)
 				return newTable.getItem();
 			return null;
 		}
@@ -134,7 +136,8 @@ public class MainMenu extends MenuHolder {
 
 		public EditAndCreateItems(String table) {
 			super(new ArrayList<>(lootItems.getSettings().get(table).keySet()));
-
+			setFillSpace(Arrays.asList(1, 2, 3));
+			setMenuSize(45);
 			newItem = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -143,7 +146,7 @@ public class MainMenu extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					return null;
+					return new ItemStack(Material.CHAIN);
 				}
 			};
 
@@ -191,7 +194,7 @@ public class MainMenu extends MenuHolder {
 		@Override
 		public ItemStack getItemAt(int slot) {
 
-			if (slot == 5)
+			if (slot == 40)
 				return newItem.getItem();
 			return null;
 		}
