@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.commands.CommandsGroup;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.runTask.RunTask;
+import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnLootContainer;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
@@ -18,7 +19,9 @@ import java.util.logging.Level;
 public class Lootboxes extends JavaPlugin {
 	private RunTask runTask;
 	static Lootboxes plugin;
+	private Settings settings;
 	private SpawnLootContainer spawnLootContainer;
+
 	private CommandGroupUtility commandGroupUtility;
 	private CommandRegister commandRegister;
 	private CommandsGroup commandsGroup;
@@ -29,7 +32,8 @@ public class Lootboxes extends JavaPlugin {
 		this.spawnLootContainer = new SpawnLootContainer();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
-
+		this.settings = new Settings();
+		this.settings.reload();
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
 		new RegisterMenuAPI(this);
@@ -55,6 +59,9 @@ public class Lootboxes extends JavaPlugin {
 		return this.commandGroupUtility;
 	}
 
+	public Settings getSettings() {
+		return settings;
+	}
 
 	public SpawnLootContainer getSpawnLootContainer() {
 		return spawnLootContainer;

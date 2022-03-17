@@ -15,6 +15,10 @@ public class Settings extends YamlUtil {
 
 	private final Map<String, SettingsData> settings = new HashMap<>();
 
+	@Override
+	public void reload() {
+		super.reload();
+	}
 
 	public SettingsData getSettings() {
 		return settings.get("Settings");
