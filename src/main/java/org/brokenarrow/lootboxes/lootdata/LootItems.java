@@ -42,7 +42,7 @@ public class LootItems {
 		Map<Object, LootData> items = settings.get(table);
 		if (items != null) {
 			Map<Object, LootData> data = new HashMap<>();
-			items.put(itemStack, new LootData(1, 1, itemStack.getAmount(), fileNameMetadata, haveMetadata));
+			items.put(itemStack.getType(), new LootData(1, 1, itemStack.getAmount(), fileNameMetadata, haveMetadata));
 			settings.put(table, items);
 
 		}

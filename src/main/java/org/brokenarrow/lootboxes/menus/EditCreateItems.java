@@ -34,24 +34,7 @@ public class EditCreateItems extends MenuHolder {
 		saveItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
-				for (ItemStack item : items.values()) {
-					String fileName = "";
-					if (item.hasItemMeta() && settings.getSettings().isSaveMetadataOnItem()) {
-						if (settings.getSettings().isWarnBeforeSaveWithMetadata()) {
-							new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
-							return;
-						} else {
-							fileName = item.getType() + "";
-							itemData.setCacheItemData(fileName, item);
-						}
-					}
-					lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
-				}
-				Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
-					itemData.save();
-					lootItems.save();
-				}, 5);
+				new saveItems(lootTable).menuOpen(player);
 
 			}
 
@@ -139,6 +122,73 @@ public class EditCreateItems extends MenuHolder {
 			return backButton.getItem();
 
 		return null;
+	}
+
+	public class saveItems extends MenuHolder {
+		private final MenuButton saveItems;
+		private final MenuButton backButton;
+
+		public saveItems(String lootTable) {
+			setFillSpace(Arrays.asList(1, 2, 3));
+			setMenuSize(45);
+			setSlotsYouCanAddItems(true);
+
+			saveItems = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
+					if (items == null || items.isEmpty()) return;
+					System.out.println("items " + items.isEmpty());
+					for (ItemStack item : items.values()) {
+						if (item == null) continue;
+						String fileName = "";
+						if (item.hasItemMeta() && settings.getSettings().isSaveMetadataOnItem()) {
+							if (settings.getSettings().isWarnBeforeSaveWithMetadata()) {
+								new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
+								return;
+							} else {
+								fileName = item.getType() + "";
+								itemData.setCacheItemData(fileName, item);
+							}
+						}
+						lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
+					}
+					Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
+						itemData.save();
+						lootItems.save();
+					}, 5);
+					new EditCreateItems(lootTable).menuOpen(player);
+
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return new ItemStack(Material.PAPER);
+				}
+			};
+			this.backButton = new MenuButton() {
+
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new EditCreateItems(lootTable).menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return new ItemStack(Material.CHORUS_FRUIT);
+				}
+			};
+		}
+
+		@Override
+		public ItemStack getItemAt(int slot) {
+
+			if (slot == 40)
+				return saveItems.getItem();
+			if (slot == 44)
+				return this.backButton.getItem();
+			return null;
+		}
 	}
 
 	public class ConfirmIfItemHaveMetadata extends MenuHolder {
