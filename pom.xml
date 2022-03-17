@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.github.broken1arrow</groupId>
             <artifactId>MenuLibrary</artifactId>
-            <version>0.29</version>
+            <version>0.31</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -217,17 +217,7 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>brokenarrow.menu.lib</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.menulib</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.mineacademy</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
-                                    <excludes>
-                                        <exclude>org.mineacademy.${project.artifactId}.*</exclude>
-                                        <exclude>org.mineacademy.gameapi.*</exclude>
-                                        <exclude>org.mineacademy.boss.*</exclude>
-                                        <exclude>org.mineacademy.worldeditbridge.*</exclude>
-                                    </excludes>
+                                    <shadedPattern>org.lib.test.menulib</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
