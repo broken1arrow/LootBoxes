@@ -9,16 +9,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
-public class NewLootTable extends MenuHolder {
+public class EditCreateLootTable extends MenuHolder {
 
 	private final LootItems lootItems = LootItems.getInstance();
 	private final MenuButton createTable;
 	private final MenuButton backButton;
+	private final MenuButton newTable;
+	private final MenuButton listOfTables;
+	Map<ItemStack, ItemStack> data = new HashMap<>();
 
-	public NewLootTable() {
+	public EditCreateLootTable() {
+		super(new ArrayList<>(LootItems.getInstance().getSettings().keySet()));
+		setFillSpace(Arrays.asList(1, 2, 3));
 		setMenuSize(45);
 		createTable = new MenuButton() {
 			@Override
@@ -30,6 +39,18 @@ public class NewLootTable extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				return null;
+			}
+		};
+
+		newTable = new MenuButton() {
+			@Override
+			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+
+			}
+
+			@Override
+			public ItemStack getItem() {
+				return new ItemStack(Material.CHAIN);
 			}
 		};
 		backButton = new MenuButton() {
@@ -44,13 +65,53 @@ public class NewLootTable extends MenuHolder {
 				return new ItemStack(Material.CHORUS_FRUIT);
 			}
 		};
+		listOfTables = new MenuButton() {
+			@Override
+			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+				if (object instanceof ItemStack) {
+					ItemStack itemStack = data.get(object);
+					ItemMeta itemMeta = itemStack.getItemMeta();
+					if (itemMeta != null && itemMeta.hasDisplayName())
+						new EditCreateItems(itemMeta.getDisplayName()).menuOpen(player);
+				}
+			}
+
+			@Override
+			public ItemStack getItem() {
+				return null;
+			}
+
+			@Override
+			public ItemStack getItem(Object object) {
+
+				if (object instanceof String) {
+					if (object.equals("Global_Values")) return null;
+					ItemStack itemStack = new ItemStack(Material.PAPER);
+					ItemMeta itemMeta = itemStack.getItemMeta();
+					itemMeta.setDisplayName((String) object);
+					itemStack.setItemMeta(itemMeta);
+					data.put(itemStack, itemStack);
+					return itemStack;
+				} else if (object instanceof ItemStack)
+					return data.get(object);
+				return null;
+			}
+		};
+	}
+
+	@Override
+	public ItemStack getFillItemsAt(Object o) {
+		return listOfTables.getItem(o);
 
 	}
 
 	@Override
 	public ItemStack getItemAt(int slot) {
-		if (slot == 40)
+
+		if (slot == 38)
 			return createTable.getItem();
+		if (slot == 40)
+			return newTable.getItem();
 		if (slot == 44)
 			return backButton.getItem();
 		return null;

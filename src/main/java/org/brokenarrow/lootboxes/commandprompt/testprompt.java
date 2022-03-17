@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
 import org.brokenarrow.lootboxes.lootdata.LootItems;
-import org.brokenarrow.lootboxes.menus.NewLootTable;
+import org.brokenarrow.lootboxes.menus.EditCreateLootTable;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationCanceller;
 import org.bukkit.conversations.ConversationContext;
@@ -43,7 +43,7 @@ public class testprompt extends SimpleConversation {
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 			if (!lootItems.getSettings().containsKey(input))
 				lootItems.addTable(input);
-			new NewLootTable().menuOpen(getPlayer(context));
+			new EditCreateLootTable().menuOpen(getPlayer(context));
 			return null;
 		}
 	}
