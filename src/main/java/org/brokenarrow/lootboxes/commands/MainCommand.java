@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.commands;
 
+import org.brokenarrow.lootboxes.commandprompt.testprompt;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
 import org.brokenarrow.lootboxes.untlity.command.SubCommandsUtility;
 
@@ -13,7 +14,7 @@ public class MainCommand extends SubCommandsUtility {
 
 	@Override
 	protected void onCommand() {
-
+		new testprompt().start(getPlayer());
 	}
 
 	@Override
