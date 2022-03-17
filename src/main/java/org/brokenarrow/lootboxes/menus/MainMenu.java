@@ -1,9 +1,9 @@
 package org.brokenarrow.lootboxes.menus;
 
-import brokenarrow.menu.lib.MenuButton;
-import brokenarrow.menu.lib.MenuHolder;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.menu.library.MenuButton;
+import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -60,6 +60,7 @@ public class MainMenu extends MenuHolder {
 
 	public class EditAndCreateTable extends MenuHolder {
 		private final MenuButton newTable;
+		private final MenuButton backButton;
 		private final MenuButton listOfTables;
 		Map<ItemStack, ItemStack> data = new HashMap<>();
 
@@ -79,15 +80,24 @@ public class MainMenu extends MenuHolder {
 					return new ItemStack(Material.CHAIN);
 				}
 			};
+			backButton = new MenuButton() {
+
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new MainMenu().menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return new ItemStack(Material.CHORUS_FRUIT);
+				}
+			};
 			listOfTables = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-					System.out.println("objekt " + object);
 					if (object instanceof ItemStack) {
 						ItemStack itemStack = data.get(object);
 						ItemMeta itemMeta = itemStack.getItemMeta();
-						System.out.println("objekt " + itemMeta);
-						System.out.println("objekt " + itemMeta.hasDisplayName());
 						if (itemMeta != null && itemMeta.hasDisplayName())
 							new EditAndCreateItems(itemMeta.getDisplayName()).menuOpen(player);
 					}
@@ -102,6 +112,7 @@ public class MainMenu extends MenuHolder {
 				public ItemStack getItem(Object object) {
 
 					if (object instanceof String) {
+						if (object.equals("Global_Values")) return null;
 						ItemStack itemStack = new ItemStack(Material.PAPER);
 						ItemMeta itemMeta = itemStack.getItemMeta();
 						itemMeta.setDisplayName((String) object);
@@ -126,6 +137,8 @@ public class MainMenu extends MenuHolder {
 
 			if (slot == 40)
 				return newTable.getItem();
+			if (slot == 44)
+				return backButton.getItem();
 			return null;
 		}
 	}
@@ -133,9 +146,10 @@ public class MainMenu extends MenuHolder {
 	public class EditAndCreateItems extends MenuHolder {
 		private final MenuButton newItem;
 		private final MenuButton listOfItems;
+		private final MenuButton backButton;
 
 		public EditAndCreateItems(String table) {
-			super(new ArrayList<>(lootItems.getSettings().get(table).keySet()));
+			super(lootItems.getItems(table));
 			setFillSpace(Arrays.asList(1, 2, 3));
 			setMenuSize(45);
 			newItem = new MenuButton() {
@@ -149,7 +163,18 @@ public class MainMenu extends MenuHolder {
 					return new ItemStack(Material.CHAIN);
 				}
 			};
+			backButton = new MenuButton() {
 
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new EditAndCreateTable().menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					return new ItemStack(Material.CHORUS_FRUIT);
+				}
+			};
 			listOfItems = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -167,17 +192,21 @@ public class MainMenu extends MenuHolder {
 
 					if (object instanceof Material) {
 						LootItems.LootData data = lootItems.getSettings().get(table).get(object);
+
 						if (data != null)
-							if (data.isHaveMetadata())
+							if (data.isHaveMetadata()) {
 								return itemData.getCacheItemData().get(data.getItemdata())[0];
-							else
+							} else
 								return new ItemStack((Material) object);
 					}
 					if (object instanceof ItemStack) {
 						ItemStack item = ((ItemStack) object);
 						LootItems.LootData data = lootItems.getSettings().get(table).get(item.getType());
-						if (data != null)
+						if (data != null) {
+							if (data.isHaveMetadata())
+								item = itemData.getCacheItemData().get(data.getItemdata())[0];
 							return item;
+						}
 					}
 					return null;
 				}
@@ -196,6 +225,8 @@ public class MainMenu extends MenuHolder {
 
 			if (slot == 40)
 				return newItem.getItem();
+			if (slot == 44)
+				return backButton.getItem();
 			return null;
 		}
 
