@@ -19,13 +19,13 @@ public class SpawnLootContainer {
 		else if (this.time <= System.currentTimeMillis()) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				Location location = player.getLocation();
-				spawnBlock(location);
+				spawnBlock(location, player);
 			}
 			this.time = System.currentTimeMillis() + (1000 * 5);
 		}
 	}
 
-	public void spawnBlock(Location location) {
+	public void spawnBlock(Location location, Player player) {
 		Location clone = location.clone();
 
 		int x = clone.getBlockX();
@@ -33,7 +33,7 @@ public class SpawnLootContainer {
 		int z = clone.getBlockZ();
 		int blocksAwayFromPlayer = 10;
 		int amountToCheck = 5;
-		Location Z = checkLocation(location, amountToCheck, blocksAwayFromPlayer);
+		Location Z = checkLocation(location, amountToCheck, blocksAwayFromPlayer, player);
 
 		System.out.println("loc " + Z);
 		if (Z != null) {
@@ -42,7 +42,7 @@ public class SpawnLootContainer {
 
 	}
 
-	private Location checkLocation(Location location, int amountToCheck, int blocksAwayFromPlayer) {
+	private Location checkLocation(Location location, int amountToCheck, int blocksAwayFromPlayer, Player player) {
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
@@ -59,16 +59,16 @@ public class SpawnLootContainer {
 		System.out.println("zz " + zz);
 		double y1 = randomRadius * Math.sin(theta) * Math.cos(phi);
 */
-		int randomY = ThreadLocalRandom.current().nextInt(-50, 60);
-		int randomX = ThreadLocalRandom.current().nextInt(-50, 60);
-		int randomZ = ThreadLocalRandom.current().nextInt(-50, 60);
+		int randomY = ThreadLocalRandom.current().nextInt(-20, 20);
+		int randomX = ThreadLocalRandom.current().nextInt(-20, 20);
+		int randomZ = ThreadLocalRandom.current().nextInt(-20, 20);
 
 		int angleX = (int) (((blocksAwayFromPlayer * randomX)) * Math.PI / (45));
 		int angleZ = (int) (((blocksAwayFromPlayer * randomZ)) * Math.PI / (45));
 
-		int numberX = x + angleX;
-		int numberY = (y + blocksAwayFromPlayer) + randomY;
-		int numberZ = z + angleZ;
+		int numberX = x + randomX;
+		int numberY = y + randomY;
+		int numberZ = z + randomZ;
 
 		Location locationSubtracted = new Location(location.getWorld(), numberX, numberY, numberZ);
 
@@ -77,13 +77,13 @@ public class SpawnLootContainer {
 			int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 			return new Location(location.getWorld(), numberX, highestBlock + 1, numberZ);
 		}
-		if (checkIfLocationAreValid(locationSubtracted, numberY, amountToCheck))
+		if (checkIfLocationAreValid(locationSubtracted, numberY, amountToCheck, player))
 			return locationSubtracted;
 
 		return null;
 	}
 
-	private boolean checkIfLocationAreValid(Location location, int hight, int amountOfBlocksBetweenContainers) {
+	private boolean checkIfLocationAreValid(Location location, int hight, int amountOfBlocksBetweenContainers, Player player) {
 		World world = location.getWorld();
 		int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 
@@ -91,7 +91,8 @@ public class SpawnLootContainer {
 			hight = hight + this.settings.getAmountOfBlocksBelowSurface();
 
 		if (hight < highestBlock && !location.getBlock().isLiquid() && !checkBlock(location.getBlock()) &&
-				!isNearbyChest(location, amountOfBlocksBetweenContainers))
+				!isNearbyChest(location, amountOfBlocksBetweenContainers) &&
+				!isNearbyPlayer(player, location, 20))
 			return true;
 
 		return false;
@@ -137,5 +138,30 @@ public class SpawnLootContainer {
 				}
 
 		return hasNearbyChest;
+	}
+
+	public boolean isNearbyPlayer(Player player, Location location, int amountAwayFromPlayer) {
+		boolean hasNearbyPlayer = false;
+		double amountOfBlocksToCheck;
+		Location playerLocation = player.getLocation();
+		for (int X = 1; X <= amountAwayFromPlayer; X++)
+			for (int Y = 1; Y <= amountAwayFromPlayer; Y++)
+				for (int Z = 1; Z <= amountAwayFromPlayer; Z++) {
+					if (amountAwayFromPlayer % 2 == 0)
+						amountOfBlocksToCheck = amountAwayFromPlayer / 2.0;
+					else
+						amountOfBlocksToCheck = (amountAwayFromPlayer / 2.0) + 1;
+
+					Location cloneLoc = location.clone().add(amountOfBlocksToCheck, amountOfBlocksToCheck, amountOfBlocksToCheck);
+					Location loc = cloneLoc.subtract(X, Y, Z);
+					loc.getWorld().spawnParticle(Particle.BLOCK_MARKER, loc, 1, Material.BARRIER.createBlockData());
+
+					if (loc.getBlockX() == playerLocation.getBlockX() && loc.getBlockZ() == playerLocation.getBlockZ() && loc.getBlockY() == playerLocation.getBlockY()) {
+						hasNearbyPlayer = true;
+						return true;
+					}
+				}
+
+		return hasNearbyPlayer;
 	}
 }
