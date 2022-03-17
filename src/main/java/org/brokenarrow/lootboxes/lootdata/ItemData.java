@@ -20,14 +20,29 @@ public class ItemData {
 	private final AllYamlFilesInFolder yamlFiles;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
-	private final Map<String, ItemStack[]> cacheItemData = new HashMap<>();
+	private final Map<String, ItemStack> cacheItemData = new HashMap<>();
 
 	public ItemData() {
 		this.yamlFiles = new AllYamlFilesInFolder("itemdata", true);
 	}
 
-	public Map<String, ItemStack[]> getCacheItemData() {
+	public Map<String, ItemStack> getCacheItemData() {
 		return cacheItemData;
+	}
+
+	public void setCacheItemData(String filename, ItemStack itemstack) {
+		ItemStack file = cacheItemData.get(filename);
+		if (file != null) {
+			int order = 0;
+			while (!isCacheItemData(filename + order))
+				order += 1;
+			filename = filename + order;
+		}
+		cacheItemData.put(filename, itemstack);
+	}
+
+	public boolean isCacheItemData(String filename) {
+		return cacheItemData.get(filename) != null;
 	}
 
 	public void reload() {
@@ -55,7 +70,7 @@ public class ItemData {
 
 				if (fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
-					for (Map.Entry<String, ItemStack[]> entry : cacheItemData.entrySet())
+					for (Map.Entry<String, ItemStack> entry : cacheItemData.entrySet())
 						customConfig.set(entry.getKey(), entry.getValue());
 					try {
 						customConfig.save(file);
@@ -86,19 +101,20 @@ public class ItemData {
 		List<ItemStack> items = new ArrayList<>();
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
-			System.out.println("itemStack " + value);
 			if (configs != null) {
 				for (String childrenKey : configs.getKeys(false)) {
 				}
 			}
 			if (value.equals("item")) {
 				ItemStack itemStack = customConfig.getItemStack(value);
-				items.add(itemStack);
+				cacheItemData.put(key.getName().replace(".yml", ""), itemStack);
+				//items.add(itemStack);
 			}
 		}
-		System.out.println("itemStack " + items);
-		if (!items.isEmpty())
-			cacheItemData.put(key.getName(), items.toArray(new ItemStack[0]));
+
+	/*9	if (!items.isEmpty())
+			cacheItemData.put(key.getName().replace(".yml", ""), items.toArray(new ItemStack[0]));*/
+		System.out.println("itemStack " + cacheItemData);
 		save("test");
 	}
 }
