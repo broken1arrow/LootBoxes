@@ -61,6 +61,10 @@ public class ItemData {
 		}
 	}
 
+	public void save() {
+		save(null);
+	}
+
 	public void save(String fileToSave) {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "itemdata");
 		final File[] dataFolders = dataFolder.listFiles();
@@ -68,7 +72,7 @@ public class ItemData {
 			for (File file : dataFolders) {
 				String fileName = this.yamlFiles.getFileName(file.getName());
 
-				if (fileName.equals(fileToSave)) {
+				if (fileToSave == null || fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
 					for (Map.Entry<String, ItemStack> entry : cacheItemData.entrySet())
 						customConfig.set(entry.getKey(), entry.getValue());

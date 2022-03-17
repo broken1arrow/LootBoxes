@@ -78,6 +78,10 @@ public class LootItems {
 		}
 	}
 
+	public void save() {
+		save(null);
+	}
+
 	public void save(String fileToSave) {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "tables");
 		final File[] dataFolders = dataFolder.listFiles();
@@ -85,7 +89,7 @@ public class LootItems {
 			for (File file : dataFolders) {
 				String fileName = this.yamlFiles.getFileName(file.getName());
 
-				if (fileName.equals(fileToSave)) {
+				if (fileToSave == null || fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
 					Map<Object, LootData> settings = this.settings.get(fileName);
 					if (settings != null) {

@@ -1,10 +1,13 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -17,10 +20,11 @@ import java.util.Map;
 public class EditCreateItems extends MenuHolder {
 	private final MenuButton saveItems;
 	private final MenuButton backButton;
-	private final LootItems lootItems = LootItems.getInstance();
-	private final ItemData itemData = ItemData.getInstance();
 	private final MenuButton newItem;
 	private final MenuButton listOfItems;
+	private final LootItems lootItems = LootItems.getInstance();
+	private final ItemData itemData = ItemData.getInstance();
+	private final Settings settings = Lootboxes.getInstance().getSettings();
 
 	public EditCreateItems(String lootTable) {
 		super(LootItems.getInstance().getItems(lootTable));
@@ -32,17 +36,28 @@ public class EditCreateItems extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 				Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
 				for (ItemStack item : items.values()) {
-					if (item.hasItemMeta()) {
-						new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
-						return;
+					String fileName = "";
+					if (item.hasItemMeta() && settings.getSettings().isSaveMetadataOnItem()) {
+						if (settings.getSettings().isWarnBeforeSaveWithMetadata()) {
+							new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
+							return;
+						} else {
+							fileName = item.getType() + "";
+							itemData.setCacheItemData(fileName, item);
+						}
 					}
-					lootItems.addItems(lootTable, item, "", true);
+					lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
 				}
+				Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
+					itemData.save();
+					lootItems.save();
+				}, 5);
+
 			}
 
 			@Override
 			public ItemStack getItem() {
-				return null;
+				return new ItemStack(Material.CHAIN);
 			}
 		};
 		newItem = new MenuButton() {
