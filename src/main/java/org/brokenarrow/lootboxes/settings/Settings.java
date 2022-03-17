@@ -10,7 +10,7 @@ public class Settings extends YamlUtil {
 	private static final Settings instance = new Settings();
 
 	public Settings() {
-		super("settings.yml", "settings.yml");
+		super("Settings.yml", "Settings.yml");
 	}
 
 	private final Map<String, SettingsData> settings = new HashMap<>();
@@ -25,9 +25,13 @@ public class Settings extends YamlUtil {
 
 		int amountOfBlocksBelowSurface = customConfig.getInt("Amount_Of_Blocks_Below_Surface");
 		boolean spawnOnSurface = customConfig.getBoolean("Spawn_On_Surface");
+		boolean warnBeforeSaveWithMetadata = customConfig.getBoolean("Warn_Before_Save_With_Metadata");
+		boolean saveMetadataOnItem = customConfig.getBoolean("Save_Metadata_On_Item");
 
 		SettingsData settingsData = new SettingsData.Builder()
 				.setAmountOfBlocksBelowSurface(amountOfBlocksBelowSurface)
+				.setWarnBeforeSaveWithMetadata(warnBeforeSaveWithMetadata)
+				.setSaveMetadataOnItem(saveMetadataOnItem)
 				.setSpawnOnSurface(spawnOnSurface).build();
 
 		settings.put("Settings", settingsData);
