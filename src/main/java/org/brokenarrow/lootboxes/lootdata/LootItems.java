@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LootItems {
 
@@ -31,6 +32,25 @@ public class LootItems {
 
 	public Map<String, Map<Object, LootData>> getSettings() {
 		return settings;
+	}
+
+	public void addTable(String table) {
+		settings.put(table, new HashMap<>());
+	}
+
+	public void addItems(String table, ItemStack itemStack, String fileNameMetadata, boolean haveMetadata) {
+		Map<Object, LootData> items = settings.get(table);
+		if (items != null) {
+			Map<Object, LootData> data = new HashMap<>();
+			items.put(itemStack, new LootData(1, 1, itemStack.getAmount(), fileNameMetadata, haveMetadata));
+			settings.put(table, items);
+
+		}
+
+	}
+
+	public List<Object> getItems(String table) {
+		return settings.get(table).keySet().stream().filter(key -> !key.toString().equalsIgnoreCase("global_values")).collect(Collectors.toList());
 	}
 
 	public ItemStack[] getItems() {
@@ -146,8 +166,6 @@ public class LootItems {
 						Material item = Enums.getIfPresent(Material.class, matrial).orNull();
 						if (item == null)
 							continue;
-
-						System.out.println("Test 4444444ndddddd " + childrenKey + "  " + matrial);
 						int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
 						int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
 
@@ -169,11 +187,11 @@ public class LootItems {
 						maximum = globalValues.getMaximum();
 				}
 
-				System.out.println("Global_Values " + value + "   " + maximum);
 				data.put(value, new LootData(0, minimum, maximum, "", false));
 			}
 		}
 		this.settings.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
+		System.out.println("this.settings " + this.settings);
 		save("test");
 	}
 
