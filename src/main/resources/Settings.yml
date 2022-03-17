@@ -1,0 +1,7 @@
+# Main settings
+
+
+Amount_Of_Blocks_Below_Surface: 5
+Spawn_On_Surface: false
+Warn_Before_Save_With_Metadata: true
+Save_Metadata_On_Item: true
