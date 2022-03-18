@@ -1,10 +1,11 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -18,9 +19,14 @@ public class MainMenu extends MenuHolder {
 	private final MenuButton defultSettings;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
+	private final GuiTempletsYaml.Builder guiTemplets;
 
 	public MainMenu() {
-		setMenuSize(45);
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Main_Menu");
+
+		setMenuSize(guiTemplets.build().getGuiSize());
+		setTitle(guiTemplets.build().getGuiTitle());
+
 		editAndCreateTable = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -29,7 +35,10 @@ public class MainMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.HOPPER);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Edit_LootTable").build();
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
 			}
 		};
 		defultSettings = new MenuButton() {
@@ -40,7 +49,11 @@ public class MainMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.CHEST);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Containers").build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
 			}
 		};
 
