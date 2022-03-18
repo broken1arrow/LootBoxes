@@ -142,8 +142,9 @@ Gui_Templets:
       Icon: BARRIER
       Lore:
         - ""
-        - "&2Do you want to remove"
-        - "&2all player in the party?"
+        - "&2Rightclick to not save with metadata."
+        - ""
+        - "&2Leftclick to save with metadata."
     Back_button:
       Display_name: "&bGo back to menu"
       Enchant: true
