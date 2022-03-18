@@ -37,7 +37,6 @@ public class ItemData {
 			while (isCacheItemData(filename + order))
 				order += 1;
 			filename = filename + order;
-			System.out.println("filename " + filename);
 		}
 
 		cacheItemData.put(filename, itemstack);
@@ -77,8 +76,9 @@ public class ItemData {
 
 				if (fileToSave == null || fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
-					for (Map.Entry<String, ItemStack> entry : cacheItemData.entrySet())
+					for (Map.Entry<String, ItemStack> entry : cacheItemData.entrySet()) {
 						customConfig.set(entry.getKey(), entry.getValue());
+					}
 					try {
 						customConfig.save(file);
 					} catch (IOException e) {
@@ -122,6 +122,6 @@ public class ItemData {
 	/*9	if (!items.isEmpty())
 			cacheItemData.put(key.getName().replace(".yml", ""), items.toArray(new ItemStack[0]));*/
 		System.out.println("itemStack " + cacheItemData);
-		save("test");
+		//save("test");
 	}
 }
