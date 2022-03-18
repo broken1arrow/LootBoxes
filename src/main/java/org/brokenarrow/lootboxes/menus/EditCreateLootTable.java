@@ -1,7 +1,9 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.commandprompt.testprompt;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Material;
@@ -12,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,12 +24,16 @@ public class EditCreateLootTable extends MenuHolder {
 	private final MenuButton backButton;
 	private final MenuButton newTable;
 	private final MenuButton listOfTables;
+	private final GuiTempletsYaml.Builder guiTemplets;
 	Map<ItemStack, ItemStack> data = new HashMap<>();
 
 	public EditCreateLootTable() {
 		super(new ArrayList<>(LootItems.getInstance().getSettings().keySet()));
-		setFillSpace(Arrays.asList(1, 2, 3));
-		setMenuSize(45);
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "LootTables");
+
+		setMenuSize(guiTemplets.build().getGuiSize());
+		setTitle(guiTemplets.build().getGuiTitle());
+		setFillSpace(guiTemplets.build().getFillSpace());
 		createTable = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -38,7 +43,11 @@ public class EditCreateLootTable extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return null;
+				GuiTempletsYaml gui = guiTemplets.menuKey("Create_Table").build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
 			}
 		};
 
@@ -50,7 +59,7 @@ public class EditCreateLootTable extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.CHAIN);
+				return null;
 			}
 		};
 		backButton = new MenuButton() {
@@ -62,7 +71,11 @@ public class EditCreateLootTable extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.CHORUS_FRUIT);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
 			}
 		};
 		listOfTables = new MenuButton() {

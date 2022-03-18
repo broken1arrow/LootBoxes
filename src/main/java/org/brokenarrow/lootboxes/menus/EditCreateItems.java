@@ -1,9 +1,11 @@
 package org.brokenarrow.lootboxes.menus;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
+import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
@@ -14,7 +16,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class EditCreateItems extends MenuHolder {
@@ -25,22 +28,31 @@ public class EditCreateItems extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
+	private final GuiTempletsYaml.Builder guiTemplets;
 
 	public EditCreateItems(String lootTable) {
 		super(LootItems.getInstance().getItems(lootTable));
-		setFillSpace(Arrays.asList(1, 2, 3));
-		setMenuSize(45);
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Items_For_LootTable");
 
+		setMenuSize(guiTemplets.build().getGuiSize());
+		setTitle(guiTemplets.build().getGuiTitle());
+		setFillSpace(guiTemplets.build().getFillSpace());
+
+		Map<ItemStack, ItemStack> cacheItemData = new HashMap<>();
 		saveItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				new saveItems(lootTable).menuOpen(player);
+				new SaveItems(lootTable).menuOpen(player);
 
 			}
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.CHAIN);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Save_Items").build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
 			}
 		};
 		newItem = new MenuButton() {
@@ -51,7 +63,7 @@ public class EditCreateItems extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.CHAIN);
+				return null;
 			}
 		};
 		backButton = new MenuButton() {
@@ -63,13 +75,23 @@ public class EditCreateItems extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return new ItemStack(Material.CHORUS_FRUIT);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
 			}
 		};
 		listOfItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-
+				System.out.println("cacheItemData " + cacheItemData);
+				System.out.println("object " + object);
+				if (object instanceof ItemStack) {
+					ItemStack itemStack = cacheItemData.get(object);
+					System.out.println("cacheItemData key " + cacheItemData.values());
+					player.getInventory().addItem(itemStack);
+				}
 			}
 
 			@Override
@@ -83,21 +105,35 @@ public class EditCreateItems extends MenuHolder {
 
 				if (object instanceof Material) {
 					LootItems.LootData data = lootItems.getSettings().get(lootTable).get(object);
-
-					if (data != null)
+					if (data != null) {
+						ItemStack itemStack;
 						if (data.isHaveMetadata()) {
-							return itemData.getCacheItemData().get(data.getItemdata());
+							itemStack = itemData.getCacheItemData().get(data.getItemdata());
 						} else
-							return new ItemStack((Material) object);
+							itemStack = new ItemStack((Material) object);
+						GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
+								data.isHaveMetadata() && itemStack.hasItemMeta() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().toString().toLowerCase(Locale.ROOT),
+								data.getChance(),
+								data.getMinimum(),
+								data.getMaximum(),
+								data.isHaveMetadata()
+						).build();
+
+						ItemStack guiItem = CreateItemUtily.of(itemStack.clone(),
+								gui.getDisplayName(),
+								gui.getLore()).makeItemStack();
+						cacheItemData.put(guiItem, itemStack);
+						return guiItem;
+					}
 				}
 				if (object instanceof ItemStack) {
 					ItemStack item = ((ItemStack) object);
+					System.out.println("item " + item);
+					if (cacheItemData.get(item) == null) return null;
 					LootItems.LootData data = lootItems.getSettings().get(lootTable).get(item.getType());
-					if (data != null) {
-						if (data.isHaveMetadata())
-							item = itemData.getCacheItemData().get(data.getItemdata());
+
+					if (data != null)
 						return item;
-					}
 				}
 				return null;
 			}
@@ -124,13 +160,19 @@ public class EditCreateItems extends MenuHolder {
 		return null;
 	}
 
-	public class saveItems extends MenuHolder {
+	public class SaveItems extends MenuHolder {
 		private final MenuButton saveItems;
 		private final MenuButton backButton;
+		private final GuiTempletsYaml.Builder guiTemplets;
 
-		public saveItems(String lootTable) {
-			setFillSpace(Arrays.asList(1, 2, 3));
-			setMenuSize(45);
+		public SaveItems(String lootTable) {
+			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "SaveItems");
+
+			setMenuSize(guiTemplets.build().getGuiSize());
+			setTitle(guiTemplets.build().getGuiTitle());
+			setFillSpace(guiTemplets.build().getFillSpace());
+			/*setFillSpace(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+			setMenuSize(45);*/
 			setSlotsYouCanAddItems(true);
 
 			saveItems = new MenuButton() {
@@ -138,7 +180,7 @@ public class EditCreateItems extends MenuHolder {
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 					Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
 					if (items == null || items.isEmpty()) return;
-					System.out.println("items " + items.isEmpty());
+
 					for (ItemStack item : items.values()) {
 						if (item == null) continue;
 						String fileName = "";
@@ -147,8 +189,7 @@ public class EditCreateItems extends MenuHolder {
 								new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
 								return;
 							} else {
-								fileName = item.getType() + "";
-								itemData.setCacheItemData(fileName, item);
+								fileName = itemData.setCacheItemData(fileName, item);
 							}
 						}
 						lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
@@ -163,7 +204,11 @@ public class EditCreateItems extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					return new ItemStack(Material.PAPER);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Save_Items_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
 				}
 			};
 			this.backButton = new MenuButton() {
@@ -175,7 +220,11 @@ public class EditCreateItems extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					return new ItemStack(Material.CHORUS_FRUIT);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
 				}
 			};
 		}
@@ -194,27 +243,43 @@ public class EditCreateItems extends MenuHolder {
 	public class ConfirmIfItemHaveMetadata extends MenuHolder {
 
 		private final MenuButton confirmSave;
+		private final GuiTempletsYaml.Builder guiTemplets;
 
 		public ConfirmIfItemHaveMetadata(Map<Integer, ItemStack> items, String lootTable) {
-			setMenuSize(5);
+			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Confirm_If_Item_Have_Metadata");
+
+			setMenuSize(guiTemplets.build().getGuiSize());
+			setTitle(guiTemplets.build().getGuiTitle());
+
+
 			confirmSave = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 					for (ItemStack item : items.values()) {
 						String fileName = "";
+						if (item == null) continue;
+
 						if (item.hasItemMeta()) {
-							fileName = item.getType() + "";
-							itemData.setCacheItemData(fileName, item);
+							fileName = itemData.setCacheItemData(fileName, item);
 
 						}
 
 						lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
 					}
+					Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
+						itemData.save();
+						lootItems.save();
+					}, 5);
+					new EditCreateItems(lootTable).menuOpen(player);
 				}
 
 				@Override
 				public ItemStack getItem() {
-					return null;
+					GuiTempletsYaml gui = guiTemplets.menuKey("Confirm_Save").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
 				}
 			};
 
@@ -222,7 +287,7 @@ public class EditCreateItems extends MenuHolder {
 
 		@Override
 		public ItemStack getItemAt(int slot) {
-			if (slot == 40)
+			if (slot == 3)
 				return confirmSave.getItem();
 
 			return null;
