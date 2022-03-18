@@ -51,6 +51,15 @@
             <id>minecraft-repo</id>
             <url>https://libraries.minecraft.net/</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.org/repository/maven-public/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
     </repositories>
     <dependencies>
 
@@ -77,6 +86,18 @@
                to your plugin's jar, otherwise set this to "provided".
                <scope>provided</scope>
            -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api-plugin</artifactId>
+            <version>2.9.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -193,14 +214,9 @@
                             <finalName>${project.name}-${project.version}</finalName>
                             <artifactSet>
                                 <includes>
-                                    <include>org.mineacademy:Game*</include>
-                                    <include>com.github.kangarko:Foundation*</include>
                                     <include>com.github.broken1arrow:MenuLibrary*</include>
                                     <include>com.github.broken1arrow:*</include>
                                 </includes>
-                                <excludes>
-                                    <exclude>org.mineacademy:GameAPI*</exclude>
-                                </excludes>
                             </artifactSet>
                             <relocations>
                                 <!-- <relocation>
