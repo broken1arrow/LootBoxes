@@ -85,11 +85,9 @@ public class EditCreateItems extends MenuHolder {
 		listOfItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				System.out.println("cacheItemData " + cacheItemData);
-				System.out.println("object " + object);
+
 				if (object instanceof ItemStack) {
 					ItemStack itemStack = cacheItemData.get(object);
-					System.out.println("cacheItemData key " + cacheItemData.values());
 					player.getInventory().addItem(itemStack);
 				}
 			}
@@ -111,8 +109,9 @@ public class EditCreateItems extends MenuHolder {
 							itemStack = itemData.getCacheItemData().get(data.getItemdata());
 						} else
 							itemStack = new ItemStack((Material) object);
+						if (itemStack == null) return null;
 						GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
-								data.isHaveMetadata() && itemStack.hasItemMeta() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().toString().toLowerCase(Locale.ROOT),
+								data.isHaveMetadata() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().toString().toLowerCase(Locale.ROOT),
 								data.getChance(),
 								data.getMinimum(),
 								data.getMaximum(),
@@ -150,11 +149,11 @@ public class EditCreateItems extends MenuHolder {
 	@Override
 	public ItemStack getItemAt(int slot) {
 
-		if (slot == 38)
+		if (guiTemplets.menuKey("Save_Items").build().getSlot().contains(slot))
 			return saveItems.getItem();
-		if (slot == 40)
+		if (guiTemplets.menuKey("Save_Items").build().getSlot().contains(slot))
 			return newItem.getItem();
-		if (slot == 44)
+		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 			return backButton.getItem();
 
 		return null;
@@ -189,7 +188,7 @@ public class EditCreateItems extends MenuHolder {
 								new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
 								return;
 							} else {
-								fileName = itemData.setCacheItemData(fileName, item);
+								fileName = itemData.setCacheItemData(item.getType() + "", item);
 							}
 						}
 						lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
@@ -232,9 +231,9 @@ public class EditCreateItems extends MenuHolder {
 		@Override
 		public ItemStack getItemAt(int slot) {
 
-			if (slot == 40)
+			if (guiTemplets.menuKey("Save_Items_button").build().getSlot().contains(slot))
 				return saveItems.getItem();
-			if (slot == 44)
+			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 				return this.backButton.getItem();
 			return null;
 		}
@@ -243,6 +242,7 @@ public class EditCreateItems extends MenuHolder {
 	public class ConfirmIfItemHaveMetadata extends MenuHolder {
 
 		private final MenuButton confirmSave;
+		private final MenuButton backButton;
 		private final GuiTempletsYaml.Builder guiTemplets;
 
 		public ConfirmIfItemHaveMetadata(Map<Integer, ItemStack> items, String lootTable) {
@@ -259,8 +259,8 @@ public class EditCreateItems extends MenuHolder {
 						String fileName = "";
 						if (item == null) continue;
 
-						if (item.hasItemMeta()) {
-							fileName = itemData.setCacheItemData(fileName, item);
+						if (click.isLeftClick() && item.hasItemMeta()) {
+							fileName = itemData.setCacheItemData(item.getType() + "", item);
 
 						}
 
@@ -282,14 +282,33 @@ public class EditCreateItems extends MenuHolder {
 							gui.getLore()).makeItemStack();
 				}
 			};
+			this.backButton = new MenuButton() {
+
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new EditCreateItems(lootTable).menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
 
 		}
 
 		@Override
 		public ItemStack getItemAt(int slot) {
-			if (slot == 3)
+
+			if (guiTemplets.menuKey("Confirm_Save").build().getSlot().contains(slot))
 				return confirmSave.getItem();
 
+			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
+				return this.backButton.getItem();
 			return null;
 		}
 	}
