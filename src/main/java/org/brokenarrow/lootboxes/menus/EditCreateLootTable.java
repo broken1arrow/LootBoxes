@@ -121,11 +121,11 @@ public class EditCreateLootTable extends MenuHolder {
 	@Override
 	public ItemStack getItemAt(int slot) {
 
-		if (slot == 38)
+		if (guiTemplets.menuKey("Create_Table").build().getSlot().contains(slot))
 			return createTable.getItem();
-		if (slot == 40)
+		if (guiTemplets.menuKey("Create_Table").build().getSlot().contains(slot))
 			return newTable.getItem();
-		if (slot == 44)
+		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 			return backButton.getItem();
 		return null;
 	}
