@@ -1,0 +1,223 @@
+#
+# All diffrent gui you can change.
+#
+#
+
+Gui_Templets:
+  ######################################################
+  # MainMenu.
+  Main_Menu:
+    Menu_Size: 36
+    Menu_Title: "&1Main menu"
+    Containers:
+      Display_name: "&6List of containers"
+      Slot: 11
+      Icon: SUNFLOWER
+      Lore:
+        - ""
+        - "&2List of conected loot boxes"
+    Containers_No_Perms:
+      Display_name: "&6List of containers"
+      Slot: 11
+      Icon: BARRIER
+      Lore:
+        - ""
+        - "&4You has not permission"
+        - "&4to open this menu."
+    Edit_LootTable:
+      Display_name: "&aCreate and edit LootTable"
+      Slot: 15
+      Icon: CHAIN
+      Lore:
+        - ""
+        - "&aEdit and create loottable and add"
+        - "&aor remove items inside a specific table"
+    Edit_LootTable_No_Perms:
+      Display_name: "&Create and edit LootTable"
+      Slot: 15
+      Icon: BARRIER
+      Lore:
+        - ""
+        - "&4You has not permission"
+        - "&4to open this menu."
+        - ""
+        - "&aEdit and create loottable and add"
+        - "&aor remove items inside a specific table"
+  ######################################################
+  # EditCreateItems.
+  Edit_Items_For_LootTable:
+    Menu_Size: 45
+    Menu_Title: "&1Add and remove items"
+    FillSpace: 0-26
+    Item_List:
+      Display_name: "&6Item {0}"
+      Enchant: true
+      Slot: 0
+      Icon: ""
+      Lore:
+        - ""
+        - "&2Click to edit this item"
+        - "Chance: {1}"
+        - "Minimum: {2}"
+        - "Maximum: {3}"
+        - "HaveMetadata: {4}"
+    Save_Items:
+      Display_name: "&6Save items"
+      Enchant: true
+      Slot: 32
+      Icon: GOLD_INGOT
+      Lore:
+        - ""
+        - "&2Save items"
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Slot: 35
+      Icon: CHORUS_FRUIT
+      Lore:
+        - ""
+        - "&2Go back to"
+        - "&amain Menu."
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 34
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 28
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+  ######################################################
+  # SaveItems to your loottable.
+  SaveItems:
+    Menu_Size: 45
+    Menu_Title: "&1Add items inside this gui"
+    FillSpace: 0-26
+    Item_List:
+      Display_name: ""
+      Enchant: false
+      Slot: 0
+      Icon: ""
+      Lore:
+    Save_Items_button:
+      Display_name: "&bSave all items"
+      Enchant: true
+      Slot: 40
+      Icon: BARRIER
+      Lore:
+        - ""
+        - "&2Do you want to"
+        - "&2remove this player."
+    Back_button:
+      Display_name: "&bGo back to menu"
+      Enchant: true
+      Slot: 44
+      Icon: CHORUS_FRUIT
+      Lore:
+        - ""
+        - "&2Go back to previous menu"
+    Placeholders:
+      Display_name: "&6"
+      Slot: 38-43
+      Icon: BLACK_STAINED_GLASS_PANE
+      Lore:
+  ######################################################
+  # Confirm If Item Have Metadata.
+  Confirm_If_Item_Have_Metadata:
+    Menu_Size: 5
+    Menu_Title: "&1Confirm you want to save"
+    Confirm_Save:
+      Display_name: "&bDo you want save metadata"
+      Enchant: true
+      Slot: 1
+      Icon: BARRIER
+      Lore:
+        - ""
+        - "&2Do you want to remove"
+        - "&2all player in the party?"
+    Back_button:
+      Display_name: "&bGo back to menu"
+      Enchant: true
+      Slot: 3
+      Icon: PAPER
+      Lore:
+        - ""
+        - "&2Go back to previous"
+    Placeholders:
+      Display_name: "&6"
+      Slot: 0-5
+      Icon: BLACK_STAINED_GLASS_PANE
+      Lore:
+  ######################################################
+  # Create loot table menu.
+  LootTables:
+    Menu_Size: 45
+    Menu_Title: "&1Loot tables"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    # max amount of item on the page (if you not fill all slots and wants more pages).
+    Max_Amount_Of_Items: 13
+    Create_Table:
+      Display_name: "&bCreate new table"
+      Enchant: true
+      Icon: FIREWORK_STAR
+      Slot: 38
+      Lore:
+    Create_Table_No_Perms:
+      Display_name: "&bCreate new table"
+      Enchant: false
+      Icon: FIREWORK_STAR
+      Slot: 0
+      Lore:
+        - "&4You has no permissions"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  
