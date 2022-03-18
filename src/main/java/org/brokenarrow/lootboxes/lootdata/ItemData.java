@@ -30,15 +30,18 @@ public class ItemData {
 		return cacheItemData;
 	}
 
-	public void setCacheItemData(String filename, ItemStack itemstack) {
+	public String setCacheItemData(String filename, ItemStack itemstack) {
 		ItemStack file = cacheItemData.get(filename);
 		if (file != null) {
 			int order = 0;
-			while (!isCacheItemData(filename + order))
+			while (isCacheItemData(filename + order))
 				order += 1;
 			filename = filename + order;
+			System.out.println("filename " + filename);
 		}
+
 		cacheItemData.put(filename, itemstack);
+		return filename;
 	}
 
 	public boolean isCacheItemData(String filename) {
