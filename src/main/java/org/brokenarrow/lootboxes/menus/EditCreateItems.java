@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.menus;
 
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
-import org.brokenarrow.lootboxes.lootdata.ItemData;
+import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -10,7 +10,6 @@ import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -26,7 +25,7 @@ public class EditCreateItems extends MenuHolder {
 	private final MenuButton newItem;
 	private final MenuButton listOfItems;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ItemData itemData = ItemData.getInstance();
+	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
 
@@ -38,7 +37,7 @@ public class EditCreateItems extends MenuHolder {
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
-		Map<ItemStack, ItemStack> cacheItemData = new HashMap<>();
+		Map<ItemStack, ItemData> cacheItemData = new HashMap<>();
 		saveItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -87,8 +86,9 @@ public class EditCreateItems extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 
 				if (object instanceof ItemStack) {
-					ItemStack itemStack = cacheItemData.get(object);
-					player.getInventory().addItem(itemStack);
+					ItemData itemData = cacheItemData.get(object);
+					player.getInventory().addItem(itemData.getItemStack());
+					System.out.println("itemdata " + itemData.getItemPathKey());
 				}
 			}
 
@@ -101,14 +101,14 @@ public class EditCreateItems extends MenuHolder {
 			@Override
 			public ItemStack getItem(Object object) {
 
-				if (object instanceof Material) {
-					LootItems.LootData data = lootItems.getSettings().get(lootTable).get(object);
+				if (object instanceof String) {
+					LootData data = lootItems.getSettings().get(lootTable).get(object);
 					if (data != null) {
 						ItemStack itemStack;
 						if (data.isHaveMetadata()) {
-							itemStack = itemData.getCacheItemData().get(data.getItemdata());
+							itemStack = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
 						} else
-							itemStack = new ItemStack((Material) object);
+							itemStack = new ItemStack(data.getMaterial());
 						if (itemStack == null) return null;
 						GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
 								data.isHaveMetadata() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().toString().toLowerCase(Locale.ROOT),
@@ -121,18 +121,15 @@ public class EditCreateItems extends MenuHolder {
 						ItemStack guiItem = CreateItemUtily.of(itemStack.clone(),
 								gui.getDisplayName(),
 								gui.getLore()).makeItemStack();
-						cacheItemData.put(guiItem, itemStack);
+						cacheItemData.put(guiItem, new ItemData(itemStack, (String) object));
 						return guiItem;
 					}
 				}
 				if (object instanceof ItemStack) {
 					ItemStack item = ((ItemStack) object);
-					System.out.println("item " + item);
 					if (cacheItemData.get(item) == null) return null;
-					LootItems.LootData data = lootItems.getSettings().get(lootTable).get(item.getType());
 
-					if (data != null)
-						return item;
+					return item;
 				}
 				return null;
 			}
@@ -191,11 +188,11 @@ public class EditCreateItems extends MenuHolder {
 								fileName = itemData.setCacheItemData(item.getType() + "", item);
 							}
 						}
-						lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
+						lootItems.addItems(lootTable, item, itemData.getFileName(), fileName, !fileName.isEmpty());
 					}
 					Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
 						itemData.save();
-						lootItems.save();
+						lootItems.save(lootTable);
 					}, 5);
 					new EditCreateItems(lootTable).menuOpen(player);
 
@@ -256,19 +253,20 @@ public class EditCreateItems extends MenuHolder {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 					for (ItemStack item : items.values()) {
-						String fileName = "";
+						String itemdataPath = "";
 						if (item == null) continue;
 
 						if (click.isLeftClick() && item.hasItemMeta()) {
-							fileName = itemData.setCacheItemData(item.getType() + "", item);
+							//lootItems. getSettings().get(lootTable).get()
+							itemdataPath = itemData.setCacheItemData(item.getType() + "", item);
 
 						}
 
-						lootItems.addItems(lootTable, item, fileName, !fileName.isEmpty());
+						lootItems.addItems(lootTable, item, itemData.getFileName(), itemdataPath, !itemdataPath.isEmpty());
 					}
 					Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
 						itemData.save();
-						lootItems.save();
+						lootItems.save(lootTable);
 					}, 5);
 					new EditCreateItems(lootTable).menuOpen(player);
 				}
@@ -310,6 +308,24 @@ public class EditCreateItems extends MenuHolder {
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 				return this.backButton.getItem();
 			return null;
+		}
+	}
+
+	public static class ItemData {
+		private final ItemStack itemStack;
+		private final String itemPathKey;
+
+		public ItemData(ItemStack itemStack, String itemPathKey) {
+			this.itemStack = itemStack;
+			this.itemPathKey = itemPathKey;
+		}
+
+		public ItemStack getItemStack() {
+			return itemStack;
+		}
+
+		public String getItemPathKey() {
+			return itemPathKey;
 		}
 	}
 }
