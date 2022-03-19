@@ -18,33 +18,59 @@ public class ItemData {
 	@Getter
 	public static final ItemData instance = new ItemData();
 	private final AllYamlFilesInFolder yamlFiles;
+	private String fileName;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
-	private final Map<String, ItemStack> cacheItemData = new HashMap<>();
+	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
 		this.yamlFiles = new AllYamlFilesInFolder("itemdata", true);
 	}
 
-	public Map<String, ItemStack> getCacheItemData() {
+	public Map<String, Map<String, ItemStack>> getCacheData() {
 		return cacheItemData;
 	}
 
-	public String setCacheItemData(String filename, ItemStack itemstack) {
-		ItemStack file = cacheItemData.get(filename);
-		if (file != null) {
-			int order = 0;
-			while (isCacheItemData(filename + order))
-				order += 1;
-			filename = filename + order;
-		}
+	public ItemStack getCacheItemData(String filname, String path) {
+		Map<String, ItemStack> data = cacheItemData.get(filname);
+		if (data != null)
+			return data.get(path);
+		return null;
+	}
 
-		cacheItemData.put(filename, itemstack);
+	public ItemStack getCacheItemData(String path) {
+		return getCacheItemData(getFileName(), path);
+	}
+
+	public String setCacheItemData(String filename, ItemStack itemstack) {
+		Map<String, ItemStack> file = cacheItemData.get(getFileName());
+
+		filename = getFirstAvailableName(filename);
+		if (file == null) {
+			file = new HashMap<>();
+		}
+		file.put(filename, itemstack);
+		cacheItemData.put(getFileName(), file);
 		return filename;
 	}
 
-	public boolean isCacheItemData(String filename) {
-		return cacheItemData.get(filename) != null;
+	public boolean isCacheItemData(String itemKey) {
+		Map<String, ItemStack> data = cacheItemData.get(getFileName());
+		
+		if (data != null)
+			return data.get(itemKey) != null;
+		return false;
+	}
+
+	public String getFirstAvailableName(String itemKey) {
+		int order = 0;
+		while (isCacheItemData(itemKey + "_" + order))
+			order += 1;
+		return itemKey + "_" + order;
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 	public void reload() {
@@ -76,8 +102,11 @@ public class ItemData {
 
 				if (fileToSave == null || fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
-					for (Map.Entry<String, ItemStack> entry : cacheItemData.entrySet()) {
-						customConfig.set(entry.getKey(), entry.getValue());
+					for (Map.Entry<String, Map<String, ItemStack>> entry : cacheItemData.entrySet()) {
+
+						for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
+							customConfig.set(ent.getKey(), ent.getValue());
+						}
 					}
 					try {
 						customConfig.save(file);
@@ -106,22 +135,24 @@ public class ItemData {
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
 		List<ItemStack> items = new ArrayList<>();
+		Map<String, ItemStack> stack = new HashMap<>();
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 			if (configs != null) {
 				for (String childrenKey : configs.getKeys(false)) {
 				}
 			}
-			if (value.equals("item")) {
-				ItemStack itemStack = customConfig.getItemStack(value);
-				cacheItemData.put(key.getName().replace(".yml", ""), itemStack);
-				//items.add(itemStack);
-			}
-		}
 
+			ItemStack itemStack = customConfig.getItemStack(value);
+			stack.put(value, itemStack);
+			cacheItemData.put(key.getName().replace(".yml", ""), stack);
+			//items.add(itemStack);
+
+		}
+		fileName = String.valueOf(key.getName().replace(".yml", ""));
 	/*9	if (!items.isEmpty())
 			cacheItemData.put(key.getName().replace(".yml", ""), items.toArray(new ItemStack[0]));*/
-		System.out.println("itemStack " + cacheItemData);
+
 		//save("test");
 	}
 }
