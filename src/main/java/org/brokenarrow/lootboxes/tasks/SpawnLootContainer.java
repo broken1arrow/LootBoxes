@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.tasks;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.bukkit.*;
@@ -14,15 +15,16 @@ public class SpawnLootContainer {
 	private long time;
 
 	public void task() {
-		if (this.time == 0)
-			this.time = System.currentTimeMillis() + (1000 * 5);
-		else if (this.time <= System.currentTimeMillis()) {
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				Location location = player.getLocation();
-				spawnBlock(location, player);
+		if (Lootboxes.getInstance().getSettings().getSettings().isRandomContinerSpawn())
+			if (this.time == 0)
+				this.time = System.currentTimeMillis() + (1000 * 5);
+			else if (this.time <= System.currentTimeMillis()) {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					Location location = player.getLocation();
+					spawnBlock(location, player);
+				}
+				this.time = System.currentTimeMillis() + (1000 * 5);
 			}
-			this.time = System.currentTimeMillis() + (1000 * 5);
-		}
 	}
 
 	public void spawnBlock(Location location, Player player) {
