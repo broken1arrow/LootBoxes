@@ -30,6 +30,7 @@ public class Settings extends YamlUtil {
 		int amountOfBlocksBelowSurface = customConfig.getInt("Amount_Of_Blocks_Below_Surface");
 		boolean spawnOnSurface = customConfig.getBoolean("Spawn_On_Surface");
 		boolean warnBeforeSaveWithMetadata = customConfig.getBoolean("Warn_Before_Save_With_Metadata");
+		boolean randomContinerSpawn = customConfig.getBoolean("Random_Continer_Spawn");
 		boolean saveMetadataOnItem = customConfig.getBoolean("Save_Metadata_On_Item");
 
 		SettingsData settingsData = new SettingsData.Builder()
