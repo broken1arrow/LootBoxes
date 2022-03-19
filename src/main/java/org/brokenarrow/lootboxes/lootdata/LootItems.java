@@ -4,6 +4,7 @@ import com.google.common.base.Enums;
 import lombok.Getter;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
+import org.brokenarrow.lootboxes.untlity.LootDataSave;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -24,38 +25,129 @@ public class LootItems {
 	private File customConfigFile;
 	private FileConfiguration customConfig;
 	private boolean isUpperCase;
-	private final Map<String, Map<Object, LootData>> settings = new HashMap<>();
+	private final Map<String, Map<String, org.brokenarrow.lootboxes.builder.LootData>> settings = new HashMap<>();
 
 	public LootItems() {
 		this.yamlFiles = new AllYamlFilesInFolder("tables", true);
 	}
 
-	public Map<String, Map<Object, LootData>> getSettings() {
+	public Map<String, Map<String, org.brokenarrow.lootboxes.builder.LootData>> getSettings() {
 		return settings;
 	}
 
 	public void addTable(String table) {
 		settings.put(table, new HashMap<>());
+		save(table);
 	}
 
-	public void addItems(String table, ItemStack itemStack, String fileNameMetadata, boolean haveMetadata) {
-		Map<Object, LootData> items = settings.get(table);
+	public String addItems(String table, ItemStack itemStack, String metadatafileName, String itemdataPath, boolean haveMetadata) {
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
+
+		String loot = getFirstAvailableName(table, itemStack.getType() + "");
 		if (items != null) {
-			Map<Object, LootData> data = new HashMap<>();
-			items.put(itemStack.getType(), new LootData(1, 1, itemStack.getAmount(), fileNameMetadata, haveMetadata));
-			settings.put(table, items);
-
+			items.put(loot, new org.brokenarrow.lootboxes.builder.LootData.Builder()
+					.setChance(1)
+					.setMinimum(1)
+					.setMaximum(itemStack.getAmount())
+					.setMaterial(itemStack.getType())
+					.setItemdataPath(itemdataPath)
+					.setItemdataFileName(metadatafileName)
+					.setHaveMetadata(haveMetadata).build());
+		} else {
+			items = new HashMap<>();
+			items.put(loot, new org.brokenarrow.lootboxes.builder.LootData.Builder()
+					.setChance(1)
+					.setMinimum(1)
+					.setMaximum(itemStack.getAmount())
+					.setMaterial(itemStack.getType())
+					.setItemdataPath(itemdataPath)
+					.setItemdataFileName(metadatafileName)
+					.setHaveMetadata(haveMetadata).build());
 		}
+		settings.put(table, items);
+		return loot;
+	}
+
+	public boolean isCacheItem(String table, String itemPath) {
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = settings.get(table);
+		if (data != null)
+			return data.get(itemPath) != null;
+		return false;
+	}
+
+	public String getFirstAvailableName(String table, String itemKey) {
+		int order = 0;
+		while (isCacheItem(table, itemKey + "_" + order))
+			order += 1;
+		return itemKey + "_" + order;
+	}
+
+	public List<String> getItems(String table) {
+		return settings.get(table).keySet().stream().filter(key -> key != null && !key.equalsIgnoreCase("global_values")).collect(Collectors.toList());
+	}
+
+	public Material getMaterial(String table, String itemToEdit) {
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
+		if (items != null) {
+			return items.get(itemToEdit).getMaterial();
+		}
+		return null;
+	}
+
+	public org.brokenarrow.lootboxes.builder.LootData getLootData(String table, String itemToEdit) {
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> dataMap = settings.get(table);
+		if (dataMap != null) {
+			return dataMap.get(itemToEdit);
+		}
+		return null;
+	}
+
+	public void setLootData(LootDataSave enums, String table, String itemToEdit, Object object) {
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = settings.get(table);
+		org.brokenarrow.lootboxes.builder.LootData.Builder lootData = data.get(itemToEdit).getBuilder();
+
+		switch (enums) {
+			case CHANCE:
+				lootData.setChance((int) object);
+				break;
+			case MIN:
+				lootData.setMinimum((int) object);
+				break;
+			case MAX:
+				lootData.setMaximum((int) object);
+				break;
+			case ITEM:
+				lootData.setMaterial((Material) object);
+				break;
+			case ITEM_DATA_PATH:
+				lootData.setItemdataPath((String) object);
+				break;
+			case META_DATA_FILENAME:
+				lootData.setItemdataFileName((String) object);
+				break;
+			case HAVE_META_DATA:
+				lootData.setHaveMetadata((Boolean) object);
+				break;
+		}
+		if (data == null)
+			data = new HashMap<>();
+		data.put(itemToEdit, lootData.build());
+		settings.put(table, data);
+
 
 	}
 
-	public List<Object> getItems(String table) {
-		return settings.get(table).keySet().stream().filter(key -> !key.toString().equalsIgnoreCase("global_values")).collect(Collectors.toList());
+	public void removeItem(String table, String itemToEdit) {
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
+		if (items != null) {
+			items.remove(itemToEdit);
+		}
+		save(table);
 	}
 
 	public ItemStack[] getItems() {
 		List<ItemStack> items = new ArrayList<>();
-		for (Map<Object, LootData> values : settings.values())
+		for (Map<String, org.brokenarrow.lootboxes.builder.LootData> values : settings.values())
 			for (Object key : values.keySet())
 				if (key instanceof Material)
 					items.add(new ItemStack((Material) key));
@@ -86,40 +178,68 @@ public class LootItems {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "tables");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
+			if (!checkFolderExist(fileToSave, dataFolders)) {
+				final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", fileToSave + ".yml");
+				System.out.println("fileToSave " + fileToSave);
+				try {
+					newDataFolder.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					saveDataToFile(newDataFolder);
+				}
+			}
 			for (File file : dataFolders) {
 				String fileName = this.yamlFiles.getFileName(file.getName());
 
 				if (fileToSave == null || fileName.equals(fileToSave)) {
-					customConfig = YamlConfiguration.loadConfiguration(file);
-					Map<Object, LootData> settings = this.settings.get(fileName);
-					if (settings != null) {
-						for (Object childrenKey : settings.keySet()) {
-							System.out.println("key " + fileName + "settings " + childrenKey);
-							LootData data = settings.get(childrenKey);
-							if (!isUpperCase)
-								childrenKey = childrenKey.toString().toLowerCase();
-							//final Material material = (Material) childrenKey;
-							if (childrenKey.toString().equals("global_values") || childrenKey.toString().equals("GLOBAL_VALUES")) {
-								customConfig.set("Global_Values." + ".Minimum", data.getMinimum());
-								customConfig.set("Global_Values." + ".Maximum", data.getMaximum());
-							} else {
-								customConfig.set("Items." + childrenKey + ".Chance", data.getChance());
-								customConfig.set("Items." + childrenKey + ".Minimum", data.getMinimum());
-								customConfig.set("Items." + childrenKey + ".Maximum", data.getMaximum());
-								customConfig.set("Items." + childrenKey + ".Metadata", data.isHaveMetadata());
-								customConfig.set("Items." + childrenKey + ".Itemdata", data.getItemdata());
-							}
-							try {
-								customConfig.save(file);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
+					saveDataToFile(file);
 				}
 
 			}
 		}
+	}
+
+	public void saveDataToFile(File file) {
+		String fileName = this.yamlFiles.getFileName(file.getName());
+		customConfig = YamlConfiguration.loadConfiguration(file);
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> settings = this.settings.get(fileName);
+		if (settings != null) {
+			for (String childrenKey : settings.keySet()) {
+				if (childrenKey == null) continue;
+				org.brokenarrow.lootboxes.builder.LootData data = settings.get(childrenKey);
+				/*if (!isUpperCase)
+					childrenKey = childrenKey.toLowerCase();*/
+				//final Material material = (Material) childrenKey;
+				if (childrenKey.equalsIgnoreCase("global_values") || childrenKey.equals("GLOBAL_VALUES")) {
+					customConfig.set("Global_Values." + ".Minimum", data.getMinimum());
+					customConfig.set("Global_Values." + ".Maximum", data.getMaximum());
+				} else if (data.getMaterial() != null) {
+					customConfig.set("Items." + childrenKey + ".ItemType", data.getMaterial().name());
+					customConfig.set("Items." + childrenKey + ".Chance", data.getChance());
+					customConfig.set("Items." + childrenKey + ".Minimum", data.getMinimum());
+					customConfig.set("Items." + childrenKey + ".Maximum", data.getMaximum());
+					customConfig.set("Items." + childrenKey + ".Metadata", data.isHaveMetadata());
+					customConfig.set("Items." + childrenKey + ".Itemdata", data.getItemdataPath());
+					customConfig.set("Items." + childrenKey + ".Itemdata_Filename", data.getItemdataFileName());
+				}
+				try {
+					customConfig.save(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public boolean checkFolderExist(String fileToSave, File[] dataFolders) {
+		if (fileToSave != null)
+			for (File file : dataFolders) {
+				String fileName = this.yamlFiles.getFileName(file.getName());
+				if (fileName.equals(fileToSave))
+					return true;
+			}
+		return false;
 	}
 
 	public static String toStringFormatted(Map<?, ?> serialize) {
@@ -156,7 +276,7 @@ public class LootItems {
 	}
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
-		Map<Object, LootData> data = new HashMap<>();
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = new HashMap<>();
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 
@@ -165,25 +285,32 @@ public class LootItems {
 					for (String childrenKey : configs.getKeys(false)) {
 						if (childrenKey == null) continue;
 
-						String matrial = childrenKey.toUpperCase();
-						isUpperCase = childrenKey.equals(matrial);
-						Material item = Enums.getIfPresent(Material.class, matrial).orNull();
-						if (item == null)
-							continue;
 						int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
 						int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
 
 						int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
+						String itemStack = customConfig.getString(value + "." + childrenKey + ".ItemType", "AIR");
+						if (itemStack.equals("AIR"))
+							itemStack = new String(childrenKey).toUpperCase();
+						Material material = Enums.getIfPresent(Material.class, itemStack).orNull();
 						boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".Metadata");
 						String itemdata = customConfig.getString(value + "." + childrenKey + ".Itemdata");
+						String itemdataFileName = customConfig.getString(value + "." + childrenKey + ".Itemdata_Filename", ItemData.getInstance().getFileName());
 
-						data.put(item, new LootData(chance, minimum, maximum, itemdata, haveMetadata));
+						data.put(childrenKey, new org.brokenarrow.lootboxes.builder.LootData.Builder()
+								.setChance(chance)
+								.setMinimum(minimum)
+								.setMaximum(maximum)
+								.setMaterial(material)
+								.setItemdataPath(itemdata)
+								.setItemdataFileName(itemdataFileName)
+								.setHaveMetadata(haveMetadata).build());
 					}
 			} else if (value.equals("Global_Values")) {
 				int minimum = customConfig.getInt(value + ".Minimum");
 				int maximum = customConfig.getInt(value + ".Maximum");
 
-				LootData globalValues = data.get("Global_Values");
+				org.brokenarrow.lootboxes.builder.LootData globalValues = data.get("Global_Values");
 				if (globalValues != null) {
 					if (globalValues.getMinimum() > 0)
 						minimum = globalValues.getMinimum();
@@ -191,26 +318,35 @@ public class LootItems {
 						maximum = globalValues.getMaximum();
 				}
 
-				data.put(value, new LootData(0, minimum, maximum, "", false));
+				data.put(value, new org.brokenarrow.lootboxes.builder.LootData.Builder()
+						.setChance(0)
+						.setMinimum(minimum)
+						.setMaximum(maximum)
+						.setMaterial(Material.AIR)
+						.setItemdataPath("")
+						.setItemdataFileName("")
+						.setHaveMetadata(false).build());
 			}
 		}
 		this.settings.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
-		System.out.println("this.settings " + this.settings);
-		save("test");
 	}
 
 	public static class LootData {
 		private final int chance;
 		private final int minimum;
 		private final int maximum;
-		private final String itemdata;
+		private final Material material;
+		private final String itemdataPath;
+		private final String itemdataFileName;
 		private final boolean haveMetadata;
 
-		public LootData(int chance, int minimum, int maximum, String itemdata, boolean haveMetadata) {
+		public LootData(int chance, int minimum, int maximum, Material material, String itemdataPath, String itemdataFileName, boolean haveMetadata) {
 			this.chance = chance;
 			this.minimum = minimum;
 			this.maximum = maximum;
-			this.itemdata = itemdata;
+			this.material = material;
+			this.itemdataPath = itemdataPath;
+			this.itemdataFileName = itemdataFileName;
 			this.haveMetadata = haveMetadata;
 		}
 
@@ -226,12 +362,20 @@ public class LootItems {
 			return maximum;
 		}
 
+		public Material getMaterial() {
+			return material;
+		}
+
 		public boolean isHaveMetadata() {
 			return haveMetadata;
 		}
 
-		public String getItemdata() {
-			return itemdata;
+		public String getItemdataPath() {
+			return itemdataPath;
+		}
+
+		public String getItemdataFileName() {
+			return itemdataFileName;
 		}
 
 		public String getString() {
@@ -239,7 +383,7 @@ public class LootItems {
 					"\t'chance '=' " + chance + "'\n" +
 					"\t'minimum '=' " + minimum + "'\n" +
 					"\t'maximum '=' " + maximum + "'\n" +
-					"\t'itemdata '=' " + itemdata + "'\n" +
+					"\t'itemdata '=' " + itemdataPath + "'\n" +
 					"\t'haveMetadata '=' " + haveMetadata + "'\n" +
 					'}';
 		}
