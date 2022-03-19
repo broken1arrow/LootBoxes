@@ -1,9 +1,10 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.EditCreateLootTable;
+import org.bukkit.Bukkit;
 import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.conversations.ConversationCanceller;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -26,10 +27,6 @@ public class testprompt extends SimpleConversation {
 		System.out.println("is enneded " + canceledFromInactivity);
 	}
 
-	@Override
-	protected ConversationCanceller getCanceller() {
-		return new SimpleCanceller("one");
-	}
 
 	public class Command extends SimplePromp {
 
@@ -42,7 +39,7 @@ public class testprompt extends SimpleConversation {
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 			if (!lootItems.getSettings().containsKey(input))
-				lootItems.addTable(input);
+				Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> lootItems.addTable(input), 5);
 			new EditCreateLootTable().menuOpen(getPlayer(context));
 			return null;
 		}
