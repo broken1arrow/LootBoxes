@@ -6,6 +6,7 @@ public final class SettingsData {
 	private final boolean spawnOnSurface;
 	private final boolean warnBeforeSaveWithMetadata;
 	private final boolean saveMetadataOnItem;
+	private final boolean randomContinerSpawn;
 	private final Builder builder;
 
 	private SettingsData(Builder builder) {
@@ -13,6 +14,7 @@ public final class SettingsData {
 		this.spawnOnSurface = builder.spawnOnSurface;
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
 		this.saveMetadataOnItem = builder.saveMetadataOnItem;
+		this.randomContinerSpawn = builder.randomContinerSpawn;
 		this.builder = builder;
 
 	}
@@ -43,6 +45,10 @@ public final class SettingsData {
 		return saveMetadataOnItem;
 	}
 
+	public boolean isRandomContinerSpawn() {
+		return randomContinerSpawn;
+	}
+
 	public Builder getBuilder() {
 		return builder;
 	}
@@ -53,6 +59,7 @@ public final class SettingsData {
 		private boolean spawnOnSurface;
 		private boolean warnBeforeSaveWithMetadata;
 		private boolean saveMetadataOnItem;
+		private boolean randomContinerSpawn;
 
 		/**
 		 * Set max below Surface. Defult will it spawn as higest 1 block below highest block.
@@ -95,6 +102,11 @@ public final class SettingsData {
 		 */
 		public Builder setSaveMetadataOnItem(boolean saveMetadataOnItem) {
 			this.saveMetadataOnItem = saveMetadataOnItem;
+			return this;
+		}
+
+		public Builder setRandomContinerSpawn(boolean randomContinerSpawn) {
+			this.randomContinerSpawn = randomContinerSpawn;
 			return this;
 		}
 
