@@ -123,7 +123,7 @@ public class CustomizeItem extends MenuHolder {
 			seachButton = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-					
+
 					if (clickType.isLeftClick())
 						new SeachForItem(lootTable, itemToEdit).start(player);
 					else
@@ -156,16 +156,7 @@ public class CustomizeItem extends MenuHolder {
 
 				@Override
 				public ItemStack getItem(Object object) {
-					/*if (itemsToSearchFor != null && !itemsToSearchFor.isEmpty()) {
-						if (object instanceof Material) {
-							if (!itemsToSearchFor.toUpperCase().contains(((Material) object).name()))
-								return null;
-						}
-						if (object instanceof ItemStack)
-							if (!itemsToSearchFor.contains(((ItemStack) object).getType().name()))
-								return null;
-					}*/
-					System.out.println("object " + object);
+					
 					ItemStack itemstack = null;
 					if (object instanceof Material)
 						itemstack = new ItemStack((Material) object);
@@ -174,11 +165,6 @@ public class CustomizeItem extends MenuHolder {
 					if (itemstack == null)
 						return null;
 					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders("", itemstack.getType()).build();
-					//System.out.println("object " + object);
-					//System.out.println("object fffff" + itemstack);
-					/*if (itemstack.isSimilar(forward.getItem()) || itemstack.isSimilar(previous.getItem())) {
-						return itemstack;
-					}*/
 					return CreateItemUtily.of(itemstack, gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
