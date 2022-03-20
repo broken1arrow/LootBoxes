@@ -14,9 +14,6 @@ public class GuiCommand extends SubCommandsUtility {
 
 	@Override
 	protected void onCommand() {
-		System.out.println("test if it works " + getLabel());
-		System.out.println("test if it works " + getPermission());
-		System.out.println("test if it works " + getPlayer());
 		new MainMenu().menuOpen(getPlayer());
 	}
 
