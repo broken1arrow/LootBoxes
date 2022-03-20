@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.lootdata;
 import com.google.common.base.Enums;
 import lombok.Getter;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
 import org.brokenarrow.lootboxes.untlity.LootDataSave;
 import org.bukkit.Material;
@@ -94,8 +95,8 @@ public class LootItems {
 		return null;
 	}
 
-	public org.brokenarrow.lootboxes.builder.LootData getLootData(String table, String itemToEdit) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> dataMap = settings.get(table);
+	public LootData getLootData(String table, String itemToEdit) {
+		Map<String, LootData> dataMap = settings.get(table);
 		if (dataMap != null) {
 			return dataMap.get(itemToEdit);
 		}
@@ -103,8 +104,8 @@ public class LootItems {
 	}
 
 	public void setLootData(LootDataSave enums, String table, String itemToEdit, Object object) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = settings.get(table);
-		org.brokenarrow.lootboxes.builder.LootData.Builder lootData = data.get(itemToEdit).getBuilder();
+		Map<String, LootData> data = settings.get(table);
+		LootData.Builder lootData = data.get(itemToEdit).getBuilder();
 
 		switch (enums) {
 			case CHANCE:
@@ -137,10 +138,10 @@ public class LootItems {
 
 	}
 
-	public void removeItem(String table, String itemToEdit) {
+	public void removeItem(String table, String itemToRemove) {
 		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
 		if (items != null) {
-			items.remove(itemToEdit);
+			items.remove(itemToRemove);
 		}
 		save(table);
 	}
@@ -330,7 +331,7 @@ public class LootItems {
 		}
 		this.settings.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
 	}
-
+/*
 	public static class LootData {
 		private final int chance;
 		private final int minimum;
@@ -388,5 +389,5 @@ public class LootItems {
 					'}';
 		}
 
-	}
+	}*/
 }
