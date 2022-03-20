@@ -8,6 +8,7 @@ import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnLootContainer;
+import org.brokenarrow.lootboxes.untlity.MatrialList;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
 import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
@@ -23,7 +24,7 @@ public class Lootboxes extends JavaPlugin {
 	static Lootboxes plugin;
 	private Settings settings;
 	private SpawnLootContainer spawnLootContainer;
-
+	private MatrialList matrialList;
 	private boolean placeholderAPIMissing;
 	private CommandGroupUtility commandGroupUtility;
 	private CommandRegister commandRegister;
@@ -33,6 +34,7 @@ public class Lootboxes extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		this.spawnLootContainer = new SpawnLootContainer();
+		this.matrialList = new MatrialList();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
 		this.settings = new Settings();
@@ -75,6 +77,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public Settings getSettings() {
 		return settings;
+	}
+
+	public MatrialList getMatrialList() {
+		return matrialList;
 	}
 
 	public SpawnLootContainer getSpawnLootContainer() {
