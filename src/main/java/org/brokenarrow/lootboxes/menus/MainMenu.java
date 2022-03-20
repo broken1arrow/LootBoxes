@@ -36,6 +36,7 @@ public class MainMenu extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				GuiTempletsYaml gui = guiTemplets.menuKey("Edit_LootTable").build();
+
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -62,9 +63,10 @@ public class MainMenu extends MenuHolder {
 	@Override
 	public ItemStack getItemAt(int slot) {
 
-		if (slot == 5)
+		if (guiTemplets.menuKey("Edit_LootTable").build().getSlot().contains(slot))
 			return editAndCreateTable.getItem();
-		if (slot == 6)
+
+		if (guiTemplets.menuKey("Containers").build().getSlot().contains(slot))
 			return defultSettings.getItem();
 
 		return null;
