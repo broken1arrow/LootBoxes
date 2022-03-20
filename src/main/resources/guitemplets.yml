@@ -47,7 +47,7 @@ Gui_Templets:
   # EditCreateItems.
   Edit_Items_For_LootTable:
     Menu_Size: 45
-    Menu_Title: "&1Add and remove items"
+    Menu_Title: "&1Add and remove items. Page: {0}"
     FillSpace: 0-26
     Item_List:
       Display_name: "&6Item {0}"
@@ -56,7 +56,8 @@ Gui_Templets:
       Icon: ""
       Lore:
         - ""
-        - "&2Click to edit this item"
+        - "&2LeftClick to edit this item"
+        - "&2RightClick to get the item"
         - "Chance: {1}"
         - "Minimum: {2}"
         - "Maximum: {3}"
@@ -64,7 +65,7 @@ Gui_Templets:
     Save_Items:
       Display_name: "&6Save items"
       Enchant: true
-      Slot: 32
+      Slot: 40
       Icon: GOLD_INGOT
       Lore:
         - ""
@@ -72,7 +73,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Slot: 35
+      Slot: 44
       Icon: CHORUS_FRUIT
       Lore:
         - ""
@@ -81,7 +82,7 @@ Gui_Templets:
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
-      Slot: 34
+      Slot: 37
       Icon: ARROW
       Lore:
         - ""
@@ -90,7 +91,7 @@ Gui_Templets:
     Previous_button:
       Display_name: "&bPrevious"
       Enchant: true
-      Slot: 28
+      Slot: 42
       Icon: ARROW
       Lore:
         - ""
@@ -162,7 +163,7 @@ Gui_Templets:
   # Create loot table menu.
   LootTables:
     Menu_Size: 45
-    Menu_Title: "&1Loot tables"
+    Menu_Title: "&1Loot tables. Page: {0}"
     # slots you want to use to add items inside.
     FillSpace: 9-35
     # max amount of item on the page (if you not fill all slots and wants more pages).
@@ -221,4 +222,130 @@ Gui_Templets:
       Slot: 0-8
       Lore:
         - ""
-  
+  ######################################################
+  # CustomizeItem menu.
+  CustomizeItem:
+    Menu_Size: 45
+    Menu_Title: "&1Edit this item"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    # max amount of item on the page (if you not fill all slots and wants more pages).
+    Max_Amount_Of_Items: 13
+    Change_Item:
+      Display_name: "&bChange the item"
+      Enchant: true
+      Icon: FIREWORK_STAR
+      Slot: 15
+      Lore:
+        - "Change the item"
+    Remove_Button:
+      Display_name: "&bRemove item"
+      Enchant: true
+      Icon: BARRIER
+      Slot: 20
+      Lore:
+        - "Remove this item"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # ChangeItem menu.
+  ChangeItem:
+    Menu_Size: 45
+    Menu_Title: "&1Change item. Page: {0}"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    Change_Item:
+      Display_name: "&bChange the item to {1}"
+      Enchant: true
+      Icon: ""
+      Slot: 0
+      Lore:
+        - "Change the item type"
+    Seach_button:
+      Display_name: "&bSeach for a item"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "Leftclick for seach for a item"
+        - "Rightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
