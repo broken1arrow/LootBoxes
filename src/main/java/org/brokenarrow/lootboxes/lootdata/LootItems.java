@@ -26,51 +26,52 @@ public class LootItems {
 	private File customConfigFile;
 	private FileConfiguration customConfig;
 	private boolean isUpperCase;
-	private final Map<String, Map<String, org.brokenarrow.lootboxes.builder.LootData>> settings = new HashMap<>();
+	private final Map<String, Map<String, LootData>> cachedLoot = new HashMap<>();
 
 	public LootItems() {
 		this.yamlFiles = new AllYamlFilesInFolder("tables", true);
 	}
 
-	public Map<String, Map<String, org.brokenarrow.lootboxes.builder.LootData>> getSettings() {
-		return settings;
+	public Map<String, Map<String, LootData>> getCachedLoot() {
+		return cachedLoot;
 	}
 
 	public void addTable(String table) {
-		settings.put(table, new HashMap<>());
+		cachedLoot.put(table, new HashMap<>());
 		save(table);
 	}
 
+	public void setCachedLoot(String lootTable, String lootItem, LootData lootData) {
+		Map<String, LootData> lootDataMap = cachedLoot.get(lootTable);
+		if (lootDataMap != null)
+			lootDataMap.put(lootItem, lootData);
+		else
+			lootDataMap = Collections.singletonMap(lootItem, lootData);
+
+		cachedLoot.put(lootTable, lootDataMap);
+	}
+
 	public String addItems(String table, ItemStack itemStack, String metadatafileName, String itemdataPath, boolean haveMetadata) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = cachedLoot.get(table);
 
 		String loot = getFirstAvailableName(table, itemStack.getType() + "");
-		if (items != null) {
-			items.put(loot, new org.brokenarrow.lootboxes.builder.LootData.Builder()
-					.setChance(1)
-					.setMinimum(1)
-					.setMaximum(itemStack.getAmount())
-					.setMaterial(itemStack.getType())
-					.setItemdataPath(itemdataPath)
-					.setItemdataFileName(metadatafileName)
-					.setHaveMetadata(haveMetadata).build());
-		} else {
+		if (items == null) {
 			items = new HashMap<>();
-			items.put(loot, new org.brokenarrow.lootboxes.builder.LootData.Builder()
-					.setChance(1)
-					.setMinimum(1)
-					.setMaximum(itemStack.getAmount())
-					.setMaterial(itemStack.getType())
-					.setItemdataPath(itemdataPath)
-					.setItemdataFileName(metadatafileName)
-					.setHaveMetadata(haveMetadata).build());
 		}
-		settings.put(table, items);
+		items.put(loot, new org.brokenarrow.lootboxes.builder.LootData.Builder()
+				.setChance(1)
+				.setMinimum(1)
+				.setMaximum(itemStack.getAmount())
+				.setMaterial(itemStack.getType())
+				.setItemdataPath(itemdataPath)
+				.setItemdataFileName(metadatafileName)
+				.setHaveMetadata(haveMetadata).build());
+		cachedLoot.put(table, items);
 		return loot;
 	}
 
 	public boolean isCacheItem(String table, String itemPath) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = settings.get(table);
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = cachedLoot.get(table);
 		if (data != null)
 			return data.get(itemPath) != null;
 		return false;
@@ -84,11 +85,11 @@ public class LootItems {
 	}
 
 	public List<String> getItems(String table) {
-		return settings.get(table).keySet().stream().filter(key -> key != null && !key.equalsIgnoreCase("global_values")).collect(Collectors.toList());
+		return cachedLoot.get(table).keySet().stream().filter(key -> key != null && !key.equalsIgnoreCase("global_values")).collect(Collectors.toList());
 	}
 
 	public Material getMaterial(String table, String itemToEdit) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = cachedLoot.get(table);
 		if (items != null) {
 			return items.get(itemToEdit).getMaterial();
 		}
@@ -96,15 +97,20 @@ public class LootItems {
 	}
 
 	public LootData getLootData(String table, String itemToEdit) {
-		Map<String, LootData> dataMap = settings.get(table);
+		Map<String, LootData> dataMap = cachedLoot.get(table);
 		if (dataMap != null) {
 			return dataMap.get(itemToEdit);
 		}
 		return null;
 	}
 
+	public void setLootData(String table, String itemToEdit, Object[] object, LootDataSave... enums) {
+		for (LootDataSave lootDataSave : enums)
+			setLootData(lootDataSave, table, itemToEdit, object);
+	}
+
 	public void setLootData(LootDataSave enums, String table, String itemToEdit, Object object) {
-		Map<String, LootData> data = settings.get(table);
+		Map<String, LootData> data = cachedLoot.get(table);
 		LootData.Builder lootData = data.get(itemToEdit).getBuilder();
 
 		switch (enums) {
@@ -133,13 +139,13 @@ public class LootItems {
 		if (data == null)
 			data = new HashMap<>();
 		data.put(itemToEdit, lootData.build());
-		settings.put(table, data);
+		cachedLoot.put(table, data);
 
 
 	}
 
 	public void removeItem(String table, String itemToRemove) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = settings.get(table);
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = cachedLoot.get(table);
 		if (items != null) {
 			items.remove(itemToRemove);
 		}
@@ -148,7 +154,7 @@ public class LootItems {
 
 	public ItemStack[] getItems() {
 		List<ItemStack> items = new ArrayList<>();
-		for (Map<String, org.brokenarrow.lootboxes.builder.LootData> values : settings.values())
+		for (Map<String, org.brokenarrow.lootboxes.builder.LootData> values : cachedLoot.values())
 			for (Object key : values.keySet())
 				if (key instanceof Material)
 					items.add(new ItemStack((Material) key));
@@ -204,7 +210,7 @@ public class LootItems {
 	public void saveDataToFile(File file) {
 		String fileName = this.yamlFiles.getFileName(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> settings = this.settings.get(fileName);
+		Map<String, org.brokenarrow.lootboxes.builder.LootData> settings = this.cachedLoot.get(fileName);
 		if (settings != null) {
 			for (String childrenKey : settings.keySet()) {
 				if (childrenKey == null) continue;
@@ -329,7 +335,7 @@ public class LootItems {
 						.setHaveMetadata(false).build());
 			}
 		}
-		this.settings.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
+		this.cachedLoot.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
 	}
 /*
 	public static class LootData {
