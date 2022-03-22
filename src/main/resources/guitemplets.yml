@@ -58,10 +58,10 @@ Gui_Templets:
         - ""
         - "&2LeftClick to edit this item"
         - "&2RightClick to get the item"
-        - "Chance: {1}"
-        - "Minimum: {2}"
-        - "Maximum: {3}"
-        - "HaveMetadata: {4}"
+        - "&aChance:&6 {1}"
+        - "&aMinimum:&6 {2}"
+        - "&aMaximum:&6 {3}"
+        - "&aHaveMetadata:&6 {4}"
     Save_Items:
       Display_name: "&6Save items"
       Enchant: true
@@ -235,16 +235,23 @@ Gui_Templets:
       Display_name: "&bChange the item"
       Enchant: true
       Icon: FIREWORK_STAR
-      Slot: 15
+      Slot: 10
       Lore:
-        - "Change the item"
+        - "&aChange the item type"
+    Enchant_Item:
+      Display_name: "&bEnchant the item"
+      Enchant: true
+      Icon: ENCHANTED_BOOK
+      Slot: 13
+      Lore:
+        - "&aEnchant the item"
     Remove_Button:
       Display_name: "&bRemove item"
       Enchant: true
       Icon: BARRIER
-      Slot: 20
+      Slot: 28
       Lore:
-        - "Remove this item"
+        - "&aRemove this item"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -308,6 +315,80 @@ Gui_Templets:
       Lore:
         - "Leftclick for seach for a item"
         - "Rightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # EnchantMents for items menu.
+  EnchantMents:
+    Menu_Size: 45
+    Menu_Title: "&1Enchant item. Page: {0}"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    Enchant_Item:
+      Display_name: "&bEnchant the item with {1}"
+      Enchant: false
+      Icon: BOOK
+      Slot: 0
+      Lore:
+        - "&aEnchant the item"
+    Item_Has_Enchantment:
+      Display_name: "&bEnchant the item with {1}"
+      Enchant: false
+      Icon: BOOK
+      Slot: 0
+      Lore:
+        - "&aThis item alredy have this"
+        - "&aenchantment. Click to change"
+        - "&alevel."
+        - ""
+        - "&aCurrent enchant level: {2}"
+    Seach_button:
+      Display_name: "&bSeach for a enchant"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a enchant"
+        - "&aRightclick for reset the seach"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
