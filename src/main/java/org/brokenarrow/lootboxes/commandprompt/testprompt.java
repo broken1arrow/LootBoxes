@@ -38,7 +38,7 @@ public class testprompt extends SimpleConversation {
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-			if (!lootItems.getSettings().containsKey(input))
+			if (!lootItems.getCachedLoot().containsKey(input))
 				Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> lootItems.addTable(input), 5);
 			new EditCreateLootTable().menuOpen(getPlayer(context));
 			return null;
