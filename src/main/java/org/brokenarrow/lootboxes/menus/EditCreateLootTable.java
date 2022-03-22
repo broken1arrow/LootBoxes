@@ -31,7 +31,7 @@ public class EditCreateLootTable extends MenuHolder {
 	Map<ItemStack, ItemStack> data = new HashMap<>();
 
 	public EditCreateLootTable() {
-		super(new ArrayList<>(LootItems.getInstance().getSettings().keySet()));
+		super(new ArrayList<>(LootItems.getInstance().getCachedLoot().keySet()));
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "LootTables").placeholders(getPageNumber());
 
 		setMenuSize(guiTemplets.build().getGuiSize());
