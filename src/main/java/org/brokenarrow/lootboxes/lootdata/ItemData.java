@@ -31,10 +31,17 @@ public class ItemData {
 		return cacheItemData;
 	}
 
-	public ItemStack getCacheItemData(String filname, String path) {
+	public ItemStack getCacheItemData(String filname, String itemdataPath) {
 		Map<String, ItemStack> data = cacheItemData.get(filname);
 		if (data != null)
-			return data.get(path);
+			return data.get(itemdataPath);
+		return null;
+	}
+
+	public ItemStack removeCacheItemData(String filname, String itemdataPath) {
+		Map<String, ItemStack> data = cacheItemData.get(filname);
+		if (data != null)
+			return data.remove(itemdataPath);
 		return null;
 	}
 
@@ -42,21 +49,48 @@ public class ItemData {
 		return getCacheItemData(getFileName(), path);
 	}
 
-	public String setCacheItemData(String filename, ItemStack itemstack) {
-		Map<String, ItemStack> file = cacheItemData.get(getFileName());
+	public String updateCacheItemData(String itemdataPath, ItemStack itemstack) {
+		Map<String, ItemStack> itemStackMap = this.cacheItemData.get(getFileName());
 
-		filename = getFirstAvailableName(filename);
-		if (file == null) {
-			file = new HashMap<>();
+		if (itemStackMap == null) {
+			itemStackMap = new HashMap<>();
 		}
-		file.put(filename, itemstack);
-		cacheItemData.put(getFileName(), file);
-		return filename;
+		itemStackMap.put(itemdataPath, itemstack);
+		this.cacheItemData.put(getFileName(), itemStackMap);
+
+		return itemdataPath;
+	}
+
+	public String setCacheItemData(String itemdataPath, ItemStack itemstack) {
+		Map<String, ItemStack> itemStackMap = cacheItemData.get(getFileName());
+
+		if (itemdataPath == null || itemdataPath.isEmpty())
+			return null;
+		itemdataPath = getFirstAvailableName(itemdataPath);
+
+		if (itemStackMap == null) {
+			itemStackMap = new HashMap<>();
+		}
+		itemStackMap.put(itemdataPath, itemstack);
+		cacheItemData.put(getFileName(), itemStackMap);
+		return itemdataPath;
+	}
+
+	public String setCacheItemData(String itemdataPath, ItemStack itemstack, boolean itemIsNull) {
+		Map<String, ItemStack> itemStackMap = cacheItemData.get(getFileName());
+
+		itemdataPath = getFirstAvailableName(itemdataPath);
+		if (itemStackMap == null) {
+			itemStackMap = new HashMap<>();
+		}
+		itemStackMap.put(itemdataPath, itemstack);
+		cacheItemData.put(getFileName(), itemStackMap);
+		return itemdataPath;
 	}
 
 	public boolean isCacheItemData(String itemKey) {
 		Map<String, ItemStack> data = cacheItemData.get(getFileName());
-		
+
 		if (data != null)
 			return data.get(itemKey) != null;
 		return false;
