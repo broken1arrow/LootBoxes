@@ -15,7 +15,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -108,7 +110,7 @@ public class EditCreateItems extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof String) {
-					LootData data = lootItems.getSettings().get(lootTable).get(object);
+					LootData data = lootItems.getCachedLoot().get(lootTable).get(object);
 					if (data != null) {
 						ItemStack itemStack;
 						if (data.isHaveMetadata()) {
@@ -123,10 +125,18 @@ public class EditCreateItems extends MenuHolder {
 								data.getMaximum(),
 								data.isHaveMetadata()
 						).build();
-
-						ItemStack guiItem = CreateItemUtily.of(itemStack.clone(),
+						ItemMeta itemMeta = itemStack.getItemMeta();
+					/*	itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+						itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+						itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+						itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+						itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+						itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);*/
+						ItemStack clonedItem = itemStack.clone();
+						clonedItem.setItemMeta(itemMeta);
+						ItemStack guiItem = CreateItemUtily.of(clonedItem,
 								gui.getDisplayName(),
-								gui.getLore()).makeItemStack();
+								gui.getLore()).setShowEnchantments(true).setItemFlags(ItemFlag.HIDE_PLACED_ON).makeItemStack();
 						cacheItemData.put(guiItem, new ItemData(itemStack, (String) object));
 						return guiItem;
 					}
