@@ -273,7 +273,7 @@ public class GuiTempletsYaml {
 			else if (icon.equals("Player_Skull") && player != null) {
 				return SkullCreator.itemFromUuid(player);
 			} else {
-				return CreateItemUtily.of(icon).isglow(glow).makeItemStack();
+				return CreateItemUtily.of(icon).setGlow(glow).makeItemStack();
 
 			}
 		}
