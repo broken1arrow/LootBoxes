@@ -27,15 +27,18 @@ public final class CreateItemUtily {
 	private final Iterable<?> itemArray;
 	private final String displayName;
 	private final List<String> lore;
-	private List<String> enchantments;
+	private final List<Enchantment> enchantments = new ArrayList<>();
+	private final List<ItemFlag> visibleItemFlags = new ArrayList<>();
+	private final List<ItemFlag> itemFlags = Arrays.asList(ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS);
 	private String itemMetaKey;
 	private String itemMetaValue;
 	private Map<String, String> itemMetaMap;
 	private int amoutOfItems;
-	private int enchantmentsLevel;
+	private int enchantmentsLevel = 1;
 	private boolean glow;
 	private boolean showEnchantments;
 	private boolean ignoreLevelRestrictions;
+
 
 	private CreateItemUtily(final Bulider bulider) {
 		this.itemStack = bulider.itemStack;
@@ -146,13 +149,13 @@ public final class CreateItemUtily {
 
 	/**
 	 * Set glow on item and will not show the enchantments.
-	 * Use {@link #addEnchantments(List)} or {@link #addEnchantments(String...)}, for set custom
+	 * Use {@link #addEnchantments(List)} or {@link #addEnchantments(Object...)}, for set custom
 	 * enchants.
 	 *
 	 * @param glow set it true and the item will glow.
 	 * @return this class.
 	 */
-	public CreateItemUtily isglow(final boolean glow) {
+	public CreateItemUtily setGlow(final boolean glow) {
 		this.glow = glow;
 		return this;
 	}
@@ -160,7 +163,7 @@ public final class CreateItemUtily {
 	/**
 	 * Set enchantments level on the item.
 	 * If you want to bypass level restrictions.
-	 * {@link #isignoreLevelRestrictions(boolean)}
+	 * {@link #setIgnoreLevelRestrictions(boolean)}
 	 *
 	 * @param enchantmentsLevel type level you want to set.
 	 * @return this class.
@@ -172,7 +175,7 @@ public final class CreateItemUtily {
 	}
 
 	/**
-	 * Add own enchantments. Set {@link #isShowEnchantments(boolean)} to true
+	 * Add own enchantments. Set {@link #setShowEnchantments(boolean)} to true
 	 * if you whant to hide all enchants (defult so will it not hide enchants).
 	 * <p>
 	 * This method uses varargs and add it to list, Like this "a","b","c".
@@ -181,22 +184,35 @@ public final class CreateItemUtily {
 	 * @return this class.
 	 */
 
-	public CreateItemUtily addEnchantments(final String... enchantments) {
+	public CreateItemUtily addEnchantments(final Object... enchantments) {
 		return addEnchantments(Arrays.asList(enchantments));
 	}
 
 	/**
-	 * Add own enchantments. Set {@link #isShowEnchantments(boolean)} to true
+	 * Add own enchantments. Set {@link #setShowEnchantments(boolean)} to true
 	 * if you whant to hide all enchants (defult so will it not hide enchants).
 	 *
 	 * @param enchantments list of enchantments you want to add.
 	 * @return this class.
 	 */
 
-	public CreateItemUtily addEnchantments(final List<String> enchantments) {
-		this.enchantments = enchantments;
+	public CreateItemUtily addEnchantments(final List<Object> enchantments) {
+		Enchantment enchantment = null;
+		for (Object enchant : enchantments) {
+
+			if (enchant instanceof String)
+				enchantment = Enchantment.getByKey(NamespacedKey.minecraft((String) enchant));
+			else if (enchant instanceof Enchantment)
+				enchantment = (Enchantment) enchant;
+
+			if (enchantment != null)
+				this.enchantments.add(enchantment);
+			else
+				Lootboxes.getInstance().getLogger().log(Level.INFO, "your enchantment: " + enchant + " ,are not valid.");
+		}
 		return this;
 	}
+
 
 	/**
 	 * Ignore level restrictions. So you can set any level you want.
@@ -204,20 +220,20 @@ public final class CreateItemUtily {
 	 * @param ignoreLevelRestrictions true if you want to bypass level restrictions;
 	 * @return this class.
 	 */
-	public CreateItemUtily isignoreLevelRestrictions(final boolean ignoreLevelRestrictions) {
+	public CreateItemUtily setIgnoreLevelRestrictions(final boolean ignoreLevelRestrictions) {
 		this.ignoreLevelRestrictions = ignoreLevelRestrictions;
 		return this;
 	}
 
 	/**
-	 * When use {@link #addEnchantments(List)} or {@link #addEnchantments(String...)} and
-	 * want to hide enchants set it to true. When use {@link #isglow(boolean)} it will defult hide
-	 * enchants, but if you set this to true it will show the enchant.
+	 * When use {@link #addEnchantments(List)} or {@link #addEnchantments(Object...)} and
+	 * want to show enchants set it to true. When use {@link #setGlow(boolean)} it will defult hide
+	 * enchants, if you set #setGlow to true and set this to true it will show the enchantments.
 	 *
 	 * @param showEnchantments true and will show enchants.
 	 * @return this class.
 	 */
-	public CreateItemUtily isShowEnchantments(final boolean showEnchantments) {
+	public CreateItemUtily setShowEnchantments(final boolean showEnchantments) {
 		this.showEnchantments = showEnchantments;
 		return this;
 	}
@@ -244,6 +260,17 @@ public final class CreateItemUtily {
 	 */
 	public CreateItemUtily setItemMetaDataList(final Map<String, String> itemMetaMap) {
 		this.itemMetaMap = itemMetaMap;
+		return this;
+	}
+
+	/**
+	 * Hide one or several metadata values on a itemstack.
+	 *
+	 * @param itemFlags add one or several flags you not want to hide.
+	 * @return this class.
+	 */
+	public CreateItemUtily setItemFlags(ItemFlag... itemFlags) {
+		this.visibleItemFlags.addAll(Arrays.asList(itemFlags));
 		return this;
 	}
 
@@ -339,30 +366,30 @@ public final class CreateItemUtily {
 	}
 
 	private void addEnchantments(final ItemMeta itemMeta) {
-		if (this.enchantments != null && !this.enchantments.isEmpty()) {
-			for (final String enchant : this.enchantments) {
-				final Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchant));
-				if (enchantment != null)
-					itemMeta.addEnchant(enchantment, this.enchantmentsLevel, this.ignoreLevelRestrictions);
-				else
-					Lootboxes.getInstance().getLogger().log(Level.INFO, "your enchantment: " + enchant + " ,are not valid.");
+		if (!this.enchantments.isEmpty()) {
+			for (final Enchantment enchant : this.enchantments) {
+				if (enchant == null) {
+					Lootboxes.getInstance().getLogger().log(Level.INFO, "Your enchantment are null.");
+					continue;
+				}
+				boolean haveEnchant = itemMeta.addEnchant(enchant, this.enchantmentsLevel, this.ignoreLevelRestrictions);
+				System.out.println("enchant " + enchant + " haveEnchant " + haveEnchant);
 			}
-			if (this.showEnchantments)
+			if (!this.showEnchantments)
 				hideEnchantments(itemMeta);
 		} else if (this.glow) {
 			itemMeta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
+			if (!this.showEnchantments)
+				hideEnchantments(itemMeta);
+		} else {
 			if (!this.showEnchantments)
 				hideEnchantments(itemMeta);
 		}
 	}
 
 	private void hideEnchantments(final ItemMeta itemMeta) {
-		itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-		itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-		itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-		itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-		itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+
+		itemMeta.addItemFlags(itemFlags.stream().filter(itemFlag -> !visibleItemFlags.contains(itemFlag)).toArray(ItemFlag[]::new));
 	}
 
 	private List<String> translateColors(final List<String> rawLore) {
@@ -452,6 +479,6 @@ public final class CreateItemUtily {
 			return new CreateItemUtily(this);
 		}
 	}
-	
+
 
 }
