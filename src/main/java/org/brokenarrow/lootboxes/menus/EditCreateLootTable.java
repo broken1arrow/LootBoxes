@@ -84,11 +84,12 @@ public class EditCreateLootTable extends MenuHolder {
 		listOfTables = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				if (object instanceof ItemStack) {
-					ItemStack itemStack = data.get(object);
+		
+				if (object instanceof String) {
+				/*	ItemStack itemStack = data.get(object);
 					ItemMeta itemMeta = itemStack.getItemMeta();
-					if (itemMeta != null && itemMeta.hasDisplayName())
-						new EditCreateItems(itemMeta.getDisplayName()).menuOpen(player);
+					if (itemMeta != null && itemMeta.hasDisplayName())*/
+					new EditCreateItems((String) object).menuOpen(player);
 				}
 			}
 
