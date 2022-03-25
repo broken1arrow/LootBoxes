@@ -15,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -91,8 +90,8 @@ public class EditCreateItems extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 
-				if (object instanceof ItemStack) {
-					ItemData itemData = cacheItemData.get(object);
+				if (object instanceof String) {
+					ItemData itemData = cacheItemData.get(clickedItem);
 					if (click.isRightClick())
 						player.getInventory().addItem(itemData.getItemStack());
 					else
@@ -118,25 +117,26 @@ public class EditCreateItems extends MenuHolder {
 						} else
 							itemStack = new ItemStack(data.getMaterial());
 						if (itemStack == null) return null;
+						ItemStack clonedItem = itemStack.clone();
 						GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
-								data.isHaveMetadata() && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : itemStack.getType().toString().toLowerCase(Locale.ROOT),
+								data.isHaveMetadata() && clonedItem.hasItemMeta() && clonedItem.getItemMeta().hasDisplayName() ? clonedItem.getItemMeta().getDisplayName() : clonedItem.getType().toString().toLowerCase(Locale.ROOT),
 								data.getChance(),
 								data.getMinimum(),
 								data.getMaximum(),
 								data.isHaveMetadata()
 						).build();
-						ItemMeta itemMeta = itemStack.getItemMeta();
+						ItemMeta itemMeta = clonedItem.getItemMeta();
 					/*	itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 						itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 						itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
 						itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
 						itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 						itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);*/
-						ItemStack clonedItem = itemStack.clone();
 						clonedItem.setItemMeta(itemMeta);
+
 						ItemStack guiItem = CreateItemUtily.of(clonedItem,
 								gui.getDisplayName(),
-								gui.getLore()).setShowEnchantments(true).setItemFlags(ItemFlag.HIDE_PLACED_ON).makeItemStack();
+								gui.getLore()).setShowEnchantments(true).makeItemStack();
 						cacheItemData.put(guiItem, new ItemData(itemStack, (String) object));
 						return guiItem;
 					}
