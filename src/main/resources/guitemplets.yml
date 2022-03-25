@@ -51,7 +51,7 @@ Gui_Templets:
     FillSpace: 0-26
     Item_List:
       Display_name: "&6Item {0}"
-      Enchant: true
+      Enchant: false
       Slot: 0
       Icon: ""
       Lore:
@@ -245,6 +245,16 @@ Gui_Templets:
       Slot: 13
       Lore:
         - "&aEnchant the item"
+    Change_Chance:
+      Display_name: "&bCurrent Chance {0}"
+      Enchant: true
+      Icon: ENCHANTED_BOOK
+      Slot: 30
+      Lore:
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to increse with&6 1"
+        - "&aRightclick and shift to increse with&6 {2}"
     Remove_Button:
       Display_name: "&bRemove item"
       Enchant: true
