@@ -136,10 +136,11 @@ public class ItemData {
 
 				if (fileToSave == null || fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
+					customConfig.set("Items", null);
 					for (Map.Entry<String, Map<String, ItemStack>> entry : cacheItemData.entrySet()) {
 
 						for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
-							customConfig.set(ent.getKey(), ent.getValue());
+							customConfig.set("Items." + ent.getKey(), ent.getValue());
 						}
 					}
 					try {
@@ -174,11 +175,10 @@ public class ItemData {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 			if (configs != null) {
 				for (String childrenKey : configs.getKeys(false)) {
+					ItemStack itemStack = customConfig.getItemStack(value + "." + childrenKey);
+					stack.put(childrenKey, itemStack);
 				}
 			}
-
-			ItemStack itemStack = customConfig.getItemStack(value);
-			stack.put(value, itemStack);
 			cacheItemData.put(key.getName().replace(".yml", ""), stack);
 			//items.add(itemStack);
 
