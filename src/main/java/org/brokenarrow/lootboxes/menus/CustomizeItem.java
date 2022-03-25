@@ -25,12 +25,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
+
 public class CustomizeItem extends MenuHolder {
 
 	private final MenuButton backButton;
 	private final MenuButton removeButton;
 	private final MenuButton changeItem;
 	private final MenuButton enchantItem;
+	private final MenuButton changeChance;
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
 
@@ -72,11 +75,46 @@ public class CustomizeItem extends MenuHolder {
 						gui.getLore()).makeItemStack();
 			}
 		};
+		this.changeChance = new MenuButton() {
+			@Override
+			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				LootData.Builder builder = data.getBuilder();
+				System.out.println("clickType " + clickType);
+				int amount = 0;
+				if (clickType == ClickType.LEFT)
+					amount += 1;
+				if (clickType == ClickType.RIGHT)
+					amount -= 1;
+				if (clickType == ClickType.SHIFT_LEFT)
+					amount += 10;
+				if (clickType == ClickType.SHIFT_RIGHT)
+					amount -= 10;
+				int chance = data.getChance() + amount;
+				if (chance > 100)
+					chance = 100;
+				if (chance < 0)
+					chance = 0;
+				builder.setChance(chance);
+				lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+				updateButtons();
+			}
+
+			@Override
+			public ItemStack getItem() {
+				LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance()).build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
+			}
+		};
 		removeButton = new MenuButton() {
 
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				lootItems.getLootData(lootTable, itemToEdit);
+				//lootItems.getLootData(lootTable, itemToEdit);
 				//lootItems.setLootData();
 				lootItems.removeItem(lootTable, itemToEdit);
 			}
@@ -119,6 +157,8 @@ public class CustomizeItem extends MenuHolder {
 			return changeItem.getItem();
 		if (guiTemplets.menuKey("Enchant_Item").build().getSlot().contains(slot))
 			return enchantItem.getItem();
+		if (guiTemplets.menuKey("Change_Chance").build().getSlot().contains(slot))
+			return changeChance.getItem();
 		if (guiTemplets.menuKey("Remove_Button").build().getSlot().contains(slot))
 			return removeButton.getItem();
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
@@ -316,55 +356,38 @@ public class CustomizeItem extends MenuHolder {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
-					if (o instanceof ItemStack)
-						System.out.println("object clicked " + cachedEnchantment.get(o));
-
-
 					if (clickType.isLeftClick()) {
-						if (o instanceof ItemStack)
-							new SaveEnchantment(lootTable, itemToEdit, cachedEnchantment.get(o)).start(player);
+						if (o instanceof Enchantment)
+							new SaveEnchantment(lootTable, itemToEdit, (Enchantment) o).start(player);
 					} else if (clickType.isRightClick()) {
-						if (o instanceof ItemStack) {
-							Enchantment enchantment = cachedEnchantment.get(o);
+						if (o instanceof Enchantment) {
+							Enchantment enchantment = (Enchantment) o;
 							LootData data = lootItems.getLootData(lootTable, itemToEdit);
 							ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
+							boolean hasenchantsLeft = false;
 							if (item.getItemMeta() != null) {
 								ItemMeta metadata = item.getItemMeta();
-								System.out.println("have meta before " + metadata.getEnchants());
-								System.out.println("item have meta before " + item);
-								metadata.getEnchants().remove(enchantment);
-								System.out.println("have meta after " + metadata.getEnchants());
-								System.out.println("item have meta after " + item);
+								metadata.removeEnchant(enchantment);
 								item.setItemMeta(metadata);
-								System.out.println("have meta after setmeta " + metadata.getEnchants());
-								System.out.println("item have meta after setmeta " + item);
+								hasenchantsLeft = !metadata.getEnchants().isEmpty();
 							}
-							CreateItemUtily.of(item).addEnchantments(cachedEnchantment.get(o));
+							CreateItemUtily.of(item).addEnchantments(enchantment);
 
-							String filePatch = itemData.setCacheItemData(data.getItemdataPath(), item);
-
+							//String filePatch = itemData.setCacheItemData(data.getItemdataPath(), item);
+							itemData.updateCacheItemData(data.getItemdataPath(), item);
+							if (!hasenchantsLeft)
+								itemData.removeCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
 							LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
-							builder.setHaveMetadata(true).setItemdataPath(filePatch);
+							builder.setHaveMetadata(hasenchantsLeft);
 
 							lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+							runtaskLater(5, () -> {
+								lootItems.save(lootTable);
+								itemData.save();
+							}, true);
 						}
+						updateButtons();
 					}
-			/*	if (o instanceof ItemStack) {
-						LootData data = lootItems.getLootData(lootTable, itemToEdit);
-						ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
-						CreateItemUtily.of(item).addEnchantments(cachedEnchantment.get(o));
-
-						String filePatch = itemData.setCacheItemData(data.getItemdataPath(), item);
-
-						LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
-						builder.setHaveMetadata(true).setItemdataPath(filePatch);
-
-						lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-					}
-					}else{
-
-					}*/
-
 				}
 
 				@Override
