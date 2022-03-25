@@ -187,7 +187,6 @@ public class LootItems {
 		if (dataFolder.exists() && dataFolders != null) {
 			if (!checkFolderExist(fileToSave, dataFolders)) {
 				final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", fileToSave + ".yml");
-				System.out.println("fileToSave " + fileToSave);
 				try {
 					newDataFolder.createNewFile();
 				} catch (IOException e) {
