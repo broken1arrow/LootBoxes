@@ -103,7 +103,7 @@
         <dependency>
             <groupId>com.github.broken1arrow</groupId>
             <artifactId>MenuLibrary</artifactId>
-            <version>0.31</version>
+            <version>0.33</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
