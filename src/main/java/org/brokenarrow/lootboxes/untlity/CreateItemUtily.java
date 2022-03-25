@@ -227,7 +227,7 @@ public final class CreateItemUtily {
 
 	/**
 	 * When use {@link #addEnchantments(List)} or {@link #addEnchantments(Object...)} and
-	 * want to show enchants set it to true. When use {@link #setGlow(boolean)} it will defult hide
+	 * want to not show enchants set it to true. When use {@link #setGlow(boolean)} it will defult hide
 	 * enchants, if you set #setGlow to true and set this to true it will show the enchantments.
 	 *
 	 * @param showEnchantments true and will show enchants.
@@ -373,16 +373,15 @@ public final class CreateItemUtily {
 					continue;
 				}
 				boolean haveEnchant = itemMeta.addEnchant(enchant, this.enchantmentsLevel, this.ignoreLevelRestrictions);
-				System.out.println("enchant " + enchant + " haveEnchant " + haveEnchant);
 			}
-			if (!this.showEnchantments)
+			if (isShowEnchantments())
 				hideEnchantments(itemMeta);
 		} else if (this.glow) {
 			itemMeta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
-			if (!this.showEnchantments)
+			if (!isShowEnchantments())
 				hideEnchantments(itemMeta);
 		} else {
-			if (!this.showEnchantments)
+			if (isShowEnchantments())
 				hideEnchantments(itemMeta);
 		}
 	}
@@ -390,6 +389,10 @@ public final class CreateItemUtily {
 	private void hideEnchantments(final ItemMeta itemMeta) {
 
 		itemMeta.addItemFlags(itemFlags.stream().filter(itemFlag -> !visibleItemFlags.contains(itemFlag)).toArray(ItemFlag[]::new));
+	}
+
+	private boolean isShowEnchantments() {
+		return showEnchantments;
 	}
 
 	private List<String> translateColors(final List<String> rawLore) {

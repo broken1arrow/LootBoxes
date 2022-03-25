@@ -5,12 +5,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class YamlUtil {
 
-	protected Map<String, Map<String, String>> settingsValues = new HashMap<>();
 	protected File customConfigFile;
 
 	protected FileConfiguration customConfig;
@@ -63,4 +60,5 @@ public abstract class YamlUtil {
 
 	public void setListQueue(String player, Object... listQueue) {
 	}
+
 }
