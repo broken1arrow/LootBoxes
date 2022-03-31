@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes;
 
 
 import org.brokenarrow.lootboxes.commands.CommandsGroup;
+import org.brokenarrow.lootboxes.lootdata.ContainerData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.runTask.RunTask;
@@ -10,6 +11,7 @@ import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnLootContainer;
 import org.brokenarrow.lootboxes.untlity.EnchantmentList;
 import org.brokenarrow.lootboxes.untlity.MatrialList;
+import org.brokenarrow.lootboxes.untlity.RandomUntility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
 import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
@@ -31,16 +33,19 @@ public class Lootboxes extends JavaPlugin {
 	private CommandGroupUtility commandGroupUtility;
 	private CommandRegister commandRegister;
 	private CommandsGroup commandsGroup;
+	private RandomUntility randomUntility;
 
 	@Override
 	public void onEnable() {
 		plugin = this;
+		this.randomUntility = new RandomUntility();
 		this.spawnLootContainer = new SpawnLootContainer();
 		this.matrialList = new MatrialList();
 		this.enchantmentList = new EnchantmentList();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
 		this.settings = new Settings();
+		ContainerData.getInstance().reload();
 		GuiTempletSettings.getInstance().reload();
 
 		this.settings.reload();
@@ -92,6 +97,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public SpawnLootContainer getSpawnLootContainer() {
 		return spawnLootContainer;
+	}
+
+	public RandomUntility getRandomUntility() {
+		return randomUntility;
 	}
 
 	public boolean isPlaceholderAPIMissing() {
