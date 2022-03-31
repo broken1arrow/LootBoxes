@@ -1,0 +1,21 @@
+Data:
+  Global_Container:
+    LootTable_Linked: ""
+    Spawning: true
+    Cooldown: 1800
+    Animation: fog
+    Keys:
+      Example_key: 1
+    Enchant: false
+    Icon: ""
+    Display_name: "&6{0}"
+    Lore:
+      - "&aChange with loottable some are linked"
+      - "&aand get info on all linked containers."
+    Containers:
+      'world 0,0,0':
+        Facing: NORTH
+        Container_Type: CHEST
+        
+
+    
