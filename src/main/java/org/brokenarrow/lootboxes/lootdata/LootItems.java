@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class LootItems {
 
 	@Getter
-	public static final LootItems instance = new LootItems();
+	private static final LootItems instance = new LootItems();
 	private final AllYamlFilesInFolder yamlFiles;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
@@ -34,6 +34,10 @@ public class LootItems {
 
 	public Map<String, Map<String, LootData>> getCachedLoot() {
 		return cachedLoot;
+	}
+
+	public Map<String, LootData> getCachedTableContents(String table) {
+		return cachedLoot.get(table);
 	}
 
 	public void addTable(String table) {
@@ -209,11 +213,11 @@ public class LootItems {
 	public void saveDataToFile(File file) {
 		String fileName = this.yamlFiles.getFileName(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> settings = this.cachedLoot.get(fileName);
+		Map<String, LootData> settings = this.cachedLoot.get(fileName);
 		if (settings != null) {
 			for (String childrenKey : settings.keySet()) {
 				if (childrenKey == null) continue;
-				org.brokenarrow.lootboxes.builder.LootData data = settings.get(childrenKey);
+				LootData data = settings.get(childrenKey);
 				/*if (!isUpperCase)
 					childrenKey = childrenKey.toLowerCase();*/
 				//final Material material = (Material) childrenKey;
