@@ -37,7 +37,8 @@ public class Settings extends YamlUtil {
 				.setAmountOfBlocksBelowSurface(amountOfBlocksBelowSurface)
 				.setWarnBeforeSaveWithMetadata(warnBeforeSaveWithMetadata)
 				.setSaveMetadataOnItem(saveMetadataOnItem)
-				.setSpawnOnSurface(spawnOnSurface).build();
+				.setSpawnOnSurface(spawnOnSurface)
+				.setRandomContinerSpawn(randomContinerSpawn).build();
 
 		settings.put("Settings", settingsData);
 	}
