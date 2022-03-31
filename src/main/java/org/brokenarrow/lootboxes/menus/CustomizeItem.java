@@ -34,8 +34,11 @@ public class CustomizeItem extends MenuHolder {
 	private final MenuButton changeItem;
 	private final MenuButton enchantItem;
 	private final MenuButton changeChance;
+	private final MenuButton changeMiniAmount;
+	private final MenuButton changeMaxAmount;
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
+
 
 	public CustomizeItem(String lootTable, String itemToEdit) {
 
@@ -80,7 +83,7 @@ public class CustomizeItem extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 				LootData data = lootItems.getLootData(lootTable, itemToEdit);
 				LootData.Builder builder = data.getBuilder();
-				System.out.println("clickType " + clickType);
+
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
 					amount += 1;
@@ -104,6 +107,74 @@ public class CustomizeItem extends MenuHolder {
 			public ItemStack getItem() {
 				LootData data = lootItems.getLootData(lootTable, itemToEdit);
 				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance()).build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
+			}
+		};
+		this.changeMiniAmount = new MenuButton() {
+			@Override
+			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				LootData.Builder builder = data.getBuilder();
+
+				int amount = 0;
+				if (clickType == ClickType.LEFT)
+					amount += 1;
+				if (clickType == ClickType.RIGHT)
+					amount -= 1;
+				if (clickType == ClickType.SHIFT_LEFT)
+					amount += 10;
+				if (clickType == ClickType.SHIFT_RIGHT)
+					amount -= 10;
+				int minimum = data.getMinimum() + amount;
+
+				if (minimum < 0)
+					minimum = 0;
+				builder.setMinimum(minimum);
+				lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+				updateButtons();
+			}
+
+			@Override
+			public ItemStack getItem() {
+				LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getChance()).build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
+			}
+		};
+		this.changeMaxAmount = new MenuButton() {
+			@Override
+			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				LootData.Builder builder = data.getBuilder();
+
+				int amount = 0;
+				if (clickType == ClickType.LEFT)
+					amount += 1;
+				if (clickType == ClickType.RIGHT)
+					amount -= 1;
+				if (clickType == ClickType.SHIFT_LEFT)
+					amount += 10;
+				if (clickType == ClickType.SHIFT_RIGHT)
+					amount -= 10;
+				int maximum = data.getMaximum() + amount;
+
+				if (maximum < 0)
+					maximum = 0;
+				builder.setMaximum(maximum);
+				lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+				updateButtons();
+			}
+
+			@Override
+			public ItemStack getItem() {
+				LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getChance()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -155,6 +226,10 @@ public class CustomizeItem extends MenuHolder {
 
 		if (guiTemplets.menuKey("Change_Item").build().getSlot().contains(slot))
 			return changeItem.getItem();
+		if (guiTemplets.menuKey("Change_Minimum").build().getSlot().contains(slot))
+			return this.changeMiniAmount.getItem();
+		if (guiTemplets.menuKey("Change_Maximum").build().getSlot().contains(slot))
+			return this.changeMaxAmount.getItem();
 		if (guiTemplets.menuKey("Enchant_Item").build().getSlot().contains(slot))
 			return enchantItem.getItem();
 		if (guiTemplets.menuKey("Change_Chance").build().getSlot().contains(slot))
