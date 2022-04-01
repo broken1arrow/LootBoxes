@@ -2,8 +2,8 @@ package org.brokenarrow.lootboxes.untlity.errors;
 
 public class Valid {
 
-	public static void checkNotNull(Object mainCommand, String s) {
-		if (mainCommand == null)
+	public static void checkNotNull(Object checkNull, String s) {
+		if (checkNull == null)
 			throw new CatchExceptions(s);
 	}
 
