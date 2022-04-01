@@ -13,7 +13,7 @@ Data:
       - "&aChange with loottable some are linked"
       - "&aand get info on all linked containers."
     Containers:
-      'world 0,0,0':
+      'world 0 0 0':
         Facing: NORTH
         Container_Type: CHEST
         
