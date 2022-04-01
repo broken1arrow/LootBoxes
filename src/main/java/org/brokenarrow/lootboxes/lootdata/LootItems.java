@@ -252,23 +252,6 @@ public class LootItems {
 		return false;
 	}
 
-	public static String toStringFormatted(Map<?, ?> serialize) {
-		final List<String> lines = new ArrayList<>();
-
-		lines.add("{");
-
-		for (final Map.Entry<?, ?> entry : serialize.entrySet()) {
-			final Object value = entry.getValue();
-
-			if (value != null && !value.toString().equals("[]") && !value.toString().equals("{}") && !value.toString().isEmpty() && !value.toString().equals("0.0") && !value.toString().equals("false"))
-
-				lines.add("\t'" + entry.getKey() + "' = '" + value + "'");
-		}
-
-		lines.add("}");
-
-		return String.join("\n", lines);
-	}
 
 	private void getFilesData() {
 		try {
