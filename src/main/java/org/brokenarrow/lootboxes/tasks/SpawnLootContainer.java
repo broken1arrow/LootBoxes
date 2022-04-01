@@ -7,7 +7,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.util.concurrent.ThreadLocalRandom;
+import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
 
 public class SpawnLootContainer {
 
@@ -23,6 +23,7 @@ public class SpawnLootContainer {
 					Location location = player.getLocation();
 					spawnBlock(location, player);
 				}
+
 				this.time = System.currentTimeMillis() + (1000 * 5);
 			}
 	}
@@ -61,9 +62,10 @@ public class SpawnLootContainer {
 		System.out.println("zz " + zz);
 		double y1 = randomRadius * Math.sin(theta) * Math.cos(phi);
 */
-		int randomY = ThreadLocalRandom.current().nextInt(-20, 20);
-		int randomX = ThreadLocalRandom.current().nextInt(-20, 20);
-		int randomZ = ThreadLocalRandom.current().nextInt(-20, 20);
+
+		int randomY = randomIntNumber(-20, 20);
+		int randomX = randomIntNumber(-20, 20);
+		int randomZ = randomIntNumber(-20, 20);
 
 		int angleX = (int) (((blocksAwayFromPlayer * randomX)) * Math.PI / (45));
 		int angleZ = (int) (((blocksAwayFromPlayer * randomZ)) * Math.PI / (45));
