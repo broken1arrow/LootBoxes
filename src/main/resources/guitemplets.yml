@@ -585,7 +585,7 @@ Gui_Templets:
     Containers:
       Display_name: "&bContainers linked"
       Enchant: true
-      Slot: 28
+      Slot: 30
       Icon: OBSERVER
       Lore:
         - ""
@@ -594,7 +594,7 @@ Gui_Templets:
     Add_remove_containers:
       Display_name: "&bRemove or add containers some are linked"
       Enchant: true
-      Slot: 30
+      Slot: 32
       Icon: OBSERVER
       Lore:
         - ""
@@ -646,7 +646,7 @@ Gui_Templets:
   # containers shall use to spawn items.
   List_of_loottables:
     Menu_Size: 45
-    Menu_Title: "&1Container data. Page: {0}"
+    Menu_Title: "&1List of loottables. Page: {0}"
     # slots you want to use to add items inside.
     FillSpace: 9-35
     Loot_Tables:
@@ -710,7 +710,7 @@ Gui_Templets:
   # List of particels you can chose spawn arund the container in this menu.
   Particle_Animantion:
     Menu_Size: 45
-    Menu_Title: "&1Container data. Page: {0}"
+    Menu_Title: "&1Particles. Page: {0}"
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     Particle_list:
@@ -774,7 +774,7 @@ Gui_Templets:
   # List of keys you can add or remove in this menu.
   Edit_Keys_To_Open:
     Menu_Size: 45
-    Menu_Title: "&1Container data. Page: {0}"
+    Menu_Title: "&1Keys. Page: {0}"
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     Key_list:
@@ -839,11 +839,11 @@ Gui_Templets:
   # List of matrial you can change too in this menu.
   Matrial_List:
     Menu_Size: 45
-    Menu_Title: "&1Container data. Page: {0}"
+    Menu_Title: "&1Matrial list. Page: {0}"
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     Item_list:
-      Display_name: "&1Item:&6 {1}"
+      Display_name: "&bItem:&6 {1}"
       Enchant: false
       Icon: PAPER
       Slot: 0
@@ -856,6 +856,69 @@ Gui_Templets:
       Slot: 40
       Lore:
         - "&aLeftclick for seach for a item"
+        - "&aRightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # List of matrial you can change too in this menu.
+  Container_Linked_List:
+    Menu_Size: 45
+    Menu_Title: "&1Container List. Page: {0}"
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    Container_list:
+      Display_name: "&bLinked:&6 {0}"
+      Enchant: false
+      Icon: COMPASS
+      Slot: 0
+      Lore:
+        - "&aClick to remove ths location."
+    Seach_button:
+      Display_name: "&bSeach for a location"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a location"
         - "&aRightclick for reset the seach"
     Forward_button:
       Display_name: "&bForward"
