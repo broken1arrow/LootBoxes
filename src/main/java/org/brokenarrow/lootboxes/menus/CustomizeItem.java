@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
@@ -254,7 +253,7 @@ public class CustomizeItem extends MenuHolder {
 
 		public ChangeItem(String lootTable, String itemToEdit, String itemsToSearchFor) {
 			super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));
-			this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "ChangeItem").placeholders(getPageNumber());
+			this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Change_Item").placeholders(getPageNumber());
 			setMenuSize(guiTemplets.build().getGuiSize());
 			setTitle(guiTemplets.build().getGuiTitle());
 			setFillSpace(guiTemplets.build().getFillSpace());
@@ -316,7 +315,7 @@ public class CustomizeItem extends MenuHolder {
 						previousPage();
 					}
 
-					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("ChangeItem", getPageNumber()), Material.CHEST, getMenu().getSize());
+					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Change_Item", getPageNumber()), Material.CHEST, getMenu().getSize());
 					updateButtons();
 				}
 
@@ -334,7 +333,7 @@ public class CustomizeItem extends MenuHolder {
 					if (click.isLeftClick()) {
 						nextPage();
 					}
-					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("ChangeItem", getPageNumber()), Material.CHEST, getMenu().getSize());
+					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Change_Item", getPageNumber()), Material.CHEST, getMenu().getSize());
 					updateButtons();
 				}
 
@@ -364,9 +363,6 @@ public class CustomizeItem extends MenuHolder {
 
 		}
 
-		public List<Material> getListOfMatrial() {
-			return List.of(Material.values());
-		}
 
 		@Override
 		public ItemStack getFillItemsAt(Object o) {
