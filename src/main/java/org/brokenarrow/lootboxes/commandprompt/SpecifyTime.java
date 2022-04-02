@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
-import org.brokenarrow.lootboxes.menus.ModifyLootTabels;
+import org.brokenarrow.lootboxes.menus.ModifyContinerData;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ public class SpecifyTime extends SimpleConversation {
 				builder.setCooldown(Long.parseLong(input));
 				containerData.setContainerData(container, builder.build());
 			}
-			new ModifyLootTabels.AlterContainerDataMenu(container).menuOpen(getPlayer(context));
+			new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(getPlayer(context));
 			return null;
 		}
 	}

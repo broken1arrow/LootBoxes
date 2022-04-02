@@ -70,7 +70,7 @@ public class ContainersLinkedList extends MenuHolder {
 							containerDataMap = new HashMap<>();
 						if (clickType.isRightClick()) {
 							containerDataMap.remove(o);
-							
+
 							builder.setContainerData(containerDataMap);
 							containerData.setContainerData(container, builder.build());
 						}
@@ -138,7 +138,7 @@ public class ContainersLinkedList extends MenuHolder {
 		backButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				new ModifyLootTabels.AlterContainerDataMenu(container).menuOpen(player);
+				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 			}
 
 			@Override

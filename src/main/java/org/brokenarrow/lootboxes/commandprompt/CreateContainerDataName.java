@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
-import org.brokenarrow.lootboxes.menus.ModifyLootTabels;
+import org.brokenarrow.lootboxes.menus.ModifyContinerData;
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -39,7 +39,7 @@ public class CreateContainerDataName extends SimpleConversation {
 				return getFirstPrompt();
 			}
 			containerData.putCacheContainerData(input, material);
-			new ModifyLootTabels().menuOpen(getPlayer(context));
+			new ModifyContinerData().menuOpen(getPlayer(context));
 			return null;
 		}
 	}

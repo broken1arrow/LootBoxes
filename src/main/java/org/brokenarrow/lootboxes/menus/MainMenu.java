@@ -45,7 +45,7 @@ public class MainMenu extends MenuHolder {
 		defultSettings = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				new ModifyLootTabels().menuOpen(player);
+				new ModifyContinerData().menuOpen(player);
 			}
 
 			@Override

@@ -63,7 +63,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				new ModifyLootTabels.AlterContainerDataMenu(container).menuOpen(player);
+				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 			}
 
 			@Override
@@ -96,7 +96,7 @@ public class EditKeysToOpen extends MenuHolder {
 				/*	builder.setKeysData();
 					containerData.setContainerData(container, builder.build());*/
 					System.out.println("testr clickibng " + object);
-					new ModifyLootTabels.AlterContainerDataMenu(container).menuOpen(player);
+					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				}
 			}
 
