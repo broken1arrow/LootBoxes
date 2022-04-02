@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes;
 
 
 import org.brokenarrow.lootboxes.commands.CommandsGroup;
+import org.brokenarrow.lootboxes.listener.PlayerClick;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -11,6 +12,7 @@ import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnLootContainer;
 import org.brokenarrow.lootboxes.untlity.EnchantmentList;
 import org.brokenarrow.lootboxes.untlity.MatrialList;
+import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
 import org.brokenarrow.lootboxes.untlity.RandomUntility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
@@ -29,6 +31,7 @@ public class Lootboxes extends JavaPlugin {
 	private SpawnLootContainer spawnLootContainer;
 	private MatrialList matrialList;
 	private EnchantmentList enchantmentList;
+	private ParticleEffectList particleEffectList;
 	private boolean placeholderAPIMissing;
 	private CommandGroupUtility commandGroupUtility;
 	private CommandRegister commandRegister;
@@ -42,12 +45,13 @@ public class Lootboxes extends JavaPlugin {
 		this.spawnLootContainer = new SpawnLootContainer();
 		this.matrialList = new MatrialList();
 		this.enchantmentList = new EnchantmentList();
+		this.particleEffectList = new ParticleEffectList();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
 		this.settings = new Settings();
 		ContainerData.getInstance().reload();
 		GuiTempletSettings.getInstance().reload();
-
+		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
 		this.settings.reload();
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
@@ -101,6 +105,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public RandomUntility getRandomUntility() {
 		return randomUntility;
+	}
+
+	public ParticleEffectList getParticleEffectList() {
+		return particleEffectList;
 	}
 
 	public boolean isPlaceholderAPIMissing() {
