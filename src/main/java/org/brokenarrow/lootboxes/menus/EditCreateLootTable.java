@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +83,7 @@ public class EditCreateLootTable extends MenuHolder {
 		listOfTables = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-		
+
 				if (object instanceof String) {
 				/*	ItemStack itemStack = data.get(object);
 					ItemMeta itemMeta = itemStack.getItemMeta();
@@ -103,10 +102,11 @@ public class EditCreateLootTable extends MenuHolder {
 
 				if (object instanceof String) {
 					if (object.equals("Global_Values")) return null;
-					ItemStack itemStack = new ItemStack(Material.PAPER);
-					ItemMeta itemMeta = itemStack.getItemMeta();
-					itemMeta.setDisplayName((String) object);
-					itemStack.setItemMeta(itemMeta);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object).build();
+
+					ItemStack itemStack = CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
 					data.put(itemStack, itemStack);
 					return itemStack;
 				} else if (object instanceof ItemStack)
