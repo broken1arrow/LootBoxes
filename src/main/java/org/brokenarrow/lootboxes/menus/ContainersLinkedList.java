@@ -32,7 +32,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 	public ContainersLinkedList(String container, String itemsToSearchFor) {
 		super(List.of(ContainerData.getInstance().getCacheContainerData(container).getLinkedContainerData().keySet().toArray()));
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders(getPageNumber());
+		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(getPageNumber());
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
@@ -40,6 +40,7 @@ public class ContainersLinkedList extends MenuHolder {
 		seachButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+
 
 			/*	if (clickType.isLeftClick())
 					new SeachForItem(container, "").start(player);
@@ -86,15 +87,15 @@ public class ContainersLinkedList extends MenuHolder {
 			@Override
 			public ItemStack getItem(Object object) {
 
-				ItemStack itemstack = null;
+			/*	ItemStack itemstack = null;
 				if (object instanceof Material)
 					itemstack = new ItemStack((Material) object);
 				if (object instanceof ItemStack)
 					itemstack = (ItemStack) object;
 				if (itemstack == null)
-					return null;
-				GuiTempletsYaml gui = guiTemplets.menuKey("Item_list").placeholders("", itemstack.getType()).build();
-				return CreateItemUtily.of(itemstack, gui.getDisplayName(),
+					return null;*/
+				GuiTempletsYaml gui = guiTemplets.menuKey("Container_list").placeholders(object, object).build();
+				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}
 		};
@@ -106,7 +107,7 @@ public class ContainersLinkedList extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("MatrialList", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_Linked_List", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
 
@@ -124,7 +125,7 @@ public class ContainersLinkedList extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("MatrialList", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_Linked_List", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
 
