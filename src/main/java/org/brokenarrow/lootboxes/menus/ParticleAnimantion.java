@@ -136,7 +136,7 @@ public class ParticleAnimantion extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Particle_Animantion", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
 
@@ -154,7 +154,7 @@ public class ParticleAnimantion extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Particle_Animantion", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
 
