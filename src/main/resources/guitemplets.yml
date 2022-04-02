@@ -168,6 +168,14 @@ Gui_Templets:
     FillSpace: 9-35
     # max amount of item on the page (if you not fill all slots and wants more pages).
     Max_Amount_Of_Items: 13
+    Loot_Tables:
+      Display_name: "&6{0}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 0
+      Lore:
+        - "&aLeftclick to change items inside loottable and"
+        - "&aget info on all current items you have added."
     Create_Table:
       Display_name: "&bCreate new table"
       Enchant: true
@@ -304,8 +312,8 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # ChangeItem menu.
-  ChangeItem:
+  # MatrialList menu.
+  Change_Item:
     Menu_Size: 45
     Menu_Title: "&1Change item. Page: {0}"
     # slots you want to use to add items inside.
@@ -398,6 +406,456 @@ Gui_Templets:
       Slot: 40
       Lore:
         - "&aLeftclick for seach for a enchant"
+        - "&aRightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # menu to pick one loot table to change the data.
+  Container_data:
+    Menu_Size: 45
+    Menu_Title: "&1Container data. Page: {0}"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    Loot_Tables:
+      Display_name: "&6{0}"
+      Enchant: false
+      # Icon not in use, you change the icon inside the menu.
+      Icon: CHEST
+      Slot: 0
+      Lore:
+        - "&6"
+        - "&aChange with loottable some are linked"
+        - "&aand get info on all linked containers."
+        - "&aLoottable:&6 {1}"
+        - "&aCooldown:&6 {2}"
+        - "&aIcon:&6 {3}"
+    Seach_button:
+      Display_name: "&bSeach for a Loot table"
+      Enchant: true
+      Icon: PAPER
+      Slot: 39
+      Lore:
+        - "&aLeftclick for seach for a Loot table"
+        - "&aRightclick for reset the seach"
+    CreateLoot_button:
+      Display_name: "&bCreate new continer"
+      Enchant: true
+      Icon: PAPER
+      Slot: 41
+      Lore:
+        - "&aClick and type in your name"
+        - "&aon the continer and it need"
+        - "&aunique name."
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # change the container data for loot table in this menu.
+  Alter_ContainerData_Menu:
+    Menu_Size: 45
+    Menu_Title: "&1Alter this {0}"
+    # slots you want to use to add items inside.
+    Container_Linked_To_LootTable:
+      Display_name: "&bChange loottable:&6 {0}"
+      Enchant: true
+      Slot: 10
+      Icon: CHEST
+      Lore:
+        - ""
+        - "&2Leftclick to get list of existing loottables."
+        - "&2Rightclick if you want to type manually."
+    Particle_Animantion:
+      Display_name: "&bParticle effeckt"
+      Enchant: true
+      Slot: 12
+      Icon: CHEST
+      Lore:
+        - ""
+        - "&2Leftclick to get list of particels you can add."
+        - "&2Effects on the container:"
+        - "&2{1}"
+    Keys_To_Open_Container:
+      Display_name: "&bKeys need to open container"
+      Enchant: true
+      Slot: 14
+      Icon: TRIPWIRE_HOOK
+      Lore:
+        - ""
+        - "&2Leftclick to get list of keys"
+        - "&2need to open container"
+        - "&2Keys added to the container:"
+        - "&2{1}"
+    Change_Icon:
+      Display_name: "&bChange the icon"
+      Enchant: true
+      Slot: 16
+      Icon: SPIDER_EYE
+      Lore:
+        - ""
+        - "&2List of icons you can change too"
+        - "&2for this container."
+    Cooldown_Container:
+      Display_name: "&bKeys need to open container"
+      Enchant: true
+      Slot: 28
+      Icon: CLOCK
+      Lore:
+        - ""
+        - "&2Set cooldown on the container"
+        - "&2"
+        - "&2Current cooldown:"
+        - "&2{1} seconds"
+    Containers:
+      Display_name: "&bContainers linked"
+      Enchant: true
+      Slot: 28
+      Icon: OBSERVER
+      Lore:
+        - ""
+        - "&2Get list of containers"
+        - "&2linked to {1}"
+    Add_remove_containers:
+      Display_name: "&bRemove or add containers some are linked"
+      Enchant: true
+      Slot: 30
+      Icon: OBSERVER
+      Lore:
+        - ""
+        - "&2Get list of containers"
+        - "&2linked to {1}"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # List_of loot tables in this menu. click on one to set the table to your
+  # containers shall use to spawn items.
+  List_of_loottables:
+    Menu_Size: 45
+    Menu_Title: "&1Container data. Page: {0}"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    Loot_Tables:
+      Display_name: "&6{0}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 0
+      Lore:
+        - "&aChange with loottable some are linked"
+        - "&aand get info on all linked containers."
+    Seach_button:
+      Display_name: "&bSeach for a Loot table"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a Loot table"
+        - "&aRightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # List of particels you can chose spawn arund the container in this menu.
+  Particle_Animantion:
+    Menu_Size: 45
+    Menu_Title: "&1Container data. Page: {0}"
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    Particle_list:
+      Display_name: "&1Particle:&6 {0}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 0
+      Lore:
+        - "&aChange particles some spawn arund the"
+        - "&achest or use several diffrent ones."
+    Seach_button:
+      Display_name: "&bSeach for a Loot table"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a Loot table"
+        - "&aRightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # List of keys you can add or remove in this menu.
+  Edit_Keys_To_Open:
+    Menu_Size: 45
+    Menu_Title: "&1Container data. Page: {0}"
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    Key_list:
+      Display_name: "&1Key:&6 {0}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 0
+      Lore:
+        - "&aChange key to this continer."
+        - "&aLeftclick if you want change amount and name."
+        - "&aRightclick if you want remove this key."
+    Seach_button:
+      Display_name: "&bSeach for a key"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a key"
+        - "&aRightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # List of matrial you can change too in this menu.
+  Matrial_List:
+    Menu_Size: 45
+    Menu_Title: "&1Container data. Page: {0}"
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    Item_list:
+      Display_name: "&1Item:&6 {1}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 0
+      Lore:
+        - "&aClick to change to this item."
+    Seach_button:
+      Display_name: "&bSeach for a item"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a item"
         - "&aRightclick for reset the seach"
     Forward_button:
       Display_name: "&bForward"
