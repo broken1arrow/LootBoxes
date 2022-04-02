@@ -13,10 +13,10 @@ import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 public final class ContainerDataBuilder {
 
 	private final String lootTableLinked;
-	private final String effect;
-	private final String icon;
+	private final Material icon;
 	private final String displayname;
 	private final List<String> lore;
+	private final List<String> particleEffect;
 	private final Map<Location, ContainerData> containerData;
 	private final Map<String, KeysData> keysData;
 	private final boolean spawning;
@@ -26,8 +26,8 @@ public final class ContainerDataBuilder {
 
 	public ContainerDataBuilder(Builder builder) {
 
-		this.lootTableLinked = builder.lootTableLinked;
-		this.effect = builder.effect;
+		this.lootTableLinked = builder.containerDataLinkedToLootTable;
+		this.particleEffect = builder.particleEffect;
 		this.icon = builder.icon;
 		this.displayname = builder.displayname;
 		this.lore = builder.lore;
@@ -43,11 +43,11 @@ public final class ContainerDataBuilder {
 		return lootTableLinked;
 	}
 
-	public String getEffect() {
-		return effect;
+	public List<String> getParticleEffects() {
+		return particleEffect;
 	}
 
-	public String getIcon() {
+	public Material getIcon() {
 		return icon;
 	}
 
@@ -59,7 +59,7 @@ public final class ContainerDataBuilder {
 		return lore;
 	}
 
-	public Map<Location, ContainerData> getContainerData() {
+	public Map<Location, ContainerData> getLinkedContainerData() {
 		return containerData;
 	}
 
@@ -85,28 +85,28 @@ public final class ContainerDataBuilder {
 
 	public static final class Builder {
 
-		private String lootTableLinked;
-		private String effect;
-		private String icon;
+		private String containerDataLinkedToLootTable;
+		private Material icon;
 		private String displayname;
 		private List<String> lore;
+		private List<String> particleEffect;
 		private Map<Location, ContainerData> containerData;
 		private Map<String, KeysData> keysData;
 		private boolean spawning;
 		private boolean enchant;
 		private long cooldown;
 
-		public Builder setLootTableLinked(String lootTableLinked) {
-			this.lootTableLinked = lootTableLinked;
+		public Builder setContainerDataLinkedToLootTable(String ContainerDataLinkedToLootTable) {
+			this.containerDataLinkedToLootTable = ContainerDataLinkedToLootTable;
 			return this;
 		}
 
-		public Builder setEffect(String effect) {
-			this.effect = effect;
+		public Builder setParticleEffect(List<String> particleEffect) {
+			this.particleEffect = particleEffect;
 			return this;
 		}
 
-		public Builder setIcon(String icon) {
+		public Builder setIcon(Material icon) {
 			this.icon = icon;
 			return this;
 		}
