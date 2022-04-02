@@ -288,7 +288,7 @@ public class ModifyContinerData extends MenuHolder {
 			containers = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-
+					new ContainersLinkedList(container, "").menuOpen(player);
 				}
 
 				@Override
