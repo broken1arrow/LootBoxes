@@ -3,11 +3,12 @@ Data:
     LootTable_Linked: ""
     Spawning: true
     Cooldown: 1800
-    Animation: fog
+    Animation:
+      - FOG
     Keys:
       Example_key: 1
     Enchant: false
-    Icon: ""
+    Icon: CHEST
     Display_name: "&6{0}"
     Lore:
       - "&aChange with loottable some are linked"
