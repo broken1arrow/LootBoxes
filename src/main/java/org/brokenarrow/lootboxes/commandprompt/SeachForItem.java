@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
 import org.brokenarrow.lootboxes.menus.CustomizeItem;
+import org.brokenarrow.lootboxes.menus.MatrialList;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,10 @@ public class SeachForItem extends SimpleConversation {
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 
-			new CustomizeItem.ChangeItem(lootTable, itemToEdit, input).menuOpen(getPlayer(context));
+			if (itemToEdit != null && !itemToEdit.isEmpty())
+				new CustomizeItem.ChangeItem(lootTable, itemToEdit, input).menuOpen(getPlayer(context));
+			else
+				new MatrialList(lootTable, input).menuOpen(getPlayer(context));
 
 			return null;
 		}
