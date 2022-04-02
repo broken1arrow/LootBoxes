@@ -9,10 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -150,9 +147,9 @@ public class GuiTempletsYaml {
 
 	public String getGuiTitle(String menuName, Object... placeholders) {
 		if (menuName != null) {
-			GuiTempletSettings.Guidata gui = this.guiTemplets.getGuiValues(menuName).get(menuName);
+			Map<String, GuiTempletSettings.Guidata> gui = this.guiTemplets.getGuiValues(menuName);
 			if (gui != null)
-				return ChatColor.translateAlternateColorCodes('&', translatePlaceholders(gui.getMenuTitle(), placeholders));
+				return ChatColor.translateAlternateColorCodes('&', translatePlaceholders(gui.get(menuName).getMenuTitle(), placeholders));
 		}
 		return "";
 	}
