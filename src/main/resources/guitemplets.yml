@@ -252,12 +252,32 @@ Gui_Templets:
       Icon: ENCHANTED_BOOK
       Slot: 13
       Lore:
-        - "&aEnchant the item"
+        - "&aClick to enchant the item"
     Change_Chance:
       Display_name: "&bCurrent Chance {0}"
       Enchant: true
-      Icon: ENCHANTED_BOOK
+      Icon: GREEN_DYE
       Slot: 30
+      Lore:
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to increse with&6 1"
+        - "&aRightclick and shift to increse with&6 {2}"
+    Change_Minimum:
+      Display_name: "&bChange minimum amount"
+      Enchant: true
+      Icon: GOLDEN_CARROT
+      Slot: 32
+      Lore:
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to increse with&6 1"
+        - "&aRightclick and shift to increse with&6 {2}"
+    Change_Maximum:
+      Display_name: "&bChange maximum amount"
+      Enchant: true
+      Icon: TROPICAL_FISH
+      Slot: 34
       Lore:
         - "&aLeftclick to increse with&6 1"
         - "&aLeftclick and shift to increse with&6 {1}"
@@ -784,16 +804,32 @@ Gui_Templets:
       Slot: 0
       Lore:
         - "&aChange key to this continer."
-        - "&aLeftclick if you want change amount and name."
+        - "&aLeftclick if you want change the key."
         - "&aRightclick if you want remove this key."
+        - ""
+        - "&aAmount of keys needed: {1}"
+        - ""
+        - "&aName and lore on the item player get:"
+        - "&a"
+        - "&6{2}"
+        - "&a"
+        - "&6{3}"
     Seach_button:
       Display_name: "&bSeach for a key"
       Enchant: true
       Icon: PAPER
-      Slot: 40
+      Slot: 39
       Lore:
         - "&aLeftclick for seach for a key"
         - "&aRightclick for reset the seach"
+    Add_key_button:
+      Display_name: "&bAdd a key"
+      Enchant: true
+      Icon: TRIPWIRE_HOOK
+      Slot: 41
+      Lore:
+        - "&aLeftclick for add key."
+        - "&aRightclick"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -899,7 +935,7 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # List of matrial you can change too in this menu.
+  # List of continers linked in this menu.
   Container_Linked_List:
     Menu_Size: 45
     Menu_Title: "&1Container List. Page: {0}"
@@ -938,6 +974,118 @@ Gui_Templets:
         - ""
         - "&2Go one page"
         - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # Edit a key in this menu.
+  Edit_Key:
+    Menu_Size: 45
+    Menu_Title: "&1Change key data."
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    Change_Item:
+      Display_name: "&bChange item:&6 {0}"
+      Enchant: false
+      Icon: BRICK
+      Slot: 10
+      Lore:
+        - "&aCurrent item {0}."
+    Change_Amount:
+      Display_name: "&bCange amount needed"
+      Enchant: true
+      Icon: CARROT
+      Slot: 12
+      Lore:
+        - "&aCurrent amount needed:&6 {0}"
+        - ""
+        - "&aLeftclick for add more items needed"
+        - "&aRightclick for remove items needed"
+    Alter_Display_name:
+      Display_name: "&bChange display name"
+      Enchant: true
+      Slot: 14
+      Icon: COCOA_BEANS
+      Lore:
+        - ""
+        - "&2Click her to change display name"
+        - "&2on the item. You have '{'0'}' '{'1'}' and"
+        - "&2'{'2'}' placeholders to use (remove ')."
+        - "&2"
+        - "&2Current display name:"
+        - "&6{1}"
+    Alter_Lore:
+      Display_name: "&blore"
+      Enchant: true
+      Slot: 16
+      Icon: DARK_OAK_SIGN
+      Lore:
+        - ""
+        - "&2Click her to change lore"
+        - "&2on the item.You have '{'0'}' '{'1'}' and"
+        - "&2'{'2'}' placeholders to use (remove ')."
+        - "&2"
+        - "&2Current lore:"
+        - "&6{1}"
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # Add List of keys too in this menu.
+  Save_new_keys:
+    Menu_Size: 45
+    Menu_Title: "&1Change key data."
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    Save_keys_button:
+      Display_name: "&bSave the items in the list"
+      Enchant: false
+      Icon: BRICK
+      Slot: 10
+      Lore:
+        - "&aIt will use itemtype you add (amount of"
+        - "&athat item) and keep name and lore if you"
+        - "&2set it before."
     Back_button:
       Display_name: "&bBack"
       Enchant: true
