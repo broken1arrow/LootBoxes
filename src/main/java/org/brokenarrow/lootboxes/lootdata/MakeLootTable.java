@@ -25,6 +25,7 @@ public class MakeLootTable {
 		setGlobalValues(table);
 
 		for (LootData lootData : lootItems.getCachedTableContents(table).values()) {
+			if (lootData.getMaterial() == Material.AIR) continue;
 
 			if (backupcounter == -1) {
 				backupcounter = Math.max(randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 0);
@@ -67,7 +68,6 @@ public class MakeLootTable {
 
 		} else
 			matrial = lootData.getMaterial();
-
 		return CreateItemUtily.of(itemStack != null ? itemStack : matrial).setAmoutOfItems(amountOfItems).makeItemStack();
 	}
 }
