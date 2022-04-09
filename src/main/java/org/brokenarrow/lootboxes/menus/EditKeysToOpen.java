@@ -102,7 +102,7 @@ public class EditKeysToOpen extends MenuHolder {
 						new EditKey(containerData, (String) object).menuOpen(player);
 					else if (click.isRightClick()) {
 						containerDataInstance.removeCacheKey(containerData, (String) object);
-						updateButtons();
+						new EditKeysToOpen(containerData).menuOpen(player);
 					}
 				}
 
@@ -393,7 +393,7 @@ public class EditKeysToOpen extends MenuHolder {
 		@Override
 		public ItemStack getItemAt(int slot) {
 
-			if (guiTemplets.menuKey("Save_Items_button").build().getSlot().contains(slot))
+			if (guiTemplets.menuKey("Save_keys_button").build().getSlot().contains(slot))
 				return saveItems.getItem();
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 				return this.backButton.getItem();
