@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
+
 public class ItemData {
 
 	@Getter
@@ -57,7 +59,8 @@ public class ItemData {
 		}
 		itemStackMap.put(itemdataPath, itemstack);
 		this.cacheItemData.put(getFileName(), itemStackMap);
-
+		
+		runtaskLater(5, this::save, true);
 		return itemdataPath;
 	}
 
@@ -73,6 +76,8 @@ public class ItemData {
 		}
 		itemStackMap.put(itemdataPath, itemstack);
 		cacheItemData.put(getFileName(), itemStackMap);
+
+		runtaskLater(5, this::save, true);
 		return itemdataPath;
 	}
 
