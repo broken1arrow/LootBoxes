@@ -5,9 +5,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.checkListForPlaceholdersAndTranslate;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
 public final class ContainerDataBuilder {
@@ -194,11 +197,63 @@ public final class ContainerDataBuilder {
 
 	public static final class KeysData {
 		private final String keyName;
+		private final String displayName;
+		private final String lootTableLinked;
 		private final int amountNeeded;
+		private final Material itemType;
+		private final List<String> lore;
 
-		public KeysData(String keyName, int amountNeeded) {
+		public KeysData(String keyName, String displayName, String lootTableLinked, int amountNeeded, Material itemType, List<String> lore) {
 			this.keyName = keyName;
 			this.amountNeeded = amountNeeded;
+			this.itemType = itemType;
+			this.lootTableLinked = lootTableLinked;
+			this.displayName = translatePlaceholdersDisplayName(displayName, keyName, lootTableLinked.length() > 0 ? lootTableLinked : "No table linked", amountNeeded, itemType);
+			this.lore = translatePlaceholdersLore(lore, keyName, lootTableLinked.length() > 0 ? lootTableLinked : "No table linked", amountNeeded, itemType);
+		}
+
+		public KeysData(String keyName, String displayName, String lootTableLinked, int amountNeeded, String itemType, List<String> lore) {
+			this.keyName = keyName;
+			this.amountNeeded = amountNeeded;
+			this.itemType = addMatrial(itemType);
+			this.lootTableLinked = lootTableLinked;
+			System.out.println("lootTableLinked " + lootTableLinked + " " + lootTableLinked.length());
+			this.displayName = translatePlaceholdersDisplayName(displayName, keyName, lootTableLinked.length() > 0 ? lootTableLinked : "No table linked", amountNeeded, itemType);
+			this.lore = translatePlaceholdersLore(lore, keyName, lootTableLinked.length() > 0 ? lootTableLinked : "No table linked", amountNeeded, itemType);
+
+		}
+
+		private String translatePlaceholdersDisplayName(String displayName, Object... placeholders) {
+			return translatePlaceholders(displayName, placeholders);
+
+		}
+
+		private List<String> translatePlaceholdersLore(List<String> lores, Object... placeholders) {
+			if (lores == null) return new ArrayList<>();
+			List<String> clonedlores = new ArrayList<>(lores);
+			List<String> list = new ArrayList<>();
+			for (String lore : clonedlores) {
+				if (!checkListForPlaceholdersAndTranslate(lores, lore, placeholders))
+					list.add(translatePlaceholders(lore, placeholders));
+			}
+			return list;
+		}
+
+
+		private Material addMatrial(final String itemType) {
+			checkNotNull(itemType, "This containerType are null.");
+			Material material = Enums.getIfPresent(Material.class, itemType).orNull();
+			checkNotNull(material, "This " + itemType + " are not valid");
+
+			return material;
+		}
+
+		public String getDisplayName() {
+			return displayName;
+		}
+
+		public Material getItemType() {
+			return itemType;
 		}
 
 		public String getKeyName() {
@@ -208,6 +263,11 @@ public final class ContainerDataBuilder {
 		public int getAmountNeeded() {
 			return amountNeeded;
 		}
+
+		public List<String> getLore() {
+			return lore;
+		}
+
 	}
 /*
 	@Override
