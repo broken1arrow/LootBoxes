@@ -109,7 +109,7 @@ public class EditCreateItems extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof String) {
-					LootData data = lootItems.getCachedLoot().get(lootTable).get(object);
+					LootData data = lootItems.getCachedTableContents(lootTable).get(object);
 					if (data != null) {
 						ItemStack itemStack;
 						if (data.isHaveMetadata()) {
@@ -126,12 +126,6 @@ public class EditCreateItems extends MenuHolder {
 								data.isHaveMetadata()
 						).build();
 						ItemMeta itemMeta = clonedItem.getItemMeta();
-					/*	itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-						itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-						itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-						itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-						itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-						itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);*/
 						clonedItem.setItemMeta(itemMeta);
 
 						ItemStack guiItem = CreateItemUtily.of(clonedItem,
@@ -246,10 +240,6 @@ public class EditCreateItems extends MenuHolder {
 						}
 						lootItems.addItems(lootTable, item, itemData.getFileName(), fileName, !fileName.isEmpty());
 					}
-					Bukkit.getScheduler().runTaskLaterAsynchronously(Lootboxes.getInstance(), () -> {
-						itemData.save();
-						lootItems.save(lootTable);
-					}, 5);
 					new EditCreateItems(lootTable).menuOpen(player);
 
 				}
