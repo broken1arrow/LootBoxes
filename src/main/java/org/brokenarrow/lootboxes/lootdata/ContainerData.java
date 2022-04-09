@@ -50,12 +50,79 @@ public class ContainerData extends YamlUtil {
 		return cacheContainerData.get(container);
 	}
 
+	public ContainerDataBuilder.Builder getCacheContainerBuilder(String container) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getBuilder();
+
+		return null;
+	}
+
 	public ContainerDataBuilder.KeysData getCacheKeys(String container, String keyName) {
-		return cacheContainerData.get(container).getKeysData().get("Keys_" + keyName);
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getKeysData().get("Keys_" + keyName);
+
+		return null;
+	}
+
+	public ContainerDataBuilder.KeysData removeCacheKey(String container, String keyName) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getKeysData().remove("Keys_" + keyName);
+
+		return null;
 	}
 
 	public Map<String, ContainerDataBuilder.KeysData> getCacheKeysData(String container) {
 		return cacheContainerData.get(container).getKeysData();
+	}
+
+	public void setKeyData(String containerData, String keyName, ContainerDataBuilder.KeysData keysData) {
+		Map<String, ContainerDataBuilder.KeysData> keysDataMap = new HashMap<>();
+
+		keysDataMap.put("Keys_" + keyName, keysData);
+		ContainerDataBuilder.Builder builder = getCacheContainerBuilder(containerData);
+		checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + containerData + " null");
+		builder.setKeysData(keysDataMap);
+
+		this.cacheContainerData.put(containerData, builder.build());
+
+	}
+
+	public boolean containsKeyName(String containerData, String keyName) {
+		ContainerDataBuilder builder = getCacheContainerData(containerData);
+
+		return builder != null && builder.getKeysData().get("Keys_" + keyName) != null;
+
+	}
+
+	public void setKeyData(KeysData keysData, Object objectToSave, String container, String keyName) {
+		Map<String, ContainerDataBuilder.KeysData> keysDataMap = new HashMap<>();
+		ContainerDataBuilder.KeysData keyData = getCacheKeys(container, keyName);
+		if (keyData != null) {
+			Material material = null;
+			if (keysData == KeysData.ITEM_TYPE) {
+				if (objectToSave instanceof String)
+					material = Enums.getIfPresent(Material.class, (String) objectToSave).orNull();
+				else
+					material = (Material) objectToSave;
+			}
+			ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
+					keysData == KeysData.KEY_NAME ? (String) objectToSave : keyData.getKeyName(),
+					keysData == KeysData.DISPLAY_NAME ? (String) objectToSave : keyData.getDisplayName(),
+					keysData == KeysData.LOOT_TABLE_LINKED ? (String) objectToSave : keyData.getDisplayName(),
+					keysData == KeysData.AMOUNT_NEEDED ? (int) objectToSave : keyData.getAmountNeeded(),
+					keysData == KeysData.ITEM_TYPE ? material : keyData.getItemType(),
+					keysData == KeysData.LORE ? (List<String>) objectToSave : keyData.getLore());
+			keysDataMap.put("Keys_" + keyName, data);
+
+			ContainerDataBuilder.Builder builder = getCacheContainerBuilder(container);
+			checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + container + " null");
+			builder.setKeysData(keysDataMap);
+
+			this.cacheContainerData.put(container, builder.build());
+		}
 	}
 
 	public List<String> getListOfKeys(String container) {
@@ -107,8 +174,12 @@ public class ContainerData extends YamlUtil {
 				serializeData.put(childrenKey + "." + "Spawning", data.isSpawning());
 				serializeData.put(childrenKey + "." + "Cooldown", data.getCooldown());
 				serializeData.put(childrenKey + "." + "Animation", data.getParticleEffects());
-				for (ContainerDataBuilder.KeysData keyData : data.getKeysData().values())
-					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName(), keyData.getAmountNeeded());
+				for (ContainerDataBuilder.KeysData keyData : data.getKeysData().values()) {
+					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Amount_Of_Keys", keyData.getAmountNeeded());
+					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Itemtype", keyData.getItemType().name());
+					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Display_name", keyData.getDisplayName());
+					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Lore", keyData.getLore());
+				}
 				serializeData.put(childrenKey + "." + "Enchant", data.isEnchant());
 				serializeData.put(childrenKey + "." + "Icon", data.getIcon().name());
 				serializeData.put(childrenKey + "." + "Display_name", data.getDisplayname());
@@ -162,8 +233,11 @@ public class ContainerData extends YamlUtil {
 
 				ConfigurationSection innerConfigKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Keys");
 				for (String innerKey : innerConfigKeys.getKeys(false)) {
-					int keys = this.customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey);
-					keysDataMap.put("Keys_" + innerKey, new ContainerDataBuilder.KeysData(innerKey, keys));
+					int keys = this.customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Amount_Of_Keys");
+					String itemType = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Itemtype");
+					String displayName = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Display_name");
+					List<String> keyLore = this.customConfig.getStringList("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Lore");
+					keysDataMap.put("Keys_" + innerKey, new ContainerDataBuilder.KeysData(innerKey, displayName, lootTableLinked, keys, itemType, keyLore));
 				}
 
 				ConfigurationSection containersKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Containers");
