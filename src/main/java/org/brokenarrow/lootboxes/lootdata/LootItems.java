@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
+
 public class LootItems {
 
 	@Getter
@@ -53,6 +55,7 @@ public class LootItems {
 			lootDataMap = Collections.singletonMap(lootItem, lootData);
 
 		cachedLoot.put(lootTable, lootDataMap);
+		runtaskLater(5, () -> save(lootTable), true);
 	}
 
 	public String addItems(String table, ItemStack itemStack, String metadatafileName, String itemdataPath, boolean haveMetadata) {
@@ -71,6 +74,8 @@ public class LootItems {
 				.setItemdataFileName(metadatafileName)
 				.setHaveMetadata(haveMetadata).build());
 		cachedLoot.put(table, items);
+
+		runtaskLater(5, () -> save(table), true);
 		return loot;
 	}
 
@@ -108,11 +113,6 @@ public class LootItems {
 		return null;
 	}
 
-	public void setLootData(String table, String itemToEdit, Object[] object, LootDataSave... enums) {
-		for (LootDataSave lootDataSave : enums)
-			setLootData(lootDataSave, table, itemToEdit, object);
-	}
-
 	public void setLootData(LootDataSave enums, String table, String itemToEdit, Object object) {
 		Map<String, LootData> data = cachedLoot.get(table);
 		LootData.Builder lootData = data.get(itemToEdit).getBuilder();
@@ -144,21 +144,20 @@ public class LootItems {
 			data = new HashMap<>();
 		data.put(itemToEdit, lootData.build());
 		cachedLoot.put(table, data);
-
-
+		runtaskLater(5, () -> save(table), true);
 	}
 
 	public void removeItem(String table, String itemToRemove) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = cachedLoot.get(table);
+		Map<String, LootData> items = cachedLoot.get(table);
 		if (items != null) {
 			items.remove(itemToRemove);
 		}
-		save(table);
+		runtaskLater(5, () -> save(table), true);
 	}
 
 	public ItemStack[] getItems() {
 		List<ItemStack> items = new ArrayList<>();
-		for (Map<String, org.brokenarrow.lootboxes.builder.LootData> values : cachedLoot.values())
+		for (Map<String, LootData> values : cachedLoot.values())
 			for (Object key : values.keySet())
 				if (key instanceof Material)
 					items.add(new ItemStack((Material) key));
