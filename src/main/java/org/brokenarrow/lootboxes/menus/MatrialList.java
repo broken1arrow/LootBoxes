@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.commandprompt.SeachForItem;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.KeysData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
@@ -27,7 +28,7 @@ public class MatrialList extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerData containerData = ContainerData.getInstance();
 
-	public MatrialList(String container, String itemsToSearchFor) {
+	public MatrialList(MenuKeys menuKey, String value, String container, String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders(getPageNumber());
 		setMenuSize(guiTemplets.build().getGuiSize());
@@ -41,7 +42,7 @@ public class MatrialList extends MenuHolder {
 				if (clickType.isLeftClick())
 					new SeachForItem(container, "").start(player);
 				else
-					new MatrialList(container, "").menuOpen(player);
+					new MatrialList(menuKey, "", container, "").menuOpen(player);
 			}
 
 			@Override
@@ -56,13 +57,21 @@ public class MatrialList extends MenuHolder {
 		itemList = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				System.out.println("container, value " + container + "  " + value + "Object  " + o);
+				if (o instanceof Material) {
 
-				if (o instanceof ItemStack) {
-					ContainerDataBuilder containerDataBuilder = containerData.getCacheContainerData(container);
-					if (containerDataBuilder != null) {
-						ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-						builder.setIcon(((ItemStack) o).getType());
-						containerData.setContainerData(container, builder.build());
+					if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
+						ContainerDataBuilder containerDataBuilder = containerData.getCacheContainerData(container);
+						if (containerDataBuilder != null) {
+							ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+							builder.setIcon((Material) o);
+							containerData.setContainerData(container, builder.build());
+						}
+					}
+					if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
+						System.out.println("container, value " + container + "  " + value);
+						containerData.setKeyData(KeysData.ITEM_TYPE, o, container, value);
+
 					}
 				}
 			}
@@ -127,7 +136,10 @@ public class MatrialList extends MenuHolder {
 		backButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
+				if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
+					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
+				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
+					new EditKeysToOpen.EditKey(container, value).menuOpen(player);
 			}
 
 			@Override
