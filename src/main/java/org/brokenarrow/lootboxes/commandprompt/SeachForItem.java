@@ -7,6 +7,8 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static org.brokenarrow.lootboxes.menus.MenuKeys.MATRIALLIST_MENU;
+
 public class SeachForItem extends SimpleConversation {
 
 	private final String lootTable;
@@ -39,7 +41,7 @@ public class SeachForItem extends SimpleConversation {
 			if (itemToEdit != null && !itemToEdit.isEmpty())
 				new CustomizeItem.ChangeItem(lootTable, itemToEdit, input).menuOpen(getPlayer(context));
 			else
-				new MatrialList(lootTable, input).menuOpen(getPlayer(context));
+				new MatrialList(MATRIALLIST_MENU, "", lootTable, input).menuOpen(getPlayer(context));
 
 			return null;
 		}
