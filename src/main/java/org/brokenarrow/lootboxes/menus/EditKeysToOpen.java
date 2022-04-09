@@ -3,10 +3,14 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
+import org.brokenarrow.lootboxes.commandprompt.SetKeyName;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.KeysData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
@@ -16,8 +20,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static org.brokenarrow.lootboxes.menus.MenuKeys.EDIT_KEYS_FOR_OPEN_MENU;
 
 public class EditKeysToOpen extends MenuHolder {
 
@@ -26,22 +31,21 @@ public class EditKeysToOpen extends MenuHolder {
 	private final MenuButton forward;
 	private final MenuButton previous;
 	private final MenuButton seachButton;
+	private final MenuButton addKeyButton;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerData containerDataInstance = ContainerData.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
 
-	public EditKeysToOpen(String container) {
-		super(ContainerData.getInstance().getListOfKeys(container));
+	public EditKeysToOpen(String containerData) {
+		super(ContainerData.getInstance().getListOfKeys(containerData));
 
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Keys_To_Open").placeholders(getPageNumber());
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
-
-		Map<ItemStack, EditCreateItems.ItemData> cacheItemData = new HashMap<>();
 
 		seachButton = new MenuButton() {
 			@Override
@@ -58,12 +62,26 @@ public class EditKeysToOpen extends MenuHolder {
 						gui.getLore()).makeItemStack();
 			}
 		};
+		addKeyButton = new MenuButton() {
+			@Override
+			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+				new SaveNewKeys(containerData).menuOpen(player);
+			}
 
+			@Override
+			public ItemStack getItem() {
+				GuiTempletsYaml gui = guiTemplets.menuKey("Add_key_button").build();
+
+				return CreateItemUtily.of(gui.getIcon(),
+						gui.getDisplayName(),
+						gui.getLore()).makeItemStack();
+			}
+		};
 		backButton = new MenuButton() {
 
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
+				new ModifyContinerData.AlterContainerDataMenu(containerData).menuOpen(player);
 			}
 
 			@Override
@@ -80,24 +98,18 @@ public class EditKeysToOpen extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 				System.out.println("KeysToOpen " + object);
 				if (object instanceof String) {
-					ContainerDataBuilder data = containerData.getCacheContainerData(String.valueOf(object));
-					ContainerDataBuilder.Builder builder = data.getBuilder();
-					ContainerDataBuilder.KeysData keysData = data.getKeysData().get(object);
-					if (keysData != null) {
-						if (!keysData.getKeyName().isEmpty())
-							player.sendMessage("You change the loottable from " + data.getLootTableLinked() + " to " + object);
-
-						if (keysData.getKeyName().equals(object))
-							player.sendMessage("Your change do not change the loottable is same as the old, old " + data.getLootTableLinked() + " new name " + object);
-						//particleEffect.add((String) object);
+					if (click.isLeftClick())
+						new EditKey(containerData, (String) object).menuOpen(player);
+					else if (click.isRightClick()) {
+						containerDataInstance.removeCacheKey(containerData, (String) object);
+						updateButtons();
 					}
+				}
 
 
 				/*	builder.setKeysData();
 					containerData.setContainerData(container, builder.build());*/
-					System.out.println("testr clickibng " + object);
-					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
-				}
+				System.out.println("testr clickibng " + object);
 			}
 
 			@Override
@@ -110,9 +122,11 @@ public class EditKeysToOpen extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof String) {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Key_list").placeholders(object).build();
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, String.valueOf(object));
+					GuiTempletsYaml gui = guiTemplets.menuKey("Key_list").placeholders(object, keysData.getAmountNeeded(), keysData.getDisplayName(),
+							keysData.getLore()).build();
 
-					return CreateItemUtily.of(gui.getIcon(),
+					return CreateItemUtily.of(keysData.getItemType(),
 							gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -151,6 +165,7 @@ public class EditKeysToOpen extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
+
 				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
@@ -179,9 +194,211 @@ public class EditKeysToOpen extends MenuHolder {
 			return previous.getItem();
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
 			return seachButton.getItem();
+		if (guiTemplets.menuKey("Add_key_button").build().getSlot().contains(slot))
+			return addKeyButton.getItem();
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 			return backButton.getItem();
 
 		return null;
 	}
+
+	public static class EditKey extends MenuHolder {
+
+		private final MenuButton backButton;
+		private final MenuButton changeItem;
+		private final MenuButton changeAmount;
+		private final MenuButton displayName;
+		private final MenuButton lore;
+		private final GuiTempletsYaml.Builder guiTemplets;
+		private final ContainerData containerDataInstance = ContainerData.getInstance();
+
+		public EditKey(String containerData, String keyName) {
+			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Key").placeholders(getPageNumber());
+
+			setMenuSize(guiTemplets.build().getGuiSize());
+			setTitle(guiTemplets.build().getGuiTitle());
+			//setFillSpace(guiTemplets.build().getFillSpace());
+			//LootData data = lootItems.getLootData(lootTable, itemToEdit);
+
+			changeItem = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+					new MatrialList(EDIT_KEYS_FOR_OPEN_MENU, keyName, containerData, "").menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders(keysData.getItemType()).build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			this.changeAmount = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+
+
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					int amount = 0;
+					if (clickType == ClickType.LEFT)
+						amount += 1;
+					if (clickType == ClickType.RIGHT)
+						amount -= 1;
+					if (clickType == ClickType.SHIFT_LEFT)
+						amount += 10;
+					if (clickType == ClickType.SHIFT_RIGHT)
+						amount -= 10;
+					int amountCached = keysData.getAmountNeeded() + amount;
+					if (amountCached > 64)
+						amountCached = 64;
+					if (amountCached < 0)
+						amountCached = 0;
+					containerDataInstance.setKeyData(KeysData.AMOUNT_NEEDED, amountCached, containerData, keyName);
+
+					updateButtons();
+				}
+
+				@Override
+				public ItemStack getItem() {
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded()).build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			this.displayName = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+					new ChangeDisplaynameLore(containerData, keyName, false).start(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Display_name").placeholders("", keysData.getDisplayName()).build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			this.lore = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+					new ChangeDisplaynameLore(containerData, keyName, true).start(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Lore").placeholders("", keysData.getLore()).build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			backButton = new MenuButton() {
+
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new EditKeysToOpen(containerData).menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+		}
+
+		@Override
+		public ItemStack getItemAt(int slot) {
+
+			if (guiTemplets.menuKey("Change_Item").build().getSlot().contains(slot))
+				return changeItem.getItem();
+			if (guiTemplets.menuKey("Change_Amount").build().getSlot().contains(slot))
+				return changeAmount.getItem();
+			if (guiTemplets.menuKey("Alter_Display_name").build().getSlot().contains(slot))
+				return displayName.getItem();
+			if (guiTemplets.menuKey("Alter_Lore").build().getSlot().contains(slot))
+				return lore.getItem();
+			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
+				return backButton.getItem();
+
+			return null;
+		}
+	}
+
+	public static class SaveNewKeys extends MenuHolder {
+		private final MenuButton saveItems;
+		private final MenuButton backButton;
+		private final GuiTempletsYaml.Builder guiTemplets;
+		private final ContainerData containerDataInstance = ContainerData.getInstance();
+
+		public SaveNewKeys(String containerData) {
+			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Save_new_keys");
+
+			setMenuSize(guiTemplets.build().getGuiSize());
+			setTitle(guiTemplets.build().getGuiTitle());
+			setFillSpace(guiTemplets.build().getFillSpace());
+			/*setFillSpace(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));*/
+			setSlotsYouCanAddItems(true);
+
+			saveItems = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
+					if (items == null || items.isEmpty()) return;
+
+					new SetKeyName(items.values().toArray(new ItemStack[0]), containerData).start(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Save_keys_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			this.backButton = new MenuButton() {
+
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new EditKeysToOpen(containerData).menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+		}
+
+		@Override
+		public ItemStack getItemAt(int slot) {
+
+			if (guiTemplets.menuKey("Save_Items_button").build().getSlot().contains(slot))
+				return saveItems.getItem();
+			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
+				return this.backButton.getItem();
+			return null;
+		}
+	}
+
 }
