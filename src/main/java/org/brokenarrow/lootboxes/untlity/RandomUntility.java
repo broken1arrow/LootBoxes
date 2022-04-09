@@ -45,7 +45,9 @@ public final class RandomUntility extends Random {
 		return random.nextDouble() * 100D < percent;
 	}
 
-	public static int nextRandomInt(final int bound) {
+	public static int nextRandomInt(int bound) {
+		if (bound < 0)
+			bound = 1;
 		return random.nextInt(bound);
 	}
 }
