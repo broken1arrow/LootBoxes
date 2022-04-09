@@ -39,6 +39,7 @@ public class LootItems {
 	}
 
 	public Map<String, LootData> getCachedTableContents(String table) {
+
 		return cachedLoot.get(table);
 	}
 
