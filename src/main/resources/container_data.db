@@ -6,7 +6,13 @@ Data:
     Animation:
       - FOG
     Keys:
-      Example_key: 1
+      Example_key:
+        Amount_Of_Keys: 1
+        Itemtype: TRIPWIRE_HOOK
+        Display_name: "&6key name {0}"
+        Lore:
+          - "&aThis key open {1}"
+          - "&aAmount of keys needed {2}."
     Enchant: false
     Icon: CHEST
     Display_name: "&6{0}"
