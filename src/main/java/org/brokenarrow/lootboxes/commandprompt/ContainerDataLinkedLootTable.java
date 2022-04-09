@@ -37,10 +37,10 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 
 			ContainerDataBuilder.Builder builder = containerData.getBuilder();
 			if (!containerData.getLootTableLinked().isEmpty())
-				getPlayer(context).sendMessage("You change the loottable from " + containerData.getLootTableLinked() + " to " + input);
+				getPlayer(context).sendRawMessage("You change the loottable from " + containerData.getLootTableLinked() + " to " + input);
 
 			if (containerData.getLootTableLinked().equals(input))
-				getPlayer(context).sendMessage("Your change do not change the loottable is same as the old, old " + containerData.getLootTableLinked() + " new name " + input);
+				getPlayer(context).sendRawMessage("Your change do not change the loottable is same as the old, old " + containerData.getLootTableLinked() + " new name " + input);
 
 			builder.setContainerDataLinkedToLootTable(input);
 			container.setContainerData(key, builder.build());
