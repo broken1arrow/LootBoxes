@@ -23,6 +23,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.menus.MenuKeys.ALTER_CONTAINER_DATA_MENU;
+
 public class ModifyContinerData extends MenuHolder {
 
 	private final MenuButton createContainerData;
@@ -262,7 +264,7 @@ public class ModifyContinerData extends MenuHolder {
 			changeIcon = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-					new MatrialList(container, "").menuOpen(player);
+					new MatrialList(ALTER_CONTAINER_DATA_MENU, "", container, "").menuOpen(player);
 				}
 
 				@Override
