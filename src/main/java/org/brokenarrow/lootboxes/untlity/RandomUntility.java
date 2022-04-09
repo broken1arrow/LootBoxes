@@ -34,7 +34,7 @@ public final class RandomUntility extends Random {
 			new RandomUntility();
 		return origin + nextRandomInt(bound - origin + 1);
 	}
-	
+
 	public static boolean chance(final int percent) {
 		return chance(percent, false);
 	}
