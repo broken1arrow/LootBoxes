@@ -38,7 +38,7 @@ public class MakeLootTable {
 				break;
 			amountIfItemsMax++;
 			if (!chance(lootData.getChance()))
-				return new ItemStack[0];
+				continue;
 
 			itemStacks.add(createItem(lootData, amountOfItems));
 		}
