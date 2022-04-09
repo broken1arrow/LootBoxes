@@ -24,8 +24,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
-
 public class CustomizeItem extends MenuHolder {
 
 	private final MenuButton backButton;
@@ -452,10 +450,6 @@ public class CustomizeItem extends MenuHolder {
 							builder.setHaveMetadata(hasenchantsLeft);
 
 							lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-							runtaskLater(5, () -> {
-								lootItems.save(lootTable);
-								itemData.save();
-							}, true);
 						}
 						updateButtons();
 					}
