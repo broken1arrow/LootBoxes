@@ -1081,7 +1081,7 @@ Gui_Templets:
       Display_name: "&bSave the items in the list"
       Enchant: false
       Icon: BRICK
-      Slot: 10
+      Slot: 40
       Lore:
         - "&aIt will use itemtype you add (amount of"
         - "&athat item) and keep name and lore if you"
