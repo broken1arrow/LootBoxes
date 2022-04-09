@@ -6,10 +6,12 @@ import org.brokenarrow.lootboxes.listener.PlayerClick;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.lootdata.MakeLootTable;
 import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
-import org.brokenarrow.lootboxes.tasks.SpawnLootContainer;
+import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
+import org.brokenarrow.lootboxes.tasks.SpawnedContainers;
 import org.brokenarrow.lootboxes.untlity.EnchantmentList;
 import org.brokenarrow.lootboxes.untlity.MatrialList;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
@@ -28,13 +30,15 @@ public class Lootboxes extends JavaPlugin {
 	private RunTask runTask;
 	static Lootboxes plugin;
 	private Settings settings;
-	private SpawnLootContainer spawnLootContainer;
+	private SpawnContainerRandomLoc spawnContainerRandomLoc;
 	private MatrialList matrialList;
 	private EnchantmentList enchantmentList;
 	private ParticleEffectList particleEffectList;
 	private boolean placeholderAPIMissing;
 	private CommandGroupUtility commandGroupUtility;
 	private CommandRegister commandRegister;
+	private SpawnedContainers spawnedContainers;
+	private MakeLootTable makeLootTable;
 	private CommandsGroup commandsGroup;
 	private RandomUntility randomUntility;
 
@@ -42,13 +46,15 @@ public class Lootboxes extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		this.randomUntility = new RandomUntility();
-		this.spawnLootContainer = new SpawnLootContainer();
+		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 		this.matrialList = new MatrialList();
 		this.enchantmentList = new EnchantmentList();
 		this.particleEffectList = new ParticleEffectList();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
 		this.settings = new Settings();
+		this.spawnedContainers = new SpawnedContainers();
+		this.makeLootTable = new MakeLootTable();
 		ContainerData.getInstance().reload();
 		GuiTempletSettings.getInstance().reload();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
@@ -99,12 +105,20 @@ public class Lootboxes extends JavaPlugin {
 		return enchantmentList;
 	}
 
-	public SpawnLootContainer getSpawnLootContainer() {
-		return spawnLootContainer;
+	public SpawnContainerRandomLoc getSpawnLootContainer() {
+		return spawnContainerRandomLoc;
 	}
 
 	public RandomUntility getRandomUntility() {
 		return randomUntility;
+	}
+
+	public MakeLootTable getMakeLootTable() {
+		return makeLootTable;
+	}
+
+	public SpawnedContainers getSpawnedContainers() {
+		return spawnedContainers;
 	}
 
 	public ParticleEffectList getParticleEffectList() {
