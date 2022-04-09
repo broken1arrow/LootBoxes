@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MatrialList {
-	List<Material> matrials;
+	private List<Material> matrials;
+	private boolean firstRun = true;
 
 	public MatrialList() {
-
-		this.matrials = Stream.of(Material.values()).filter((material) -> material != Material.AIR && checkIfValidItem(material)
-				//&& !matrial.toString().startsWith("INFESTED_")
-		).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
-		//this.matrials.sort(Comparator.comparing(Enum::name));
+		if (firstRun) {
+			this.matrials = Stream.of(Material.values()).filter((material) -> material != Material.AIR && checkIfValidItem(material)
+			).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
+			firstRun = false;
+			System.out.println("teskjhgbkböolinh if this get called");
+		}
 	}
 
 	public boolean checkIfValidItem(Material material) {
