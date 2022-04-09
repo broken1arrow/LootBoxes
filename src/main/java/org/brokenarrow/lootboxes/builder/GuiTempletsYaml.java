@@ -109,21 +109,34 @@ public class GuiTempletsYaml {
 		return getLore(menuName, menuItemKey, placeholder);
 	}
 
-	public List<String> getLore(String menuName, String menuItemKey, Object... placeholder) {
+	public List<String> getLore(String menuName, String menuItemKey, Object... placeholders) {
 		List<String> lores = new ArrayList<>();
 		if (menuName != null && menuItemKey != null) {
 			GuiTempletSettings.Guidata guidata = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.Lore, guidata))
 				for (String lore : guidata.getLore()) {
-					if (lore.contains("{" + containsList(placeholder) + "}") && containsList(placeholder) != -1)
-						for (String text : (List<String>) placeholder[containsList(placeholder)])
-							lores.add(lore.replace("{" + containsList(placeholder) + "}", text));
-					else
-						lores.add(translatePlaceholders(lore, placeholder));
+					boolean containsPlaceholder = checkListForPlaceholders(lores, lore, placeholders);
+					/*if (lore.contains("{" + containsList(placeholders) + "}") && containsList(placeholders) != -1)
+						for (Object text : (List<?>) placeholders[containsList(placeholders)])
+							lores.add(lore.replace("{" + containsList(placeholders) + "}", text));*/
+					if (!containsPlaceholder)
+						lores.add(translatePlaceholders(lore, placeholders));
 				}
 			return lores;
 		}
 		return Collections.singletonList("");
+	}
+
+	public static boolean checkListForPlaceholders(List<String> lores, String lore, Object... placeholder) {
+		int number = containsList(placeholder);
+		if (number < 0) return false;
+
+		if (lore.contains("{" + number + "}")) {
+			for (Object text : (List<?>) placeholder[number])
+				lores.add(lore.replace(("{" + number + "}"), (String) text));
+			return true;
+		}
+		return false;
 	}
 
 	public static int containsList(Object... placeholder) {
