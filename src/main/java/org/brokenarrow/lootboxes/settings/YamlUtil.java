@@ -66,7 +66,7 @@ public abstract class YamlUtil {
 
 					customConfig.set(yamlMainpath + "." + childrenKey.getKey(), childrenKey.getValue());
 				}
-			//load().save(customConfigFile);
+			load().save(customConfigFile);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
