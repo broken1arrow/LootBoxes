@@ -81,24 +81,26 @@ public class ParticleAnimantion extends MenuHolder {
 		listOfItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				System.out.println("paricle objekt " + object);
-				if (object instanceof String) {
-					ContainerDataBuilder data = containerData.getCacheContainerData(String.valueOf(object));
+
+				if (object instanceof Particle) {
+					ContainerDataBuilder data = containerData.getCacheContainerData(container);
 					ContainerDataBuilder.Builder builder = data.getBuilder();
 					List<String> particleEffect = data.getParticleEffects();
+					String particle = ((Particle) object).name();
 					if (particleEffect != null) {
 						if (!particleEffect.isEmpty())
 							player.sendMessage("You change the loottable from " + data.getLootTableLinked() + " to " + object);
 
-						if (particleEffect.contains(object))
+						if (particleEffect.contains(particle))
 							player.sendMessage("Your change do not change the loottable is same as the old, old " + data.getLootTableLinked() + " new name " + object);
-						particleEffect.add((String) object);
+						if (click.isLeftClick())
+							particleEffect.add(particle);
+						if (click.isRightClick())
+							particleEffect.remove(particle);
 					}
 
-
-					builder.setParticleEffect(particleEffect != null ? particleEffect : Collections.singletonList((String) object));
+					builder.setParticleEffect(particleEffect != null ? particleEffect : Collections.singletonList(particle));
 					containerData.setContainerData(container, builder.build());
-					System.out.println("testr clickibng " + object);
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				}
 			}
@@ -113,11 +115,13 @@ public class ParticleAnimantion extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof Particle) {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(object).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(((Particle) object).name().equals("BLOCK_MARKER") ? "BARRIER" : object).build();
+					ContainerDataBuilder data = containerData.getCacheContainerData(container);
+					List<String> particleEffect = data.getParticleEffects();
 
-					return CreateItemUtily.of(gui.getIcon(),
+					return CreateItemUtily.of(Lootboxes.getInstance().getParticleEffectList().checkParticleList((Particle) object),
 							gui.getDisplayName(),
-							gui.getLore()).makeItemStack();
+							gui.getLore()).setGlow(particleEffect.contains(((Particle) object).name())).makeItemStack();
 				}
 			/*	if (object instanceof ItemStack) {
 					ItemStack item = ((ItemStack) object);
