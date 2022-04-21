@@ -240,7 +240,7 @@ Gui_Templets:
     # max amount of item on the page (if you not fill all slots and wants more pages).
     Max_Amount_Of_Items: 13
     Change_Item:
-      Display_name: "&bChange the item"
+      Display_name: "&bChange the item {0}"
       Enchant: true
       Icon: FIREWORK_STAR
       Slot: 10
@@ -261,20 +261,20 @@ Gui_Templets:
       Lore:
         - "&aLeftclick to increse with&6 1"
         - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to increse with&6 1"
-        - "&aRightclick and shift to increse with&6 {2}"
+        - "&aRightclick to decrese  with&6 1"
+        - "&aRightclick and shift to decrese  with&6 {2}"
     Change_Minimum:
-      Display_name: "&bChange minimum amount"
+      Display_name: "&bChange minimum amount {0}"
       Enchant: true
       Icon: GOLDEN_CARROT
       Slot: 32
       Lore:
         - "&aLeftclick to increse with&6 1"
         - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to increse with&6 1"
-        - "&aRightclick and shift to increse with&6 {2}"
+        - "&aRightclick to decrese  with&6 1"
+        - "&aRightclick and shift to decrese with&6 {2}"
     Change_Maximum:
-      Display_name: "&bChange maximum amount"
+      Display_name: "&bChange maximum amount {0}"
       Enchant: true
       Icon: TROPICAL_FISH
       Slot: 34
