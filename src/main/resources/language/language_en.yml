@@ -1,0 +1,44 @@
+# You can change language in Settings.yml and make new file here with your language name.
+# like this name example language_swe for swedish (some language not exist inside the plugin so you need to translate self).
+
+PREFIX: "&8[&6Lootbox&8] "
+
+CHANGE_DISPLAYNAME_AND_LORE:
+  DISPLAYNAME: "&fType in display name on this item."
+  LORE: "&6Use row-0: to change first line, to edit several rows: row-0: your text. row-1: your second row."
+  CONFIRM: "&fyou have now change lore and/or display name."
+
+CONTAINER_DATA_LINKED_LOOTTABLE:
+  NEW_LOOTTABLE: "You have create new lootTable with name {0}"
+  CANGE_NAME: "You change the loottable from {0} to {1}"
+  NEW_NAME_IS_SAME: "Your change do not change the loottable is same as the old, old {0} new name {1}"
+
+CREATE_CONTAINER_DATA_NAME:
+  CREATE_NEW: "Type the name for the container."
+  ALREDY_EXIST: "This name {0} alredy exist"
+  CONFIRM: "Have now set this name: {0}"
+
+SAVE_ENCHANTMENT:
+  SET_LEVEL: "Type in the enchantments level for the item"
+  NOT_A_NUMBER: "Is not valid number, you input: {0}."
+  CONFIRM: "Have now set level: {0}"
+
+SEACH_FOR_ENCHANTMENT:
+  TYPE_NAME: "Seach for enchantment/enchantments, type in parts or whole name of enchantment."
+
+SEACH_FOR_ITEM:
+  TYPE_NAME: "Seach for item or items, type in parts or whole name of item"
+
+SET_NAME_ON_KEY:
+  DUPLICATE: "Is exist alredy key with this name {0}"
+  TYPE_NAME: "Type name on the key {0}"
+  CONFIRM: "Have now set name: {0}"
+  CONFIRM_FINISH: "Have now set name on all keys: {0}"
+
+SPECIFY_TIME:
+  TYPE_TIME: "Type in time in seconds"
+  CONFIRM: "Have now set time: {0}"
+
+ADD_CONTINERS:
+  LEFT_CLICK_BLOCK: "you have now added this container to loottable. {0}"
+  RIGHT_CLICK_BLOCK: "you have now removed this container from loottable."
