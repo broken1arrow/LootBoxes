@@ -45,7 +45,7 @@ public class LootItems {
 
 	public void addTable(String table) {
 		cachedLoot.put(table, new HashMap<>());
-		save(table);
+		saveTask(table);
 	}
 
 	public void setCachedLoot(String lootTable, String lootItem, LootData lootData) {
@@ -56,7 +56,7 @@ public class LootItems {
 			lootDataMap = Collections.singletonMap(lootItem, lootData);
 
 		cachedLoot.put(lootTable, lootDataMap);
-		runtaskLater(5, () -> save(lootTable), true);
+		saveTask(lootTable);
 	}
 
 	public String addItems(String table, ItemStack itemStack, String metadatafileName, String itemdataPath, boolean haveMetadata) {
@@ -76,7 +76,7 @@ public class LootItems {
 				.setHaveMetadata(haveMetadata).build());
 		cachedLoot.put(table, items);
 
-		runtaskLater(5, () -> save(table), true);
+		saveTask(table);
 		return loot;
 	}
 
@@ -145,7 +145,7 @@ public class LootItems {
 			data = new HashMap<>();
 		data.put(itemToEdit, lootData.build());
 		cachedLoot.put(table, data);
-		runtaskLater(5, () -> save(table), true);
+		saveTask(table);
 	}
 
 	public void removeItem(String table, String itemToRemove) {
@@ -153,7 +153,7 @@ public class LootItems {
 		if (items != null) {
 			items.remove(itemToRemove);
 		}
-		runtaskLater(5, () -> save(table), true);
+		saveTask(table);
 	}
 
 	public ItemStack[] getItems() {
@@ -183,6 +183,10 @@ public class LootItems {
 
 	public void save() {
 		save(null);
+	}
+
+	public void saveTask(String table) {
+		runtaskLater(5, () -> save(table), true);
 	}
 
 	public void save(String fileToSave) {
