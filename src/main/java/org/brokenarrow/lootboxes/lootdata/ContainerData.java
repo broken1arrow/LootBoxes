@@ -149,7 +149,6 @@ public class ContainerData extends YamlUtil {
 
 		for (String keyData : cacheContainerData.get(container).getKeysData().keySet())
 			if (keyData != null) {
-				System.out.println("keyData " + keyData);
 				keyNameList.add(cacheContainerData.get(container).getKeysData().get(keyData).getKeyName());
 			}
 		return keyNameList;
