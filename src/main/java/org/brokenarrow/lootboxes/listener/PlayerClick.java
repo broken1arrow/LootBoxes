@@ -17,6 +17,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_LEFT_CLICK_BLOCK;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_RIGHT_CLICK_BLOCK;
+
 public class PlayerClick implements Listener {
 
 
@@ -52,12 +55,14 @@ public class PlayerClick implements Listener {
 					if (data.getIcon() == null || data.getIcon() == Material.AIR)
 						builder.setIcon(block.getType());
 					containerData.setContainerData(metadata, builder.build());
+					ADD_CONTINERS_LEFT_CLICK_BLOCK.sendMessage(player, location);
 				}
 
 			} else if (action == Action.RIGHT_CLICK_BLOCK) {
 				containerDataMap.remove(location);
 				builder.setContainerData(containerDataMap);
 				containerData.setContainerData(metadata, builder.build());
+				ADD_CONTINERS_RIGHT_CLICK_BLOCK.sendMessage(player, location);
 			}
 		}
 	}
