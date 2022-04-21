@@ -8,6 +8,9 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SPECIFY_TIME_CONFIRM;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SPECIFY_TIME_TYPE_TIME;
+
 public class SpecifyTime extends SimpleConversation {
 
 	private final String container;
@@ -26,7 +29,7 @@ public class SpecifyTime extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return "type in time in seconds ";
+			return SPECIFY_TIME_TYPE_TIME.languageMessages();
 		}
 
 		@Nullable
@@ -37,6 +40,7 @@ public class SpecifyTime extends SimpleConversation {
 				ContainerDataBuilder.Builder builder = data.getBuilder();
 				builder.setCooldown(Long.parseLong(input));
 				containerData.setContainerData(container, builder.build());
+				SPECIFY_TIME_CONFIRM.sendMessage(getPlayer(context), input);
 			}
 			new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(getPlayer(context));
 			return null;
