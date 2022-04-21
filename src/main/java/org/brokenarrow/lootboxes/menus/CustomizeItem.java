@@ -3,9 +3,9 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.LootData;
+import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.SaveEnchantment;
 import org.brokenarrow.lootboxes.commandprompt.SeachForEnchantment;
-import org.brokenarrow.lootboxes.commandprompt.SeachForItem;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -35,7 +35,7 @@ public class CustomizeItem extends MenuHolder {
 	private final MenuButton changeMaxAmount;
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
-
+	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettings();
 
 	public CustomizeItem(String lootTable, String itemToEdit) {
 
@@ -48,12 +48,12 @@ public class CustomizeItem extends MenuHolder {
 		changeItem = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				new ChangeItem(lootTable, itemToEdit, "").menuOpen(player);
+				new MatrialList(MenuKeys.CUSTOMIZEITEM_MENU, itemToEdit, lootTable, "").menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").build();
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders(data.getMaterial()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -87,9 +87,9 @@ public class CustomizeItem extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += 10;
+					amount += settingsData.getIncrese();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= 10;
+					amount -= settingsData.getDecrese();
 				int chance = data.getChance() + amount;
 				if (chance > 100)
 					chance = 100;
@@ -103,7 +103,7 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance()).build();
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance(), settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -122,9 +122,9 @@ public class CustomizeItem extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += 10;
+					amount += settingsData.getIncrese();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= 10;
+					amount -= settingsData.getDecrese();
 				int minimum = data.getMinimum() + amount;
 
 				if (minimum < 0)
@@ -137,7 +137,7 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getChance()).build();
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getMinimum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -156,9 +156,9 @@ public class CustomizeItem extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += 10;
+					amount += settingsData.getIncrese();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= 10;
+					amount -= settingsData.getDecrese();
 				int maximum = data.getMaximum() + amount;
 
 				if (maximum < 0)
@@ -171,7 +171,7 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getChance()).build();
+				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getMaximum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -260,10 +260,10 @@ public class CustomizeItem extends MenuHolder {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
-					if (clickType.isLeftClick())
-						new SeachForItem(lootTable, itemToEdit).start(player);
+				/*	if (clickType.isLeftClick())
+						//new SeachForItem(lootTable, itemToEdit).start(player);
 					else
-						new ChangeItem(lootTable, itemToEdit, "").menuOpen(player);
+						new ChangeItem(lootTable, itemToEdit, "").menuOpen(player);*/
 				}
 
 				@Override
