@@ -8,6 +8,7 @@ import org.brokenarrow.lootboxes.lootdata.ContainerData;
 import org.brokenarrow.lootboxes.lootdata.KeysData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.LootDataSave;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
@@ -40,9 +41,9 @@ public class MatrialList extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
 				if (clickType.isLeftClick())
-					new SeachForItem(container, "").start(player);
+					new SeachForItem(menuKey, container, value).start(player);
 				else
-					new MatrialList(menuKey, "", container, "").menuOpen(player);
+					new MatrialList(menuKey, value, container, "").menuOpen(player);
 			}
 
 			@Override
@@ -58,6 +59,7 @@ public class MatrialList extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 				System.out.println("container, value " + container + "  " + value + "Object  " + o);
+				System.out.println("container, value " + menuKey);
 				if (o instanceof Material) {
 
 					if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
@@ -66,12 +68,18 @@ public class MatrialList extends MenuHolder {
 							ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 							builder.setIcon((Material) o);
 							containerData.setContainerData(container, builder.build());
+							new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 						}
 					}
 					if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
 						System.out.println("container, value " + container + "  " + value);
 						containerData.setKeyData(KeysData.ITEM_TYPE, o, container, value);
+						new EditKeysToOpen.EditKey(container, value).menuOpen(player);
 
+					}
+					if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
+						lootItems.setLootData(LootDataSave.ITEM, container, value, o);
+						new CustomizeItem(container, value).menuOpen(player);
 					}
 				}
 			}
@@ -104,7 +112,7 @@ public class MatrialList extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("MatrialList", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
 
@@ -122,7 +130,7 @@ public class MatrialList extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("MatrialList", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()), Material.CHEST, getMenu().getSize());
 				updateButtons();
 			}
 
@@ -140,6 +148,9 @@ public class MatrialList extends MenuHolder {
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
 					new EditKeysToOpen.EditKey(container, value).menuOpen(player);
+				if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
+					new CustomizeItem(container, value).menuOpen(player);
+				}
 			}
 
 			@Override
