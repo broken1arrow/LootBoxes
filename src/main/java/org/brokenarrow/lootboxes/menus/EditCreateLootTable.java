@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.menus;
 
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
-import org.brokenarrow.lootboxes.commandprompt.testprompt;
+import org.brokenarrow.lootboxes.commandprompt.CreateTable;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
@@ -40,7 +40,7 @@ public class EditCreateLootTable extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 //new SimpleConversation();
-				new testprompt().start(player);
+				new CreateTable().start(player);
 			}
 
 			@Override
