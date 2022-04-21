@@ -7,6 +7,8 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+
 public class ContainerDataLinkedLootTable extends SimpleConversation {
 
 	private ContainerDataBuilder containerData;
@@ -37,11 +39,13 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 
 			ContainerDataBuilder.Builder builder = containerData.getBuilder();
 			if (!containerData.getLootTableLinked().isEmpty())
-				getPlayer(context).sendRawMessage("You change the loottable from " + containerData.getLootTableLinked() + " to " + input);
-
+				CONTAINER_DATA_LINKED_LOOTTABLE_CANGE_NAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
+			else {
+				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_LOOTTABLE.sendMessage(getPlayer(context), input);
+			}
 			if (containerData.getLootTableLinked().equals(input))
-				getPlayer(context).sendRawMessage("Your change do not change the loottable is same as the old, old " + containerData.getLootTableLinked() + " new name " + input);
-
+				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_NAME_IS_SAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
+			
 			builder.setContainerDataLinkedToLootTable(input);
 			container.setContainerData(key, builder.build());
 

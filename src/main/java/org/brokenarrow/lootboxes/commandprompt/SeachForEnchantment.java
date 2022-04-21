@@ -6,6 +6,8 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SEACH_FOR_ENCHANTMENT_TYPE_NAME;
+
 public class SeachForEnchantment extends SimpleConversation {
 
 	private final String lootTable;
@@ -24,7 +26,7 @@ public class SeachForEnchantment extends SimpleConversation {
 	public class ItemSeach extends SimplePromp {
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return "Seach for item or items, type in parts or whole name of item";
+			return SEACH_FOR_ENCHANTMENT_TYPE_NAME.languageMessages();
 		}
 
 		@Nullable

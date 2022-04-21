@@ -8,6 +8,8 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+
 public class CreateContainerDataName extends SimpleConversation {
 	private final ContainerData containerData = ContainerData.getInstance();
 	private final Material material;
@@ -27,17 +29,18 @@ public class CreateContainerDataName extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return "type the name on the containers list ";
+			return CREATE_CONTAINER_DATA_NAME_CREATE_NEW.languageMessages();
 		}
 
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-			System.out.println("contains " + containerData.containsContainerData(input));
+		
 			if (containerData.containsContainerData(input)) {
-				getPlayer(context).sendMessage(getPlayer(context).getUniqueId(), "this name alredy exist");
+				CREATE_CONTAINER_DATA_NAME_ALREDY_EXIST.sendMessage(getPlayer(context), input);
 				return getFirstPrompt();
 			}
+			CREATE_CONTAINER_DATA_NAME_CONFIRM.sendMessage(getPlayer(context), input);
 			containerData.putCacheContainerData(input, material);
 			new ModifyContinerData().menuOpen(getPlayer(context));
 			return null;

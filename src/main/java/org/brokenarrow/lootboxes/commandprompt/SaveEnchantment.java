@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+
 public class SaveEnchantment extends SimpleConversation {
 	private final String lootTable;
 	private final String itemToEdit;
@@ -38,7 +40,7 @@ public class SaveEnchantment extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return "Type in the enchantments level for the item";
+			return SAVE_ENCHANTMENT_SET_LEVEL.languageMessages();
 		}
 
 		@Nullable
@@ -49,8 +51,8 @@ public class SaveEnchantment extends SimpleConversation {
 				level = Integer.parseInt(input);
 			} catch (NumberFormatException ignore) {
 				System.out.println("test v" + getPlayer(context));
-				getPlayer(context).sendMessage("Is not valid number, you input: " + input + ".");
-				getPlayer(context).sendMessage(getPlayer(context).getUniqueId(), "Is not valid number, you input: " + input + ".");
+				SAVE_ENCHANTMENT_NOT_A_NUMBER.sendMessage(getPlayer(context), input);
+
 				return getFirstPrompt();
 
 			}
@@ -76,6 +78,8 @@ public class SaveEnchantment extends SimpleConversation {
 			}
 			LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
 			builder.setHaveMetadata(true).setItemdataFileName(fileName).setItemdataPath(filePatch);
+
+			SAVE_ENCHANTMENT_CONFIRM.sendMessage(getPlayer(context), input);
 
 			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
 			new CustomizeItem.EnchantMents(lootTable, itemToEdit, "").menuOpen(getPlayer(context));

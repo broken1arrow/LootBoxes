@@ -13,6 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+
 public class ChangeDisplaynameLore extends SimpleConversation {
 	private final ContainerData containerData = ContainerData.getInstance();
 	private String container;
@@ -35,9 +37,9 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 		@Override
 		protected String getPrompt(ConversationContext context) {
 			if (setlore) {
-				return "Use row-0: to change first line, to edit several rows: row-0: your text. row-1: your second row.";
+				return CHANGE_DISPLAYNAME_AND_LORE_LORE.languageMessages();
 			} else
-				return "Type in display name on this item.";
+				return CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME.languageMessages();
 		}
 
 		@Nullable
@@ -64,7 +66,7 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 				containerData.setKeyData(KeysData.LORE, loreList, container, keyName);
 			} else
 				containerData.setKeyData(KeysData.DISPLAY_NAME, input, container, keyName);
-
+			CHANGE_DISPLAYNAME_AND_LORE_CONFIRM.sendMessage(getPlayer(context));
 			new EditKeysToOpen.EditKey(container, keyName).menuOpen(getPlayer(context));
 			return null;
 		}
