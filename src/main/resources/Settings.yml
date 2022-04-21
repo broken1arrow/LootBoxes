@@ -1,7 +1,12 @@
 # Main settings
 
+Language: en
 Random_Continer_Spawn: false
 Amount_Of_Blocks_Below_Surface: 5
 Spawn_On_Surface: false
 Warn_Before_Save_With_Metadata: true
 Save_Metadata_On_Item: true
+Max_and_min_amount:
+  Increse_with: 10
+  Decrese_with: 10
+    
