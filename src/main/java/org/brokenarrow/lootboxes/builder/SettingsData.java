@@ -1,8 +1,10 @@
 package org.brokenarrow.lootboxes.builder;
 
 public final class SettingsData {
-
+	private final String language;
 	private final int amountOfBlocksBelowSurface;
+	private final int increse;
+	private final int decrese;
 	private final boolean spawnOnSurface;
 	private final boolean warnBeforeSaveWithMetadata;
 	private final boolean saveMetadataOnItem;
@@ -10,13 +12,20 @@ public final class SettingsData {
 	private final Builder builder;
 
 	private SettingsData(Builder builder) {
+		this.language = builder.language;
 		this.amountOfBlocksBelowSurface = builder.amountOfBlocksBelowSurface;
 		this.spawnOnSurface = builder.spawnOnSurface;
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
 		this.saveMetadataOnItem = builder.saveMetadataOnItem;
 		this.randomContinerSpawn = builder.randomContinerSpawn;
-		this.builder = builder;
+		this.increse = builder.increse;
+		this.decrese = builder.decrese;
 
+		this.builder = builder;
+	}
+
+	public String getLanguage() {
+		return language;
 	}
 
 	/**
@@ -26,6 +35,14 @@ public final class SettingsData {
 	 */
 	public int getAmountOfBlocksBelowSurface() {
 		return amountOfBlocksBelowSurface;
+	}
+
+	public int getIncrese() {
+		return increse;
+	}
+
+	public int getDecrese() {
+		return decrese;
 	}
 
 	/**
@@ -55,11 +72,20 @@ public final class SettingsData {
 
 	public static class Builder {
 
+		private String language;
 		private int amountOfBlocksBelowSurface;
+		private int increse;
+		private int decrese;
 		private boolean spawnOnSurface;
 		private boolean warnBeforeSaveWithMetadata;
 		private boolean saveMetadataOnItem;
 		private boolean randomContinerSpawn;
+
+
+		public Builder setLanguage(String language) {
+			this.language = language;
+			return this;
+		}
 
 		/**
 		 * Set max below Surface. Defult will it spawn as higest 1 block below highest block.
@@ -69,6 +95,16 @@ public final class SettingsData {
 		 */
 		public Builder setAmountOfBlocksBelowSurface(int amountOfBlocksBelowSurface) {
 			this.amountOfBlocksBelowSurface = amountOfBlocksBelowSurface;
+			return this;
+		}
+
+		public Builder setIncrese(int increse) {
+			this.increse = increse;
+			return this;
+		}
+
+		public Builder setDecrese(int decrese) {
+			this.decrese = decrese;
 			return this;
 		}
 
