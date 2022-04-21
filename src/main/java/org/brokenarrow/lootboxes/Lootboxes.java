@@ -8,6 +8,7 @@ import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.lootdata.MakeLootTable;
 import org.brokenarrow.lootboxes.runTask.RunTask;
+import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
@@ -29,6 +30,7 @@ import java.util.logging.Level;
 public class Lootboxes extends JavaPlugin {
 	private RunTask runTask;
 	static Lootboxes plugin;
+	private ChatMessages chatMessages;
 	private Settings settings;
 	private SpawnContainerRandomLoc spawnContainerRandomLoc;
 	private MatrialList matrialList;
@@ -62,7 +64,7 @@ public class Lootboxes extends JavaPlugin {
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
 		new RegisterMenuAPI(this);
-
+		ChatMessages.messagesReload(this);
 		commandRegister = new CommandRegister(this, "lootbox", new CommandsGroup());
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
