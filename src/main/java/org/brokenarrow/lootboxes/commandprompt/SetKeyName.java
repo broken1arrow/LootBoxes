@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+
 public class SetKeyName extends SimpleConversation {
 
 	private final ItemStack[] itemStacks;
@@ -37,7 +39,6 @@ public class SetKeyName extends SimpleConversation {
 			final Player player = (Player) event.getCanceller();
 			chachedPlayer.remove(player);
 		}
-		System.out.println("removed " + chachedPlayer);
 	}
 
 	public class Commandprompt extends SimplePromp {
@@ -55,18 +56,21 @@ public class SetKeyName extends SimpleConversation {
 					numbersUsed.addAll(data.getNumbersUsed());
 				numbersUsed.add(i);
 				chachedPlayer.put(player, new StoreData(i, numbersUsed));
-				return "Type name on the key";
+				return SET_NAME_ON_KEY_TYPE_NAME.languageMessages(itemStack.getType());
 			}
-			return "Type name on the key";
+			return SET_NAME_ON_KEY_TYPE_NAME.languageMessages();
 		}
 
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-
-			if (containerDataInstance.containsKeyName(containerData, input))
-				return getFirstPrompt();
 			Player player = getPlayer(context);
+
+			if (containerDataInstance.containsKeyName(containerData, input)) {
+				SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
+				return getFirstPrompt();
+			}
+
 			int placeInList = chachedPlayer.get(player).getNumber();
 			ItemStack item = itemStacks[placeInList];
 
@@ -95,9 +99,10 @@ public class SetKeyName extends SimpleConversation {
 				}
 			}
 			if (!checkAllItems(player)) {
+				SET_NAME_ON_KEY_CONFIRM.sendMessage(player, input);
 				return getFirstPrompt();
 			}
-
+			SET_NAME_ON_KEY_CONFIRM_FINISH.sendMessage(player, item);
 			new EditKeysToOpen.SaveNewKeys(containerData).menuOpen(getPlayer(context));
 			return null;
 		}
