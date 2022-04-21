@@ -37,6 +37,9 @@ public class ChatMessages {
 	public static ChatMessages SPECIFY_TIME_CONFIRM = new ChatMessages("SPECIFY_TIME.CONFIRM");
 	public static ChatMessages ADD_CONTINERS_LEFT_CLICK_BLOCK = new ChatMessages("ADD_CONTINERS.LEFT_CLICK_BLOCK");
 	public static ChatMessages ADD_CONTINERS_RIGHT_CLICK_BLOCK = new ChatMessages("ADD_CONTINERS.RIGHT_CLICK_BLOCK");
+	public static ChatMessages CREATE_TABLE_TYPE_NAME = new ChatMessages("CREATE_TABLE.TYPE_NAME");
+	public static ChatMessages CREATE_TABLE_DUPLICATE = new ChatMessages("CREATE_TABLE.DUPLICATE");
+	public static ChatMessages CREATE_TABLE_CONFIRM = new ChatMessages("CREATE_TABLE.CONFIRM");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 
 	public ChatMessages(String idKey) {

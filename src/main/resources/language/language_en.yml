@@ -42,3 +42,8 @@ SPECIFY_TIME:
 ADD_CONTINERS:
   LEFT_CLICK_BLOCK: "you have now added this container to loottable. {0}"
   RIGHT_CLICK_BLOCK: "you have now removed this container from loottable."
+
+CREATE_TABLE:
+  TYPE_NAME: "Type name on the table"
+  DUPLICATE: "Is exist alredy table with this name {0}"
+  CONFIRM: "Have now set name on the table: {0}"
