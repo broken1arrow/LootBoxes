@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.EditKeysToOpen;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
@@ -20,6 +21,7 @@ public class SetKeyName extends SimpleConversation {
 
 	private final ItemStack[] itemStacks;
 	private final String containerData;
+	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final ContainerData containerDataInstance = ContainerData.getInstance();
 	private static final Map<Player, StoreData> chachedPlayer = new HashMap<>();
 
@@ -78,6 +80,10 @@ public class SetKeyName extends SimpleConversation {
 				if (item.hasItemMeta()) {
 					ItemMeta meta = item.getItemMeta();
 					if (meta != null) {
+						if (!keyDropData.createKeyData(containerData, input)) {
+							SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
+							return getFirstPrompt();
+						}
 						ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
 								input,
 								meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name().toLowerCase(),
@@ -86,8 +92,13 @@ public class SetKeyName extends SimpleConversation {
 								item.getType(),
 								meta.hasLore() ? meta.getLore() : new ArrayList<>());
 						containerDataInstance.setKeyData(containerData, input, data);
+
 					}
 				} else {
+					if (!keyDropData.createKeyData(containerData, input)) {
+						SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
+						return getFirstPrompt();
+					}
 					ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
 							input,
 							item.getType().name().toLowerCase(),
