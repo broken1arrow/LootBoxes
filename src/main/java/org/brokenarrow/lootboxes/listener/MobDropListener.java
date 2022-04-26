@@ -12,7 +12,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class MobDropListener implements Listener {
@@ -35,8 +34,7 @@ public class MobDropListener implements Listener {
 			if (itemStacks != null)
 				for (ItemStack itemStack : itemStacks)
 					entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), itemStack);
-			System.out.println("kilded entety you get " + Arrays.toString(itemStacks));
-			System.out.println("kilded entety " + entity);
+
 		}
 	}
 
