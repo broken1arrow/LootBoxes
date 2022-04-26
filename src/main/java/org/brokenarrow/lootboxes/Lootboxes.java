@@ -2,21 +2,16 @@ package org.brokenarrow.lootboxes;
 
 
 import org.brokenarrow.lootboxes.commands.CommandsGroup;
+import org.brokenarrow.lootboxes.listener.MobDropListener;
 import org.brokenarrow.lootboxes.listener.PlayerClick;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
-import org.brokenarrow.lootboxes.lootdata.ItemData;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
-import org.brokenarrow.lootboxes.lootdata.MakeLootTable;
+import org.brokenarrow.lootboxes.lootdata.*;
 import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
 import org.brokenarrow.lootboxes.tasks.SpawnedContainers;
-import org.brokenarrow.lootboxes.untlity.EnchantmentList;
-import org.brokenarrow.lootboxes.untlity.MatrialList;
-import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
-import org.brokenarrow.lootboxes.untlity.RandomUntility;
+import org.brokenarrow.lootboxes.untlity.*;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtility;
 import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
 import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
@@ -36,6 +31,7 @@ public class Lootboxes extends JavaPlugin {
 	private MatrialList matrialList;
 	private EnchantmentList enchantmentList;
 	private ParticleEffectList particleEffectList;
+	private MobList mobList;
 	private boolean placeholderAPIMissing;
 	private CommandGroupUtility commandGroupUtility;
 	private CommandRegister commandRegister;
@@ -60,12 +56,15 @@ public class Lootboxes extends JavaPlugin {
 		ContainerData.getInstance().reload();
 		GuiTempletSettings.getInstance().reload();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
+		Bukkit.getPluginManager().registerEvents(new MobDropListener(), this);
 		this.settings.reload();
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
+		KeyDropData.getInstance().reload();
 		new RegisterMenuAPI(this);
 		ChatMessages.messagesReload(this);
 		commandRegister = new CommandRegister(this, "lootbox", new CommandsGroup());
+		this.mobList = new MobList();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
 			 * We register the EventListener here, when PlaceholderAPI is installed.
@@ -101,6 +100,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public MatrialList getMatrialList() {
 		return matrialList;
+	}
+
+	public MobList getMobList() {
+		return mobList;
 	}
 
 	public EnchantmentList getEnchantmentList() {
