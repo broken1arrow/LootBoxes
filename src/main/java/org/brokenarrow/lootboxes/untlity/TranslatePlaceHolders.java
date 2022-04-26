@@ -1,9 +1,20 @@
 package org.brokenarrow.lootboxes.untlity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TranslatePlaceHolders {
 
+	public static List<String> translatePlaceholdersLore(List<String> lores, Object... placeholders) {
+		if (lores == null) return new ArrayList<>();
+		List<String> clonedlores = new ArrayList<>(lores);
+		List<String> list = new ArrayList<>();
+		for (String lore : clonedlores) {
+			if (!checkListForPlaceholdersAndTranslate(lores, lore, placeholders))
+				list.add(translatePlaceholders(lore, placeholders));
+		}
+		return list;
+	}
 
 	public static boolean checkListForPlaceholdersAndTranslate(List<String> lores, String lore, Object... placeholders) {
 		int number = containsList(placeholders);
