@@ -139,12 +139,6 @@ public class EditKeysToOpen extends MenuHolder {
 							gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
-			/*	if (object instanceof ItemStack) {
-					ItemStack item = ((ItemStack) object);
-					if (cacheItemData.get(item) == null) return null;
-
-					return item;
-				}*/
 				return null;
 			}
 		};
