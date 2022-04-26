@@ -9,9 +9,7 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
@@ -47,7 +45,7 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 
 			if (setlore) {
-				ContainerDataBuilder.KeysData keysData = containerData.getCacheKeys(container, keyName);
+				ContainerDataBuilder.KeysData keysData = containerData.getCacheKey(container, keyName);
 				List<String> loreList = keysData.getLore();
 				if (input.contains("row-")) {
 					for (Map.Entry<Integer, String> entry : formatInput(input).entrySet()) {
@@ -60,6 +58,14 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 								loreList.add("");
 							loreList.add(text);
 						}
+					}
+				} else if (input.startsWith("remove")) {
+					int removeAfterEveryRun = 0;
+					for (int integer : removeRow(input)) {
+						integer -= removeAfterEveryRun;
+						if (loreList.size() > integer)
+							loreList.remove(integer);
+						removeAfterEveryRun++;
 					}
 				} else
 					loreList.add(input);
@@ -88,6 +94,23 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 				values.put(row, text);
 			}
 			return values;
+		}
+
+		private Set<Integer> removeRow(String inputString) {
+			Set<Integer> numbers = new LinkedHashSet<>();
+
+			int end = inputString.indexOf(':');
+			String text = inputString.substring(end + 1);
+			String[] splitInput = text.split(",");
+
+			if (splitInput.length > 0) {
+				for (String splt : splitInput) {
+					numbers.add(Integer.parseInt(splt));
+				}
+			} else
+				numbers.add(Integer.parseInt(text));
+			System.out.println("numbers " + numbers);
+			return numbers;
 		}
 	}
 }
