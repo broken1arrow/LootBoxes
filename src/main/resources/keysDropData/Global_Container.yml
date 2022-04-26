@@ -1,0 +1,7 @@
+Keys_Data:
+  Example_key:
+    Chance: 5
+    Minimum: 1
+    Maximum: 2
+    Entity_list:
+      - ZOMBIE
