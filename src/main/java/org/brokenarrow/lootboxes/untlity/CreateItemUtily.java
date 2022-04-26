@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.untlity;
 import com.google.common.base.Enums;
 import org.broken.lib.rbg.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.untlity.nbtuntlity.CompMetadata;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -29,7 +30,6 @@ public final class CreateItemUtily {
 	private final List<String> lore;
 	private final List<Enchantment> enchantments = new ArrayList<>();
 	private final List<ItemFlag> visibleItemFlags = new ArrayList<>();
-	private final List<ItemFlag> itemFlags = Arrays.asList(ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_DYE, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS);
 	private String itemMetaKey;
 	private String itemMetaValue;
 	private Map<String, String> itemMetaMap;
@@ -284,13 +284,17 @@ public final class CreateItemUtily {
 		ItemStack itemstack = checkTypeOfItem();
 
 		if (itemstack != null && itemstack.getType() != Material.AIR) {
-		/*if (this.itemMetaMap != null) {
-				for (final Map.Entry<String, String> entitys : this.itemMetaMap.entrySet()) {
+			if (this.itemMetaMap != null) {
+				/*for (final Map.Entry<String, String> entitys : this.itemMetaMap.entrySet()) {
 					itemstack = CompMetadata.setMetadata(itemstack, entitys.getKey(), entitys.getValue());
-				}
-			} else if (this.itemMetaKey != null && this.itemMetaValue != null)
+				}*/
+			} else if (this.itemMetaKey != null && this.itemMetaValue != null) {
 				itemstack = CompMetadata.setMetadata(itemstack, this.itemMetaKey, this.itemMetaValue);
-*/
+
+				//itemstack = CompMetadata.setMetadata(itemstack, this.itemMetaKey, this.itemMetaValue);
+			}
+
+
 			final ItemMeta itemMeta = itemstack.getItemMeta();
 
 			if (itemMeta != null) {
@@ -387,8 +391,7 @@ public final class CreateItemUtily {
 	}
 
 	private void hideEnchantments(final ItemMeta itemMeta) {
-
-		itemMeta.addItemFlags(itemFlags.stream().filter(itemFlag -> !visibleItemFlags.contains(itemFlag)).toArray(ItemFlag[]::new));
+		itemMeta.addItemFlags(Arrays.stream(ItemFlag.values()).filter(itemFlag -> !visibleItemFlags.contains(itemFlag)).toArray(ItemFlag[]::new));
 	}
 
 	private boolean isShowEnchantments() {
