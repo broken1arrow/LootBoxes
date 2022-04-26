@@ -15,7 +15,7 @@ public final class CommandRegister {
 	public CommandRegister(Plugin plugin, String label, CommandGroupUtilityAPI commandGroupClazz) {
 		this.commandGroupUtility = new CommandGroupUtility(label, Collections.singletonList(label), plugin);
 		if (this.commandGroupClazz.contains(commandGroupClazz))
-			Valid.exception("This class " + commandGroupClazz.getClass().getName() + " is alredy registed.");
+			new Valid.CatchExceptions("This class " + commandGroupClazz.getClass().getName() + " is alredy registed.");
 		this.commandGroupClazz.add(commandGroupClazz);
 		registerSubclass();
 	}
