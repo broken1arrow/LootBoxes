@@ -90,7 +90,7 @@ public class ChatMessages {
 
 		File file = new File(plugin.getDataFolder() + "/language", "language_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml");
 
-		new AllYamlFilesInFolder("language", true).reload();
+		new AllYamlFilesInFolder("language", true).getAllFiles();
 
 		if (!file.exists())
 			Lootboxes.getInstance().saveResource("language/language_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml", false);
