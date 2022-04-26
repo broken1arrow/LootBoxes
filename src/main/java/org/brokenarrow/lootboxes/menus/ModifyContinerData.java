@@ -7,6 +7,7 @@ import org.brokenarrow.lootboxes.commandprompt.ContainerDataLinkedLootTable;
 import org.brokenarrow.lootboxes.commandprompt.CreateContainerDataName;
 import org.brokenarrow.lootboxes.commandprompt.SpecifyTime;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -34,6 +35,7 @@ public class ModifyContinerData extends MenuHolder {
 	private final MenuButton previous;
 	private final MenuButton seachButton;
 	private final LootItems lootItems = LootItems.getInstance();
+	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final ContainerData containerData = ContainerData.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
@@ -101,8 +103,12 @@ public class ModifyContinerData extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 
 				if (object instanceof String) {
-					ContainerDataBuilder data = containerData.getCacheContainerData(String.valueOf(object));
-					new AlterContainerDataMenu((String) object).menuOpen(player);
+					if (click.isLeftClick())
+						new AlterContainerDataMenu((String) object).menuOpen(player);
+					if (click.isRightClick()) {
+						containerData.removeCacheContainerData((String) object);
+						keyDropData.removeFile((String) object);
+					}
 				}
 			}
 
@@ -139,7 +145,7 @@ public class ModifyContinerData extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()));
 				updateButtons();
 			}
 
@@ -157,7 +163,7 @@ public class ModifyContinerData extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()));
 				updateButtons();
 			}
 
