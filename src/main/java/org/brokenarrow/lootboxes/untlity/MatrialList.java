@@ -9,14 +9,13 @@ import java.util.stream.Stream;
 
 public class MatrialList {
 	private List<Material> matrials;
-	private boolean firstRun = true;
+	private boolean firstRun;
 
 	public MatrialList() {
-		if (firstRun) {
+		if (this.matrials == null) {
 			this.matrials = Stream.of(Material.values()).filter((material) -> material != Material.AIR && checkIfValidItem(material)
 			).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
-			firstRun = false;
-			System.out.println("teskjhgbkböolinh if this get called");
+			firstRun = true;
 		}
 	}
 
