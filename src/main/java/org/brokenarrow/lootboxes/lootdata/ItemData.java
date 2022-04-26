@@ -59,7 +59,7 @@ public class ItemData {
 		}
 		itemStackMap.put(itemdataPath, itemstack);
 		this.cacheItemData.put(getFileName(), itemStackMap);
-		
+
 		runtaskLater(5, this::save, true);
 		return itemdataPath;
 	}
@@ -114,14 +114,14 @@ public class ItemData {
 
 	public void reload() {
 		if (customConfigFile == null) {
-			for (File file : this.yamlFiles.reload()) {
+			for (File file : this.yamlFiles.getAllFiles()) {
 				customConfigFile = file;
 
 				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
 				getFilesData();
 			}
 		} else {
-			for (File file : this.yamlFiles.reload()) {
+			for (File file : this.yamlFiles.getAllFiles()) {
 				customConfigFile = file;
 				getFilesData();
 			}
