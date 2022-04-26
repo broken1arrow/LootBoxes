@@ -95,7 +95,10 @@ public class LootItems {
 	}
 
 	public List<String> getItems(String table) {
-		return cachedLoot.get(table).keySet().stream().filter(key -> key != null && !key.equalsIgnoreCase("global_values")).collect(Collectors.toList());
+		Map<String, LootData> tableData = cachedLoot.get(table);
+		if (tableData != null)
+			return tableData.keySet().stream().filter(key -> key != null && !key.equalsIgnoreCase("global_values")).collect(Collectors.toList());
+		return null;
 	}
 
 	public Material getMaterial(String table, String itemToEdit) {
@@ -167,14 +170,14 @@ public class LootItems {
 
 	public void reload() {
 		if (customConfigFile == null) {
-			for (File file : this.yamlFiles.reload()) {
+			for (File file : this.yamlFiles.getAllFiles()) {
 				customConfigFile = file;
 
 				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
 				getFilesData();
 			}
 		} else {
-			for (File file : this.yamlFiles.reload()) {
+			for (File file : this.yamlFiles.getAllFiles()) {
 				customConfigFile = file;
 				getFilesData();
 			}
@@ -193,7 +196,7 @@ public class LootItems {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "tables");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
-			if (!checkFolderExist(fileToSave, dataFolders)) {
+			if (!this.yamlFiles.checkFolderExist(fileToSave, dataFolders)) {
 				final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", fileToSave + ".yml");
 				try {
 					newDataFolder.createNewFile();
@@ -246,16 +249,6 @@ public class LootItems {
 		}
 	}
 
-	public boolean checkFolderExist(String fileToSave, File[] dataFolders) {
-		if (fileToSave != null)
-			for (File file : dataFolders) {
-				String fileName = this.yamlFiles.getFileName(file.getName());
-				if (fileName.equals(fileToSave))
-					return true;
-			}
-		return false;
-	}
-
 
 	private void getFilesData() {
 		try {
@@ -273,7 +266,7 @@ public class LootItems {
 	}
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
-		Map<String, org.brokenarrow.lootboxes.builder.LootData> data = new HashMap<>();
+		Map<String, LootData> data = new HashMap<>();
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 
@@ -327,63 +320,5 @@ public class LootItems {
 		}
 		this.cachedLoot.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
 	}
-/*
-	public static class LootData {
-		private final int chance;
-		private final int minimum;
-		private final int maximum;
-		private final Material material;
-		private final String itemdataPath;
-		private final String itemdataFileName;
-		private final boolean haveMetadata;
 
-		public LootData(int chance, int minimum, int maximum, Material material, String itemdataPath, String itemdataFileName, boolean haveMetadata) {
-			this.chance = chance;
-			this.minimum = minimum;
-			this.maximum = maximum;
-			this.material = material;
-			this.itemdataPath = itemdataPath;
-			this.itemdataFileName = itemdataFileName;
-			this.haveMetadata = haveMetadata;
-		}
-
-		public int getChance() {
-			return chance;
-		}
-
-		public int getMinimum() {
-			return minimum;
-		}
-
-		public int getMaximum() {
-			return maximum;
-		}
-
-		public Material getMaterial() {
-			return material;
-		}
-
-		public boolean isHaveMetadata() {
-			return haveMetadata;
-		}
-
-		public String getItemdataPath() {
-			return itemdataPath;
-		}
-
-		public String getItemdataFileName() {
-			return itemdataFileName;
-		}
-
-		public String getString() {
-			return "{" +
-					"\t'chance '=' " + chance + "'\n" +
-					"\t'minimum '=' " + minimum + "'\n" +
-					"\t'maximum '=' " + maximum + "'\n" +
-					"\t'itemdata '=' " + itemdataPath + "'\n" +
-					"\t'haveMetadata '=' " + haveMetadata + "'\n" +
-					'}';
-		}
-
-	}*/
 }
