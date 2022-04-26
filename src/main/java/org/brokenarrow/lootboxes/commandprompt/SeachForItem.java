@@ -40,9 +40,6 @@ public class SeachForItem extends SimpleConversation {
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 
-			/*if (itemToEdit != null && !itemToEdit.isEmpty())
-				new CustomizeItem.ChangeItem(lootTable, itemToEdit, input).menuOpen(getPlayer(context));
-			else*/
 			new MatrialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
 
 			return null;
