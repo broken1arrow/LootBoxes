@@ -46,7 +46,8 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		return cachedKeyData.get(fileName);
 	}
 
-	public EntityKeyData getEntityCache(EntityType entityType) {
+	public Set<EntityKeyData> getEntityCache(EntityType entityType) {
+		Set<EntityKeyData> entityKeyDataSet = new HashSet<>();
 		for (Map.Entry<String, EntityKeyData> entry : this.entityCache.entrySet()) {
 			String[] key = entry.getKey().split("#");
 			if (key.length != 2) continue;
@@ -54,9 +55,9 @@ public class KeyDropData extends AllYamlFilesInFolder {
 
 			EntityKeyData entityKeyData = entityCache.get(key[0] + "#" + key[1]);
 			if (entityKeyData != null)
-				return entityKeyData;
+				entityKeyDataSet.add(entityKeyData);
 		}
-		return null;
+		return entityKeyDataSet;
 	}
 
 	public boolean createKeyData(String containerDataFileName, String keyName) {
@@ -246,10 +247,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 					data.put(childrenKey, builder.build());
 				}
 		}
-		System.out.println("key filename get name " + key.getName());
 		cachedKeyData.put(getFileName(key.getName()), data);
-		getEntityCache(EntityType.ZOMBIE);
-		System.out.println("this.entityCache " + this.entityCache);
 	}
 
 	private List<EntityType> convertStringToEntityType(List<String> entityList) {
