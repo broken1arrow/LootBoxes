@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.brokenarrow.lootboxes.untlity.RandomUntility.chance;
 import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
@@ -23,15 +24,17 @@ public class RandomKey {
 	private final ContainerData containerData = ContainerData.getInstance();
 
 	public ItemStack[] makeRandomAmountOfItems(EntityType entety) {
-		EntityKeyData entityKeyData = this.keyDropData.getEntityCache(entety);
-		if (entityKeyData != null) {
-			return makeRandomAmountOfItems(entityKeyData.getContainerDataFileName(), entityKeyData.getKeyName());
+		List<ItemStack> itemStacks = new ArrayList<>();
+		Set<EntityKeyData> entityKeyDataSet = this.keyDropData.getEntityCache(entety);
+		if (entityKeyDataSet != null && !entityKeyDataSet.isEmpty()) {
+			for (EntityKeyData entityKeyData : entityKeyDataSet)
+				itemStacks.add(makeRandomAmountOfItems(entityKeyData.getContainerDataFileName(), entityKeyData.getKeyName()));
 		}
-		return new ItemStack[0];
+		return itemStacks.toArray(new ItemStack[0]);
 	}
 
-	public ItemStack[] makeRandomAmountOfItems(String containerData, String keyName) {
-		List<ItemStack> itemStacks = new ArrayList<>();
+	public ItemStack makeRandomAmountOfItems(String containerData, String keyName) {
+
 
 		KeyMobDropData keyMobDropData = this.keyDropData.getKeyMobDropData(containerData, keyName);
 		if (keyMobDropData == null) return null;
@@ -43,13 +46,12 @@ public class RandomKey {
 		if (!chance(keyMobDropData.getChance()))
 			return null;
 		ContainerDataBuilder.KeysData keysData = this.containerData.getCacheKey(containerData, keyName);
-		String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(), keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
-		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(), keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
-		
-		ItemStack itemStack = CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setAmoutOfItems(amountOfItems).makeItemStack();
-		itemStacks.add(itemStack);
+		String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
+				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 
-		return itemStacks.toArray(new ItemStack[0]);
+		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setAmoutOfItems(amountOfItems).makeItemStack();
 	}
 
 	private int randomNumber(KeyMobDropData keyMobDropData) {
