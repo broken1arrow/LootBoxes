@@ -29,7 +29,10 @@ public class AllYamlFilesInFolder {
 		this.plugin = Lootboxes.getInstance();
 	}
 
-	public File[] reload() {
+	public void reload() {
+	}
+
+	public File[] getAllFiles() {
 		Map<String, File> map = new HashMap<>();
 		List<String> filenamesFromDir = null;
 		try {
@@ -78,6 +81,15 @@ public class AllYamlFilesInFolder {
 		return new ArrayList<>(filenamesFromDir);
 	}
 
+	public boolean checkFolderExist(String fileToSave, File[] dataFolders) {
+		if (fileToSave != null)
+			for (File file : dataFolders) {
+				String fileName = getFileName(file.getName());
+				if (fileName.equals(fileToSave))
+					return true;
+			}
+		return false;
+	}
 
 	public File[] getYamlFiles(String directory, String extension) {
 		if (extension.startsWith("."))
