@@ -12,7 +12,7 @@ Gui_Templets:
     Containers:
       Display_name: "&6List of containers"
       Slot: 11
-      Icon: SUNFLOWER
+      Icon: CHEST
       Lore:
         - ""
         - "&2List of conected loot boxes"
@@ -27,7 +27,7 @@ Gui_Templets:
     Edit_LootTable:
       Display_name: "&aCreate and edit LootTable"
       Slot: 15
-      Icon: CHAIN
+      Icon: BOOK
       Lore:
         - ""
         - "&aEdit and create loottable and add"
@@ -1028,25 +1028,34 @@ Gui_Templets:
       Icon: COCOA_BEANS
       Lore:
         - ""
-        - "&2Click her to change display name"
+        - "&2Click here to change display name"
         - "&2on the item. You have '{'0'}' '{'1'}' and"
         - "&2'{'2'}' placeholders to use (remove ')."
         - "&2"
         - "&2Current display name:"
         - "&6{1}"
     Alter_Lore:
-      Display_name: "&blore"
+      Display_name: "&bChange Lore"
       Enchant: true
       Slot: 16
       Icon: DARK_OAK_SIGN
       Lore:
         - ""
-        - "&2Click her to change lore"
+        - "&2Click here to change lore"
         - "&2on the item.You have '{'0'}' '{'1'}' and"
         - "&2'{'2'}' placeholders to use (remove ')."
         - "&2"
         - "&2Current lore:"
         - "&6{1}"
+    Mob_Drop_Key:
+      Display_name: "&bSettings for dropp key"
+      Enchant: true
+      Slot: 28
+      Icon: BAT_SPAWN_EGG
+      Lore:
+        - ""
+        - "&2Click here to change with mob drops"
+        - "&2this key,amount and chance it drop the key."
     Back_button:
       Display_name: "&bBack"
       Enchant: true
@@ -1086,6 +1095,173 @@ Gui_Templets:
         - "&aIt will use itemtype you add (amount of"
         - "&athat item) and keep name and lore if you"
         - "&2set it before."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # Customize with mobs shall drop this key menu.
+  Key_Settings_MobDrop:
+    Menu_Size: 45
+    Menu_Title: "&1Edit this key: {0}"
+    # slots you want to use to add items inside.
+    FillSpace: 9-35
+    Mobs_some_drop_this_key:
+      Display_name: "&bChange the mobs {0}"
+      Enchant: true
+      Icon: FIREWORK_STAR
+      Slot: 10
+      Lore:
+        - "&aChange the mobs some dropp this key"
+    Enchant_Item:
+      Display_name: "&bEnchant the item"
+      Enchant: true
+      Icon: ENCHANTED_BOOK
+      Slot: 13
+      Lore:
+        - "&aClick to enchant the item"
+    Change_Chance:
+      Display_name: "&bCurrent Chance {0}"
+      Enchant: true
+      Icon: GREEN_DYE
+      Slot: 30
+      Lore:
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to decrese  with&6 1"
+        - "&aRightclick and shift to decrese  with&6 {2}"
+    Change_Minimum:
+      Display_name: "&bChange minimum amount {0}"
+      Enchant: true
+      Icon: GOLDEN_CARROT
+      Slot: 32
+      Lore:
+        - "&6Set minimum of keys mob can drop."
+        - ""
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to decrese  with&6 1"
+        - "&aRightclick and shift to decrese with&6 {2}"
+    Change_Maximum:
+      Display_name: "&bChange maximum amount {0}"
+      Enchant: true
+      Icon: TROPICAL_FISH
+      Slot: 34
+      Lore:
+        - "&6Set minimum of keys mob can drop."
+        - ""
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to increse with&6 1"
+        - "&aRightclick and shift to increse with&6 {2}"
+    Remove_Button:
+      Display_name: "&bRemove item"
+      Enchant: true
+      Icon: BARRIER
+      Slot: 28
+      Lore:
+        - "&aRemove this item"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # List of EntityType in this menu.
+  EntityType_List_Menu:
+    Menu_Size: 45
+    Menu_Title: "&1Container List. Page: {0}"
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    EntityType_list:
+      Display_name: "&bEntity:&6 {0}"
+      Enchant: false
+      Icon: COMPASS
+      Slot: 0
+      Lore:
+        - "&aLeftclick to add entity"
+        - "&aRightclick to remove this entity."
+    Seach_button:
+      Display_name: "&bSeach for a entity"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeftclick for seach for a entity"
+        - "&aRightclick for reset the seach"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
     Back_button:
       Display_name: "&bBack"
       Enchant: true
