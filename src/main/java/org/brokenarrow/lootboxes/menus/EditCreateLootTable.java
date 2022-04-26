@@ -7,7 +7,6 @@ import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -122,7 +121,7 @@ public class EditCreateLootTable extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("LootTables", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("LootTables", getPageNumber()));
 				updateButtons();
 			}
 
@@ -140,7 +139,7 @@ public class EditCreateLootTable extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("LootTables", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("LootTables", getPageNumber()));
 				updateButtons();
 			}
 

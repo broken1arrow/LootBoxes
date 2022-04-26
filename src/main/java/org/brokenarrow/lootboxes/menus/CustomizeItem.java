@@ -313,7 +313,7 @@ public class CustomizeItem extends MenuHolder {
 						previousPage();
 					}
 
-					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Change_Item", getPageNumber()), Material.CHEST, getMenu().getSize());
+					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Change_Item", getPageNumber()));
 					updateButtons();
 				}
 
@@ -331,7 +331,7 @@ public class CustomizeItem extends MenuHolder {
 					if (click.isLeftClick()) {
 						nextPage();
 					}
-					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Change_Item", getPageNumber()), Material.CHEST, getMenu().getSize());
+					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Change_Item", getPageNumber()));
 					updateButtons();
 				}
 
@@ -495,7 +495,7 @@ public class CustomizeItem extends MenuHolder {
 						previousPage();
 					}
 
-					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("EnchantMents", getPageNumber()), Material.CHEST, getMenu().getSize());
+					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("EnchantMents", getPageNumber()));
 					updateButtons();
 				}
 
@@ -513,7 +513,7 @@ public class CustomizeItem extends MenuHolder {
 					if (click.isLeftClick()) {
 						nextPage();
 					}
-					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("EnchantMents", getPageNumber()), Material.CHEST, getMenu().getSize());
+					UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("EnchantMents", getPageNumber()));
 					updateButtons();
 				}
 

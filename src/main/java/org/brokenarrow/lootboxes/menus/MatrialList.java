@@ -58,8 +58,6 @@ public class MatrialList extends MenuHolder {
 		itemList = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				System.out.println("container, value " + container + "  " + value + "Object  " + o);
-				System.out.println("container, value " + menuKey);
 				if (o instanceof Material) {
 
 					if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
@@ -72,7 +70,6 @@ public class MatrialList extends MenuHolder {
 						}
 					}
 					if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
-						System.out.println("container, value " + container + "  " + value);
 						containerData.setKeyData(KeysData.ITEM_TYPE, o, container, value);
 						new EditKeysToOpen.EditKey(container, value).menuOpen(player);
 
@@ -112,7 +109,7 @@ public class MatrialList extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()));
 				updateButtons();
 			}
 
@@ -130,7 +127,7 @@ public class MatrialList extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()));
 				updateButtons();
 			}
 
