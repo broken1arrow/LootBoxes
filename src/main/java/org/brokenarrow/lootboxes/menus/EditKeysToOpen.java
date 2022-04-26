@@ -6,6 +6,7 @@ import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.commandprompt.SetKeyName;
 import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.KeysData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
@@ -14,15 +15,17 @@ import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDIT_KEYS_FOR_OPEN_MENU;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
 public class EditKeysToOpen extends MenuHolder {
 
@@ -34,6 +37,7 @@ public class EditKeysToOpen extends MenuHolder {
 	private final MenuButton addKeyButton;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerData containerDataInstance = ContainerData.getInstance();
+	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
@@ -102,6 +106,8 @@ public class EditKeysToOpen extends MenuHolder {
 						new EditKey(containerData, (String) object).menuOpen(player);
 					else if (click.isRightClick()) {
 						containerDataInstance.removeCacheKey(containerData, (String) object);
+						keyDropData.removeKeyMobDropData(containerData, (String) object);
+						//keyDropData.removeFile(containerData);
 						new EditKeysToOpen(containerData).menuOpen(player);
 					}
 				}
@@ -122,9 +128,12 @@ public class EditKeysToOpen extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof String) {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, String.valueOf(object));
-					GuiTempletsYaml gui = guiTemplets.menuKey("Key_list").placeholders(object, keysData.getAmountNeeded(), keysData.getDisplayName(),
-							keysData.getLore()).build();
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, String.valueOf(object));
+					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), object, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), object, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+
+					GuiTempletsYaml gui = guiTemplets.menuKey("Key_list").placeholders(object, keysData.getAmountNeeded(), placeholderDisplayName,
+							placeholdersLore).build();
 
 					return CreateItemUtily.of(keysData.getItemType(),
 							gui.getDisplayName(),
@@ -147,7 +156,7 @@ public class EditKeysToOpen extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()));
 				updateButtons();
 			}
 
@@ -166,7 +175,7 @@ public class EditKeysToOpen extends MenuHolder {
 					nextPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()), Material.CHEST, getMenu().getSize());
+				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()));
 				updateButtons();
 			}
 
@@ -209,6 +218,7 @@ public class EditKeysToOpen extends MenuHolder {
 		private final MenuButton changeAmount;
 		private final MenuButton displayName;
 		private final MenuButton lore;
+		private final MenuButton mobDropKey;
 		private final GuiTempletsYaml.Builder guiTemplets;
 		private final ContainerData containerDataInstance = ContainerData.getInstance();
 
@@ -220,7 +230,7 @@ public class EditKeysToOpen extends MenuHolder {
 			//setFillSpace(guiTemplets.build().getFillSpace());
 			//LootData data = lootItems.getLootData(lootTable, itemToEdit);
 
-			changeItem = new MenuButton() {
+			this.changeItem = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 					new MatrialList(EDIT_KEYS_FOR_OPEN_MENU, keyName, containerData, "").menuOpen(player);
@@ -228,7 +238,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders(keysData.getItemType()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
@@ -241,7 +251,7 @@ public class EditKeysToOpen extends MenuHolder {
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
 
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
 					int amount = 0;
 					if (clickType == ClickType.LEFT)
 						amount += 1;
@@ -263,7 +273,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
@@ -279,8 +289,9 @@ public class EditKeysToOpen extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
-					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Display_name").placeholders("", keysData.getDisplayName()).build();
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Display_name").placeholders("", placeholderDisplayName).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),
@@ -295,15 +306,32 @@ public class EditKeysToOpen extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKeys(containerData, keyName);
-					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Lore").placeholders("", keysData.getLore()).build();
+					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keyName, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Lore").placeholders("", placeholdersLore).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
 			};
-			backButton = new MenuButton() {
+			this.mobDropKey = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new KeySettingsMobDrop(containerData, keyName).menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Mob_Drop_Key").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+
+			this.backButton = new MenuButton() {
 
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
@@ -325,15 +353,17 @@ public class EditKeysToOpen extends MenuHolder {
 		public ItemStack getItemAt(int slot) {
 
 			if (guiTemplets.menuKey("Change_Item").build().getSlot().contains(slot))
-				return changeItem.getItem();
+				return this.changeItem.getItem();
 			if (guiTemplets.menuKey("Change_Amount").build().getSlot().contains(slot))
-				return changeAmount.getItem();
+				return this.changeAmount.getItem();
 			if (guiTemplets.menuKey("Alter_Display_name").build().getSlot().contains(slot))
-				return displayName.getItem();
+				return this.displayName.getItem();
 			if (guiTemplets.menuKey("Alter_Lore").build().getSlot().contains(slot))
-				return lore.getItem();
+				return this.lore.getItem();
+			if (guiTemplets.menuKey("Mob_Drop_Key").build().getSlot().contains(slot))
+				return this.mobDropKey.getItem();
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-				return backButton.getItem();
+				return this.backButton.getItem();
 
 			return null;
 		}
