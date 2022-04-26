@@ -2,6 +2,11 @@ package org.brokenarrow.lootboxes.untlity.errors;
 
 public class Valid {
 
+	public static void checkNotNull(Object checkNull) {
+		if (checkNull == null)
+			throw new CatchExceptions("Object is null ");
+	}
+
 	public static void checkNotNull(Object checkNull, String s) {
 		if (checkNull == null)
 			throw new CatchExceptions(s);
@@ -11,12 +16,12 @@ public class Valid {
 		if (!bolen)
 			throw new CatchExceptions(s);
 	}
+	
+	public static class CatchExceptions extends RuntimeException {
+		public CatchExceptions(Throwable throwable, String message) {
+			super(message, throwable);
+		}
 
-	public static void exception(String s) {
-		throw new CatchExceptions(s);
-	}
-
-	private static class CatchExceptions extends RuntimeException {
 		public CatchExceptions(String message) {
 			super(message);
 		}
