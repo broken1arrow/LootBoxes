@@ -58,8 +58,7 @@ public class ContainerData extends YamlUtil {
 				.setKeysData(new HashMap<>());
 
 		cacheContainerData.put(container, builder.build());
-		runtaskLater(5, this::save, true);
-		System.out.println("cacheContainerData " + cacheContainerData);
+		saveTask();
 	}
 
 	public ContainerDataBuilder getCacheContainerData(String container) {
@@ -74,7 +73,7 @@ public class ContainerData extends YamlUtil {
 		return null;
 	}
 
-	public ContainerDataBuilder.KeysData getCacheKeys(String container, String keyName) {
+	public ContainerDataBuilder.KeysData getCacheKey(String container, String keyName) {
 		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getKeysData().get("Keys_" + keyName);
@@ -82,10 +81,22 @@ public class ContainerData extends YamlUtil {
 		return null;
 	}
 
+	public Map<String, ContainerDataBuilder.KeysData> getCacheKeys(String container) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getKeysData();
+
+		return null;
+	}
+
+	public void removeCacheContainerData(String container) {
+		cacheContainerData.remove(container);
+	}
+
 	public ContainerDataBuilder.KeysData removeCacheKey(String container, String keyName) {
 		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
 		if (containerDataBuilder != null) {
-			runtaskLater(5, this::save, true);
+			saveTask();
 			return containerDataBuilder.getKeysData().remove("Keys_" + keyName);
 		}
 		return null;
@@ -105,7 +116,7 @@ public class ContainerData extends YamlUtil {
 		builder.setKeysData(keysDataMap);
 
 		this.cacheContainerData.put(containerData, builder.build());
-		runtaskLater(5, this::save, true);
+		saveTask();
 	}
 
 	public boolean containsKeyName(String containerData, String keyName) {
@@ -116,32 +127,37 @@ public class ContainerData extends YamlUtil {
 	}
 
 	public void setKeyData(KeysData keysData, Object objectToSave, String container, String keyName) {
-		Map<String, ContainerDataBuilder.KeysData> keysDataMap = new HashMap<>();
-		ContainerDataBuilder.KeysData keyData = getCacheKeys(container, keyName);
-		if (keyData != null) {
-			Material material = null;
-			if (keysData == KeysData.ITEM_TYPE) {
-				if (objectToSave instanceof String)
-					material = Enums.getIfPresent(Material.class, (String) objectToSave).orNull();
-				else
-					material = (Material) objectToSave;
-			}
-			ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
-					keysData == KeysData.KEY_NAME ? (String) objectToSave : keyData.getKeyName(),
-					keysData == KeysData.DISPLAY_NAME ? (String) objectToSave : keyData.getDisplayName(),
-					keysData == KeysData.LOOT_TABLE_LINKED ? (String) objectToSave : keyData.getDisplayName(),
-					keysData == KeysData.AMOUNT_NEEDED ? (int) objectToSave : keyData.getAmountNeeded(),
-					keysData == KeysData.ITEM_TYPE ? material : keyData.getItemType(),
-					keysData == KeysData.LORE ? (List<String>) objectToSave : keyData.getLore());
-			keysDataMap.put("Keys_" + keyName, data);
+		Map<String, ContainerDataBuilder.KeysData> keyDataMap = getCacheKeys(container);
 
-			ContainerDataBuilder.Builder builder = getCacheContainerBuilder(container);
-			checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + container + " null");
-			builder.setKeysData(keysDataMap);
+		Material material = null;
+		if (keysData == KeysData.ITEM_TYPE) {
+			if (objectToSave instanceof String)
+				material = Enums.getIfPresent(Material.class, (String) objectToSave).orNull();
+			else
+				material = (Material) objectToSave;
 
-			this.cacheContainerData.put(container, builder.build());
-			runtaskLater(5, this::save, true);
 		}
+		if (keyDataMap == null)
+			keyDataMap = new HashMap<>();
+		ContainerDataBuilder.KeysData oldData = keyDataMap.get("Keys_" + keyName);
+		ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
+				keysData == KeysData.KEY_NAME ? (String) objectToSave : oldData.getKeyName(),
+				keysData == KeysData.DISPLAY_NAME ? (String) objectToSave : oldData.getDisplayName(),
+				keysData == KeysData.LOOT_TABLE_LINKED ? (String) objectToSave : oldData.getDisplayName(),
+				keysData == KeysData.AMOUNT_NEEDED ? (int) objectToSave : oldData.getAmountNeeded(),
+				keysData == KeysData.ITEM_TYPE ? material : oldData.getItemType(),
+				keysData == KeysData.LORE ? (List<String>) objectToSave : oldData.getLore());
+
+
+		keyDataMap.put("Keys_" + keyName, data);
+
+		ContainerDataBuilder.Builder builder = getCacheContainerBuilder(container);
+		checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + container + " null");
+		builder.setKeysData(keyDataMap);
+
+		this.cacheContainerData.put(container, builder.build());
+		saveTask();
+
 	}
 
 	public List<String> getListOfKeys(String container) {
@@ -167,6 +183,10 @@ public class ContainerData extends YamlUtil {
 		//ContainerDataBuilder lootDataMap = cacheContainerData.get(lootTable);
 
 		cacheContainerData.put(containers, containerDataBuilder);
+		saveTask();
+	}
+
+	public void saveTask() {
 		runtaskLater(5, this::save, true);
 	}
 
@@ -211,25 +231,6 @@ public class ContainerData extends YamlUtil {
 		return serializeData;
 	}
 
-	public static String toStringFormatted(Map<?, ?> serialize) {
-		final List<String> lines = new ArrayList<>();
-
-		lines.add("{");
-
-		for (final Map.Entry<?, ?> entry : serialize.entrySet()) {
-			final Object value = entry.getValue();
-
-			if (value != null && !value.toString().equals("[]") && !value.toString().equals("{}") && !value.toString().isEmpty() && !value.toString().equals("0.0") && !value.toString().equals("false")) {
-				System.out.println("to GenericString " + value.getClass().toGenericString());
-				System.out.println("to String " + value.getClass().toString());
-				lines.add("\t'" + entry.getKey() + "' = '" + value + "'");
-			}
-		}
-
-		lines.add("}");
-
-		return String.join("\n", lines);
-	}
 
 	@Override
 	protected void loadSettingsFromYaml() {
