@@ -550,7 +550,7 @@ Gui_Templets:
   # change the container data for loot table in this menu.
   Alter_ContainerData_Menu:
     Menu_Size: 45
-    Menu_Title: "&1Alter this {0}"
+    Menu_Title: "&1Alter this: {0}"
     # slots you want to use to add items inside.
     Container_Linked_To_LootTable:
       Display_name: "&bChange loottable:&6 {0}"
@@ -615,11 +615,20 @@ Gui_Templets:
       Display_name: "&bRemove or add containers some are linked"
       Enchant: true
       Slot: 32
-      Icon: OBSERVER
+      Icon: CHEST
       Lore:
         - ""
         - "&2Get list of containers"
         - "&2linked to {1}"
+    Change_DisplayName:
+      Display_name: "&bDisplay name: {0}"
+      Enchant: true
+      Slot: 34
+      Icon: CHEST
+      Lore:
+        - ""
+        - "&2Change display name, this will"
+        - "&2show as title when open a container."
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1002,8 +1011,6 @@ Gui_Templets:
   Edit_Key:
     Menu_Size: 45
     Menu_Title: "&1Change key data."
-    # slots you want to use to add fill items inside.
-    FillSpace: 9-35
     Change_Item:
       Display_name: "&bChange item:&6 {0}"
       Enchant: false
@@ -1123,27 +1130,20 @@ Gui_Templets:
   Key_Settings_MobDrop:
     Menu_Size: 45
     Menu_Title: "&1Edit this key: {0}"
-    # slots you want to use to add items inside.
-    FillSpace: 9-35
     Mobs_some_drop_this_key:
-      Display_name: "&bChange the mobs {0}"
+      Display_name: "&bChange the dropps"
       Enchant: true
       Icon: FIREWORK_STAR
-      Slot: 10
+      Slot: 19
       Lore:
         - "&aChange the mobs some dropp this key"
-    Enchant_Item:
-      Display_name: "&bEnchant the item"
-      Enchant: true
-      Icon: ENCHANTED_BOOK
-      Slot: 13
-      Lore:
-        - "&aClick to enchant the item"
+        - "Current mobs dropp this key: "
+        - "&6{0}"
     Change_Chance:
       Display_name: "&bCurrent Chance {0}"
       Enchant: true
       Icon: GREEN_DYE
-      Slot: 30
+      Slot: 21
       Lore:
         - "&aLeftclick to increse with&6 1"
         - "&aLeftclick and shift to increse with&6 {1}"
@@ -1153,7 +1153,7 @@ Gui_Templets:
       Display_name: "&bChange minimum amount {0}"
       Enchant: true
       Icon: GOLDEN_CARROT
-      Slot: 32
+      Slot: 22
       Lore:
         - "&6Set minimum of keys mob can drop."
         - ""
@@ -1165,7 +1165,7 @@ Gui_Templets:
       Display_name: "&bChange maximum amount {0}"
       Enchant: true
       Icon: TROPICAL_FISH
-      Slot: 34
+      Slot: 24
       Lore:
         - "&6Set minimum of keys mob can drop."
         - ""
@@ -1173,13 +1173,6 @@ Gui_Templets:
         - "&aLeftclick and shift to increse with&6 {1}"
         - "&aRightclick to increse with&6 1"
         - "&aRightclick and shift to increse with&6 {2}"
-    Remove_Button:
-      Display_name: "&bRemove item"
-      Enchant: true
-      Icon: BARRIER
-      Slot: 28
-      Lore:
-        - "&aRemove this item"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
