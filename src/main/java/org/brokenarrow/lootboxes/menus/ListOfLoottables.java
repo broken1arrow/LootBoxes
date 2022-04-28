@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -26,7 +26,7 @@ public class ListOfLoottables extends MenuHolder {
 	private final MenuButton previous;
 	private final MenuButton seachButton;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
@@ -79,7 +79,7 @@ public class ListOfLoottables extends MenuHolder {
 
 				if (object instanceof String) {
 					System.out.println("object " + object);
-					ContainerDataBuilder data = containerData.getCacheContainerData(container);
+					ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					ContainerDataBuilder.Builder builder = data.getBuilder();
 					if (!data.getLootTableLinked().isEmpty())
 						player.sendMessage("You change the loottable from " + data.getLootTableLinked() + " to " + object);
@@ -88,7 +88,7 @@ public class ListOfLoottables extends MenuHolder {
 						player.sendMessage("Your change do not change the loottable is same as the old, old " + data.getLootTableLinked() + " new name " + object);
 
 					builder.setContainerDataLinkedToLootTable((String) object);
-					containerData.setContainerData(container, builder.build());
+					containerDataCache.setContainerData(container, builder.build());
 					System.out.println("testr clickibng " + object);
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				}
