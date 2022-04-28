@@ -57,6 +57,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 			if (entityKeyData != null)
 				entityKeyDataSet.add(entityKeyData);
 		}
+		System.out.println("this.entityCache " + this.entityCache);
 		return entityKeyDataSet;
 	}
 
@@ -235,7 +236,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 					List<EntityType> entityList = convertStringToEntityType(customConfig.getStringList(value + "." + childrenKey + ".Entity_list"));
 					if (entityList != null && !entityList.isEmpty()) {
 						for (EntityType entityType : entityList)
-							this.entityCache.put(getFileName(key.getName()) + "#" + entityType, new EntityKeyData(childrenKey, getFileName(key.getName())));
+							this.entityCache.put(getFileName(key.getName()) + "_" + childrenKey + "#" + entityType, new EntityKeyData(childrenKey, getFileName(key.getName())));
 					}
 					KeyMobDropData.Builder builder = new KeyMobDropData.Builder();
 					builder.setChance(chance)
