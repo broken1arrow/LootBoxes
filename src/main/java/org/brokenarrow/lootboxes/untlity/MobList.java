@@ -16,7 +16,7 @@ public class MobList {
 	public MobList() {
 		if (this.entityType == null) {
 			this.entityType = Stream.of(EntityType.values()).filter((entity) -> entity.isSpawnable() && entity.isAlive()
-			).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
+					&& makeSpawnEggs(entity) != null).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
 			firstRun = true;
 		}
 	}
