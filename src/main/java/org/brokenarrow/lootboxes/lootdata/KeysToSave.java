@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.lootdata;
 
-public enum KeysData {
+public enum KeysToSave {
 
 	KEY_NAME,
 	DISPLAY_NAME,
