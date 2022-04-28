@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.untlity;
 
+import org.broken.lib.rbg.TextTranslator;
 import org.bukkit.Location;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
@@ -10,15 +11,15 @@ public class ModifyBlock {
 
 
 	/**
-	 * Get the inventory on the location.
+	 * Set custom name on container.
 	 *
-	 * @param location you want to get the inventory.
-	 * @return inventory or null if it not find inventory.
+	 * @param location were coniner is placed.
+	 * @param text     the tittle you want to set.
 	 */
-	public static void setCustomName(Location location) {
+	public static void setCustomName(Location location, String text) {
 		Block block = location.getBlock();
 		if (!checkBlocktype(block)) return;
-		String text = "test if works too end";
+		text = TextTranslator.toSpigotFormat(text);
 
 		switch (block.getType()) {
 			case HOPPER:
