@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -29,7 +29,7 @@ public class ParticleAnimantion extends MenuHolder {
 	private final MenuButton previous;
 	private final MenuButton seachButton;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
@@ -82,7 +82,7 @@ public class ParticleAnimantion extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 
 				if (object instanceof Particle) {
-					ContainerDataBuilder data = containerData.getCacheContainerData(container);
+					ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					ContainerDataBuilder.Builder builder = data.getBuilder();
 					List<String> particleEffect = data.getParticleEffects();
 					String particle = ((Particle) object).name();
@@ -99,7 +99,7 @@ public class ParticleAnimantion extends MenuHolder {
 					}
 
 					builder.setParticleEffect(particleEffect != null ? particleEffect : Collections.singletonList(particle));
-					containerData.setContainerData(container, builder.build());
+					containerDataCache.setContainerData(container, builder.build());
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				}
 			}
@@ -115,7 +115,7 @@ public class ParticleAnimantion extends MenuHolder {
 
 				if (object instanceof Particle) {
 					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(((Particle) object).name().equals("BLOCK_MARKER") ? "BARRIER" : object).build();
-					ContainerDataBuilder data = containerData.getCacheContainerData(container);
+					ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					List<String> particleEffect = data.getParticleEffects();
 
 					return CreateItemUtily.of(Lootboxes.getInstance().getParticleEffectList().checkParticleList((Particle) object),

@@ -5,7 +5,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.commandprompt.SeachForItem;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -30,7 +30,7 @@ public class EntityTypeListMenu extends MenuHolder {
 	private final MenuButton entityTypeList;
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final Lootboxes plugin = Lootboxes.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 
@@ -46,9 +46,9 @@ public class EntityTypeListMenu extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
 				if (clickType.isLeftClick())
-					new SeachForItem(menuKey, container, value).start(player);
+					new SeachForItem(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
 				else
-					new MatrialList(menuKey, value, container, "").menuOpen(player);
+					new EntityTypeListMenu(menuKey, container, value, "").menuOpen(player);
 			}
 
 			@Override

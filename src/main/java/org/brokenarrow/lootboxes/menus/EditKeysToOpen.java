@@ -1,13 +1,12 @@
 package org.brokenarrow.lootboxes.menus;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.commandprompt.SetKeyName;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
-import org.brokenarrow.lootboxes.lootdata.KeysData;
+import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -23,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDIT_KEYS_FOR_OPEN_MENU;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
@@ -36,14 +36,14 @@ public class EditKeysToOpen extends MenuHolder {
 	private final MenuButton seachButton;
 	private final MenuButton addKeyButton;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerData containerDataInstance = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
 
 	public EditKeysToOpen(String containerData) {
-		super(ContainerData.getInstance().getListOfKeys(containerData));
+		super(ContainerDataCache.getInstance().getListOfKeys(containerData));
 
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Keys_To_Open").placeholders(getPageNumber());
 
@@ -100,14 +100,12 @@ public class EditKeysToOpen extends MenuHolder {
 		listOfItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				System.out.println("KeysToOpen " + object);
 				if (object instanceof String) {
 					if (click.isLeftClick())
 						new EditKey(containerData, (String) object).menuOpen(player);
 					else if (click.isRightClick()) {
-						containerDataInstance.removeCacheKey(containerData, (String) object);
+						containerDataCacheInstance.removeCacheKey(containerData, (String) object);
 						keyDropData.removeKeyMobDropData(containerData, (String) object);
-						//keyDropData.removeFile(containerData);
 						new EditKeysToOpen(containerData).menuOpen(player);
 					}
 				}
@@ -128,7 +126,7 @@ public class EditKeysToOpen extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof String) {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, String.valueOf(object));
+					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, String.valueOf(object));
 					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), object, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), object, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 
@@ -214,7 +212,7 @@ public class EditKeysToOpen extends MenuHolder {
 		private final MenuButton lore;
 		private final MenuButton mobDropKey;
 		private final GuiTempletsYaml.Builder guiTemplets;
-		private final ContainerData containerDataInstance = ContainerData.getInstance();
+		private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 
 		public EditKey(String containerData, String keyName) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Key").placeholders(getPageNumber());
@@ -232,7 +230,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders(keysData.getItemType()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
@@ -245,7 +243,7 @@ public class EditKeysToOpen extends MenuHolder {
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
 
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					int amount = 0;
 					if (clickType == ClickType.LEFT)
 						amount += 1;
@@ -260,14 +258,14 @@ public class EditKeysToOpen extends MenuHolder {
 						amountCached = 64;
 					if (amountCached < 0)
 						amountCached = 0;
-					containerDataInstance.setKeyData(KeysData.AMOUNT_NEEDED, amountCached, containerData, keyName);
+					containerDataCacheInstance.setKeyData(KeysToSave.AMOUNT_NEEDED, amountCached, containerData, keyName);
 
 					updateButtons();
 				}
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
@@ -278,12 +276,12 @@ public class EditKeysToOpen extends MenuHolder {
 			this.displayName = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-					new ChangeDisplaynameLore(containerData, keyName, false).start(player);
+					new ChangeDisplaynameLore(EDITKEY, containerData, keyName, false).start(player);
 				}
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Display_name").placeholders("", placeholderDisplayName).build();
 
@@ -295,12 +293,12 @@ public class EditKeysToOpen extends MenuHolder {
 			this.lore = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-					new ChangeDisplaynameLore(containerData, keyName, true).start(player);
+					new ChangeDisplaynameLore(EDITKEY, containerData, keyName, true).start(player);
 				}
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder.KeysData keysData = containerDataInstance.getCacheKey(containerData, keyName);
+					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keyName, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Lore").placeholders("", placeholdersLore).build();
 
@@ -367,7 +365,7 @@ public class EditKeysToOpen extends MenuHolder {
 		private final MenuButton saveItems;
 		private final MenuButton backButton;
 		private final GuiTempletsYaml.Builder guiTemplets;
-		private final ContainerData containerDataInstance = ContainerData.getInstance();
+		private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 
 		public SaveNewKeys(String containerData) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Save_new_keys");

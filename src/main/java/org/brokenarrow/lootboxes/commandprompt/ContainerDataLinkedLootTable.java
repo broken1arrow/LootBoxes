@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 
 	private ContainerDataBuilder containerData;
 	private String key;
-	private final ContainerData container = ContainerData.getInstance();
+	private final ContainerDataCache container = ContainerDataCache.getInstance();
 
 	public ContainerDataLinkedLootTable(ContainerDataBuilder containerData, String key) {
 		this.containerData = containerData;
@@ -45,7 +45,7 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 			}
 			if (containerData.getLootTableLinked().equals(input))
 				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_NAME_IS_SAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
-			
+
 			builder.setContainerDataLinkedToLootTable(input);
 			container.setContainerData(key, builder.build());
 

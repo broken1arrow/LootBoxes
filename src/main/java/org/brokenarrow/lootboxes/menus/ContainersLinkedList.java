@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.menus;
 
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
@@ -27,10 +27,10 @@ public class ContainersLinkedList extends MenuHolder {
 	private final MenuButton itemList;
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
 	public ContainersLinkedList(String container, String itemsToSearchFor) {
-		super(List.of(ContainerData.getInstance().getCacheContainerData(container).getLinkedContainerData().keySet().toArray()));
+		super(List.of(ContainerDataCache.getInstance().getCacheContainerData(container).getLinkedContainerData().keySet().toArray()));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(getPageNumber());
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
@@ -62,17 +62,17 @@ public class ContainersLinkedList extends MenuHolder {
 
 				if (o instanceof Location) {
 
-					ContainerDataBuilder containerDataBuilder = containerData.getCacheContainerData(container);
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					if (containerDataBuilder != null) {
 						ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-						Map<Location, ContainerDataBuilder.ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
+						Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
 						if (containerDataMap == null)
 							containerDataMap = new HashMap<>();
 						if (clickType.isRightClick()) {
 							containerDataMap.remove(o);
 
 							builder.setContainerData(containerDataMap);
-							containerData.setContainerData(container, builder.build());
+							containerDataCache.setContainerData(container, builder.build());
 						}
 					}
 				}

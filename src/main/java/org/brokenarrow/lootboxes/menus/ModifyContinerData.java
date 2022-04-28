@@ -3,10 +3,11 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.commandprompt.ContainerDataLinkedLootTable;
 import org.brokenarrow.lootboxes.commandprompt.CreateContainerDataName;
 import org.brokenarrow.lootboxes.commandprompt.SpecifyTime;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
@@ -36,13 +37,13 @@ public class ModifyContinerData extends MenuHolder {
 	private final MenuButton seachButton;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final GuiTempletsYaml.Builder guiTemplets;
 
 	public ModifyContinerData() {
-		super(ContainerData.getInstance().getContainerData());
+		super(ContainerDataCache.getInstance().getContainerData());
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_data").placeholders(getPageNumber());
 
 		setMenuSize(guiTemplets.build().getGuiSize());
@@ -106,7 +107,7 @@ public class ModifyContinerData extends MenuHolder {
 					if (click.isLeftClick())
 						new AlterContainerDataMenu((String) object).menuOpen(player);
 					if (click.isRightClick()) {
-						containerData.removeCacheContainerData((String) object);
+						containerDataCache.removeCacheContainerData((String) object);
 						keyDropData.removeFile((String) object);
 					}
 				}
@@ -122,7 +123,7 @@ public class ModifyContinerData extends MenuHolder {
 			public ItemStack getItem(Object object) {
 
 				if (object instanceof String) {
-					ContainerDataBuilder data = containerData.getCacheContainerData(String.valueOf(object));
+					ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(object));
 					if (data != null) {
 						GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object, data.getLootTableLinked(), data.getCooldown(), data.getIcon()).build();
 						ItemStack itemStack = null;
@@ -206,12 +207,13 @@ public class ModifyContinerData extends MenuHolder {
 		private final MenuButton animation;
 		private final MenuButton keys;
 		private final MenuButton changeIcon;
+		private final MenuButton changeDisplayName;
 		private final MenuButton coolddownBetweenContainers;
 		private final MenuButton containers;
 		private final MenuButton backButton;
 		private final MenuButton addRemovecontainers;
 		private final GuiTempletsYaml.Builder guiTemplets;
-		private final ContainerData containerData = ContainerData.getInstance();
+		private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
 		public AlterContainerDataMenu(String container) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Alter_ContainerData_Menu").placeholders(container);
@@ -225,7 +227,7 @@ public class ModifyContinerData extends MenuHolder {
 
 					if (container != null)
 						if (click.isRightClick()) {
-							new ContainerDataLinkedLootTable(containerData.getCacheContainerData(container), container);
+							new ContainerDataLinkedLootTable(containerDataCache.getCacheContainerData(container), container);
 						} else if (click.isLeftClick()) {
 							new ListOfLoottables(container).menuOpen(player);
 						}
@@ -234,7 +236,7 @@ public class ModifyContinerData extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					ContainerDataBuilder containerDataBuilder = containerData.getCacheContainerData(container);
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Container_Linked_To_LootTable").placeholders(containerDataBuilder.getLootTableLinked()).build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
@@ -249,7 +251,7 @@ public class ModifyContinerData extends MenuHolder {
 				@Override
 				public ItemStack getItem() {
 
-					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_Animantion").placeholders("", containerData.getCacheContainerData(container).getParticleEffects()).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_Animantion").placeholders("", containerDataCache.getCacheContainerData(container).getParticleEffects()).build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -262,7 +264,7 @@ public class ModifyContinerData extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Keys_To_Open_Container").placeholders("", containerData.getListOfKeys(container)).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Keys_To_Open_Container").placeholders("", containerDataCache.getListOfKeys(container)).build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -275,7 +277,22 @@ public class ModifyContinerData extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Icon").placeholders("", containerData.getCacheContainerData(container).getCooldown()).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Icon").placeholders("", containerDataCache.getCacheContainerData(container).getCooldown()).build();
+					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			changeDisplayName = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new ChangeDisplaynameLore(ALTER_CONTAINER_DATA_MENU, container, "", false).start(player);
+
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_DisplayName").placeholders(containerDataCache.getCacheContainerData(container).getDisplayname(), container).build();
+
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -346,6 +363,8 @@ public class ModifyContinerData extends MenuHolder {
 				return containerLinkedToLootTable.getItem();
 			if (guiTemplets.menuKey("Particle_Animantion").build().getSlot().contains(slot))
 				return animation.getItem();
+			if (guiTemplets.menuKey("Change_DisplayName").build().getSlot().contains(slot))
+				return changeDisplayName.getItem();
 			if (guiTemplets.menuKey("Keys_To_Open_Container").build().getSlot().contains(slot))
 				return keys.getItem();
 			if (guiTemplets.menuKey("Change_Icon").build().getSlot().contains(slot))

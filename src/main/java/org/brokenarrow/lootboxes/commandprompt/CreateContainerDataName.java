@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.ModifyContinerData;
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class CreateContainerDataName extends SimpleConversation {
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final Material material;
 
 	public CreateContainerDataName(Material material) {
@@ -35,13 +35,13 @@ public class CreateContainerDataName extends SimpleConversation {
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-		
-			if (containerData.containsContainerData(input)) {
+
+			if (containerDataCache.containsContainerData(input)) {
 				CREATE_CONTAINER_DATA_NAME_ALREDY_EXIST.sendMessage(getPlayer(context), input);
 				return getFirstPrompt();
 			}
 			CREATE_CONTAINER_DATA_NAME_CONFIRM.sendMessage(getPlayer(context), input);
-			containerData.putCacheContainerData(input, material);
+			containerDataCache.putCacheContainerData(input, material);
 			new ModifyContinerData().menuOpen(getPlayer(context));
 			return null;
 		}

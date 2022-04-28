@@ -53,7 +53,7 @@ public class Lootboxes extends JavaPlugin {
 		this.settings = new Settings();
 		this.spawnedContainers = new SpawnedContainers();
 		this.makeLootTable = new MakeLootTable();
-		ContainerData.getInstance().reload();
+		ContainerDataCache.getInstance().reload();
 		GuiTempletSettings.getInstance().reload();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
 		Bukkit.getPluginManager().registerEvents(new MobDropListener(), this);

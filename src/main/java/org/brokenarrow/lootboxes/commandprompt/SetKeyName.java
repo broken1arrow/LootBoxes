@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.EditKeysToOpen;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -22,7 +22,7 @@ public class SetKeyName extends SimpleConversation {
 	private final ItemStack[] itemStacks;
 	private final String containerData;
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerData containerDataInstance = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private static final Map<Player, StoreData> chachedPlayer = new HashMap<>();
 
 	public SetKeyName(ItemStack[] itemStacks, String containerData) {
@@ -68,7 +68,7 @@ public class SetKeyName extends SimpleConversation {
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 			Player player = getPlayer(context);
 
-			if (containerDataInstance.containsKeyName(containerData, input)) {
+			if (containerDataCacheInstance.containsKeyName(containerData, input)) {
 				SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
 				return getFirstPrompt();
 			}
@@ -84,14 +84,14 @@ public class SetKeyName extends SimpleConversation {
 							SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
 							return getFirstPrompt();
 						}
-						ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
+						KeysData data = new KeysData(
 								input,
 								meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name().toLowerCase(),
-								containerDataInstance.getCacheContainerData(containerData).getLootTableLinked(),
+								containerDataCacheInstance.getCacheContainerData(containerData).getLootTableLinked(),
 								item.getAmount(),
 								item.getType(),
 								meta.hasLore() ? meta.getLore() : new ArrayList<>());
-						containerDataInstance.setKeyData(containerData, input, data);
+						containerDataCacheInstance.setKeyData(containerData, input, data);
 
 					}
 				} else {
@@ -99,14 +99,14 @@ public class SetKeyName extends SimpleConversation {
 						SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
 						return getFirstPrompt();
 					}
-					ContainerDataBuilder.KeysData data = new ContainerDataBuilder.KeysData(
+					KeysData data = new KeysData(
 							input,
 							item.getType().name().toLowerCase(),
-							containerDataInstance.getCacheContainerData(containerData).getLootTableLinked(),
+							containerDataCacheInstance.getCacheContainerData(containerData).getLootTableLinked(),
 							item.getAmount(),
 							item.getType(),
 							new ArrayList<>());
-					containerDataInstance.setKeyData(containerData, input, data);
+					containerDataCacheInstance.setKeyData(containerData, input, data);
 				}
 			}
 			if (!checkAllItems(player)) {

@@ -1,9 +1,10 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.SettingsData;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -20,7 +21,7 @@ public class SpawnContainerRandomLoc {
 
 	private final SettingsData settings = Settings.getInstance().getSettings();
 	private long time;
-	private final ContainerData containerDataInstance = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 
 	public void task() {
@@ -49,22 +50,22 @@ public class SpawnContainerRandomLoc {
 
 		System.out.println("loc " + loc);
 		if (loc != null) {
-			ContainerDataBuilder containerDataBuilder = containerDataInstance.getCacheContainerData("Global_Container");
+			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData("Global_Container");
 			spawnContainer(containerDataBuilder, loc);
 		}
 
 	}
 
 	public void spawnContainer(ContainerDataBuilder containerData, Location location) {
-		Map<Location, ContainerDataBuilder.ContainerData> containerDataMap = containerData.getLinkedContainerData();
+		Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
-		for (Map.Entry<Location, ContainerDataBuilder.ContainerData> entry : containerDataMap.entrySet()) {
-			ContainerDataBuilder.ContainerData containerData1 = entry.getValue();
+		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
+			ContainerData container = entry.getValue();
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
 
-				location.getBlock().setType(containerData1.getContainerType());
-				setRotation(location, containerData1.getFacing());
-				setCustomName(location);
+				location.getBlock().setType(container.getContainerType());
+				setRotation(location, container.getFacing());
+				setCustomName(location, containerData.getDisplayname());
 
 				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
 

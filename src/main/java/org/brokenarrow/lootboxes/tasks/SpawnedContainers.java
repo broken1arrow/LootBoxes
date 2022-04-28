@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.bukkit.Location;
@@ -19,7 +19,7 @@ public class SpawnedContainers {
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	Map<String, Long> cachedTimeMap = new HashMap<>();
 	Map<String, Long> tempCache = new HashMap<>();
-	private final ContainerData containerDataInstance = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
 
@@ -31,7 +31,7 @@ public class SpawnedContainers {
 			if (time == 0) {
 				setCachedTimeMap(key, time);
 			} else if (System.currentTimeMillis() >= time) {
-				ContainerDataBuilder containerDataBuilder = containerDataInstance.getCacheContainerData(key);
+				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(key);
 				if (containerDataBuilder == null) return;
 				spawnContainer(containerDataBuilder);
 				setCachedTimeMap(key, containerDataBuilder.getCooldown());
@@ -46,17 +46,17 @@ public class SpawnedContainers {
 	}
 
 	public void spawnContainer(ContainerDataBuilder containerData) {
-		Map<Location, ContainerDataBuilder.ContainerData> containerDataMap = containerData.getLinkedContainerData();
+		Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
-		for (Map.Entry<Location, ContainerDataBuilder.ContainerData> entry : containerDataMap.entrySet()) {
-			ContainerDataBuilder.ContainerData containerData1 = entry.getValue();
+		for (Map.Entry<Location, org.brokenarrow.lootboxes.builder.ContainerData> entry : containerDataMap.entrySet()) {
+			org.brokenarrow.lootboxes.builder.ContainerData containerData1 = entry.getValue();
 			Location location = entry.getKey();
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
 				location.getBlock().setType(containerData1.getContainerType());
 
 				location.getBlock().setType(containerData1.getContainerType());
 				setRotation(location, containerData1.getFacing());
-				setCustomName(location);
+				setCustomName(location, containerData.getDisplayname());
 
 				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
 				/*System.out.println("loootTable ===" + Arrays.toString(item));

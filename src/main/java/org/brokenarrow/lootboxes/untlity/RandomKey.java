@@ -1,9 +1,9 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
-import org.brokenarrow.lootboxes.lootdata.ContainerData;
+import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -21,7 +21,7 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 public class RandomKey {
 
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerData containerData = ContainerData.getInstance();
+	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
 	public ItemStack[] makeRandomAmountOfItems(EntityType entety) {
 		List<ItemStack> itemStacks = new ArrayList<>();
@@ -35,7 +35,8 @@ public class RandomKey {
 
 	public ItemStack makeRandomAmountOfItems(String containerData, String keyName) {
 
-
+		System.out.println("containerDataCache " + containerData);
+		System.out.println("containerDataCache " + keyName);
 		KeyMobDropData keyMobDropData = this.keyDropData.getKeyMobDropData(containerData, keyName);
 		if (keyMobDropData == null) return null;
 
@@ -45,7 +46,7 @@ public class RandomKey {
 
 		if (!chance(keyMobDropData.getChance()))
 			return null;
-		ContainerDataBuilder.KeysData keysData = this.containerData.getCacheKey(containerData, keyName);
+		KeysData keysData = this.containerDataCache.getCacheKey(containerData, keyName);
 		String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
 				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
