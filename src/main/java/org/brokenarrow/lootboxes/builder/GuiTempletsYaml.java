@@ -133,7 +133,10 @@ public class GuiTempletsYaml {
 
 		if (lore.contains("{" + number + "}")) {
 			for (Object text : (List<?>) placeholder[number])
-				lores.add(lore.replace(("{" + number + "}"), (String) text));
+				if (text instanceof String)
+					lores.add(lore.replace(("{" + number + "}"), (String) text));
+				else
+					lores.add(lore.replace(("{" + number + "}"), text.toString()));
 			return true;
 		}
 		return false;
