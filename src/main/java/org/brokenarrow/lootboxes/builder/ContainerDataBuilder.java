@@ -1,14 +1,10 @@
 package org.brokenarrow.lootboxes.builder;
 
-import com.google.common.base.Enums;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
 public final class ContainerDataBuilder {
 
@@ -83,6 +79,23 @@ public final class ContainerDataBuilder {
 		return builder;
 	}
 
+	@Override
+	public String toString() {
+		return "ContainerDataBuilder{" +
+				"lootTableLinked='" + lootTableLinked + '\'' +
+				", icon=" + icon +
+				", displayname='" + displayname + '\'' +
+				", lore=" + lore +
+				", particleEffect=" + particleEffect +
+				", containerData=" + containerData +
+				", keysData=" + keysData +
+				", spawning=" + spawning +
+				", enchant=" + enchant +
+				", cooldown=" + cooldown +
+				", builder=" + builder +
+				'}';
+	}
+
 	public static final class Builder {
 
 		private String containerDataLinkedToLootTable;
@@ -149,124 +162,22 @@ public final class ContainerDataBuilder {
 		public ContainerDataBuilder build() {
 			return new ContainerDataBuilder(this);
 		}
-	}
 
-	public static final class ContainerData {
-
-		private final BlockFace facing;
-		private final Material containerType;
-
-		public ContainerData(BlockFace facing, Material containerType) {
-			this.facing = facing;
-			this.containerType = containerType;
-		}
-
-		public ContainerData(String facing, String containerType) {
-			this.facing = addBlockFace(facing);
-			this.containerType = addMatrial(containerType);
-		}
-
-
-		public BlockFace addBlockFace(final String facing) {
-			checkNotNull(facing, "This block face are null.");
-			BlockFace blockFace = Enums.getIfPresent(BlockFace.class, facing).orNull();
-			checkNotNull(blockFace, "This " + facing + " are not valid");
-
-			return blockFace;
-		}
-
-		public Material addMatrial(final String containerType) {
-			checkNotNull(containerType, "This containerType are null.");
-			Material material = Enums.getIfPresent(Material.class, containerType).orNull();
-			checkNotNull(material, "This " + containerType + " are not valid");
-
-			return material;
-		}
-
-		public BlockFace getFacing() {
-			return facing;
-		}
-
-		public Material getContainerType() {
-			return containerType;
+		@Override
+		public String toString() {
+			return "Builder{" +
+					"containerDataLinkedToLootTable='" + containerDataLinkedToLootTable + '\'' +
+					", icon=" + icon +
+					", displayname='" + displayname + '\'' +
+					", lore=" + lore +
+					", particleEffect=" + particleEffect +
+					", containerData=" + containerData +
+					", keysData=" + keysData +
+					", spawning=" + spawning +
+					", enchant=" + enchant +
+					", cooldown=" + cooldown +
+					'}';
 		}
 	}
-
-	public static final class KeysData {
-		private final String keyName;
-		private final String displayName;
-		private final String lootTableLinked;
-		private final int amountNeeded;
-		private final Material itemType;
-		private final List<String> lore;
-
-		public KeysData(String keyName, String displayName, String lootTableLinked, int amountNeeded, Material itemType, List<String> lore) {
-			this.keyName = keyName;
-			this.amountNeeded = amountNeeded;
-			this.itemType = itemType;
-			this.lootTableLinked = lootTableLinked;
-			this.displayName = displayName;
-			this.lore = lore;
-		}
-
-		public KeysData(String keyName, String displayName, String lootTableLinked, int amountNeeded, String itemType, List<String> lore) {
-			this.keyName = keyName;
-			this.amountNeeded = amountNeeded;
-			this.itemType = addMatrial(itemType);
-			this.lootTableLinked = lootTableLinked;
-			this.displayName = displayName;
-			this.lore = lore;
-
-		}
-		
-
-		private Material addMatrial(final String itemType) {
-			checkNotNull(itemType, "This containerType are null.");
-			Material material = Enums.getIfPresent(Material.class, itemType).orNull();
-			checkNotNull(material, "This " + itemType + " are not valid");
-
-			return material;
-		}
-
-		public String getDisplayName() {
-			return displayName;
-		}
-
-		public Material getItemType() {
-			return itemType;
-		}
-
-		public String getKeyName() {
-			return keyName;
-		}
-
-		public int getAmountNeeded() {
-			return amountNeeded;
-		}
-
-		public List<String> getLore() {
-			return lore;
-		}
-
-		public String getLootTableLinked() {
-			return lootTableLinked;
-		}
-	}
-/*
-	@Override
-	public String toString() {
-		return "ContainerDataBuilder{" +
-				"lootTableLinked='" + lootTableLinked + '\'' +
-				", effect='" + effect + '\'' +
-				", icon='" + icon + '\'' +
-				", displayname='" + displayname + '\'' +
-				", lore=" + lore +
-				", containerData=" + containerData +
-				", keysData=" + keysData +
-				", spawning=" + spawning +
-				", enchant=" + enchant +
-				", Cooldown=" + cooldown +
-				", builder=" + builder +
-				'}';
-	}*/
+	
 }
