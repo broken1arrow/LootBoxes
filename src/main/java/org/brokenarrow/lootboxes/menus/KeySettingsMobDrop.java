@@ -9,18 +9,20 @@ import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.brokenarrow.lootboxes.menus.MenuKeys.KEY_SETTINGS_MOBDROP;
 
 public class KeySettingsMobDrop extends MenuHolder {
 	private final MenuButton backButton;
-	private final MenuButton removeButton;
 	private final MenuButton setMobsDropThisKey;
-	private final MenuButton enchantItem;
 	private final MenuButton changeChance;
 	private final MenuButton changeMiniAmount;
 	private final MenuButton changeMaxAmount;
@@ -46,22 +48,10 @@ public class KeySettingsMobDrop extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Mobs_some_drop_this_key").placeholders(data != null ? data.getKeyName() : "").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		enchantItem = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				new CustomizeItem.EnchantMents(continerData, keyName, "").menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Enchant_Item").build();
+				List<String> list = new ArrayList<>();
+				for (EntityType entety : data.getEntityTypes())
+					list.add(entety.name());
+				GuiTempletsYaml gui = guiTemplets.menuKey("Mobs_some_drop_this_key").placeholders(data.getEntityTypes(), data != null ? data.getKeyName() : "").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -172,24 +162,6 @@ public class KeySettingsMobDrop extends MenuHolder {
 						gui.getLore()).makeItemStack();
 			}
 		};
-		removeButton = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-				//lootItems.getLootData(lootTable, itemToEdit);
-				//lootItems.setLootData();
-			}
-
-			@Override
-			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Remove_Button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
 
 		backButton = new MenuButton() {
 
@@ -220,12 +192,8 @@ public class KeySettingsMobDrop extends MenuHolder {
 			return this.changeMiniAmount.getItem();
 		if (guiTemplets.menuKey("Change_Maximum").build().getSlot().contains(slot))
 			return this.changeMaxAmount.getItem();
-		if (guiTemplets.menuKey("Enchant_Item").build().getSlot().contains(slot))
-			return enchantItem.getItem();
 		if (guiTemplets.menuKey("Change_Chance").build().getSlot().contains(slot))
 			return changeChance.getItem();
-		if (guiTemplets.menuKey("Remove_Button").build().getSlot().contains(slot))
-			return removeButton.getItem();
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 			return backButton.getItem();
 
