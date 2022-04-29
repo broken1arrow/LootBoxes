@@ -1,8 +1,12 @@
 package org.brokenarrow.lootboxes.listener;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.menus.ModifyContinerData;
+import org.brokenarrow.lootboxes.untlity.RunTimedTask;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,8 +21,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Map;
 
-import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_LEFT_CLICK_BLOCK;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_RIGHT_CLICK_BLOCK;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
 
 public class PlayerClick implements Listener {
 
@@ -29,28 +34,37 @@ public class PlayerClick implements Listener {
 	public void playerClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
-		if (!player.hasMetadata("addRemovecontainers")) return;
+		if (!player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 
 		Action action = event.getAction();
 		if (action == Action.LEFT_CLICK_AIR && player.isSneaking()) {
-			player.removeMetadata("addRemovecontainers", Lootboxes.getInstance());
-			player.sendMessage("You have now turn now off add ar remove mode");
+			String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
+			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
+
+			RunTimedTask.runtaskLater(5, () -> new ModifyContinerData.AlterContainerDataMenu(metadata).menuOpen(player), false);
+			ADD_CONTINERS_TURN_OFF_ADD_CONTAINERS.sendMessage(player);
 		}
 		if (block == null) return;
 
 		Location location = block.getLocation();
-		if (block.getType() == Material.CHEST || block.getType() == Material.BARREL || block.getType() == Material.HOPPER) {
-			String metadata = (String) player.getMetadata("addRemovecontainers").get(0).value();
-			System.out.println("metadata  " + metadata);
+		if (checkBlockIsContainer(block)) {
+			String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 			ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
+			LocationData locationData = containerDataCache.getLocationData(location);
+
+			if (locationData != null && action == Action.LEFT_CLICK_BLOCK) {
+				ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContinerData());
+				event.setCancelled(true);
+				return;
+			}
 
 			ContainerDataBuilder.Builder builder = data.getBuilder();
-			Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = data.getLinkedContainerData();
+			Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
 			if (!containerDataMap.containsKey(location) && action == Action.LEFT_CLICK_BLOCK) {
 				if (block.getBlockData() instanceof Directional) {
 					event.setCancelled(true);
 					Directional container = (Directional) block.getBlockData();
-					containerDataMap.put(location, new org.brokenarrow.lootboxes.builder.ContainerData(container.getFacing(), block.getType()));
+					containerDataMap.put(location, new ContainerData(container.getFacing(), block.getType()));
 					builder.setContainerData(containerDataMap);
 					if (data.getIcon() == null || data.getIcon() == Material.AIR)
 						builder.setIcon(block.getType());
@@ -59,6 +73,7 @@ public class PlayerClick implements Listener {
 				}
 
 			} else if (action == Action.RIGHT_CLICK_BLOCK) {
+				event.setCancelled(true);
 				containerDataMap.remove(location);
 				builder.setContainerData(containerDataMap);
 				containerDataCache.setContainerData(metadata, builder.build());
@@ -70,14 +85,14 @@ public class PlayerClick implements Listener {
 	@EventHandler
 	public void playerLeftSever(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (player.hasMetadata("addRemovecontainers"))
-			player.removeMetadata("addRemovecontainers", Lootboxes.getInstance());
+		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name()))
+			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
 	}
 
 	@EventHandler
-	public void playerLeftSever(PlayerJoinEvent event) {
+	public void playerJoinSever(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (player.hasMetadata("addRemovecontainers"))
-			player.removeMetadata("addRemovecontainers", Lootboxes.getInstance());
+		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name()))
+			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
 	}
 }
