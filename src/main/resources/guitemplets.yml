@@ -615,16 +615,17 @@ Gui_Templets:
       Display_name: "&bRemove or add containers some are linked"
       Enchant: true
       Slot: 32
-      Icon: CHEST
+      Icon: GOLDEN_SHOVEL
       Lore:
         - ""
-        - "&2Get list of containers"
-        - "&2linked to {1}"
+        - "&2Left click to link chest with hand"
+        - "&2"
+        - "&2Right click to link chest with a item"
     Change_DisplayName:
       Display_name: "&bDisplay name: {0}"
       Enchant: true
       Slot: 34
-      Icon: CHEST
+      Icon: PAPER
       Lore:
         - ""
         - "&2Change display name, this will"
