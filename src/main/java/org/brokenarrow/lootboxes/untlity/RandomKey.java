@@ -9,10 +9,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.RandomUntility.chance;
 import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
@@ -35,8 +35,6 @@ public class RandomKey {
 
 	public ItemStack makeRandomAmountOfItems(String containerData, String keyName) {
 
-		System.out.println("containerDataCache " + containerData);
-		System.out.println("containerDataCache " + keyName);
 		KeyMobDropData keyMobDropData = this.keyDropData.getKeyMobDropData(containerData, keyName);
 		if (keyMobDropData == null) return null;
 
@@ -46,13 +44,18 @@ public class RandomKey {
 
 		if (!chance(keyMobDropData.getChance()))
 			return null;
+		Map<String, Object> map = new HashMap<>();
+
 		KeysData keysData = this.containerDataCache.getCacheKey(containerData, keyName);
+		map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
+		map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
+
 		String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
 				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
 				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 
-		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setAmoutOfItems(amountOfItems).makeItemStack();
+		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(amountOfItems).makeItemStack();
 	}
 
 	private int randomNumber(KeyMobDropData keyMobDropData) {
