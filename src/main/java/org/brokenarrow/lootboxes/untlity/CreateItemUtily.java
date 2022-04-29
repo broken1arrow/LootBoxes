@@ -32,7 +32,7 @@ public final class CreateItemUtily {
 	private final List<ItemFlag> visibleItemFlags = new ArrayList<>();
 	private String itemMetaKey;
 	private String itemMetaValue;
-	private Map<String, String> itemMetaMap;
+	private Map<String, Object> itemMetaMap;
 	private int amoutOfItems;
 	private int enchantmentsLevel = 1;
 	private boolean glow;
@@ -258,7 +258,7 @@ public final class CreateItemUtily {
 	 * @param itemMetaMap map of values.
 	 * @return this class.
 	 */
-	public CreateItemUtily setItemMetaDataList(final Map<String, String> itemMetaMap) {
+	public CreateItemUtily setItemMetaDataList(final Map<String, Object> itemMetaMap) {
 		this.itemMetaMap = itemMetaMap;
 		return this;
 	}
@@ -285,9 +285,9 @@ public final class CreateItemUtily {
 
 		if (itemstack != null && itemstack.getType() != Material.AIR) {
 			if (this.itemMetaMap != null) {
-				/*for (final Map.Entry<String, String> entitys : this.itemMetaMap.entrySet()) {
+				for (final Map.Entry<String, Object> entitys : this.itemMetaMap.entrySet()) {
 					itemstack = CompMetadata.setMetadata(itemstack, entitys.getKey(), entitys.getValue());
-				}*/
+				}
 			} else if (this.itemMetaKey != null && this.itemMetaValue != null) {
 				itemstack = CompMetadata.setMetadata(itemstack, this.itemMetaKey, this.itemMetaValue);
 
