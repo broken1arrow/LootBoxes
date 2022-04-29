@@ -40,10 +40,24 @@ SPECIFY_TIME:
   CONFIRM: "Have now set time: {0}"
 
 ADD_CONTINERS:
-  LEFT_CLICK_BLOCK: "you have now added this container to loottable. {0}"
-  RIGHT_CLICK_BLOCK: "you have now removed this container from loottable."
+  TURNED_ON_ADD_CONTAINERS: "Leftclick to add location and rightclick to remove location,turn off while leftclicking air and sneaking."
+  TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "Leftclick to add location and rightclick to remove location, for turn it off dropp item or switch slot."
+  TURN_OFF_ADD_CONTAINERS: "&fYou have now turn now off add and remove mode."
+  LEFT_CLICK_BLOCK: "&fyou have now added this container to loottable. {0}"
+  RIGHT_CLICK_BLOCK: "&fyou have now removed this container from loottable."
+  THIS_CONTAINER_IS_USED_ALREDY: "This location is used of this {0} container."
+  YOU_DROP_LINK_TOOL: "You will return to the menu."
+  YOU_SWITCH_SLOT_LINK_TOOL: "You will return to the menu."
 
 CREATE_TABLE:
-  TYPE_NAME: "Type name on the table"
-  DUPLICATE: "Is exist alredy table with this name {0}"
-  CONFIRM: "Have now set name on the table: {0}"
+  TYPE_NAME: "&fType name on the table"
+  DUPLICATE: "&fIs exist alredy table with this name {0}"
+  CONFIRM: "&fHave now set name on the table: {0}"
+
+CONTAINER_OPEN:
+  LOOKED_CONTAINER_TRY_OPEN: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and needed this keys&6 {1}&f."
+  LOOKED_CONTAINER_NOT_RIGHT_ITEM: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and item you need&6 {1}&f."
+  LOOKED_CONTAINER_NOT_RIGHT_AMOUNT: "&fThis container is locked becuse  you don´t have right amount of items.You have&6 {0}&f and need&6 {1}&f."
+  LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED."
+  UNLOOKED_CONTAINER_SOUND: "ENTITY_VILLAGER_CELEBRATE"
+  
