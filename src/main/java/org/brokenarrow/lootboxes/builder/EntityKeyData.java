@@ -16,4 +16,12 @@ public class EntityKeyData {
 	public String getContainerDataFileName() {
 		return containerDataFileName;
 	}
+
+	@Override
+	public String toString() {
+		return "EntityKeyData{" +
+				"keyName='" + keyName + '\'' +
+				", containerDataFileName='" + containerDataFileName + '\'' +
+				'}';
+	}
 }
