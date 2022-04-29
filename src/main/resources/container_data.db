@@ -15,7 +15,7 @@ Data:
           - "&aAmount of keys needed {2}."
     Enchant: false
     Icon: CHEST
-    Display_name: "&6{0}"
+    Display_name: "&6Random loot"
     Lore:
       - "&aChange with loottable some are linked"
       - "&aand get info on all linked containers."
