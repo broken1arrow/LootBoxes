@@ -57,7 +57,6 @@ public class KeyDropData extends AllYamlFilesInFolder {
 			if (entityKeyData != null)
 				entityKeyDataSet.add(entityKeyData);
 		}
-		System.out.println("this.entityCache " + this.entityCache);
 		return entityKeyDataSet;
 	}
 
