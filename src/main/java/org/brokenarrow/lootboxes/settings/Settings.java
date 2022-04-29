@@ -8,8 +8,6 @@ import java.util.Map;
 
 public class Settings extends YamlUtil {
 
-	private static final Settings instance = new Settings();
-
 	public Settings() {
 		super("Settings.yml", "Settings.yml");
 	}
@@ -55,9 +53,5 @@ public class Settings extends YamlUtil {
 				.build();
 
 		settings.put("Settings", settingsData);
-	}
-
-	public static Settings getInstance() {
-		return instance;
 	}
 }
