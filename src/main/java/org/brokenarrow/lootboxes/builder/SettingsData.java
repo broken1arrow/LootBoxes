@@ -1,7 +1,12 @@
 package org.brokenarrow.lootboxes.builder;
 
+import java.util.List;
+
 public final class SettingsData {
 	private final String language;
+	private final String linkToolItem;
+	private final String linkToolDisplayName;
+	private final List<String> linkToolLore;
 	private final int amountOfBlocksBelowSurface;
 	private final int increse;
 	private final int decrese;
@@ -13,6 +18,9 @@ public final class SettingsData {
 
 	private SettingsData(Builder builder) {
 		this.language = builder.language;
+		this.linkToolItem = builder.linkToolItem;
+		linkToolDisplayName = builder.linkToolDisplayName;
+		linkToolLore = builder.linkToolLore;
 		this.amountOfBlocksBelowSurface = builder.amountOfBlocksBelowSurface;
 		this.spawnOnSurface = builder.spawnOnSurface;
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
@@ -26,6 +34,18 @@ public final class SettingsData {
 
 	public String getLanguage() {
 		return language;
+	}
+
+	public String getLinkToolItem() {
+		return linkToolItem;
+	}
+
+	public String getLinkToolDisplayName() {
+		return linkToolDisplayName;
+	}
+
+	public List<String> getLinkToolLore() {
+		return linkToolLore;
 	}
 
 	/**
@@ -73,6 +93,9 @@ public final class SettingsData {
 	public static class Builder {
 
 		private String language;
+		private String linkToolItem;
+		private String linkToolDisplayName;
+		private List<String> linkToolLore;
 		private int amountOfBlocksBelowSurface;
 		private int increse;
 		private int decrese;
@@ -84,6 +107,21 @@ public final class SettingsData {
 
 		public Builder setLanguage(String language) {
 			this.language = language;
+			return this;
+		}
+
+		public Builder setLinkToolItem(String linkToolItem) {
+			this.linkToolItem = linkToolItem;
+			return this;
+		}
+
+		public Builder setLinkToolDisplayName(String linkToolDisplayName) {
+			this.linkToolDisplayName = linkToolDisplayName;
+			return this;
+		}
+
+		public Builder setLinkToolLore(List<String> linkToolLore) {
+			this.linkToolLore = linkToolLore;
 			return this;
 		}
 
