@@ -59,8 +59,7 @@ public class SpawnedContainers {
 				setCustomName(location, containerData.getDisplayname());
 
 				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
-				/*System.out.println("loootTable ===" + Arrays.toString(item));
-				System.out.println("loc " + location);*/
+		
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {
 					inventory.setContents(item);
