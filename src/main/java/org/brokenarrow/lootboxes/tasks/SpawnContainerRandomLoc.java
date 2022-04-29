@@ -5,7 +5,6 @@ import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,13 +20,13 @@ import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
 
 public class SpawnContainerRandomLoc {
 
-	private final SettingsData settings = Settings.getInstance().getSettings();
+	private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettings();
 	private long time;
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 
 	public void task() {
-		if (Lootboxes.getInstance().getSettings().getSettings().isRandomContinerSpawn())
+		if (settings.isRandomContinerSpawn())
 			if (this.time == 0)
 				this.time = System.currentTimeMillis() + (1000 * 5);
 			else if (System.currentTimeMillis() >= this.time) {
@@ -84,7 +83,7 @@ public class SpawnContainerRandomLoc {
 		int randomY = randomIntNumber(-20, 20);
 		int randomX = randomIntNumber(-20, 20);
 		int randomZ = randomIntNumber(-20, 20);
-		
+
 
 		int numberX = x + randomX;
 		int numberY = y + randomY;
