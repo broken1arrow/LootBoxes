@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.settings;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Settings extends YamlUtil {
@@ -35,6 +36,10 @@ public class Settings extends YamlUtil {
 		int increse = customConfig.getInt("Max_and_min_amount.Increse_with");
 		int decrese = customConfig.getInt("Max_and_min_amount.Decrese_with");
 		String language = customConfig.getString("Language");
+		String linkTool = customConfig.getString("Link_tool.Item");
+		String linkToolDisplayName = customConfig.getString("Link_tool.Display_name");
+		List<String> linkToolLore = customConfig.getStringList("Link_tool.Lore");
+
 		SettingsData settingsData = new SettingsData.Builder()
 				.setAmountOfBlocksBelowSurface(amountOfBlocksBelowSurface)
 				.setWarnBeforeSaveWithMetadata(warnBeforeSaveWithMetadata)
@@ -44,6 +49,9 @@ public class Settings extends YamlUtil {
 				.setIncrese(increse)
 				.setDecrese(decrese)
 				.setLanguage(language)
+				.setLinkToolItem(linkTool)
+				.setLinkToolDisplayName(linkToolDisplayName)
+				.setLinkToolLore(linkToolLore)
 				.build();
 
 		settings.put("Settings", settingsData);
