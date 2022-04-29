@@ -6,7 +6,9 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -39,11 +41,7 @@ public class SpawnContainerRandomLoc {
 	}
 
 	public void spawnBlock(Location location, Player player) {
-		Location clone = location.clone();
 
-		int x = clone.getBlockX();
-		int y = clone.getBlockY();
-		int z = clone.getBlockZ();
 		int blocksAwayFromPlayer = 10;
 		int amountToCheck = 5;
 		Location loc = checkLocation(location, amountToCheck, blocksAwayFromPlayer, player);
@@ -82,25 +80,11 @@ public class SpawnContainerRandomLoc {
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
 
-/*
-		final double randomRadius = random.nextDouble() * 30;
-		final double theta = Math.toRadians(random.nextDouble() * 360);
-		final double phi = Math.toRadians(random.nextDouble() * 180 - 90);
-
-		final double xx = randomRadius * Math.cos(theta) * Math.sin(phi);
-		final double zz = randomRadius * Math.cos(phi);
-
-		System.out.println("xx " + xx);
-		System.out.println("zz " + zz);
-		double y1 = randomRadius * Math.sin(theta) * Math.cos(phi);
-*/
 
 		int randomY = randomIntNumber(-20, 20);
 		int randomX = randomIntNumber(-20, 20);
 		int randomZ = randomIntNumber(-20, 20);
-
-		int angleX = (int) (((blocksAwayFromPlayer * randomX)) * Math.PI / (45));
-		int angleZ = (int) (((blocksAwayFromPlayer * randomZ)) * Math.PI / (45));
+		
 
 		int numberX = x + randomX;
 		int numberY = y + randomY;
@@ -166,7 +150,6 @@ public class SpawnContainerRandomLoc {
 
 					Location cloneLoc = location.clone().add(amountOfBlocksToCheck, amountOfBlocksToCheck, amountOfBlocksToCheck);
 					Location loc = cloneLoc.subtract(X, Y, Z);
-					loc.getWorld().spawnParticle(Particle.BLOCK_MARKER, loc, 1, Material.BARRIER.createBlockData());
 
 					if (checkBlock(loc.getBlock())) {
 						hasNearbyChest = true;
@@ -190,7 +173,6 @@ public class SpawnContainerRandomLoc {
 
 					Location cloneLoc = location.clone().add(amountOfBlocksToCheck, amountOfBlocksToCheck, amountOfBlocksToCheck);
 					Location loc = cloneLoc.subtract(X, Y, Z);
-					loc.getWorld().spawnParticle(Particle.BLOCK_MARKER, loc, 1, Material.BARRIER.createBlockData());
 
 					if (loc.getBlockX() == playerLocation.getBlockX() && loc.getBlockZ() == playerLocation.getBlockZ() && loc.getBlockY() == playerLocation.getBlockY()) {
 						hasNearbyPlayer = true;
