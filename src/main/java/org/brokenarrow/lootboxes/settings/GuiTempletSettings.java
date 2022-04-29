@@ -2,7 +2,6 @@ package org.brokenarrow.lootboxes.settings;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,26 +33,39 @@ public class GuiTempletSettings extends YamlUtil {
 					for (String innerChildrenKeys : innerConfigKeys.getKeys(false)) {
 						if (!innerChildrenKeys.equals("Menu_Size") && !innerChildrenKeys.equals("Menu_Title") && !innerChildrenKeys.equals("FillSpace")) {
 
-							int MenuGuiSize = this.customConfig.getInt("Gui_Templets." + mainKey + "." + "Menu_Size");
-							String MenuGuiTitle = this.customConfig.getString("Gui_Templets." + mainKey + "." + "Menu_Title");
-							String MenuFillSpace = this.customConfig.getString("Gui_Templets." + mainKey + "." + "FillSpace");
-							int MenuMaxAmountOfItems = this.customConfig.getInt("Gui_Templets." + mainKey + "." + "Max_Amount_Of_Items");
-							String playlistDisplayname = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Display_name");
-							String playlistslot = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Slot");
-							String playlistIcon = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Icon");
+							int menuGuiSize = this.customConfig.getInt("Gui_Templets." + mainKey + "." + "Menu_Size");
+							String menuGuiTitle = this.customConfig.getString("Gui_Templets." + mainKey + "." + "Menu_Title");
+							String fillSpace = this.customConfig.getString("Gui_Templets." + mainKey + "." + "FillSpace");
+							int maxAmountOfItems = this.customConfig.getInt("Gui_Templets." + mainKey + "." + "Max_Amount_Of_Items");
+
+							String displayname = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Display_name");
+							String slot = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Slot");
+							String icon = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Icon");
 							boolean glow = this.customConfig.getBoolean("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Enchant");
-							List<String> playlistLore = this.customConfig.getStringList("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Lore");
+							List<String> lore = this.customConfig.getStringList("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Lore");
 
-							yamlData.put(mainKey + "_" + innerChildrenKeys, Guidata.of(glow, playlistDisplayname, playlistslot, playlistIcon, playlistLore));
-							yamlData.put(mainKey, Guidata.of(MenuGuiTitle, MenuGuiSize, "", "", "", new ArrayList<>(), MenuFillSpace, MenuMaxAmountOfItems));
+							Guidata.Builder builder = new Guidata.Builder()
+									.setDisplayname(displayname)
+									.setGlow(glow)
+									.setIcon(icon)
+									.setLore(lore)
+									.setSlot(slot);
+							yamlData.put(mainKey + "_" + innerChildrenKeys, builder.build());
+							builder = new Guidata.Builder()
+									.setMenuFillSpace(fillSpace)
+									.setMenuMaxAmountOfItems(maxAmountOfItems)
+									.setMenuSize(menuGuiSize)
+									.setMenuTitle(menuGuiTitle);
+							yamlData.put(mainKey, builder.build());
 
-							if (!yamlData.isEmpty()) {
-								setDataYamlfile(mainKey, yamlData);
-							}
 						}
 					}
+				if (!yamlData.isEmpty()) {
+					setDataYamlfile(mainKey, yamlData);
+				}
 			}
 		}
+
 	}
 
 
@@ -66,6 +78,10 @@ public class GuiTempletSettings extends YamlUtil {
 		return this.chacheGuiSettings.get(childrenKey);
 	}
 
+	public static GuiTempletSettings getInstance() {
+		return instance;
+	}
+	/*
 	public static class Guidata {
 		private int menuSize;
 		private String menuTitle = "";
@@ -162,5 +178,5 @@ public class GuiTempletSettings extends YamlUtil {
 
 	public static GuiTempletSettings getInstance() {
 		return instance;
-	}
+	}*/
 }

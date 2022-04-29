@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.builder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
+import org.brokenarrow.lootboxes.settings.Guidata;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.SkullCreator;
 import org.bukkit.ChatColor;
@@ -95,7 +96,7 @@ public class GuiTempletsYaml {
 
 	public String getDisplayName(String menuName, String menuItemKey, Object... placeholders) {
 		if (menuName != null && menuItemKey != null) {
-			GuiTempletSettings.Guidata displayname = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			Guidata displayname = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.DisplayName, displayname))
 				return translatePlaceholders(displayname.getDisplayname(), placeholders);
 		}
@@ -112,7 +113,7 @@ public class GuiTempletsYaml {
 	public List<String> getLore(String menuName, String menuItemKey, Object... placeholders) {
 		List<String> lores = new ArrayList<>();
 		if (menuName != null && menuItemKey != null) {
-			GuiTempletSettings.Guidata guidata = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			Guidata guidata = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.Lore, guidata))
 				for (String lore : guidata.getLore()) {
 					boolean containsPlaceholder = checkListForPlaceholders(lores, lore, placeholders);
@@ -163,7 +164,7 @@ public class GuiTempletsYaml {
 
 	public String getGuiTitle(String menuName, Object... placeholders) {
 		if (menuName != null) {
-			Map<String, GuiTempletSettings.Guidata> gui = this.guiTemplets.getGuiValues(menuName);
+			Map<String, Guidata> gui = this.guiTemplets.getGuiValues(menuName);
 			if (gui != null)
 				return ChatColor.translateAlternateColorCodes('&', translatePlaceholders(gui.get(menuName).getMenuTitle(), placeholders));
 		}
@@ -181,7 +182,7 @@ public class GuiTempletsYaml {
 	public List<Integer> getFillSpace(String menuName, String menuItemKey) {
 		List<Integer> slotList = new ArrayList<>();
 		if (menuName != null) {
-			GuiTempletSettings.Guidata guiData;
+			Guidata guiData;
 			if (menuItemKey == null)
 				guiData = guiTemplets.getGuiValues(menuName).get(menuName);
 			else
@@ -212,7 +213,7 @@ public class GuiTempletsYaml {
 
 	public int getMaxAmountOfItems(String menuName) {
 		if (menuName != null) {
-			GuiTempletSettings.Guidata guiData = guiTemplets.getGuiValues(menuName).get(menuName);
+			Guidata guiData = guiTemplets.getGuiValues(menuName).get(menuName);
 			if (checkNull(menuName, null, YamlKeys.MaxAmountOfItems, guiData))
 				return guiData.getMenuMaxAmountOfItems();
 		}
@@ -221,7 +222,7 @@ public class GuiTempletsYaml {
 
 	public int getGuiSize() {
 		if (this.menuName != null) {
-			GuiTempletSettings.Guidata guiData = this.guiTemplets.getGuiValues(this.menuName).get(this.menuName);
+			Guidata guiData = this.guiTemplets.getGuiValues(this.menuName).get(this.menuName);
 			if (checkNull(this.menuName, null, YamlKeys.GuiSize, guiData))
 				return guiData.getMenuSize();
 		}
@@ -230,7 +231,7 @@ public class GuiTempletsYaml {
 
 	public int getGuiSize(String menuName) {
 		if (menuName != null) {
-			GuiTempletSettings.Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName);
+			Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName);
 			if (checkNull(menuName, null, YamlKeys.GuiSize, guiData))
 				return guiData.getMenuSize();
 		}
@@ -241,7 +242,7 @@ public class GuiTempletsYaml {
 		List<Integer> slotList = new ArrayList<>();
 		String slots = null;
 		if (menuName != null && menuItemKey != null) {
-			GuiTempletSettings.Guidata guidata = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			Guidata guidata = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.Slot, guidata))
 				slots = guidata.getSlot();
 
@@ -271,7 +272,7 @@ public class GuiTempletsYaml {
 	public ItemStack getIcon(String menuName, String menuItemKey, UUID player) {
 
 		if (menuName != null && menuItemKey != null) {
-			GuiTempletSettings.Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (!checkNull(menuName, menuItemKey, YamlKeys.Icon, guiData)) return null;
 
 			String icon = guiData.getIcon();
@@ -308,7 +309,7 @@ public class GuiTempletsYaml {
 	}
 
 
-	private static boolean checkNull(String menu, String menuItemKey, YamlKeys typeOfKeyMissing, GuiTempletSettings.Guidata object) {
+	private static boolean checkNull(String menu, String menuItemKey, YamlKeys typeOfKeyMissing, Guidata object) {
 		if (object == null)
 			plugin.getLogger().log(Level.INFO, "In this menu " + menu + (menuItemKey != null ? " and this icon " + menuItemKey : "") + ", do you missing this " + typeOfKeyMissing.name() + " key in your guitemplet.yml.");
 		return object != null;
