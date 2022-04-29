@@ -2,7 +2,9 @@ package org.brokenarrow.lootboxes;
 
 
 import org.brokenarrow.lootboxes.commands.CommandsGroup;
+import org.brokenarrow.lootboxes.listener.LinkTool;
 import org.brokenarrow.lootboxes.listener.MobDropListener;
+import org.brokenarrow.lootboxes.listener.OpenContainer;
 import org.brokenarrow.lootboxes.listener.PlayerClick;
 import org.brokenarrow.lootboxes.lootdata.*;
 import org.brokenarrow.lootboxes.runTask.RunTask;
@@ -53,16 +55,12 @@ public class Lootboxes extends JavaPlugin {
 		this.settings = new Settings();
 		this.spawnedContainers = new SpawnedContainers();
 		this.makeLootTable = new MakeLootTable();
-		ContainerDataCache.getInstance().reload();
-		GuiTempletSettings.getInstance().reload();
+		reloadFiles();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
 		Bukkit.getPluginManager().registerEvents(new MobDropListener(), this);
-		this.settings.reload();
-		LootItems.getInstance().reload();
-		ItemData.getInstance().reload();
-		KeyDropData.getInstance().reload();
+		Bukkit.getPluginManager().registerEvents(new OpenContainer(), this);
+		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
 		new RegisterMenuAPI(this);
-		ChatMessages.messagesReload(this);
 		commandRegister = new CommandRegister(this, "lootbox", new CommandsGroup());
 		this.mobList = new MobList();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -76,6 +74,16 @@ public class Lootboxes extends JavaPlugin {
 			placeholderAPIMissing = true;
 		}
 		this.getLogger().log(Level.INFO, "Start Lootboxes");
+	}
+
+	public void reloadFiles() {
+		ContainerDataCache.getInstance().reload();
+		GuiTempletSettings.getInstance().reload();
+		this.settings.reload();
+		LootItems.getInstance().reload();
+		ItemData.getInstance().reload();
+		KeyDropData.getInstance().reload();
+		ChatMessages.messagesReload(this);
 	}
 
 	public static Lootboxes getInstance() {
