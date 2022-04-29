@@ -1,16 +1,14 @@
 package org.brokenarrow.lootboxes.builder;
 
-import java.util.Set;
+import java.util.Map;
 
 public class LocationData {
 
 	private final String continerData;
-	private final String displayname;
-	private final Set<String> keys;
+	private final Map<String, KeysData> keys;
 
-	public LocationData(String continerData, String displayname, Set<String> keys) {
+	public LocationData(String continerData, Map<String, KeysData> keys) {
 		this.continerData = continerData;
-		this.displayname = displayname;
 		this.keys = keys;
 	}
 
@@ -18,19 +16,16 @@ public class LocationData {
 		return continerData;
 	}
 
-	public String getDisplayname() {
-		return displayname;
-	}
 
-	public Set<String> getKeys() {
+	public Map<String, KeysData> getKeys() {
 		return keys;
 	}
+
 
 	@Override
 	public String toString() {
 		return "LocationData{" +
 				"continerData='" + continerData + '\'' +
-				", displayname='" + displayname + '\'' +
 				", keys=" + keys +
 				'}';
 	}
