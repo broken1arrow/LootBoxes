@@ -65,7 +65,6 @@ public class ContainerDataCache extends YamlUtil {
 			cacheKeysData = this.getCacheKeysData(continerDataName);
 		} else
 			cacheKeysData = keysDataMap;
-		System.out.println("linkedContainerData " + linkedContainerData);
 		for (Location location : linkedContainerData)
 			putChachedLocations(location, new LocationData(continerDataName, cacheKeysData));
 	}
