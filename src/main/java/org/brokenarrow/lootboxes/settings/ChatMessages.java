@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -37,9 +38,20 @@ public class ChatMessages {
 	public static ChatMessages SPECIFY_TIME_CONFIRM = new ChatMessages("SPECIFY_TIME.CONFIRM");
 	public static ChatMessages ADD_CONTINERS_LEFT_CLICK_BLOCK = new ChatMessages("ADD_CONTINERS.LEFT_CLICK_BLOCK");
 	public static ChatMessages ADD_CONTINERS_RIGHT_CLICK_BLOCK = new ChatMessages("ADD_CONTINERS.RIGHT_CLICK_BLOCK");
+	public static ChatMessages ADD_CONTINERS_TURN_OFF_ADD_CONTAINERS = new ChatMessages("ADD_CONTINERS.TURN_OFF_ADD_CONTAINERS");
+	public static ChatMessages ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY = new ChatMessages("ADD_CONTINERS.THIS_CONTAINER_IS_USED_ALREDY");
+	public static ChatMessages ADD_CONTINERS_TURN_ON_ADD_CONTAINERS = new ChatMessages("ADD_CONTINERS.TURNED_ON_ADD_CONTAINERS");
+	public static ChatMessages ADD_CONTINERS_YOU_DROP_LINK_TOOL = new ChatMessages("ADD_CONTINERS.YOU_DROP_LINK_TOOL");
+	public static ChatMessages ADD_CONTINERS_YOU_SWITCH_SLOT_LINK_TOOL = new ChatMessages("ADD_CONTINERS.YOU_SWITCH_SLOT_LINK_TOOL");
+	public static ChatMessages ADD_CONTINERS_TURNED_ON_ADD_CONTAINERS_WITH_TOOL = new ChatMessages("ADD_CONTINERS.TURNED_ON_ADD_CONTAINERS_WITH_TOOL");
 	public static ChatMessages CREATE_TABLE_TYPE_NAME = new ChatMessages("CREATE_TABLE.TYPE_NAME");
 	public static ChatMessages CREATE_TABLE_DUPLICATE = new ChatMessages("CREATE_TABLE.DUPLICATE");
 	public static ChatMessages CREATE_TABLE_CONFIRM = new ChatMessages("CREATE_TABLE.CONFIRM");
+	public static ChatMessages LOOKED_CONTAINER_NOT_RIGHT_ITEM = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_NOT_RIGHT_ITEM");
+	public static ChatMessages LOOKED_CONTAINER_NOT_RIGHT_AMOUNT = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_NOT_RIGHT_AMOUNT");
+	public static ChatMessages LOOKED_CONTAINER_SOUND = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_SOUND");
+	public static ChatMessages UNLOOKED_CONTAINER_SOUND = new ChatMessages("CONTAINER_OPEN.UNLOOKED_CONTAINER_SOUND");
+	public static ChatMessages LOOKED_CONTAINER_TRY_OPEN = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_TRY_OPEN");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 
 	public ChatMessages(String idKey) {
@@ -50,9 +62,10 @@ public class ChatMessages {
 		if (this.messages != null && !this.messages.isEmpty()) {
 			String msg = this.messages;
 
-			for (int i = 0; i < objects.length; i++)
-				msg = msg.replace("{" + i + "}", objects[i].toString());
-
+			for (int i = 0; i < objects.length; i++) {
+				Object object = convertList(objects[i]);
+				msg = msg.replace("{" + i + "}", object.toString());
+			}
 			return msg;
 
 		}
@@ -63,6 +76,16 @@ public class ChatMessages {
 		if (PREFIX.getMessages() != null)
 			return PREFIX.getMessages();
 		return "";
+	}
+
+	public Object convertList(Object object) {
+		if (object instanceof List) {
+			String converted = object.toString();
+			int start = converted.indexOf('[');
+			return converted.substring(start + 1, converted.length() - 1);
+		} else return object;
+
+
 	}
 
 	public void sendMessage(Player sender, Object... objects) {
