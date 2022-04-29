@@ -53,12 +53,24 @@ public class ContainerDataCache extends YamlUtil {
 		this.chachedLocations.put(location, locationData);
 	}
 
-	public void addChachedLocation(String continerDataName, String displayName, Map<Location, ContainerData> map, Set<String> keyNames) {
-		for (Location location : map.keySet())
-			putChachedLocations(location, new LocationData(continerDataName, displayName, keyNames));
+	public void addChachedLocation(String continerDataName, Map<Location, ContainerData> map, Map<String, KeysData> keysDataMap) {
+		Set<Location> linkedContainerData;
+		Map<String, KeysData> cacheKeysData;
+		this.chachedLocations.clear();
+		if (map.isEmpty()) {
+			linkedContainerData = this.getLinkedContainers(continerDataName).keySet();
+		} else
+			linkedContainerData = map.keySet();
+		if (keysDataMap.isEmpty()) {
+			cacheKeysData = this.getCacheKeysData(continerDataName);
+		} else
+			cacheKeysData = keysDataMap;
+		System.out.println("linkedContainerData " + linkedContainerData);
+		for (Location location : linkedContainerData)
+			putChachedLocations(location, new LocationData(continerDataName, cacheKeysData));
 	}
 
-	public void putCacheContainerData(String container, Material material) {
+	public void setCacheContainerDataCache(String container, Material material) {
 
 		ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
 		builder.setContainerDataLinkedToLootTable("").setSpawning(true).setCooldown(1800).setParticleEffect(new ArrayList<>())
@@ -81,7 +93,7 @@ public class ContainerDataCache extends YamlUtil {
 		return null;
 	}
 
-	public org.brokenarrow.lootboxes.builder.KeysData getCacheKey(String container, String keyName) {
+	public KeysData getCacheKey(String container, String keyName) {
 		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getKeysData().get("Keys_" + keyName);
@@ -89,19 +101,35 @@ public class ContainerDataCache extends YamlUtil {
 		return null;
 	}
 
-	public Map<String, org.brokenarrow.lootboxes.builder.KeysData> getCacheKeys(String container) {
-		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+	public Map<String, KeysData> getCacheKeys(String containerDataCacheName) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getKeysData();
 
+		return new HashMap<>();
+	}
+
+	public ContainerData getLinkedContainerData(String containerDataCacheName, Location location) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getLinkedContainerData().get(location);
+
 		return null;
+	}
+
+	public Map<Location, ContainerData> getLinkedContainers(String containerDataCacheName) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getLinkedContainerData();
+
+		return new HashMap<>();
 	}
 
 	public void removeCacheContainerData(String container) {
 		cacheContainerData.remove(container);
 	}
 
-	public org.brokenarrow.lootboxes.builder.KeysData removeCacheKey(String container, String keyName) {
+	public KeysData removeCacheKey(String container, String keyName) {
 		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
 		if (containerDataBuilder != null) {
 			saveTask();
@@ -110,11 +138,11 @@ public class ContainerDataCache extends YamlUtil {
 		return null;
 	}
 
-	public Map<String, org.brokenarrow.lootboxes.builder.KeysData> getCacheKeysData(String container) {
+	public Map<String, KeysData> getCacheKeysData(String container) {
 		return cacheContainerData.get(container).getKeysData();
 	}
 
-	public void setKeyData(String containerData, String keyName, org.brokenarrow.lootboxes.builder.KeysData keysData) {
+	public void setKeyData(String containerData, String keyName, KeysData keysData) {
 
 		ContainerDataBuilder containerDataBuilder = getCacheContainerData(containerData);
 		checkNotNull(containerDataBuilder, "Some reason are ContainerDataBuilder for this containerData " + containerData + " null");
@@ -124,6 +152,7 @@ public class ContainerDataCache extends YamlUtil {
 		builder.setKeysData(keysDataMap);
 
 		this.cacheContainerData.put(containerData, builder.build());
+		addChachedLocation(containerData, new HashMap<>(), keysDataMap);
 		saveTask();
 	}
 
@@ -135,7 +164,7 @@ public class ContainerDataCache extends YamlUtil {
 	}
 
 	public void setKeyData(KeysToSave keysToSave, Object objectToSave, String container, String keyName) {
-		Map<String, org.brokenarrow.lootboxes.builder.KeysData> keyDataMap = getCacheKeys(container);
+		Map<String, KeysData> keyDataMap = getCacheKeys(container);
 
 		Material material = null;
 		if (keysToSave == KeysToSave.ITEM_TYPE) {
@@ -147,11 +176,11 @@ public class ContainerDataCache extends YamlUtil {
 		}
 		if (keyDataMap == null)
 			keyDataMap = new HashMap<>();
-		org.brokenarrow.lootboxes.builder.KeysData oldData = keyDataMap.get("Keys_" + keyName);
-		org.brokenarrow.lootboxes.builder.KeysData data = new org.brokenarrow.lootboxes.builder.KeysData(
+		KeysData oldData = keyDataMap.get("Keys_" + keyName);
+		KeysData data = new org.brokenarrow.lootboxes.builder.KeysData(
 				keysToSave == KeysToSave.KEY_NAME ? (String) objectToSave : oldData.getKeyName(),
 				keysToSave == KeysToSave.DISPLAY_NAME ? (String) objectToSave : oldData.getDisplayName(),
-				keysToSave == KeysToSave.LOOT_TABLE_LINKED ? (String) objectToSave : oldData.getDisplayName(),
+				keysToSave == KeysToSave.LOOT_TABLE_LINKED ? (String) objectToSave : oldData.getLootTableLinked(),
 				keysToSave == KeysToSave.AMOUNT_NEEDED ? (int) objectToSave : oldData.getAmountNeeded(),
 				keysToSave == KeysToSave.ITEM_TYPE ? material : oldData.getItemType(),
 				keysToSave == KeysToSave.LORE ? (List<String>) objectToSave : oldData.getLore());
@@ -164,6 +193,7 @@ public class ContainerDataCache extends YamlUtil {
 		builder.setKeysData(keyDataMap);
 
 		this.cacheContainerData.put(container, builder.build());
+		addChachedLocation(container, new HashMap<>(), keyDataMap);
 		saveTask();
 
 	}
@@ -191,6 +221,8 @@ public class ContainerDataCache extends YamlUtil {
 		//ContainerDataBuilder lootDataMap = cacheContainerData.get(lootTable);
 
 		cacheContainerData.put(containers, containerDataBuilder);
+
+		addChachedLocation(containers, new HashMap<>(), new HashMap<>());
 		saveTask();
 	}
 
@@ -275,7 +307,7 @@ public class ContainerDataCache extends YamlUtil {
 					containerDataMap.put(isLocation(innerKey), new ContainerData(facing, containerType));
 				}
 
-				addChachedLocation(mainKey, display_name, containerDataMap, keysDataMap.keySet());
+				addChachedLocation(mainKey, containerDataMap, keysDataMap);
 				ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
 				builder.setContainerDataLinkedToLootTable(lootTableLinked)
 						.setSpawning(spawning)
@@ -290,8 +322,6 @@ public class ContainerDataCache extends YamlUtil {
 				cacheContainerData.put(mainKey, builder.build());
 				Lootboxes.getInstance().getSpawnedContainers().setCachedTimeMap(mainKey, cooldown);
 			}
-		System.out.println("cacheContainerData " + cacheContainerData);
-
 	}
 
 	public static ContainerDataCache getInstance() {
