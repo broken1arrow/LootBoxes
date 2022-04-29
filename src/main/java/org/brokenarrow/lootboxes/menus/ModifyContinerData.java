@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.commandprompt.ContainerDataLinkedLootTable;
 import org.brokenarrow.lootboxes.commandprompt.CreateContainerDataName;
@@ -26,6 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.ALTER_CONTAINER_DATA_MENU;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_TURNED_ON_ADD_CONTAINERS_WITH_TOOL;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_TURN_ON_ADD_CONTAINERS;
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
 
 public class ModifyContinerData extends MenuHolder {
 
@@ -214,6 +218,7 @@ public class ModifyContinerData extends MenuHolder {
 		private final MenuButton addRemovecontainers;
 		private final GuiTempletsYaml.Builder guiTemplets;
 		private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+		private final Settings settings = Lootboxes.getInstance().getSettings();
 
 		public AlterContainerDataMenu(String container) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Alter_ContainerData_Menu").placeholders(container);
@@ -326,9 +331,20 @@ public class ModifyContinerData extends MenuHolder {
 			addRemovecontainers = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-					player.setMetadata("addRemovecontainers", new FixedMetadataValue(Lootboxes.getInstance(), container));
-					player.sendMessage("Leftclick to add location and rightclick to remove location.");
-					player.closeInventory();
+					if (click.isLeftClick()) {
+						ADD_CONTINERS_TURN_ON_ADD_CONTAINERS.sendMessage(player);
+						player.closeInventory();
+					} else {
+						ADD_CONTINERS_TURNED_ON_ADD_CONTAINERS_WITH_TOOL.sendMessage(player);
+						SettingsData setting = settings.getSettings();
+						player.getInventory().addItem(
+								CreateItemUtily.of(setting.getLinkToolItem(), setting.getLinkToolDisplayName(), setting.getLinkToolLore())
+										.setItemMetaData(ADD_AND_REMOVE_CONTAINERS.name(), container).makeItemStack());
+						player.closeInventory();
+					}
+					player.setMetadata(ADD_AND_REMOVE_CONTAINERS.name(), new FixedMetadataValue(Lootboxes.getInstance(), container));
+
+
 				}
 
 				@Override
