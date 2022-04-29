@@ -9,4 +9,11 @@ Save_Metadata_On_Item: true
 Max_and_min_amount:
   Increse_with: 10
   Decrese_with: 10
+Link_tool:
+  Item: GOLDEN_SHOVEL
+  Display_name: "&3Link tool"
+  Lore:
+    - "&aThis tool can you add or remove"
+    - "&aLink to container, change slot"
+    - "&aor drop item to cancel."
     
