@@ -36,33 +36,64 @@ public final class KeysData {
 
 
 	private Material addMatrial(final String itemType) {
-		checkNotNull(itemType, "This containerType are null.");
+		checkNotNull(itemType, "This item are null.");
 		Material material = Enums.getIfPresent(Material.class, itemType).orNull();
 		checkNotNull(material, "This " + itemType + " are not valid");
 
 		return material;
 	}
 
+	/**
+	 * Name on the item player get.
+	 *
+	 * @return the display name.
+	 */
 	public String getDisplayName() {
 		return displayName;
 	}
 
+	/**
+	 * Get the matrial for this key.
+	 *
+	 * @return matrial.
+	 */
 	public Material getItemType() {
 		return itemType;
 	}
 
+	/**
+	 * Get the key name used internally,
+	 * to keep different keys apart.
+	 *
+	 * @return the key name.
+	 */
 	public String getKeyName() {
 		return keyName;
 	}
 
+	/**
+	 * Get the amount needed, for open a continer.
+	 *
+	 * @return the amount.
+	 */
 	public int getAmountNeeded() {
 		return amountNeeded;
 	}
 
+	/**
+	 * Get the lore for this item.
+	 *
+	 * @return A list.
+	 */
 	public List<String> getLore() {
 		return lore;
 	}
 
+	/**
+	 * Get table this key is linked too.
+	 *
+	 * @return the table linked to this key.
+	 */
 	public String getLootTableLinked() {
 		return lootTableLinked;
 	}
