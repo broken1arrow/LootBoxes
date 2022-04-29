@@ -45,17 +45,17 @@ public class Lootboxes extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
-		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 		this.matrialList = new MatrialList();
 		this.enchantmentList = new EnchantmentList();
 		this.particleEffectList = new ParticleEffectList();
 		this.runTask = new RunTask(this);
 		this.runTask.start();
-		this.settings = new Settings();
 		this.spawnedContainers = new SpawnedContainers();
 		this.makeLootTable = new MakeLootTable();
 		reloadFiles();
+		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
 		Bukkit.getPluginManager().registerEvents(new MobDropListener(), this);
 		Bukkit.getPluginManager().registerEvents(new OpenContainer(), this);
