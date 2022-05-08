@@ -25,7 +25,7 @@ Gui_Templets:
         - "&4You has not permission"
         - "&4to open this menu."
     Edit_LootTable:
-      Display_name: "&aCreate and edit LootTable"
+      Display_name: "&6Create and edit LootTable"
       Slot: 15
       Icon: BOOK
       Lore:
@@ -752,12 +752,12 @@ Gui_Templets:
         - "&aChange particles some spawn arund the"
         - "&achest or use several diffrent ones."
     Seach_button:
-      Display_name: "&bSeach for a Loot table"
+      Display_name: "&bSeach for a particle"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a Loot table"
+        - "&aLeftclick for seach for a particle"
         - "&aRightclick for reset the seach"
     Forward_button:
       Display_name: "&bForward"
