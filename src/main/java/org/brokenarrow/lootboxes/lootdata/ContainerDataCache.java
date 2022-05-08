@@ -302,7 +302,8 @@ public class ContainerDataCache extends YamlUtil {
 				for (String innerKey : containersKeys.getKeys(false)) {
 					String facing = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Facing");
 					String containerType = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Container_Type");
-					checkNotNull(isLocation(innerKey), "location " + innerKey + " are not valid or null");
+					if (isLocation(innerKey) == null)
+						System.out.println("location " + innerKey + " are not valid or null");
 					containerDataMap.put(isLocation(innerKey), new ContainerData(facing, containerType));
 				}
 
