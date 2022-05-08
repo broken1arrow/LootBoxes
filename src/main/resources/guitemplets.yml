@@ -180,13 +180,13 @@ Gui_Templets:
       Display_name: "&bCreate new table"
       Enchant: true
       Icon: FIREWORK_STAR
-      Slot: 38
+      Slot: 40
       Lore:
     Create_Table_No_Perms:
       Display_name: "&bCreate new table"
       Enchant: false
       Icon: FIREWORK_STAR
-      Slot: 0
+      Slot: 40
       Lore:
         - "&4You has no permissions"
     Forward_button:
