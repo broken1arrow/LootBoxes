@@ -37,7 +37,7 @@ public class SeachForItem extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return SEACH_FOR_ITEM_TYPE_NAME.languageMessages();
+			return SEACH_FOR_ITEM_TYPE_NAME.languageMessagePrefix();
 		}
 
 		@Nullable

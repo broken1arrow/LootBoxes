@@ -41,9 +41,9 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 		@Override
 		protected String getPrompt(ConversationContext context) {
 			if (setlore) {
-				return CHANGE_DISPLAYNAME_AND_LORE_LORE.languageMessages();
+				return CHANGE_DISPLAYNAME_AND_LORE_LORE.languageMessagePrefix();
 			} else
-				return CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME.languageMessages();
+				return CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME.languageMessagePrefix();
 		}
 
 		@Nullable

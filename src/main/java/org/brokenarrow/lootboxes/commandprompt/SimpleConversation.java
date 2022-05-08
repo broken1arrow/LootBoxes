@@ -73,7 +73,6 @@ public abstract class SimpleConversation implements ConversationAbandonedListene
 		}
 
 		onConversationEnd(event, timeout);
-		System.out.println("ened");
 	/*	if (conversing instanceof Player) {
 			final Player player = (Player) conversing;
 

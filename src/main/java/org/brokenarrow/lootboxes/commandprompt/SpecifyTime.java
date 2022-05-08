@@ -29,7 +29,7 @@ public class SpecifyTime extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return SPECIFY_TIME_TYPE_TIME.languageMessages();
+			return SPECIFY_TIME_TYPE_TIME.languageMessagePrefix();
 		}
 
 		@Nullable

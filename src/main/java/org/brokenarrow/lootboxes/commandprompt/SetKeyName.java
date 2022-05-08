@@ -58,9 +58,9 @@ public class SetKeyName extends SimpleConversation {
 					numbersUsed.addAll(data.getNumbersUsed());
 				numbersUsed.add(i);
 				chachedPlayer.put(player, new StoreData(i, numbersUsed));
-				return SET_NAME_ON_KEY_TYPE_NAME.languageMessages(itemStack.getType());
+				return SET_NAME_ON_KEY_TYPE_NAME.languageMessagePrefix(itemStack.getType());
 			}
-			return SET_NAME_ON_KEY_TYPE_NAME.languageMessages();
+			return SET_NAME_ON_KEY_TYPE_NAME.languageMessagePrefix();
 		}
 
 		@Nullable

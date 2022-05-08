@@ -26,7 +26,7 @@ public class SeachForEnchantment extends SimpleConversation {
 	public class ItemSeach extends SimplePromp {
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return SEACH_FOR_ENCHANTMENT_TYPE_NAME.languageMessages();
+			return SEACH_FOR_ENCHANTMENT_TYPE_NAME.languageMessagePrefix();
 		}
 
 		@Nullable

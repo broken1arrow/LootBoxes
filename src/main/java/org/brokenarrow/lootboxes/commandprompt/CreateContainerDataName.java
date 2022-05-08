@@ -29,7 +29,7 @@ public class CreateContainerDataName extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return CREATE_CONTAINER_DATA_NAME_CREATE_NEW.languageMessages();
+			return CREATE_CONTAINER_DATA_NAME_CREATE_NEW.languageMessagePrefix();
 		}
 
 		@Nullable

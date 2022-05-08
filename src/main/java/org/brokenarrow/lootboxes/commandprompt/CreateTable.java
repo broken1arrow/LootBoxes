@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.menus.EditCreateLootTable;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +25,8 @@ public class CreateTable extends SimpleConversation {
 
 	@Override
 	protected void onConversationEnd(ConversationAbandonedEvent event, boolean canceledFromInactivity) {
+		if (event.getContext().getForWhom() instanceof Player)
+			new EditCreateLootTable().menuOpen((Player) event.getContext().getForWhom());
 	}
 
 
@@ -31,13 +34,14 @@ public class CreateTable extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return CREATE_TABLE_TYPE_NAME.languageMessages();
+
+			return CREATE_TABLE_TYPE_NAME.languageMessagePrefix();
 		}
 
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-			
+
 			if (!lootItems.getCachedLoot().containsKey(input)) {
 				lootItems.addTable(input);
 			} else {
