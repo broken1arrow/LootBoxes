@@ -183,24 +183,24 @@ public class ModifyContinerData extends MenuHolder {
 
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return listOfItems.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return listOfItems;
 
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("CreateLoot_button").build().getSlot().contains(slot))
-			return createContainerData.getItem();
+			return createContainerData;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}
@@ -373,26 +373,26 @@ public class ModifyContinerData extends MenuHolder {
 		}
 
 		@Override
-		public ItemStack getItemAt(int slot) {
+		public MenuButton getButtonAt(int slot) {
 
 			if (guiTemplets.menuKey("Container_Linked_To_LootTable").build().getSlot().contains(slot))
-				return containerLinkedToLootTable.getItem();
+				return containerLinkedToLootTable;
 			if (guiTemplets.menuKey("Particle_Animantion").build().getSlot().contains(slot))
-				return animation.getItem();
+				return animation;
 			if (guiTemplets.menuKey("Change_DisplayName").build().getSlot().contains(slot))
-				return changeDisplayName.getItem();
+				return changeDisplayName;
 			if (guiTemplets.menuKey("Keys_To_Open_Container").build().getSlot().contains(slot))
-				return keys.getItem();
+				return keys;
 			if (guiTemplets.menuKey("Change_Icon").build().getSlot().contains(slot))
-				return changeIcon.getItem();
+				return changeIcon;
 			if (guiTemplets.menuKey("Cooldown_Container").build().getSlot().contains(slot))
-				return coolddownBetweenContainers.getItem();
+				return coolddownBetweenContainers;
 			if (guiTemplets.menuKey("Containers").build().getSlot().contains(slot))
-				return containers.getItem();
+				return containers;
 			if (guiTemplets.menuKey("Add_remove_containers").build().getSlot().contains(slot))
-				return addRemovecontainers.getItem();
+				return addRemovecontainers;
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-				return backButton.getItem();
+				return backButton;
 
 			return null;
 		}

@@ -11,7 +11,6 @@ import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.LootDataSave;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -31,7 +30,7 @@ public class MatrialList extends MenuHolder {
 
 	public MatrialList(MenuKeys menuKey, String value, String container, String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders(getPageNumber());
+		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
@@ -109,8 +108,6 @@ public class MatrialList extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -127,8 +124,7 @@ public class MatrialList extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Matrial_List", getPageNumber()));
-				updateButtons();
+
 			}
 
 			@Override
@@ -165,21 +161,21 @@ public class MatrialList extends MenuHolder {
 
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return itemList.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return itemList;
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}

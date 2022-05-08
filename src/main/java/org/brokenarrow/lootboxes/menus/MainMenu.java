@@ -11,8 +11,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Iterator;
-
 public class MainMenu extends MenuHolder {
 
 	private final MenuButton editAndCreateTable;
@@ -61,21 +59,15 @@ public class MainMenu extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Edit_LootTable").build().getSlot().contains(slot))
-			return editAndCreateTable.getItem();
+			return editAndCreateTable;
 
 		if (guiTemplets.menuKey("Containers").build().getSlot().contains(slot))
-			return defultSettings.getItem();
+			return defultSettings;
 
 		return null;
 	}
 
-
-	public ItemStack convertObjectToItemstack(Iterator<?> iterator, Class<?> clazz, Object object) {
-
-		clazz.cast(object);
-		return null;
-	}
 }

@@ -31,7 +31,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 	public ContainersLinkedList(String container, String itemsToSearchFor) {
 		super(List.of(ContainerDataCache.getInstance().getCacheContainerData(container).getLinkedContainerData().keySet().toArray()));
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(getPageNumber());
+		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
@@ -156,21 +156,21 @@ public class ContainersLinkedList extends MenuHolder {
 
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return itemList.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return itemList;
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}

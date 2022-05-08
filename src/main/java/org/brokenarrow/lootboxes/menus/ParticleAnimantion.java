@@ -9,7 +9,6 @@ import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -17,9 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ParticleAnimantion extends MenuHolder {
 
@@ -37,18 +34,16 @@ public class ParticleAnimantion extends MenuHolder {
 	public ParticleAnimantion(String container) {
 		super(Lootboxes.getInstance().getParticleEffectList().getParticleList(""));
 
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Animantion").placeholders(getPageNumber());
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
-		Map<ItemStack, EditCreateItems.ItemData> cacheItemData = new HashMap<>();
-
 		seachButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-
+//todo fix so you can seach particels.
 			}
 
 			@Override
@@ -139,8 +134,6 @@ public class ParticleAnimantion extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Particle_Animantion", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -157,8 +150,6 @@ public class ParticleAnimantion extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Particle_Animantion", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -171,22 +162,22 @@ public class ParticleAnimantion extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return listOfItems.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return listOfItems;
 
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}

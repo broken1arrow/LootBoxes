@@ -11,7 +11,6 @@ import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -36,7 +35,7 @@ public class EntityTypeListMenu extends MenuHolder {
 
 	public EntityTypeListMenu(MenuKeys menuKey, String container, String value, String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMobList().getEntityTypeList(itemsToSearchFor));
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "EntityType_List_Menu").placeholders(getPageNumber());
+		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "EntityType_List_Menu").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
@@ -63,7 +62,7 @@ public class EntityTypeListMenu extends MenuHolder {
 		entityTypeList = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				System.out.println("container, value " + container + "  " + value + "Object  " + o);
+
 				if (o instanceof EntityType) {
 					if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
 						KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
@@ -109,7 +108,6 @@ public class EntityTypeListMenu extends MenuHolder {
 				if (click.isLeftClick()) {
 					previousPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("EntityType_List_Menu", getPageNumber()));
 			}
 
 			@Override
@@ -126,7 +124,6 @@ public class EntityTypeListMenu extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("EntityType_List_Menu", getPageNumber()));
 			}
 
 			@Override
@@ -166,21 +163,21 @@ public class EntityTypeListMenu extends MenuHolder {
 
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return entityTypeList.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return entityTypeList;
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}

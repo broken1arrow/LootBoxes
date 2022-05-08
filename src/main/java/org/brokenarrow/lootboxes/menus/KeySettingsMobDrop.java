@@ -33,7 +33,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 
 	public KeySettingsMobDrop(String continerData, String keyName) {
 
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, getPageNumber());
+		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, "");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
@@ -184,18 +184,18 @@ public class KeySettingsMobDrop extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Mobs_some_drop_this_key").build().getSlot().contains(slot))
-			return setMobsDropThisKey.getItem();
+			return setMobsDropThisKey;
 		if (guiTemplets.menuKey("Change_Minimum").build().getSlot().contains(slot))
-			return this.changeMiniAmount.getItem();
+			return this.changeMiniAmount;
 		if (guiTemplets.menuKey("Change_Maximum").build().getSlot().contains(slot))
-			return this.changeMaxAmount.getItem();
+			return this.changeMaxAmount;
 		if (guiTemplets.menuKey("Change_Chance").build().getSlot().contains(slot))
-			return changeChance.getItem();
+			return changeChance;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}

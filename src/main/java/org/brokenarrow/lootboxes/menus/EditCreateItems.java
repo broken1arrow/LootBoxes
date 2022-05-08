@@ -9,7 +9,6 @@ import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -150,9 +149,6 @@ public class EditCreateItems extends MenuHolder {
 				if (click.isLeftClick()) {
 					previousPage();
 				}
-
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Edit_Items_For_LootTable", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -169,8 +165,6 @@ public class EditCreateItems extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Edit_Items_For_LootTable", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -183,24 +177,24 @@ public class EditCreateItems extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return listOfItems.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return listOfItems;
 
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Save_Items").build().getSlot().contains(slot))
-			return saveItems.getItem();
+			return saveItems;
 		if (guiTemplets.menuKey("Save_Items").build().getSlot().contains(slot))
-			return newItem.getItem();
+			return newItem;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}
@@ -271,12 +265,12 @@ public class EditCreateItems extends MenuHolder {
 		}
 
 		@Override
-		public ItemStack getItemAt(int slot) {
+		public MenuButton getButtonAt(int slot) {
 
 			if (guiTemplets.menuKey("Save_Items_button").build().getSlot().contains(slot))
-				return saveItems.getItem();
+				return saveItems;
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-				return this.backButton.getItem();
+				return this.backButton;
 			return null;
 		}
 	}
@@ -345,13 +339,13 @@ public class EditCreateItems extends MenuHolder {
 		}
 
 		@Override
-		public ItemStack getItemAt(int slot) {
+		public MenuButton getButtonAt(int slot) {
 
 			if (guiTemplets.menuKey("Confirm_Save").build().getSlot().contains(slot))
-				return confirmSave.getItem();
+				return confirmSave;
 
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-				return this.backButton.getItem();
+				return this.backButton;
 			return null;
 		}
 	}

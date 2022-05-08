@@ -24,6 +24,8 @@ public class LootItems {
 
 	@Getter
 	private static final LootItems instance = new LootItems();
+	
+
 	private final AllYamlFilesInFolder yamlFiles;
 	private File customConfigFile;
 	private FileConfiguration customConfig;

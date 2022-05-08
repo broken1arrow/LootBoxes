@@ -9,15 +9,12 @@ import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListOfLoottables extends MenuHolder {
 	private final MenuButton backButton;
@@ -33,13 +30,11 @@ public class ListOfLoottables extends MenuHolder {
 
 	public ListOfLoottables(String container) {
 		super(new ArrayList<>(LootItems.getInstance().getCachedLoot().keySet()));
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "List_of_loottables").placeholders(getPageNumber());
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "List_of_loottables").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
-
-		Map<ItemStack, EditCreateItems.ItemData> cacheItemData = new HashMap<>();
 
 		seachButton = new MenuButton() {
 			@Override
@@ -76,9 +71,7 @@ public class ListOfLoottables extends MenuHolder {
 		listOfItems = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-
 				if (object instanceof String) {
-					System.out.println("object " + object);
 					ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					ContainerDataBuilder.Builder builder = data.getBuilder();
 					if (!data.getLootTableLinked().isEmpty())
@@ -102,7 +95,6 @@ public class ListOfLoottables extends MenuHolder {
 
 			@Override
 			public ItemStack getItem(Object object) {
-
 				if (object instanceof String) {
 					if (object.equals("Global_Values")) return null;
 					GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object).build();
@@ -111,12 +103,6 @@ public class ListOfLoottables extends MenuHolder {
 							gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
-			/*	if (object instanceof ItemStack) {
-					ItemStack item = ((ItemStack) object);
-					if (cacheItemData.get(item) == null) return null;
-
-					return item;
-				}*/
 				return null;
 			}
 		};
@@ -128,8 +114,6 @@ public class ListOfLoottables extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -146,8 +130,7 @@ public class ListOfLoottables extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()));
-				updateButtons();
+
 			}
 
 			@Override
@@ -160,22 +143,22 @@ public class ListOfLoottables extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return listOfItems.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return listOfItems;
 
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}

@@ -153,24 +153,24 @@ public class EditCreateLootTable extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return listOfTables.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return listOfTables;
 
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Create_Table").build().getSlot().contains(slot))
-			return createTable.getItem();
+			return createTable;
 		if (guiTemplets.menuKey("Create_Table").build().getSlot().contains(slot))
-			return newTable.getItem();
+			return newTable;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 		return null;
 	}
 
@@ -195,9 +195,9 @@ public class EditCreateLootTable extends MenuHolder {
 		}
 
 		@Override
-		public ItemStack getItemAt(int slot) {
+		public MenuButton getButtonAt(int slot) {
 			if (slot == 40)
-				return confirmSave.getItem();
+				return confirmSave;
 
 			return null;
 		}

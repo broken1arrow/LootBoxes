@@ -13,7 +13,6 @@ import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.CheckItemsInsideInventory;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -45,7 +44,7 @@ public class EditKeysToOpen extends MenuHolder {
 	public EditKeysToOpen(String containerData) {
 		super(ContainerDataCache.getInstance().getListOfKeys(containerData));
 
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Keys_To_Open").placeholders(getPageNumber());
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Keys_To_Open").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
@@ -110,10 +109,6 @@ public class EditKeysToOpen extends MenuHolder {
 					}
 				}
 
-
-				/*	builder.setKeysData();
-					containerData.setContainerData(container, builder.build());*/
-				System.out.println("testr clickibng " + object);
 			}
 
 			@Override
@@ -148,8 +143,6 @@ public class EditKeysToOpen extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -167,8 +160,6 @@ public class EditKeysToOpen extends MenuHolder {
 					nextPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("List_of_loottables", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -181,24 +172,24 @@ public class EditKeysToOpen extends MenuHolder {
 	}
 
 	@Override
-	public ItemStack getFillItemsAt(Object o) {
-		return listOfItems.getItem(o);
+	public MenuButton getFillButtonAt(Object o) {
+		return listOfItems;
 
 	}
 
 	@Override
-	public ItemStack getItemAt(int slot) {
+	public MenuButton getButtonAt(int slot) {
 
 		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward.getItem();
+			return forward;
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous.getItem();
+			return previous;
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton.getItem();
+			return seachButton;
 		if (guiTemplets.menuKey("Add_key_button").build().getSlot().contains(slot))
-			return addKeyButton.getItem();
+			return addKeyButton;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton.getItem();
+			return backButton;
 
 		return null;
 	}
@@ -215,7 +206,7 @@ public class EditKeysToOpen extends MenuHolder {
 		private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 
 		public EditKey(String containerData, String keyName) {
-			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Key").placeholders(getPageNumber());
+			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Key").placeholders("");
 
 			setMenuSize(guiTemplets.build().getGuiSize());
 			setTitle(guiTemplets.build().getGuiTitle());
@@ -342,20 +333,20 @@ public class EditKeysToOpen extends MenuHolder {
 		}
 
 		@Override
-		public ItemStack getItemAt(int slot) {
+		public MenuButton getButtonAt(int slot) {
 
 			if (guiTemplets.menuKey("Change_Item").build().getSlot().contains(slot))
-				return this.changeItem.getItem();
+				return this.changeItem;
 			if (guiTemplets.menuKey("Change_Amount").build().getSlot().contains(slot))
-				return this.changeAmount.getItem();
+				return this.changeAmount;
 			if (guiTemplets.menuKey("Alter_Display_name").build().getSlot().contains(slot))
-				return this.displayName.getItem();
+				return this.displayName;
 			if (guiTemplets.menuKey("Alter_Lore").build().getSlot().contains(slot))
-				return this.lore.getItem();
+				return this.lore;
 			if (guiTemplets.menuKey("Mob_Drop_Key").build().getSlot().contains(slot))
-				return this.mobDropKey.getItem();
+				return this.mobDropKey;
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-				return this.backButton.getItem();
+				return this.backButton;
 
 			return null;
 		}
@@ -413,12 +404,12 @@ public class EditKeysToOpen extends MenuHolder {
 		}
 
 		@Override
-		public ItemStack getItemAt(int slot) {
+		public MenuButton getButtonAt(int slot) {
 
 			if (guiTemplets.menuKey("Save_keys_button").build().getSlot().contains(slot))
-				return saveItems.getItem();
+				return saveItems;
 			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-				return this.backButton.getItem();
+				return this.backButton;
 			return null;
 		}
 	}
