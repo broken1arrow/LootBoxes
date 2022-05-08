@@ -68,9 +68,10 @@ public class MatrialList {
 						&& !stringItem.startsWith("ATTACHED_") && !stringItem.contains("WALL_")
 						&& !stringItem.contains("COMMAND_"))
 					return true;
+				return false;
 
 		}
-		return false;
+
 	}
 
 	public List<Material> getMatrials(String itemsToSearchFor) {
