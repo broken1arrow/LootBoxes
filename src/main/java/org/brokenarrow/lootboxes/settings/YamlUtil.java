@@ -72,6 +72,10 @@ public abstract class YamlUtil {
 		}
 	}
 
+	public static String serializeLoc(final Location loc) {
+		return serializeLoc(loc, false);
+	}
+
 	public static String serializeLoc(final Location loc, boolean addPitch) {
 		if (!addPitch)
 			return loc.getWorld().getName() + " " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
