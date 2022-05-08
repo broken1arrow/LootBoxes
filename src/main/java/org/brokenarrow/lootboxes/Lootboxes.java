@@ -2,6 +2,8 @@ package org.brokenarrow.lootboxes;
 
 
 import org.brokenarrow.lootboxes.commands.CommandsGroup;
+import org.brokenarrow.lootboxes.commands.GuiCommand;
+import org.brokenarrow.lootboxes.commands.MainCommand;
 import org.brokenarrow.lootboxes.listener.LinkTool;
 import org.brokenarrow.lootboxes.listener.MobDropListener;
 import org.brokenarrow.lootboxes.listener.OpenContainer;
@@ -14,8 +16,6 @@ import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
 import org.brokenarrow.lootboxes.tasks.SpawnedContainers;
 import org.brokenarrow.lootboxes.untlity.*;
-import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtility;
-import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
 import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
 import org.brokenarrow.menu.library.RegisterMenuAPI;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ public class Lootboxes extends JavaPlugin {
 	private ParticleEffectList particleEffectList;
 	private MobList mobList;
 	private boolean placeholderAPIMissing;
-	private CommandGroupUtility commandGroupUtility;
+
 	private CommandRegister commandRegister;
 	private SpawnedContainers spawnedContainers;
 	private MakeLootTable makeLootTable;
@@ -61,7 +61,9 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new OpenContainer(), this);
 		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
 		new RegisterMenuAPI(this);
-		commandRegister = new CommandRegister(this, "lootbox", new CommandsGroup());
+		commandRegister = new CommandRegister(this, "lootbox");
+		commandRegister.registerSubclass(new GuiCommand(), new MainCommand());
+
 		this.mobList = new MobList();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
@@ -98,9 +100,6 @@ public class Lootboxes extends JavaPlugin {
 		return commandsGroup;
 	}
 
-	public CommandGroupUtilityAPI getCommandGroupUtility() {
-		return this.commandGroupUtility;
-	}
 
 	public Settings getSettings() {
 		return settings;

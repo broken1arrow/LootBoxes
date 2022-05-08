@@ -9,25 +9,25 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class CommandGroupUtility implements CommandGroupUtilityAPI {
+import static org.brokenarrow.lootboxes.untlity.command.CommandRegister.getPLUGIN;
 
-	private final Plugin plugin;
+public class CommandGroupUtility {
+
+	private final Plugin plugin = getPLUGIN();
 	private CommandsUtility mainCommand;
 	private final List<SubCommandsUtility> subcommands = new ArrayList<>();
 
-	public CommandGroupUtility(final String label, final List<String> aliases, Plugin plugin) {
-		this.plugin = plugin;
+	public CommandGroupUtility(final String label, final List<String> aliases) {
 		this.register(label, aliases);
 	}
 
-	@Override
 	public void register(final String label, final List<String> aliases) {
 		//Valid.checkBoolean(!isRegistered(), "Main command already registered as: " + mainCommand);
 		mainCommand = new MainCommand(label);
 
 		if (aliases != null)
 			mainCommand.setAliases(aliases);
-		RegisterCommand.register(plugin.getName(), mainCommand);
+		CommandRegister.register(plugin.getName(), mainCommand);
 		//mainCommand.register(label);
 
 		// Sort A-Z
@@ -38,13 +38,6 @@ public class CommandGroupUtility implements CommandGroupUtilityAPI {
 	}
 
 
-	@Override
-	public void registerSubcommands(CommandGroupUtility commandGroupUtility) {
-
-	}
-
-
-	@Override
 	public final void registerSubcommand(final SubCommandsUtility command) {
 		Valid.checkNotNull(mainCommand, "Cannot add subcommands when main command is missing! Call register()");
 		Valid.checkBoolean(!subcommands.contains(command), "Subcommand /" + mainCommand.getLabel() + " " + command.getLabel() + " already registered when trying to add " + command.getClass());
@@ -53,7 +46,7 @@ public class CommandGroupUtility implements CommandGroupUtilityAPI {
 		subcommands.sort(Comparator.comparing(CommandsUtility::getLabel));
 	}
 
-	@Override
+
 	public String getMainLabel() {
 		return mainCommand.getMainLabel().isEmpty() ? mainCommand.getLabel() : mainCommand.getMainLabel();
 	}
@@ -61,7 +54,7 @@ public class CommandGroupUtility implements CommandGroupUtilityAPI {
 	public final class MainCommand extends CommandsUtility {
 
 		public MainCommand(String lable) {
-			super(lable, plugin);
+			super(lable, getPLUGIN());
 
 		}
 

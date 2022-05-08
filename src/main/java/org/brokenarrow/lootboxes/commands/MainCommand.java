@@ -1,15 +1,14 @@
 package org.brokenarrow.lootboxes.commands;
 
 import org.brokenarrow.lootboxes.commandprompt.CreateTable;
-import org.brokenarrow.lootboxes.untlity.command.CommandGroupUtilityAPI;
 import org.brokenarrow.lootboxes.untlity.command.SubCommandsUtility;
 
 import java.util.List;
 
 public class MainCommand extends SubCommandsUtility {
 
-	public MainCommand(CommandGroupUtilityAPI parent) {
-		super(parent, "loot");
+	public MainCommand() {
+		super("loot");
 	}
 
 	@Override

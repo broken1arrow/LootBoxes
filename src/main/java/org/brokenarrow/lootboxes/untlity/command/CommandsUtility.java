@@ -15,12 +15,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import static org.brokenarrow.lootboxes.untlity.command.CommandRegister.getPLUGIN;
+
 public abstract class CommandsUtility extends Command {
 
 	private CommandSender sender;
 	private String label = "";
 	private String[] args;
-	protected static Plugin pluginType;
+	protected static Plugin pluginType = getPLUGIN();
 
 	public CommandsUtility(@NotNull String name, @NotNull Plugin plugin) {
 		this(name);
