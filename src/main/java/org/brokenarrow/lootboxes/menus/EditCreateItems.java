@@ -34,7 +34,7 @@ public class EditCreateItems extends MenuHolder {
 
 	public EditCreateItems(String lootTable) {
 		super(LootItems.getInstance().getItems(lootTable));
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Items_For_LootTable").placeholders(getPageNumber());
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Items_For_LootTable").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());

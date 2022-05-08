@@ -6,7 +6,6 @@ import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -30,7 +29,7 @@ public class EditCreateLootTable extends MenuHolder {
 
 	public EditCreateLootTable() {
 		super(new ArrayList<>(LootItems.getInstance().getCachedLoot().keySet()));
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "LootTables").placeholders(getPageNumber());
+		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "LootTables").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
@@ -121,8 +120,6 @@ public class EditCreateLootTable extends MenuHolder {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("LootTables", getPageNumber()));
-				updateButtons();
 			}
 
 			@Override
@@ -139,8 +136,7 @@ public class EditCreateLootTable extends MenuHolder {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("LootTables", getPageNumber()));
-				updateButtons();
+
 			}
 
 			@Override
@@ -167,8 +163,6 @@ public class EditCreateLootTable extends MenuHolder {
 			return previous;
 		if (guiTemplets.menuKey("Create_Table").build().getSlot().contains(slot))
 			return createTable;
-		if (guiTemplets.menuKey("Create_Table").build().getSlot().contains(slot))
-			return newTable;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 			return backButton;
 		return null;
