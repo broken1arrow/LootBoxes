@@ -98,6 +98,13 @@ public class ChatMessages {
 
 	}
 
+	public String languageMessagePrefix(Object... objects) {
+		String message = getMessages(objects);
+		if (this.messages != null)
+			return translateHexCodes(prefix() + message);
+		return "";
+	}
+
 	public String languageMessages(Object... objects) {
 		String message = getMessages(objects);
 		if (this.messages != null)
