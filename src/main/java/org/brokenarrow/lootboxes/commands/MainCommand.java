@@ -9,6 +9,7 @@ public class MainCommand extends SubCommandsUtility {
 
 	public MainCommand() {
 		super("loot");
+		setPermission("not.in.use");
 	}
 
 	@Override

@@ -4,3 +4,8 @@ main: ${main.class}
 author: broken
 api-version: 1.13
 softdepend: [PlaceholderAPI]
+
+permissions:
+  lootboxes.acces.menu:
+    description: to open the menus to edit tables and containers.
+    default: false

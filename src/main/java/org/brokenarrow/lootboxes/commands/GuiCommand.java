@@ -9,6 +9,8 @@ public class GuiCommand extends SubCommandsUtility {
 
 	public GuiCommand() {
 		super("menu");
+		setPermission("lootboxes.acces.menu");
+	
 	}
 
 	@Override
