@@ -8,6 +8,8 @@ public final class SettingsData {
 	private final String linkToolDisplayName;
 	private final List<String> linkToolLore;
 	private final int amountOfBlocksBelowSurface;
+	private final int blocksAwayFromPlayer;
+	private final int blocksBetweenContainers;
 	private final int increse;
 	private final int decrese;
 	private final boolean spawnOnSurface;
@@ -26,6 +28,8 @@ public final class SettingsData {
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
 		this.saveMetadataOnItem = builder.saveMetadataOnItem;
 		this.randomContinerSpawn = builder.randomContinerSpawn;
+		this.blocksAwayFromPlayer = builder.blocksAwayFromPlayer;
+		this.blocksBetweenContainers = builder.blocksBetweenContainers;
 		this.increse = builder.increse;
 		this.decrese = builder.decrese;
 
@@ -55,6 +59,14 @@ public final class SettingsData {
 	 */
 	public int getAmountOfBlocksBelowSurface() {
 		return amountOfBlocksBelowSurface;
+	}
+
+	public int getBlocksAwayFromPlayer() {
+		return blocksAwayFromPlayer;
+	}
+
+	public int getBlocksBetweenContainers() {
+		return blocksBetweenContainers;
 	}
 
 	public int getIncrese() {
@@ -97,6 +109,8 @@ public final class SettingsData {
 		private String linkToolDisplayName;
 		private List<String> linkToolLore;
 		private int amountOfBlocksBelowSurface;
+		private int blocksAwayFromPlayer;
+		private int blocksBetweenContainers;
 		private int increse;
 		private int decrese;
 		private boolean spawnOnSurface;
@@ -133,6 +147,16 @@ public final class SettingsData {
 		 */
 		public Builder setAmountOfBlocksBelowSurface(int amountOfBlocksBelowSurface) {
 			this.amountOfBlocksBelowSurface = amountOfBlocksBelowSurface;
+			return this;
+		}
+
+		public Builder setBlocksAwayFromPlayer(int blocksAwayFromPlayer) {
+			this.blocksAwayFromPlayer = blocksAwayFromPlayer;
+			return this;
+		}
+
+		public Builder setBlocksBetweenContainers(int blocksBetweenContainers) {
+			this.blocksBetweenContainers = blocksBetweenContainers;
 			return this;
 		}
 
