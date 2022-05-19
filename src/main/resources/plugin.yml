@@ -6,6 +6,11 @@ api-version: 1.13
 softdepend: [PlaceholderAPI]
 
 permissions:
-  lootboxes.acces.menu:
+  
+  lootboxes.admin.*:
     description: to open the menus to edit tables and containers.
     default: false
+    children:
+      lootboxes.acces.menu: true
+      lootboxes-command.menu: true
+      lootboxes.command.reload: true
