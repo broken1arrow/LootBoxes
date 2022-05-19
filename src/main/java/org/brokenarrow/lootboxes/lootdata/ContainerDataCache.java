@@ -251,6 +251,7 @@ public class ContainerDataCache extends YamlUtil {
 				serializeData.put(childrenKey + "." + "Spawning", data.isSpawning());
 				serializeData.put(childrenKey + "." + "Cooldown", data.getCooldown());
 				serializeData.put(childrenKey + "." + "Animation", data.getParticleEffects());
+				serializeData.put(childrenKey + "." + "Random_spawn", data.isRandomSpawn());
 				for (org.brokenarrow.lootboxes.builder.KeysData keyData : data.getKeysData().values()) {
 					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Amount_Of_Keys", keyData.getAmountNeeded());
 					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Itemtype", keyData.getItemType().name());
@@ -288,6 +289,7 @@ public class ContainerDataCache extends YamlUtil {
 				Material icon = Enums.getIfPresent(Material.class, this.customConfig.getString("Data." + mainKey + "." + "Icon", "AIR")).orNull();
 				String display_name = this.customConfig.getString("Data." + mainKey + "." + "Display_name");
 				List<String> lore = this.customConfig.getStringList("Data." + mainKey + "." + "Lore");
+				boolean randomSpawn = this.customConfig.getBoolean("Data." + mainKey + "." + "Random_spawn");
 
 				ConfigurationSection innerConfigKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Keys");
 				for (String innerKey : innerConfigKeys.getKeys(false)) {
@@ -306,7 +308,6 @@ public class ContainerDataCache extends YamlUtil {
 						System.out.println("location " + innerKey + " are not valid or null");
 					containerDataMap.put(isLocation(innerKey), new ContainerData(facing, containerType));
 				}
-
 				addChachedLocation(mainKey, containerDataMap, keysDataMap);
 				ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
 				builder.setContainerDataLinkedToLootTable(lootTableLinked)
@@ -317,6 +318,7 @@ public class ContainerDataCache extends YamlUtil {
 						.setIcon(icon)
 						.setDisplayname(display_name)
 						.setLore(lore)
+						.setRandomSpawn(randomSpawn)
 						.setContainerData(containerDataMap)
 						.setKeysData(keysDataMap);
 				cacheContainerData.put(mainKey, builder.build());
