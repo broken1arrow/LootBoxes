@@ -592,13 +592,12 @@ Gui_Templets:
         - "&2List of icons you can change too"
         - "&2for this container."
     Cooldown_Container:
-      Display_name: "&bKeys need to open container"
+      Display_name: "&bSet cooldown on the container"
       Enchant: true
       Slot: 28
       Icon: CLOCK
       Lore:
         - ""
-        - "&2Set cooldown on the container"
         - "&2"
         - "&2Current cooldown:"
         - "&2{1} seconds"
