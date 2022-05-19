@@ -17,6 +17,7 @@ public final class ContainerDataBuilder {
 	private final Map<String, KeysData> keysData;
 	private final boolean spawning;
 	private final boolean enchant;
+	private final boolean randomSpawn;
 	private final long cooldown;
 	private final Builder builder;
 
@@ -32,6 +33,7 @@ public final class ContainerDataBuilder {
 		this.spawning = builder.spawning;
 		this.enchant = builder.enchant;
 		this.cooldown = builder.cooldown;
+		this.randomSpawn = builder.randomSpawn;
 		this.builder = builder;
 	}
 
@@ -71,6 +73,10 @@ public final class ContainerDataBuilder {
 		return enchant;
 	}
 
+	public boolean isRandomSpawn() {
+		return randomSpawn;
+	}
+
 	public long getCooldown() {
 		return cooldown;
 	}
@@ -107,6 +113,7 @@ public final class ContainerDataBuilder {
 		private Map<String, KeysData> keysData;
 		private boolean spawning;
 		private boolean enchant;
+		private boolean randomSpawn;
 		private long cooldown;
 
 		public Builder setContainerDataLinkedToLootTable(String ContainerDataLinkedToLootTable) {
@@ -154,6 +161,11 @@ public final class ContainerDataBuilder {
 			return this;
 		}
 
+		public Builder setRandomSpawn(boolean randomSpawn) {
+			this.randomSpawn = randomSpawn;
+			return this;
+		}
+
 		public Builder setCooldown(long cooldown) {
 			this.cooldown = cooldown;
 			return this;
@@ -179,5 +191,5 @@ public final class ContainerDataBuilder {
 					'}';
 		}
 	}
-	
+
 }
