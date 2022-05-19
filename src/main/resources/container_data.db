@@ -3,6 +3,7 @@ Data:
     LootTable_Linked: ""
     Spawning: true
     Cooldown: 1800
+    Random_spawn: false
     Animation:
       - FOG
     Keys:
