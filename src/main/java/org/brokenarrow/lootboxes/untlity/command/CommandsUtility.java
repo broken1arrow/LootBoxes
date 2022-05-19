@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.untlity.command;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
@@ -53,6 +54,7 @@ public abstract class CommandsUtility extends Command {
 		this.label = commandLabel;
 		this.args = args;
 		try {
+
 			if (getPermission() != null)
 				checkPerm(getPermission());
 
@@ -70,9 +72,9 @@ public abstract class CommandsUtility extends Command {
 		this.sender = sender;
 		this.label = alias;
 		this.args = args;
+
 		if (hasPerm(getPermission())) {
 			List<String> suggestions = tabComplete();
-
 			if (suggestions == null)
 				suggestions = new ArrayList<>();
 
@@ -162,6 +164,17 @@ public abstract class CommandsUtility extends Command {
 		return super.getPermission();
 	}
 
+	/**
+	 * Sets the permission required for this command to run. If you set the
+	 * permission to null we will not require any permission (unsafe).
+	 *
+	 * @param permission permission you want to set.
+	 */
+	@Override
+	public final void setPermission(final String permission) {
+		super.setPermission(permission);
+	}
+
 	@NotNull
 	@Override
 	public String getLabel() {
@@ -205,9 +218,28 @@ public abstract class CommandsUtility extends Command {
 		return getOrDefault(super.getPermissionMessage(), "You don´t have permission to run this command");
 	}
 
+	public final void noPermissionRunSubCommands(List<SubCommandsUtility> subcommands, @NonNull final String perm) {
+		List<String> list = new ArrayList<>();
+		if (isPlayer()) {
+			list.add("&8>>>>&7 Sub commands for command /" + getMainLabel() + ":&8 <<<<<<");
+			list.add("");
+			list.add("");
+			for (final SubCommandsUtility command : subcommands) {
+				list.add("&6 /" + command.getMainLabel() + " " + command.getSublabels() + "&3  permission:&4 " + command.getPermission());
+
+			}
+			for (String message : list) {
+				System.out.println(message);
+				getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+			}
+		}
+	}
+
 	public final void checkPerm(@NonNull final String perm) throws CommandException {
-		if (isPlayer() && !hasPerm(perm))
-			throw new CommandException(getPermissionMessage().replace("{permission}", perm));
+		if (isPlayer() && !hasPerm(perm)) {
+			getPlayer().sendMessage(getPermissionMessage().replace("{permission}", perm));
+			//throw new CommandException(getPermissionMessage().replace("{permission}", perm));
+		}
 	}
 
 	protected final void checkConsole() throws CommandException {

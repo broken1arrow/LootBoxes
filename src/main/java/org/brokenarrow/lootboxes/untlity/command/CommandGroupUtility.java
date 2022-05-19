@@ -1,15 +1,13 @@
 package org.brokenarrow.lootboxes.untlity.command;
 
-import org.brokenarrow.lootboxes.untlity.errors.Valid;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.brokenarrow.lootboxes.untlity.command.CommandRegister.getPLUGIN;
+
 
 public class CommandGroupUtility {
 
@@ -18,7 +16,14 @@ public class CommandGroupUtility {
 	private final List<SubCommandsUtility> subcommands = new ArrayList<>();
 
 	public CommandGroupUtility(final String label, final List<String> aliases) {
-		this.register(label, aliases);
+		String[] splited = label.split("\\|");
+		if (splited.length > 1) {
+			for (String mainCommand : splited) {
+				this.register(mainCommand, Collections.singletonList(mainCommand));
+			}
+		} else {
+			this.register(label, aliases);
+		}
 	}
 
 	public void register(final String label, final List<String> aliases) {
@@ -39,8 +44,6 @@ public class CommandGroupUtility {
 
 
 	public final void registerSubcommand(final SubCommandsUtility command) {
-		Valid.checkNotNull(mainCommand, "Cannot add subcommands when main command is missing! Call register()");
-		Valid.checkBoolean(!subcommands.contains(command), "Subcommand /" + mainCommand.getLabel() + " " + command.getLabel() + " already registered when trying to add " + command.getClass());
 
 		subcommands.add(command);
 		subcommands.sort(Comparator.comparing(CommandsUtility::getLabel));
@@ -55,15 +58,20 @@ public class CommandGroupUtility {
 
 		public MainCommand(String lable) {
 			super(lable, getPLUGIN());
-
+			setPermission(null);
 		}
 
 		@Override
 		protected void onCommand() {
-			if (getArgs().length < 1) return;
+
+			if (getArgs().length < 1) {
+				noPermissionRunSubCommands(subcommands, "test");
+				return;
+			}
 
 			final String argument = getArgs()[0];
 			final SubCommandsUtility command = findSubcommand(argument);
+
 			if (command != null) {
 
 				final String oldSublabel = command.getLabel();
@@ -85,9 +93,15 @@ public class CommandGroupUtility {
 		@Override
 		protected List<String> tabComplete() {
 			if (getArgs().length == 1)
-				return tabCompleteSubcommands(getSender(), getArgs()[0]);
-			//return completeLastWord("menu");
+				return tabCompleteSubcommands(getSender(), getArgs()[0], true);
 
+			if (getArgs().length > 1) {
+				final SubCommandsUtility cmd = findSubcommand(getArgs()[0]);
+
+				if (cmd != null)
+					return cmd.tabComplete(getSender(), getLabel(), Arrays.copyOfRange(getArgs(), 1, getArgs().length));
+			}
+			//return completeLastWord("menu");
 			return null;
 		}
 
@@ -104,11 +118,11 @@ public class CommandGroupUtility {
 			return null;
 		}
 
-		private List<String> tabCompleteSubcommands(final CommandSender sender, String param) {
+		private List<String> tabCompleteSubcommands(final CommandSender sender, String param, boolean overridePermission) {
 			param = param.toLowerCase();
 			final List<String> tab = new ArrayList<>();
 			for (final SubCommandsUtility subcommand : subcommands) {
-				if (hasPerm(subcommand.getPermission())) {
+				if (hasPerm(subcommand.getPermission()) || overridePermission) {
 					String label = subcommand.getSublabels();
 					//for (final String label : subcommand.getLabel())
 					if (!label.trim().isEmpty() && label.startsWith(param))
