@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.commands;
 import org.brokenarrow.lootboxes.menus.MainMenu;
 import org.brokenarrow.lootboxes.untlity.command.SubCommandsUtility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuiCommand extends SubCommandsUtility {
@@ -10,7 +11,8 @@ public class GuiCommand extends SubCommandsUtility {
 	public GuiCommand() {
 		super("menu");
 		setPermission("lootboxes.acces.menu");
-	
+		setPermissionMessage("you don´t have lootboxes.admin.* or the children permissions");
+
 	}
 
 	@Override
@@ -20,6 +22,6 @@ public class GuiCommand extends SubCommandsUtility {
 
 	@Override
 	protected List<String> tabComplete() {
-		return completeLastWord("test");
+		return new ArrayList<>();
 	}
 }
