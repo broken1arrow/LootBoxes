@@ -1,6 +1,8 @@
 # Main settings
 
 Language: en
+Blocks_Between_Containers: 10
+Blocks_Away_From_Player: 30
 Random_Continer_Spawn: false
 Amount_Of_Blocks_Below_Surface: 5
 Spawn_On_Surface: false
