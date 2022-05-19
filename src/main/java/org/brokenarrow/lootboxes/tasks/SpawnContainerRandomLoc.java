@@ -22,39 +22,51 @@ public class SpawnContainerRandomLoc {
 
 	private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettings();
 	private long time;
+	private String containerdataName;
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 
 	public void task() {
 		if (settings.isRandomContinerSpawn())
-			if (this.time == 0)
-				this.time = System.currentTimeMillis() + (1000 * 5);
-			else if (System.currentTimeMillis() >= this.time) {
+			if (this.time == 0) {
+				setRandomSpawnedContiner();
+			} else if (System.currentTimeMillis() >= this.time) {
+				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(this.containerdataName);
+				if (!containerDataBuilder.isRandomSpawn()) {
+					setRandomSpawnedContiner();
+				}
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					Location location = player.getLocation();
-					spawnBlock(location, player);
+					spawnBlock(containerDataBuilder, location, player);
 				}
-
-				this.time = System.currentTimeMillis() + (1000 * 5);
+				this.time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
 			}
 	}
 
-	public void spawnBlock(Location location, Player player) {
+	public void setRandomSpawnedContiner() {
+		for (String containerdata : containerDataCacheInstance.getCacheContainerData().keySet()) {
+			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerdata);
+			if (containerDataBuilder.isRandomSpawn()) {
+				this.time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
+				this.containerdataName = containerdata;
+				return;
+			}
+		}
+	}
 
-		int blocksAwayFromPlayer = 10;
-		int amountToCheck = 5;
-		Location loc = checkLocation(location, amountToCheck, blocksAwayFromPlayer, player);
+	public void spawnBlock(ContainerDataBuilder containerDataBuilder, Location location, Player player) {
+
+		Location loc = checkLocation(location, player);
 
 		System.out.println("loc " + loc);
 		if (loc != null) {
-			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData("Global_Container");
 			spawnContainer(containerDataBuilder, loc);
 		}
 
 	}
 
 	public void spawnContainer(ContainerDataBuilder containerData, Location location) {
-		Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerData.getLinkedContainerData();
+		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
 			ContainerData container = entry.getValue();
@@ -74,7 +86,7 @@ public class SpawnContainerRandomLoc {
 		}
 	}
 
-	private Location checkLocation(Location location, int amountToCheck, int blocksAwayFromPlayer, Player player) {
+	private Location checkLocation(Location location, Player player) {
 		int x = location.getBlockX();
 		int y = location.getBlockY();
 		int z = location.getBlockZ();
@@ -96,13 +108,13 @@ public class SpawnContainerRandomLoc {
 			int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 			return new Location(location.getWorld(), numberX, highestBlock + 1, numberZ);
 		}
-		if (checkIfLocationAreValid(locationSubtracted, numberY, amountToCheck, player))
+		if (checkIfLocationAreValid(locationSubtracted, numberY, player))
 			return locationSubtracted;
 
 		return null;
 	}
 
-	private boolean checkIfLocationAreValid(Location location, int hight, int amountOfBlocksBetweenContainers, Player player) {
+	private boolean checkIfLocationAreValid(Location location, int hight, Player player) {
 		World world = location.getWorld();
 		int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 
@@ -110,8 +122,8 @@ public class SpawnContainerRandomLoc {
 			hight = hight + this.settings.getAmountOfBlocksBelowSurface();
 
 		if (hight < highestBlock && !location.getBlock().isLiquid() && !checkBlock(location.getBlock()) &&
-				!isNearbyChest(location, amountOfBlocksBetweenContainers) &&
-				!isNearbyPlayer(player, location, 20))
+				!isNearbyChest(location, this.settings != null ? settings.getBlocksBetweenContainers() : 10) &&
+				!isNearbyPlayer(player, location, this.settings != null ? settings.getBlocksAwayFromPlayer() : 30))
 			return true;
 
 		return false;
