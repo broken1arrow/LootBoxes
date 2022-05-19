@@ -489,12 +489,12 @@ Gui_Templets:
         - "&aCooldown:&6 {2}"
         - "&aIcon:&6 {3}"
     Seach_button:
-      Display_name: "&bSeach for a Loot table"
+      Display_name: "&bSeach for continer"
       Enchant: true
       Icon: PAPER
       Slot: 39
       Lore:
-        - "&aLeftclick for seach for a Loot table"
+        - "&aLeftclick for seach for continer"
         - "&aRightclick for reset the seach"
     CreateLoot_button:
       Display_name: "&bCreate new continer"
