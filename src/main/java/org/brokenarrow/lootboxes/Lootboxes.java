@@ -1,9 +1,8 @@
 package org.brokenarrow.lootboxes;
 
 
-import org.brokenarrow.lootboxes.commands.CommandsGroup;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
-import org.brokenarrow.lootboxes.commands.MainCommand;
+import org.brokenarrow.lootboxes.commands.ReloadCommand;
 import org.brokenarrow.lootboxes.listener.LinkTool;
 import org.brokenarrow.lootboxes.listener.MobDropListener;
 import org.brokenarrow.lootboxes.listener.OpenContainer;
@@ -39,7 +38,7 @@ public class Lootboxes extends JavaPlugin {
 	private CommandRegister commandRegister;
 	private SpawnedContainers spawnedContainers;
 	private MakeLootTable makeLootTable;
-	private CommandsGroup commandsGroup;
+
 	private RandomUntility randomUntility;
 
 	@Override
@@ -62,7 +61,7 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
 		new RegisterMenuAPI(this);
 		commandRegister = new CommandRegister(this, "lootbox");
-		commandRegister.registerSubclass(new GuiCommand(), new MainCommand());
+		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand());
 
 		this.mobList = new MobList();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -94,10 +93,6 @@ public class Lootboxes extends JavaPlugin {
 
 	public RunTask getRunTask() {
 		return this.runTask;
-	}
-
-	public CommandsGroup getCommandsGroup() {
-		return commandsGroup;
 	}
 
 
