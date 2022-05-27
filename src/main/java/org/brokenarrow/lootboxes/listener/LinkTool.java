@@ -1,10 +1,10 @@
 package org.brokenarrow.lootboxes.listener;
 
+import de.tr7zw.changeme.nbtapi.metodes.CompMetadata;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.ModifyContinerData;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
-import org.brokenarrow.lootboxes.untlity.nbtuntlity.CompMetadata;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

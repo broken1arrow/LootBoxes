@@ -1,10 +1,10 @@
 package org.brokenarrow.lootboxes.listener;
 
+import de.tr7zw.changeme.nbtapi.metodes.CompMetadata;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
-import org.brokenarrow.lootboxes.untlity.nbtuntlity.CompMetadata;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

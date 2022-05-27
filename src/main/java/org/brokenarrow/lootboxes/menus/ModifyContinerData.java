@@ -216,6 +216,7 @@ public class ModifyContinerData extends MenuHolder {
 		private final MenuButton containers;
 		private final MenuButton backButton;
 		private final MenuButton addRemovecontainers;
+		private final MenuButton changeIfShallUsedToRandomSpawn;
 		private final GuiTempletsYaml.Builder guiTemplets;
 		private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 		private final Settings settings = Lootboxes.getInstance().getSettings();
@@ -225,24 +226,55 @@ public class ModifyContinerData extends MenuHolder {
 			setMenuSize(guiTemplets.build().getGuiSize());
 			setTitle(guiTemplets.build().getGuiTitle());
 			//setFillSpace(guiTemplets.build().getFillSpace());
+			ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+			changeIfShallUsedToRandomSpawn = new MenuButton() {
 
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					if (containerDataBuilder != null) {
+						ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+						builder.setRandomSpawn(click.isLeftClick());
+						containerDataCache.setContainerData(container, builder.build());
+
+
+					}
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Set_random_spawn_disabled").placeholders(containerDataBuilder.isRandomSpawn()).build();
+
+					if (containerDataBuilder.isRandomSpawn()) {
+						gui = guiTemplets.menuKey("Set_random_spawn").placeholders(containerDataBuilder.isRandomSpawn()).build();
+					}
+					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
 			containerLinkedToLootTable = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-
-					if (container != null)
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					if (container != null && containerDataBuilder != null) {
+						if (containerDataBuilder.isRandomSpawn()) return;
 						if (click.isRightClick()) {
 							new ContainerDataLinkedLootTable(containerDataCache.getCacheContainerData(container), container);
 						} else if (click.isLeftClick()) {
 							new ListOfLoottables(container).menuOpen(player);
 						}
-
+					}
 				}
 
 				@Override
 				public ItemStack getItem() {
 					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Container_Linked_To_LootTable").placeholders(containerDataBuilder.getLootTableLinked()).build();
+
+					if (containerDataBuilder.isRandomSpawn()) {
+						gui = guiTemplets.menuKey("Container_Linked_To_LootTable_Random_Spawn").placeholders(containerDataBuilder.getLootTableLinked()).build();
+					}
+
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -331,6 +363,9 @@ public class ModifyContinerData extends MenuHolder {
 			addRemovecontainers = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					if (containerDataBuilder != null && containerDataBuilder.isRandomSpawn()) return;
+
 					if (click.isLeftClick()) {
 						ADD_CONTINERS_TURN_ON_ADD_CONTAINERS.sendMessage(player);
 						player.closeInventory();
@@ -344,12 +379,16 @@ public class ModifyContinerData extends MenuHolder {
 					}
 					player.setMetadata(ADD_AND_REMOVE_CONTAINERS.name(), new FixedMetadataValue(Lootboxes.getInstance(), container));
 
-
 				}
 
 				@Override
 				public ItemStack getItem() {
 					GuiTempletsYaml gui = guiTemplets.menuKey("Add_remove_containers").placeholders("", container).build();
+
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					if (containerDataBuilder != null && containerDataBuilder.isRandomSpawn()) {
+						gui = guiTemplets.menuKey("Add_remove_containers_Random_Spawn").placeholders("", container).build();
+					}
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -375,6 +414,8 @@ public class ModifyContinerData extends MenuHolder {
 		@Override
 		public MenuButton getButtonAt(int slot) {
 
+			if (guiTemplets.menuKey("Set_random_spawn").build().getSlot().contains(slot))
+				return changeIfShallUsedToRandomSpawn;
 			if (guiTemplets.menuKey("Container_Linked_To_LootTable").build().getSlot().contains(slot))
 				return containerLinkedToLootTable;
 			if (guiTemplets.menuKey("Particle_Animantion").build().getSlot().contains(slot))

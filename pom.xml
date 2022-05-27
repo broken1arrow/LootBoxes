@@ -141,10 +141,15 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>1.18.24</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.broken1arrow</groupId>
+            <artifactId>Item-NBT-API</artifactId>
+            <version>2.9.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
 
@@ -209,10 +214,17 @@
                             <finalName>${project.name}-${project.version}</finalName>
                             <artifactSet>
                                 <includes>
-                                    <include>com.github.broken1arrow:MenuLibrary*</include>
                                     <include>com.github.broken1arrow:*</include>
-
+                                    <include>com.github.broken1arrow.Item-NBT-API:item-nbt-api:*</include>
+                                    <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
+                                                <include>com.github.broken1arrow:*</include>
+                                                <include>de.tr7zw:*</include>
+                                                <include>com.github.broken1arrow:Item-NBT-API*</include>-->
                                 </includes>
+                                <excludes>
+
+                                </excludes>
+
                             </artifactSet>
                             <relocations>
                                 <!-- <relocation>
@@ -224,15 +236,15 @@
                                      <shadedPattern>${project.groupId}.${project.artifactId}.minimsg</shadedPattern>
                                  </relocation>-->
                                 <relocation>
-                                    <pattern>org.broken.lib</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.rbglib</shadedPattern>
+                                    <pattern>org.broken.lib.rbg</pattern>
+                                    <shadedPattern>org.lib.test.rbglib</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>brokenarrow.menu.lib</pattern>
+                                    <pattern>org.brokenarrow.menu.library</pattern>
                                     <shadedPattern>org.lib.test.menulib</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>de.tr7zw</pattern>
+                                    <pattern>de.tr7zw.changeme</pattern>
                                     <shadedPattern>org.lib.test.tr7zw</shadedPattern>
                                 </relocation>
                             </relocations>

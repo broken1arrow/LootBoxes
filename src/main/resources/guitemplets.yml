@@ -561,6 +561,15 @@ Gui_Templets:
         - ""
         - "&2Leftclick to get list of existing loottables."
         - "&2Rightclick if you want to type manually."
+    Container_Linked_To_LootTable_Random_Spawn:
+      Display_name: "&bChange loottable:&6 {0}"
+      Enchant: true
+      Slot: 10
+      Icon: BARRIER
+      Lore:
+        - ""
+        - "&4You can´t use this setting when"
+        - "&4is used to random spawn a container."
     Particle_Animantion:
       Display_name: "&bParticle effeckt"
       Enchant: true
@@ -620,6 +629,41 @@ Gui_Templets:
         - "&2Left click to link chest with hand"
         - "&2"
         - "&2Right click to link chest with a item"
+    Add_remove_containers_Random_Spawn:
+      Display_name: "&bRemove or add containers some are linked"
+      Enchant: true
+      Slot: 32
+      Icon: BARRIER
+      Lore:
+        - ""
+        - "&4You can´t use this setting when"
+        - "&4is used to random spawn a container."
+    Set_random_spawn:
+      Display_name: "&bRandom spawn {0}"
+      Enchant: true
+      Slot: 22
+      Icon: Elytra
+      Lore:
+        - ""
+        - "&2Enable this for use this container to random spawn"
+        - "&2your loottable arund all online players."
+        - "&6"
+        - "&2Left click to enable"
+        - "&2"
+        - "&2Right click to enable disabled"
+    Set_random_spawn_disabled:
+      Display_name: "&bRandom spawn {0}"
+      Enchant: false
+      Slot: 22
+      Icon: Elytra
+      Lore:
+        - ""
+        - "&2Enable this for use this container to random spawn"
+        - "&2your loottable arund all online players."
+        - "&6"
+        - "&2Left click to enable"
+        - "&2"
+        - "&2Right click to enable disabled"
     Change_DisplayName:
       Display_name: "&bDisplay name: {0}"
       Enchant: true

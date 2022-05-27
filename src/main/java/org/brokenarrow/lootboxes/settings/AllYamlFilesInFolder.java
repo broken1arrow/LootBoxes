@@ -64,12 +64,8 @@ public class AllYamlFilesInFolder {
 		}
 		return files;
 	}
-
-	public String getFolders() {
-		return "Chests_and_HoppersSettings";
-	}
-
-	public List<String> getFolder() {
+	
+	public List<String> getFolders() {
 		List<String> filenamesFromDir = null;
 		try {
 			filenamesFromDir = getFilenamesForDirnameFromCP(this.folderName);

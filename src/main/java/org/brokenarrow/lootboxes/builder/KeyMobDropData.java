@@ -14,7 +14,7 @@ public final class KeyMobDropData {
 	private final List<EntityType> entityTypes;
 	private final Builder builder;
 
-	public KeyMobDropData(Builder builder) {
+	private KeyMobDropData(Builder builder) {
 		this.chance = builder.chance;
 		this.minimum = builder.minimum;
 		this.maximum = builder.maximum;

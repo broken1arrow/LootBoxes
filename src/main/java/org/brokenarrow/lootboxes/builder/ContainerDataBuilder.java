@@ -21,7 +21,7 @@ public final class ContainerDataBuilder {
 	private final long cooldown;
 	private final Builder builder;
 
-	public ContainerDataBuilder(Builder builder) {
+	private ContainerDataBuilder(Builder builder) {
 
 		this.lootTableLinked = builder.containerDataLinkedToLootTable;
 		this.particleEffect = builder.particleEffect;
