@@ -128,7 +128,7 @@ public class EditCreateItems extends MenuHolder {
 
 						ItemStack guiItem = CreateItemUtily.of(clonedItem,
 								gui.getDisplayName(),
-								gui.getLore()).isShowEnchantments(true).makeItemStack();
+								gui.getLore()).setShowEnchantments(true).makeItemStack();
 						cacheItemData.put(guiItem, new ItemData(itemStack, (String) object));
 						return guiItem;
 					}
