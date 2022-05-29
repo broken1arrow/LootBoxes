@@ -10,7 +10,7 @@ public class GuiCommand extends SubCommandsUtility {
 
 	public GuiCommand() {
 		super("menu");
-		setPermission("lootboxes.acces.menu");
+		setPermission("lootboxes.command.menu");
 		setPermissionMessage("you don´t have lootboxes.admin.* or the children permissions");
 
 	}
