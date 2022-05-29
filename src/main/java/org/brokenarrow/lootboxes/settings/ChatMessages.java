@@ -53,6 +53,7 @@ public class ChatMessages {
 	public static ChatMessages UNLOOKED_CONTAINER_SOUND = new ChatMessages("CONTAINER_OPEN.UNLOOKED_CONTAINER_SOUND");
 	public static ChatMessages LOOKED_CONTAINER_TRY_OPEN = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_TRY_OPEN");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
+	public static ChatMessages RELOAD = new ChatMessages("RELOAD");
 
 	public ChatMessages(String idKey) {
 		chatMessagesMap.put(idKey, this);

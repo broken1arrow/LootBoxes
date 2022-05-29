@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.untlity.command;
 
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
@@ -73,6 +74,11 @@ public class CommandGroupUtility {
 			final SubCommandsUtility command = findSubcommand(argument);
 
 			if (command != null) {
+				if (!hasPerm(getPlayer(), command.getPermission())) {
+					if (getPlayer() != null)
+						getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', command.getPermissionMessage()));
+					return;
+				}
 
 				final String oldSublabel = command.getLabel();
 				try {
@@ -93,7 +99,7 @@ public class CommandGroupUtility {
 		@Override
 		protected List<String> tabComplete() {
 			if (getArgs().length == 1)
-				return tabCompleteSubcommands(getSender(), getArgs()[0], true);
+				return tabCompleteSubcommands(getSender(), getArgs()[0], false);
 
 			if (getArgs().length > 1) {
 				final SubCommandsUtility cmd = findSubcommand(getArgs()[0]);

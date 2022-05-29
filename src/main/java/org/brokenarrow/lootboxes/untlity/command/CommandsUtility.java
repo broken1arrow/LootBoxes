@@ -229,8 +229,10 @@ public abstract class CommandsUtility extends Command {
 
 			}
 			for (String message : list) {
-				System.out.println(message);
-				getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+				if (getPlayer() != null)
+					getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+				else
+					System.out.println("[Lootboxes] " + message);
 			}
 		}
 	}
