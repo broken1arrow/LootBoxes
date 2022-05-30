@@ -8,46 +8,53 @@ CHANGE_DISPLAYNAME_AND_LORE:
   LORE: "&6Use row-0: to change first line, to edit several rows: row-0: your text. row-1: your second row."
   CONFIRM: "&fyou have now change lore and/or display name."
 
+CHANGE_DISPLAYNAME_CONTINEDATA:
+  DISPLAYNAME: "&fType in display name some will be used as title."
+  CONFIRM: "&fYou have now change display name, to {0}."
+
 CONTAINER_DATA_LINKED_LOOTTABLE:
   NEW_LOOTTABLE: "You have create new lootTable with name {0}"
   CANGE_NAME: "You change the loottable from {0} to {1}"
   NEW_NAME_IS_SAME: "Your change do not change the loottable is same as the old, old {0} new name {1}"
 
 CREATE_CONTAINER_DATA_NAME:
-  CREATE_NEW: "Type the name for the container."
-  ALREDY_EXIST: "This name {0} alredy exist"
-  CONFIRM: "Have now set this name: {0}"
+  CREATE_NEW: "&fType the name for the container."
+  ALREDY_EXIST: "&fThis name {0} alredy exist"
+  CONFIRM: "&fHave now set this name: {0}"
 
 SAVE_ENCHANTMENT:
-  SET_LEVEL: "Type in the enchantments level for the item"
-  NOT_A_NUMBER: "Is not valid number, you input: {0}."
-  CONFIRM: "Have now set level: {0}"
+  SET_LEVEL: "&fType in the enchantments level for the item"
+  NOT_A_NUMBER: "&fIs not valid number, you input: {0}."
+  CONFIRM: "&fHave now set level: {0}"
 
 SEACH_FOR_ENCHANTMENT:
-  TYPE_NAME: "Seach for enchantment/enchantments, type in parts or whole name of enchantment."
+  TYPE_NAME: "&fSeach for enchantment/enchantments, type in parts or whole name of enchantment."
 
 SEACH_FOR_ITEM:
-  TYPE_NAME: "Seach for item or items, type in parts or whole name of item"
+  TYPE_NAME: "&fSeach for item or items, type in parts or whole name of item"
 
 SET_NAME_ON_KEY:
-  DUPLICATE: "Is exist alredy key with this name {0}"
-  TYPE_NAME: "Type name on the key {0}"
-  CONFIRM: "Have now set name: {0}"
-  CONFIRM_FINISH: "Have now set name on all keys: {0}"
+  DUPLICATE: "&fIs exist alredy key with this name {0}"
+  TYPE_NAME: "&fType name on the key {0}"
+  CONFIRM: "&fHave now set name: {0}"
+  CONFIRM_FINISH: "&fHave now set name on all keys: {0}"
 
 SPECIFY_TIME:
-  TYPE_TIME: "Type in time in seconds"
-  CONFIRM: "Have now set time: {0}"
+  TYPE_TIME: "&fType in time in seconds"
+  CONFIRM: "&fHave now set time: {0}"
 
 ADD_CONTINERS:
-  TURNED_ON_ADD_CONTAINERS: "Leftclick to add location and rightclick to remove location,turn off while leftclicking air and sneaking."
-  TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "Leftclick to add location and rightclick to remove location, for turn it off dropp item or switch slot."
+  TURNED_ON_ADD_CONTAINERS: "&fLeftclick to add location and rightclick to remove location,turn off while leftclicking air and sneaking."
+  TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "&fLeftclick to add location and rightclick to remove location, for turn it off dropp item or switch slot."
+  TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER: "&fPlace continer to add location and rightclick to remove location, for turn it off dropp item or switch slot."
   TURN_OFF_ADD_CONTAINERS: "&fYou have now turn now off add and remove mode."
-  LEFT_CLICK_BLOCK: "&fyou have now added this container to loottable. {0}"
+  LEFT_CLICK_BLOCK: "&fyou have now added this container to loottable.&6 {0} {1} {2} {3}"
   RIGHT_CLICK_BLOCK: "&fyou have now removed this container from loottable."
-  THIS_CONTAINER_IS_USED_ALREDY: "This location is used of this {0} container."
-  YOU_DROP_LINK_TOOL: "You will return to the menu."
-  YOU_SWITCH_SLOT_LINK_TOOL: "You will return to the menu."
+  THIS_CONTAINER_IS_USED_ALREDY: "&fThis location is used of this {0} container."
+  YOU_DROP_LINK_TOOL: "&fYou will return to the menu."
+  YOU_SWITCH_SLOT_LINK_TOOL: "&fYou will return to the menu."
+  YOU_DONT_HAVE_PERMISSION_TO_LINK: "&fYou don´t have this permission {0}"
+
 
 CREATE_TABLE:
   TYPE_NAME: "&fType name on the table"
@@ -55,10 +62,10 @@ CREATE_TABLE:
   CONFIRM: "&fHave now set name on the table: {0}"
 
 CONTAINER_OPEN:
-  LOOKED_CONTAINER_TRY_OPEN: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and needed this keys&6 {1}&f."
-  LOOKED_CONTAINER_NOT_RIGHT_ITEM: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and item you need&6 {1}&f."
+  LOOKED_CONTAINER_TRY_OPEN: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and needed this key:s&6 {1}&f."
+  LOOKED_CONTAINER_NOT_RIGHT_ITEM: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and item you need:&6 {1}&f."
   LOOKED_CONTAINER_NOT_RIGHT_AMOUNT: "&fThis container is locked becuse  you don´t have right amount of items.You have&6 {0}&f and need&6 {1}&f."
   LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED."
   UNLOOKED_CONTAINER_SOUND: "ENTITY_VILLAGER_CELEBRATE"
 
-RELOAD: "You have successful reload the config files"
+RELOAD: "&fYou have successful reload the config files"

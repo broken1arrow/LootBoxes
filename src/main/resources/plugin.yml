@@ -13,3 +13,4 @@ permissions:
     children:
       lootboxes.command.menu: true
       lootboxes.command.reload: true
+      lootboxes.link.containers: true

@@ -82,7 +82,6 @@ public class ListOfLoottables extends MenuHolder {
 
 					builder.setContainerDataLinkedToLootTable((String) object);
 					containerDataCache.setContainerData(container, builder.build());
-					System.out.println("testr clickibng " + object);
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				}
 			}

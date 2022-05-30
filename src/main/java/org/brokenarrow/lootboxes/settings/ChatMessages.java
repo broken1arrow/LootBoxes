@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.settings;
 
 import org.broken.lib.rbg.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -38,12 +39,14 @@ public class ChatMessages {
 	public static ChatMessages SPECIFY_TIME_CONFIRM = new ChatMessages("SPECIFY_TIME.CONFIRM");
 	public static ChatMessages ADD_CONTINERS_LEFT_CLICK_BLOCK = new ChatMessages("ADD_CONTINERS.LEFT_CLICK_BLOCK");
 	public static ChatMessages ADD_CONTINERS_RIGHT_CLICK_BLOCK = new ChatMessages("ADD_CONTINERS.RIGHT_CLICK_BLOCK");
+	public static ChatMessages TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER = new ChatMessages("ADD_CONTINERS.TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER");
 	public static ChatMessages ADD_CONTINERS_TURN_OFF_ADD_CONTAINERS = new ChatMessages("ADD_CONTINERS.TURN_OFF_ADD_CONTAINERS");
 	public static ChatMessages ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY = new ChatMessages("ADD_CONTINERS.THIS_CONTAINER_IS_USED_ALREDY");
 	public static ChatMessages ADD_CONTINERS_TURN_ON_ADD_CONTAINERS = new ChatMessages("ADD_CONTINERS.TURNED_ON_ADD_CONTAINERS");
 	public static ChatMessages ADD_CONTINERS_YOU_DROP_LINK_TOOL = new ChatMessages("ADD_CONTINERS.YOU_DROP_LINK_TOOL");
 	public static ChatMessages ADD_CONTINERS_YOU_SWITCH_SLOT_LINK_TOOL = new ChatMessages("ADD_CONTINERS.YOU_SWITCH_SLOT_LINK_TOOL");
 	public static ChatMessages ADD_CONTINERS_TURNED_ON_ADD_CONTAINERS_WITH_TOOL = new ChatMessages("ADD_CONTINERS.TURNED_ON_ADD_CONTAINERS_WITH_TOOL");
+	public static ChatMessages YOU_DONT_HAVE_PERMISSION_TO_LINK = new ChatMessages("ADD_CONTINERS.YOU_DONT_HAVE_PERMISSION_TO_LINK");
 	public static ChatMessages CREATE_TABLE_TYPE_NAME = new ChatMessages("CREATE_TABLE.TYPE_NAME");
 	public static ChatMessages CREATE_TABLE_DUPLICATE = new ChatMessages("CREATE_TABLE.DUPLICATE");
 	public static ChatMessages CREATE_TABLE_CONFIRM = new ChatMessages("CREATE_TABLE.CONFIRM");
@@ -52,6 +55,8 @@ public class ChatMessages {
 	public static ChatMessages LOOKED_CONTAINER_SOUND = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_SOUND");
 	public static ChatMessages UNLOOKED_CONTAINER_SOUND = new ChatMessages("CONTAINER_OPEN.UNLOOKED_CONTAINER_SOUND");
 	public static ChatMessages LOOKED_CONTAINER_TRY_OPEN = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_TRY_OPEN");
+	public static ChatMessages CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM = new ChatMessages("CHANGE_DISPLAYNAME_CONTINEDATA.CONFIRM");
+	public static ChatMessages CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME = new ChatMessages("CHANGE_DISPLAYNAME_CONTINEDATA.DISPLAYNAME");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 	public static ChatMessages RELOAD = new ChatMessages("RELOAD");
 
@@ -64,7 +69,7 @@ public class ChatMessages {
 			String msg = this.messages;
 
 			for (int i = 0; i < objects.length; i++) {
-				Object object = convertList(objects[i]);
+				Object object = convertObject(objects[i]);
 				msg = msg.replace("{" + i + "}", object.toString());
 			}
 			return msg;
@@ -79,11 +84,14 @@ public class ChatMessages {
 		return "";
 	}
 
-	public Object convertList(Object object) {
+	public Object convertObject(Object object) {
 		if (object instanceof List) {
 			String converted = object.toString();
 			int start = converted.indexOf('[');
 			return converted.substring(start + 1, converted.length() - 1);
+		} else if (object instanceof Location) {
+			Location converted = (Location) object;
+			return converted.getWorld() + "" + converted.getBlockX() + converted.getBlockY() + converted.getBlockZ();
 		} else return object;
 
 

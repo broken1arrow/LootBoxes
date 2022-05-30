@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes;
 
 
+import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
 import org.brokenarrow.lootboxes.listener.LinkTool;
@@ -22,6 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
 
+import static org.brokenarrow.lootboxes.untlity.ServerVersion.setServerVersion;
+
 
 public class Lootboxes extends JavaPlugin {
 	private RunTask runTask;
@@ -40,10 +43,13 @@ public class Lootboxes extends JavaPlugin {
 	private MakeLootTable makeLootTable;
 
 	private RandomUntility randomUntility;
+	private RegisterNbtAPI nbtAPI;
 
 	@Override
 	public void onEnable() {
 		plugin = this;
+		setServerVersion(this);
+		this.nbtAPI = new RegisterNbtAPI(this, false);
 		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
 		this.matrialList = new MatrialList();
@@ -62,7 +68,6 @@ public class Lootboxes extends JavaPlugin {
 		new RegisterMenuAPI(this);
 		commandRegister = new CommandRegister(this, "lootbox");
 		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand());
-
 		this.mobList = new MobList();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
@@ -95,6 +100,9 @@ public class Lootboxes extends JavaPlugin {
 		return this.runTask;
 	}
 
+	public RegisterNbtAPI getNbtAPI() {
+		return nbtAPI;
+	}
 
 	public Settings getSettings() {
 		return settings;

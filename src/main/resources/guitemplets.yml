@@ -565,11 +565,16 @@ Gui_Templets:
       Display_name: "&bChange loottable:&6 {0}"
       Enchant: true
       Slot: 10
-      Icon: BARRIER
+      Icon: CHEST
       Lore:
+        - "&3You have set this container to spawn"
+        - "&3random containers. So it will use the"
+        - "&3set loottable for random spawn continer"
+        - "&3on every player online."
         - ""
-        - "&4You can´t use this setting when"
-        - "&4is used to random spawn a container."
+        - "&2Leftclick to get list of existing loottables."
+        - ""
+        - "&2Rightclick if you want to type manually."
     Particle_Animantion:
       Display_name: "&bParticle effeckt"
       Enchant: true
@@ -619,6 +624,19 @@ Gui_Templets:
         - ""
         - "&2Get list of containers"
         - "&2linked to {1}"
+    Containers_random_spawn_on:
+      Display_name: "&bContainers linked"
+      Enchant: false
+      Slot: 30
+      Icon: OBSERVER
+      Lore:
+        - "&3When you set it to random spawn"
+        - "&3a continer this will show what"
+        - "&3you link this container to before"
+        - "&3(if you have link containers before)."
+        - ""
+        - "&2Get list of containers"
+        - "&2linked to {1}"
     Add_remove_containers:
       Display_name: "&bRemove or add containers some are linked"
       Enchant: true
@@ -626,9 +644,12 @@ Gui_Templets:
       Icon: GOLDEN_SHOVEL
       Lore:
         - ""
-        - "&2Left click to link chest with hand"
+        - "&2Leftclick to link chest with hand"
         - "&2"
-        - "&2Right click to link chest with a item"
+        - "&2Rightclick to link chest with a item"
+        - "&6"
+        - "&2Shift and Rightclick to use container"
+        - "&2some you can link with (will place it)."
     Add_remove_containers_Random_Spawn:
       Display_name: "&bRemove or add containers some are linked"
       Enchant: true
@@ -650,7 +671,7 @@ Gui_Templets:
         - "&6"
         - "&2Left click to enable"
         - "&2"
-        - "&2Right click to enable disabled"
+        - "&2Right click to disabled"
     Set_random_spawn_disabled:
       Display_name: "&bRandom spawn {0}"
       Enchant: false
@@ -663,7 +684,7 @@ Gui_Templets:
         - "&6"
         - "&2Left click to enable"
         - "&2"
-        - "&2Right click to enable disabled"
+        - "&2Right click to disabled"
     Change_DisplayName:
       Display_name: "&bDisplay name: {0}"
       Enchant: true
@@ -995,7 +1016,7 @@ Gui_Templets:
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     Container_list:
-      Display_name: "&bLinked:&6 {0}"
+      Display_name: "&bLinked:&6 {0} {1} {2} {3}"
       Enchant: false
       Icon: COMPASS
       Slot: 0
@@ -1308,6 +1329,62 @@ Gui_Templets:
         - ""
         - "&aGo back to"
         - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # Add List of keys too in this menu.
+  Choose_Container:
+    Menu_Size: 45
+    Menu_Title: "&1Choose Container you want."
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    List_Of_ContainerTypes:
+      Display_name: "&bChoose this {0}"
+      Enchant: false
+      Icon: BRICK
+      Slot: 40
+      Lore:
+        - "&aThis container will be used as loot chest"
+        - "&aif click on this button and place it."
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amenu before."
     Placeholders:
       Display_name: "&b"
       Enchant: false

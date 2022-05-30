@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.listener;
 
-import de.tr7zw.changeme.nbtapi.metodes.CompMetadata;
+import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -25,6 +26,8 @@ import static org.brokenarrow.lootboxes.untlity.PlaySound.playSound;
 
 public class OpenContainer implements Listener {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final Lootboxes lootboxes = Lootboxes.getInstance();
+	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 
 	@EventHandler
 	public void openLootContainer(PlayerInteractEvent event) {
@@ -37,8 +40,8 @@ public class OpenContainer implements Listener {
 			String key = null;
 			String containerData = null;
 			if (itemStack != null && itemStack.getType() != Material.AIR) {
-				key = CompMetadata.getMetadata(itemStack, MOB_DROP_KEY_NAME.name());
-				containerData = CompMetadata.getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
+				key = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_KEY_NAME.name());
+				containerData = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
 			}
 			LocationData locationData = containerDataCache.getLocationData(location);
 			if (locationData != null) {
@@ -50,6 +53,7 @@ public class OpenContainer implements Listener {
 					LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
 
 					event.setCancelled(true);
+					playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
 					return;
 				}
 			} else return;

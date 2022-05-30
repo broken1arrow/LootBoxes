@@ -233,16 +233,20 @@ public class ModifyContinerData extends MenuHolder {
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					if (containerDataBuilder != null) {
+						if (containerDataBuilder.isRandomSpawn() == click.isLeftClick()) return;
+
 						ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 						builder.setRandomSpawn(click.isLeftClick());
 						containerDataCache.setContainerData(container, builder.build());
 
 
 					}
+					updateButtons();
 				}
 
 				@Override
 				public ItemStack getItem() {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					GuiTempletsYaml gui = guiTemplets.menuKey("Set_random_spawn_disabled").placeholders(containerDataBuilder.isRandomSpawn()).build();
 
 					if (containerDataBuilder.isRandomSpawn()) {
@@ -257,7 +261,6 @@ public class ModifyContinerData extends MenuHolder {
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					if (container != null && containerDataBuilder != null) {
-						if (containerDataBuilder.isRandomSpawn()) return;
 						if (click.isRightClick()) {
 							new ContainerDataLinkedLootTable(containerDataCache.getCacheContainerData(container), container);
 						} else if (click.isLeftClick()) {
@@ -342,7 +345,8 @@ public class ModifyContinerData extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Cooldown_Container").build();
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Cooldown_Container").placeholders("", containerDataBuilder.getCooldown()).build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -355,26 +359,34 @@ public class ModifyContinerData extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+
 					GuiTempletsYaml gui = guiTemplets.menuKey("Containers").placeholders("", container).build();
+					if (containerDataBuilder.isRandomSpawn())
+						gui = guiTemplets.menuKey("Containers_random_spawn_on").placeholders("", container).build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
 			};
 			addRemovecontainers = new MenuButton() {
+				private final SettingsData setting = settings.getSettings();
+
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					if (containerDataBuilder != null && containerDataBuilder.isRandomSpawn()) return;
 
-					if (click.isLeftClick()) {
+					if (click.isShiftClick() && click.isRightClick()) {
+						new ChooseContainer(container).menuOpen(player);
+						return;
+					} else if (!click.isShiftClick() && click.isLeftClick()) {
 						ADD_CONTINERS_TURN_ON_ADD_CONTAINERS.sendMessage(player);
 						player.closeInventory();
-					} else {
+					} else if (!click.isShiftClick() && click.isRightClick()) {
 						ADD_CONTINERS_TURNED_ON_ADD_CONTAINERS_WITH_TOOL.sendMessage(player);
-						SettingsData setting = settings.getSettings();
-						player.getInventory().addItem(
-								CreateItemUtily.of(setting.getLinkToolItem(), setting.getLinkToolDisplayName(), setting.getLinkToolLore())
-										.setItemMetaData(ADD_AND_REMOVE_CONTAINERS.name(), container).makeItemStack());
+						player.getInventory().addItem(CreateItemUtily.of(setting.getLinkToolItem(),
+										setting.getLinkToolDisplayName(), setting.getLinkToolLore())
+								.setItemMetaData(ADD_AND_REMOVE_CONTAINERS.name(), container).makeItemStack());
 						player.closeInventory();
 					}
 					player.setMetadata(ADD_AND_REMOVE_CONTAINERS.name(), new FixedMetadataValue(Lootboxes.getInstance(), container));

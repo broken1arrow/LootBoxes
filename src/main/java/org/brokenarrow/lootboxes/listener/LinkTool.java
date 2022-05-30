@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.listener;
 
-import de.tr7zw.changeme.nbtapi.metodes.CompMetadata;
+import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.ModifyContinerData;
@@ -17,10 +17,13 @@ import org.bukkit.inventory.ItemStack;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_YOU_DROP_LINK_TOOL;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_YOU_SWITCH_SLOT_LINK_TOOL;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER;
 
 public class LinkTool implements Listener {
 
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final Lootboxes lootboxes = Lootboxes.getInstance();
+	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 
 	@EventHandler
 	public void swichSlot(PlayerItemHeldEvent event) {
@@ -29,7 +32,10 @@ public class LinkTool implements Listener {
 		ItemStack itemStack = event.getPlayer().getInventory().getItem(event.getPreviousSlot());
 		if (itemStack == null) return;
 
-		String metadata = CompMetadata.getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS.name());
+		String metadata = nbt.getCompMetadata().getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS.name());
+		if (metadata == null)
+			metadata = nbt.getCompMetadata().getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name());
+
 		if (metadata != null) {
 			ADD_CONTINERS_YOU_SWITCH_SLOT_LINK_TOOL.sendMessage(player);
 			event.getPlayer().getInventory().setItem(event.getPreviousSlot(), new ItemStack(Material.AIR));
@@ -45,8 +51,10 @@ public class LinkTool implements Listener {
 		Player player = event.getPlayer();
 		if (!player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 		ItemStack itemStack = event.getItemDrop().getItemStack();
-		String metadata = CompMetadata.getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS.name());
-
+		String metadata = nbt.getCompMetadata().getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS.name());
+		if (metadata == null)
+			metadata = nbt.getCompMetadata().getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name());
+		
 		if (metadata != null) {
 			ADD_CONTINERS_YOU_DROP_LINK_TOOL.sendMessage(player);
 			Inventory inventory = player.getInventory();

@@ -14,8 +14,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.brokenarrow.lootboxes.untlity.DeSerialize.isLocation;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
+import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.isLocation;
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
 public class ContainerDataCache extends YamlUtil {
@@ -82,6 +82,17 @@ public class ContainerDataCache extends YamlUtil {
 
 	public ContainerDataBuilder getCacheContainerData(String container) {
 		return cacheContainerData.get(container);
+	}
+
+	public Map<Location, ContainerData> getLinkedContainerData(String container) {
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
+		if (containerDataBuilder != null) {
+			if (containerDataBuilder.getLinkedContainerData() != null)
+				return containerDataBuilder.getLinkedContainerData();
+			else new HashMap<>();
+		}
+
+		return new HashMap<>();
 	}
 
 	public ContainerDataBuilder.Builder getCacheContainerBuilder(String container) {

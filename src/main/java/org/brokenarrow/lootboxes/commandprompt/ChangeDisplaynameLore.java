@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.menus.EditKeysToOpen;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
+import org.brokenarrow.lootboxes.menus.ModifyContinerData;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import java.util.*;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.ALTER_CONTAINER_DATA_MENU;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
 public class ChangeDisplaynameLore extends SimpleConversation {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
@@ -42,8 +44,11 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 		protected String getPrompt(ConversationContext context) {
 			if (setlore) {
 				return CHANGE_DISPLAYNAME_AND_LORE_LORE.languageMessagePrefix();
-			} else
+			} else {
+				if (menuAcces == ALTER_CONTAINER_DATA_MENU)
+					return CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME.languageMessages();
 				return CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME.languageMessagePrefix();
+			}
 		}
 
 		@Nullable
@@ -57,6 +62,9 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 				ContainerDataBuilder.Builder builder = data.getBuilder().setDisplayname(input);
 
 				containerDataCache.setContainerData(container, builder.build());
+				CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM.sendMessage(getPlayer(context), input);
+				runtaskLater(40, () ->
+						new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(getPlayer(context)), false);
 			}
 			return null;
 		}
@@ -130,7 +138,6 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 			}
 		} else
 			numbers.add(Integer.parseInt(text));
-		System.out.println("numbers " + numbers);
 		return numbers;
 	}
 }

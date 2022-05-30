@@ -36,9 +36,13 @@ public class Settings extends YamlUtil {
 		int increse = customConfig.getInt("Max_and_min_amount.Increse_with");
 		int decrese = customConfig.getInt("Max_and_min_amount.Decrese_with");
 		String language = customConfig.getString("Language");
+
 		String linkTool = customConfig.getString("Link_tool.Item");
 		String linkToolDisplayName = customConfig.getString("Link_tool.Display_name");
 		List<String> linkToolLore = customConfig.getStringList("Link_tool.Lore");
+
+		String placeContainerDisplayName = customConfig.getString("Place_container.Display_name");
+		List<String> placeContainerLore = customConfig.getStringList("Place_container.Lore");
 
 		SettingsData settingsData = new SettingsData.Builder()
 				.setAmountOfBlocksBelowSurface(amountOfBlocksBelowSurface)
@@ -54,6 +58,8 @@ public class Settings extends YamlUtil {
 				.setLinkToolItem(linkTool)
 				.setLinkToolDisplayName(linkToolDisplayName)
 				.setLinkToolLore(linkToolLore)
+				.setPlaceContainerDisplayName(placeContainerDisplayName)
+				.setPlaceContainerLore(placeContainerLore)
 				.build();
 
 		settings.put("Settings", settingsData);

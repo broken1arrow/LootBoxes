@@ -37,7 +37,6 @@ public class TranslatePlaceHolders {
 	}
 
 	public static String translatePlaceholders(String rawText, Object... placeholders) {
-
 		if (placeholders != null)
 			for (int i = 0; i < placeholders.length; i++) {
 				if (placeholders[i] instanceof List)

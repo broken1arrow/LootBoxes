@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class DeSerialize {
+public class SerializeUtlity {
 
 	public static Location isLocation(Object raw) {
 		String[] parts;

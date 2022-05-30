@@ -14,8 +14,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ContainersLinkedList extends MenuHolder {
@@ -30,7 +30,7 @@ public class ContainersLinkedList extends MenuHolder {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
 	public ContainersLinkedList(String container, String itemsToSearchFor) {
-		super(List.of(ContainerDataCache.getInstance().getCacheContainerData(container).getLinkedContainerData().keySet().toArray()));
+		super(Arrays.asList(ContainerDataCache.getInstance().getLinkedContainerData(container).keySet().toArray()));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
@@ -86,14 +86,14 @@ public class ContainersLinkedList extends MenuHolder {
 			@Override
 			public ItemStack getItem(Object object) {
 
-			/*	ItemStack itemstack = null;
-				if (object instanceof Material)
-					itemstack = new ItemStack((Material) object);
-				if (object instanceof ItemStack)
-					itemstack = (ItemStack) object;
-				if (itemstack == null)
-					return null;*/
-				GuiTempletsYaml gui = guiTemplets.menuKey("Container_list").placeholders(object, object).build();
+				Location location = null;
+				if (object instanceof Location)
+					location = (Location) object;
+				GuiTempletsYaml gui;
+				if (location != null)
+					gui = guiTemplets.menuKey("Container_list").placeholders(location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ()).build();
+				else
+					gui = guiTemplets.menuKey("Container_list").placeholders(object).build();
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}

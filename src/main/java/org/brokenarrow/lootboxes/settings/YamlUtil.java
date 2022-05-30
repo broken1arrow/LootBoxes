@@ -77,10 +77,16 @@ public abstract class YamlUtil {
 	}
 
 	public static String serializeLoc(final Location loc, boolean addPitch) {
+		if (loc == null) return null;
+		String world;
+		if (loc.getWorld() == null)
+			world = loc.getWorld() + "";
+		else
+			world = loc.getWorld().getName();
 		if (!addPitch)
-			return loc.getWorld().getName() + " " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
+			return world + " " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ();
 
-		return loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ() + (loc.getPitch() != 0F || loc.getYaw() != 0F ? " " + loc.getYaw() + " " + loc.getPitch() : "");
+		return world + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ() + (loc.getPitch() != 0F || loc.getYaw() != 0F ? " " + loc.getYaw() + " " + loc.getPitch() : "");
 	}
 
 	public Map<?, ?> serialize() {

@@ -7,6 +7,8 @@ public final class SettingsData {
 	private final String linkToolItem;
 	private final String linkToolDisplayName;
 	private final List<String> linkToolLore;
+	private final String placeContainerDisplayName;
+	private final List<String> placeContainerLore;
 	private final int amountOfBlocksBelowSurface;
 	private final int blocksAwayFromPlayer;
 	private final int blocksBetweenContainers;
@@ -21,8 +23,10 @@ public final class SettingsData {
 	private SettingsData(Builder builder) {
 		this.language = builder.language;
 		this.linkToolItem = builder.linkToolItem;
-		linkToolDisplayName = builder.linkToolDisplayName;
-		linkToolLore = builder.linkToolLore;
+		this.linkToolDisplayName = builder.linkToolDisplayName;
+		this.linkToolLore = builder.linkToolLore;
+		this.placeContainerDisplayName = builder.placeContainerDisplayName;
+		this.placeContainerLore = builder.placeContainerLore;
 		this.amountOfBlocksBelowSurface = builder.amountOfBlocksBelowSurface;
 		this.spawnOnSurface = builder.spawnOnSurface;
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
@@ -50,6 +54,14 @@ public final class SettingsData {
 
 	public List<String> getLinkToolLore() {
 		return linkToolLore;
+	}
+
+	public String getPlaceContainerDisplayName() {
+		return placeContainerDisplayName;
+	}
+
+	public List<String> getPlaceContainerLore() {
+		return placeContainerLore;
 	}
 
 	/**
@@ -108,6 +120,8 @@ public final class SettingsData {
 		private String linkToolItem;
 		private String linkToolDisplayName;
 		private List<String> linkToolLore;
+		private String placeContainerDisplayName;
+		private List<String> placeContainerLore;
 		private int amountOfBlocksBelowSurface;
 		private int blocksAwayFromPlayer;
 		private int blocksBetweenContainers;
@@ -136,6 +150,16 @@ public final class SettingsData {
 
 		public Builder setLinkToolLore(List<String> linkToolLore) {
 			this.linkToolLore = linkToolLore;
+			return this;
+		}
+
+		public Builder setPlaceContainerDisplayName(String placeContainerDisplayName) {
+			this.placeContainerDisplayName = placeContainerDisplayName;
+			return this;
+		}
+
+		public Builder setPlaceContainerLore(List<String> placeContainerLore) {
+			this.placeContainerLore = placeContainerLore;
 			return this;
 		}
 
