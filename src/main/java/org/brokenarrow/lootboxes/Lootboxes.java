@@ -83,9 +83,9 @@ public class Lootboxes extends JavaPlugin {
 	}
 
 	public void reloadFiles() {
+		this.settings.reload();
 		ContainerDataCache.getInstance().reload();
 		GuiTempletSettings.getInstance().reload();
-		this.settings.reload();
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
 		KeyDropData.getInstance().reload();

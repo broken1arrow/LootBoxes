@@ -1,7 +1,10 @@
 package org.brokenarrow.lootboxes.settings;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,12 +15,32 @@ public class GuiTempletSettings extends YamlUtil {
 	private final Map<String, Map<String, Guidata>> chacheGuiSettings = new HashMap<>();
 
 	public GuiTempletSettings() {
-		super("guitemplets.yml", "guitemplets.yml");
+		super("guitemplets_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml", "guitemplets.yml");
+
 	}
 
 	@Override
 	public void reload() {
-		super.reload();
+		if (customConfigFile == null) {
+			customConfigFile = new File(Lootboxes.getInstance().getDataFolder() + "/language", fileName);
+			if (!this.customConfigFile.exists()) {
+				customConfigFile = new File(Lootboxes.getInstance().getDataFolder(), "guitemplets.yml");
+			}
+			customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
+		}
+		if (!this.customConfigFile.exists() && resourcePath != null) {
+			this.customConfigFile.getParentFile().mkdirs();
+			Lootboxes.getInstance().saveResource(resourcePath, false);
+
+		}
+
+		try {
+			this.customConfig = new YamlConfiguration();
+			this.customConfig.load(this.customConfigFile);
+			loadSettingsFromYaml();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 
