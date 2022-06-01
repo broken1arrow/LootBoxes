@@ -4,6 +4,7 @@ package org.brokenarrow.lootboxes;
 import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
+import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
 import org.brokenarrow.lootboxes.listener.LinkTool;
 import org.brokenarrow.lootboxes.listener.MobDropListener;
 import org.brokenarrow.lootboxes.listener.OpenContainer;
@@ -44,11 +45,14 @@ public class Lootboxes extends JavaPlugin {
 
 	private RandomUntility randomUntility;
 	private RegisterNbtAPI nbtAPI;
+	private LandProtectingLoader landProtectingLoader;
 
 	@Override
 	public void onEnable() {
 		plugin = this;
 		setServerVersion(this);
+		landProtectingLoader = new LandProtectingLoader(this);
+
 		this.nbtAPI = new RegisterNbtAPI(this, false);
 		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
@@ -106,6 +110,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public Settings getSettings() {
 		return settings;
+	}
+
+	public LandProtectingLoader getLandProtectingLoader() {
+		return landProtectingLoader;
 	}
 
 	public MatrialList getMatrialList() {
