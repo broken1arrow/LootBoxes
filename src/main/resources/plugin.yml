@@ -3,7 +3,9 @@ version: ${project.version}
 main: ${main.class}
 author: broken
 api-version: 1.13
-softdepend: [PlaceholderAPI]
+softdepend:
+  - PlaceholderAPI
+  - WorldGuard
 
 permissions:
   

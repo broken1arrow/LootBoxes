@@ -48,11 +48,15 @@ public class Lootboxes extends JavaPlugin {
 	private LandProtectingLoader landProtectingLoader;
 
 	@Override
+	public void onLoad() {
+		landProtectingLoader = new LandProtectingLoader(this);
+	}
+
+	@Override
 	public void onEnable() {
 		plugin = this;
 		setServerVersion(this);
-		landProtectingLoader = new LandProtectingLoader(this);
-
+		
 		this.nbtAPI = new RegisterNbtAPI(this, false);
 		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
