@@ -37,7 +37,8 @@ public class SpawnContainerRandomLoc {
 				}
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					Location location = player.getLocation();
-					spawnBlock(containerDataBuilder, location, player);
+					if (lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location))
+						spawnBlock(containerDataBuilder, location, player);
 				}
 				this.time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
 			}

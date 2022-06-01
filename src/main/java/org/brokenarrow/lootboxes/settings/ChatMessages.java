@@ -57,6 +57,9 @@ public class ChatMessages {
 	public static ChatMessages LOOKED_CONTAINER_TRY_OPEN = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_TRY_OPEN");
 	public static ChatMessages CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM = new ChatMessages("CHANGE_DISPLAYNAME_CONTINEDATA.CONFIRM");
 	public static ChatMessages CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME = new ChatMessages("CHANGE_DISPLAYNAME_CONTINEDATA.DISPLAYNAME");
+	public static ChatMessages CONTINER_IS_NOT_OBSTACLE = new ChatMessages("TELEPORT.CONTINER_IS_NOT_OBSTACLE");
+	public static ChatMessages CONTINER_IS_OBSTACLE_ON_ALL_SIDES = new ChatMessages("TELEPORT.CONTINER_IS_OBSTACLE_ON_ALL_SIDES");
+	public static ChatMessages CONTINER_IS_OBSTACLE_ON_SOME_SIDES = new ChatMessages("TELEPORT.CONTINER_IS_OBSTACLE_ON_SOME_SIDES");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 	public static ChatMessages RELOAD = new ChatMessages("RELOAD");
 

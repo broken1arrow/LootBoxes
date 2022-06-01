@@ -68,4 +68,9 @@ CONTAINER_OPEN:
   LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED."
   UNLOOKED_CONTAINER_SOUND: "ENTITY_VILLAGER_CELEBRATE"
 
+TELEPORT:
+  CONTINER_IS_NOT_OBSTACLE: "&fYou get teleported to top of the container, on pos:&6 {0} {1} {2} {3}"
+  CONTINER_IS_OBSTACLE_ON_ALL_SIDES: "&fYou get teleported to container pos, becuse the container is obstacle on all sides. Pos you get teleported to: &6 {0} {1} {2} {3}"
+  CONTINER_IS_OBSTACLE_ON_SOME_SIDES: "&fYou get teleported to diffrent location, becuse container was obstacle some of the side´s of the container. Pos you get teleported to: &6 {0} {1} {2} {3}"
+
 RELOAD: "&fYou have successful reload the config files"

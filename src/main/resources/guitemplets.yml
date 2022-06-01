@@ -1016,12 +1016,14 @@ Gui_Templets:
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     Container_list:
-      Display_name: "&bLinked:&6 {0} {1} {2} {3}"
+      Display_name: "&bLoc:&6 {0} {1} {2} {3}"
       Enchant: false
       Icon: COMPASS
       Slot: 0
       Lore:
-        - "&aClick to remove ths location."
+        - ""
+        - "&aLeftclick to teleport to container."
+        - "&Raightclick to remove this container."
     Seach_button:
       Display_name: "&bSeach for a location"
       Enchant: true
@@ -1029,7 +1031,7 @@ Gui_Templets:
       Slot: 40
       Lore:
         - "&aLeftclick for seach for a location"
-        - "&aRightclick for reset the seach"
+        - "&aRightclick to remove this container."
     Forward_button:
       Display_name: "&bForward"
       Enchant: true

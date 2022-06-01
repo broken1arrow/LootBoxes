@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.TeleportPlayer;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
@@ -17,6 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class ContainersLinkedList extends MenuHolder {
 
@@ -73,6 +76,19 @@ public class ContainersLinkedList extends MenuHolder {
 
 							builder.setContainerData(containerDataMap);
 							containerDataCache.setContainerData(container, builder.build());
+						}
+						if (clickType.isLeftClick()) {
+							TeleportPlayer teleport = new TeleportPlayer(player, (Location) o);
+							if (teleport.teleportPlayer()) {
+								Location teleportLoc = teleport.getFinalTeleportLoc();
+								
+								if (teleportLoc.getZ() - 0.5 == ((Location) o).getZ() && teleportLoc.getX() - 0.5 == ((Location) o).getX())
+									CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+								else if (teleportLoc.equals(o))
+									CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
+								else
+									CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+							}
 						}
 					}
 				}
