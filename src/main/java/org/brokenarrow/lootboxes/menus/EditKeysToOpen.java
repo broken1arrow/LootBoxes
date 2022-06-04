@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.menus;
 
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.commandprompt.SetKeyName;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -18,11 +19,14 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDIT_KEYS_FOR_OPEN_MENU;
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
+import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
@@ -100,9 +104,26 @@ public class EditKeysToOpen extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 				if (object instanceof String) {
+
+					if (click.isShiftClick() && click.isLeftClick()) {
+						Map<String, Object> map = new HashMap<>();
+
+						KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, (String) object);
+						map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
+						map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
+
+						String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
+								keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+						List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+								keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+
+						player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(1).makeItemStack());
+
+						return;
+					}
 					if (click.isLeftClick())
 						new EditKey(containerData, (String) object).menuOpen(player);
-					else if (click.isRightClick()) {
+					if (click.isRightClick()) {
 						containerDataCacheInstance.removeCacheKey(containerData, (String) object);
 						keyDropData.removeKeyMobDropData(containerData, (String) object);
 						new EditKeysToOpen(containerData).menuOpen(player);
