@@ -6,7 +6,7 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.0.12-SNAPSHOT</version>
+    <version>0.0.13-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
