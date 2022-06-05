@@ -8,6 +8,7 @@ Amount_Of_Blocks_Below_Surface: 5
 Spawn_On_Surface: false
 Warn_Before_Save_With_Metadata: true
 Save_Metadata_On_Item: true
+Remove_Container_When_player_close: true
 Max_and_min_amount:
   Increse_with: 10
   Decrese_with: 10

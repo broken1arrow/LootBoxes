@@ -31,7 +31,7 @@ public class GetKeyCommand extends SubCommandsUtility {
 	protected void onCommand() {
 		String[] args = getArgs();
 
-		if (args.length >= 3) {
+		if (args.length >= 4) {
 			Player player = Bukkit.getPlayer(args[0]);
 			if (player == null)
 				player = Bukkit.getOfflinePlayer(args[0]).getPlayer();
@@ -46,7 +46,7 @@ public class GetKeyCommand extends SubCommandsUtility {
 			List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
 					keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 			if (player != null)
-				player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(1).makeItemStack());
+				player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(Integer.parseInt(args[3])).makeItemStack());
 
 		}
 	}
@@ -73,6 +73,9 @@ public class GetKeyCommand extends SubCommandsUtility {
 			}
 			return TabUtil.complete(key, list);
 		}
-		return super.tabComplete();
+		if (getArgs().length == 4) {
+			return completeLastWord("<amount>");
+		}
+		return new ArrayList<>();
 	}
 }

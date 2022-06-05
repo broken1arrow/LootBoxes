@@ -67,6 +67,7 @@ CONTAINER_OPEN:
   LOOKED_CONTAINER_NOT_RIGHT_AMOUNT: "&fThis container is locked becuse  you don´t have right amount of items.You have&6 {0}&f and need&6 {1}&f."
   LOOKED_CONTAINER_NO_LOOTTABLE_LINKED: "&fIs no loottable linked to this {0} container data, you need set up or add existing loottable."
   LOOKED_CONTAINER_NO_KEY_ADDED: "&fNo key is added to this container."
+  HAS_NOT_REFILL_CONTAINER: "&fYou need to want {0} before next refill."
   OPEN_CONTAINER: "&fYou have now open container, hope you get some nice candy!!!."
   LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED."
   UNLOOKED_CONTAINER_SOUND: "ENTITY_VILLAGER_CELEBRATE"
@@ -77,3 +78,15 @@ TELEPORT:
   CONTINER_IS_OBSTACLE_ON_SOME_SIDES: "&fYou get teleported to diffrent location, becuse container was obstacle some of the side´s of the container. Pos you get teleported to: &6 {0} {1} {2} {3}"
 
 RELOAD: "&fYou have successful reload the config files"
+
+# change name on timeunit.
+# singular names.
+DAY: " day"
+HOUR: " hour"
+MINUTE: " minute"
+SECOND: " second"
+# plural names
+DAYS: " day´s"
+HOURS: " hour´s"
+MINUTES: " minute´s"
+SECONDS: " second´s"

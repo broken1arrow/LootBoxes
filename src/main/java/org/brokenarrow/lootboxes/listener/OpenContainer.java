@@ -25,6 +25,7 @@ import java.util.logging.Level;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
+import static org.brokenarrow.lootboxes.untlity.ConvertToTime.toTimeFromMillis;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.*;
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
 import static org.brokenarrow.lootboxes.untlity.PlaySound.playSound;
@@ -34,15 +35,17 @@ public class OpenContainer implements Listener {
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 
+
 	@EventHandler
 	public void openLootContainer(PlayerInteractEvent event) {
 		Block block = event.getClickedBlock();
 		if (checkBlockIsContainer(block)) {
-			Location location = event.getClickedBlock().getLocation();
+			Location location = block.getLocation();
 			ItemStack itemStack = event.getItem();
 			Player player = event.getPlayer();
 			if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 			if (player.hasPermission("lootboxes.bypass.open.requirement")) return;
+
 			String key = null;
 			String containerDataName = null;
 			if (itemStack != null && itemStack.getType() != Material.AIR) {
@@ -67,7 +70,7 @@ public class OpenContainer implements Listener {
 			if (containerData.getKeysData() == null || containerData.getKeysData().isEmpty()) {
 				return;
 			}
-			System.out.println("key " + key);
+
 			if (!key.startsWith("Keys_"))
 				key = "Keys_" + key;
 			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
@@ -88,6 +91,14 @@ public class OpenContainer implements Listener {
 				event.setCancelled(true);
 				LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
 			}
+
+			if (!lootboxes.getSpawnedContainers().isRefill(location)) {
+				String time = toTimeFromMillis(lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName) - System.currentTimeMillis());
+				HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);
+				event.setCancelled(true);
+				return;
+			}
+
 			if (event.useInteractedBlock() == Event.Result.DENY) {
 				playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
 				return;
@@ -103,7 +114,11 @@ public class OpenContainer implements Listener {
 			} else {
 				OPEN_CONTAINER.sendMessage(player);
 			}
-
+			lootboxes.getSpawnedContainers().setRefill(location, false);
+			player.getInventory().remove(itemStack);
+			int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
+			itemStack.setAmount(amount);
+			player.getInventory().addItem(itemStack);
 		}
 	}
 

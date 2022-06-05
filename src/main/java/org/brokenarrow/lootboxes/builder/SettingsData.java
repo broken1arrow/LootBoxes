@@ -18,6 +18,7 @@ public final class SettingsData {
 	private final boolean warnBeforeSaveWithMetadata;
 	private final boolean saveMetadataOnItem;
 	private final boolean randomContinerSpawn;
+	private final boolean removeContainerWhenPlayerClose;
 	private final Builder builder;
 
 	private SettingsData(Builder builder) {
@@ -32,6 +33,7 @@ public final class SettingsData {
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
 		this.saveMetadataOnItem = builder.saveMetadataOnItem;
 		this.randomContinerSpawn = builder.randomContinerSpawn;
+		this.removeContainerWhenPlayerClose = builder.removeContainerWhenPlayerClose;
 		this.blocksAwayFromPlayer = builder.blocksAwayFromPlayer;
 		this.blocksBetweenContainers = builder.blocksBetweenContainers;
 		this.increse = builder.increse;
@@ -110,6 +112,10 @@ public final class SettingsData {
 		return randomContinerSpawn;
 	}
 
+	public boolean isRemoveContainerWhenPlayerClose() {
+		return removeContainerWhenPlayerClose;
+	}
+
 	public Builder getBuilder() {
 		return builder;
 	}
@@ -131,7 +137,7 @@ public final class SettingsData {
 		private boolean warnBeforeSaveWithMetadata;
 		private boolean saveMetadataOnItem;
 		private boolean randomContinerSpawn;
-
+		private boolean removeContainerWhenPlayerClose;
 
 		public Builder setLanguage(String language) {
 			this.language = language;
@@ -229,6 +235,11 @@ public final class SettingsData {
 
 		public Builder setRandomContinerSpawn(boolean randomContinerSpawn) {
 			this.randomContinerSpawn = randomContinerSpawn;
+			return this;
+		}
+
+		public Builder setRemoveContainerWhenPlayerClose(boolean removeContainerWhenPlayerClose) {
+			this.removeContainerWhenPlayerClose = removeContainerWhenPlayerClose;
 			return this;
 		}
 

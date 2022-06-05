@@ -24,6 +24,7 @@ public class SpawnedContainers {
 	private final Map<String, Long> cachedTimeMap = new HashMap<>();
 	private final Map<String, Long> tempCache = new HashMap<>();
 	private final Set<String> removeKey = new HashSet<>();
+	private final Map<Location, Boolean> hasRefill = new HashMap<>();
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
@@ -38,13 +39,13 @@ public class SpawnedContainers {
 			} else if (System.currentTimeMillis() >= time) {
 				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(key);
 				if (containerDataBuilder == null) return;
-
 				if (!containerDataBuilder.isSpawningContainerWithCooldown()) {
 					removeKey.add(key);
 					return;
 				}
 				spawnContainer(containerDataBuilder);
 				setCachedTimeMap(key, containerDataBuilder.getCooldown());
+
 			}
 		}
 		removeKeyFromCache();
@@ -70,7 +71,7 @@ public class SpawnedContainers {
 				setCustomName(location, containerData.getDisplayname());
 
 				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
-
+				this.setRefill(location, true);
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {
 					inventory.setContents(item);
@@ -81,6 +82,19 @@ public class SpawnedContainers {
 
 	public Set<String> getRemoveKey() {
 		return removeKey;
+	}
+
+	public Map<Location, Boolean> getHasRefill() {
+		return hasRefill;
+	}
+
+	public void setRefill(Location location, boolean hasFill) {
+		hasRefill.put(location, hasFill);
+	}
+
+	public boolean isRefill(Location location) {
+		Boolean hasFilled = hasRefill.get(location);
+		return hasFilled == null || hasFilled;
 	}
 
 	public void removeKeyFromCache() {

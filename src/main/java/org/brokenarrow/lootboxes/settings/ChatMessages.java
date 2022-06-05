@@ -57,6 +57,7 @@ public class ChatMessages {
 	public static ChatMessages LOOKED_CONTAINER_TRY_OPEN = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_TRY_OPEN");
 	public static ChatMessages LOOKED_CONTAINER_NO_LOOTTABLE_LINKED = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_NO_LOOTTABLE_LINKED");
 	public static ChatMessages LOOKED_CONTAINER_NO_KEY_ADDED = new ChatMessages("CONTAINER_OPEN.LOOKED_CONTAINER_NO_KEY_ADDED");
+	public static ChatMessages HAS_NOT_REFILL_CONTAINER = new ChatMessages("CONTAINER_OPEN.HAS_NOT_REFILL_CONTAINER");
 	public static ChatMessages OPEN_CONTAINER = new ChatMessages("CONTAINER_OPEN.OPEN_CONTAINER");
 	public static ChatMessages CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM = new ChatMessages("CHANGE_DISPLAYNAME_CONTINEDATA.CONFIRM");
 	public static ChatMessages CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME = new ChatMessages("CHANGE_DISPLAYNAME_CONTINEDATA.DISPLAYNAME");
@@ -65,6 +66,14 @@ public class ChatMessages {
 	public static ChatMessages CONTINER_IS_OBSTACLE_ON_SOME_SIDES = new ChatMessages("TELEPORT.CONTINER_IS_OBSTACLE_ON_SOME_SIDES");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 	public static ChatMessages RELOAD = new ChatMessages("RELOAD");
+	public static ChatMessages DAY = new ChatMessages("DAY");
+	public static ChatMessages HOUR = new ChatMessages("HOUR");
+	public static ChatMessages MINUTE = new ChatMessages("MINUTE");
+	public static ChatMessages SECOND = new ChatMessages("SECOND");
+	public static ChatMessages DAYS = new ChatMessages("DAYS");
+	public static ChatMessages HOURS = new ChatMessages("HOURS");
+	public static ChatMessages MINUTES = new ChatMessages("MINUTES");
+	public static ChatMessages SECONDS = new ChatMessages("SECONDS");
 
 	public ChatMessages(String idKey) {
 		chatMessagesMap.put(idKey, this);
