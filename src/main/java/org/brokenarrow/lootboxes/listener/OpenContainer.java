@@ -92,8 +92,10 @@ public class OpenContainer implements Listener {
 				LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
 			}
 
-			if (!lootboxes.getSpawnedContainers().isRefill(location)) {
-				String time = toTimeFromMillis(lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName) - System.currentTimeMillis());
+			if (containerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
+				String time = "0";
+				if (lootboxes.getSpawnedContainers().getCachedTimeMap() != null)
+					time = toTimeFromMillis(lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName) - System.currentTimeMillis());
 				HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);
 				event.setCancelled(true);
 				return;

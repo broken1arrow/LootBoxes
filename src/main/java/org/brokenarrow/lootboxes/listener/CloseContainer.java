@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.listener;
 
 import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
@@ -32,8 +33,10 @@ public class CloseContainer implements Listener {
 		if (inventory != null) {
 			LocationData locationData = containerDataCache.getLocationData(location);
 			if (locationData == null) return;
+			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
+			if (containerData == null) return;
 			
-			if (settings.getSettings().isRemoveContainerWhenPlayerClose()) {
+			if (settings.getSettings().isRemoveContainerWhenPlayerClose() && containerData.isSpawningContainerWithCooldown()) {
 				location.getBlock().setType(Material.AIR);
 			} else {
 				if (!inventory.isEmpty()) {
