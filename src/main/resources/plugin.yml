@@ -16,3 +16,5 @@ permissions:
       lootboxes.command.menu: true
       lootboxes.command.reload: true
       lootboxes.link.containers: true
+      lootboxes.command.key: true
+      lootboxes.bypass.open.requirement: true

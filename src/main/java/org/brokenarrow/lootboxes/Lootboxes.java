@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes;
 
 
 import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
+import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
 import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
@@ -56,7 +57,7 @@ public class Lootboxes extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		setServerVersion(this);
-		
+
 		this.nbtAPI = new RegisterNbtAPI(this, false);
 		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
@@ -75,7 +76,7 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
 		new RegisterMenuAPI(this);
 		commandRegister = new CommandRegister(this, "lootbox");
-		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand());
+		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand(), new GetKeyCommand());
 		this.mobList = new MobList();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
