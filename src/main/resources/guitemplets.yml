@@ -605,6 +605,34 @@ Gui_Templets:
         - ""
         - "&2List of icons you can change too"
         - "&2for this container."
+    Generate_Loot_When_Clicking:
+      Display_name: "&bGenerate loot on timer"
+      Enchant: true
+      Slot: 20
+      Icon: ENDER_EYE
+      Lore:
+        - ""
+        - "&2Set if it shall generate loot on"
+        - "&2timer or when player clicking"
+        - "&2on the container."
+        - "&2"
+        - "&3Leftclick to turn this on"
+        - "&3Rightclick to turn this off"
+        - "&2"
+        - "&2Auto fill on timer:&6 {1}"
+    Cooldown_Container_Generate_Loot_is_on:
+      Display_name: "&bYou can´t set cooldown on the container"
+      Enchant: true
+      Slot: 28
+      Icon: CLOCK
+      Lore:
+        - ""
+        - "&2"
+        - "&4You can´t set cooldown, when"
+        - "&4generate loot is on."
+        - "&6"
+        - "&2Current cooldown:"
+        - "&2{1} seconds"
     Cooldown_Container:
       Display_name: "&bSet cooldown on the container"
       Enchant: true

@@ -15,7 +15,7 @@ public final class ContainerDataBuilder {
 	private final List<String> particleEffect;
 	private final Map<Location, ContainerData> containerData;
 	private final Map<String, KeysData> keysData;
-	private final boolean spawning;
+	private final boolean spawningContainerWithCooldown;
 	private final boolean enchant;
 	private final boolean randomSpawn;
 	private final long cooldown;
@@ -30,7 +30,7 @@ public final class ContainerDataBuilder {
 		this.lore = builder.lore;
 		this.containerData = builder.containerData;
 		this.keysData = builder.keysData;
-		this.spawning = builder.spawning;
+		this.spawningContainerWithCooldown = builder.spawningContainerWithCooldown;
 		this.enchant = builder.enchant;
 		this.cooldown = builder.cooldown;
 		this.randomSpawn = builder.randomSpawn;
@@ -65,8 +65,8 @@ public final class ContainerDataBuilder {
 		return keysData;
 	}
 
-	public boolean isSpawning() {
-		return spawning;
+	public boolean isSpawningContainerWithCooldown() {
+		return spawningContainerWithCooldown;
 	}
 
 	public boolean isEnchant() {
@@ -95,7 +95,7 @@ public final class ContainerDataBuilder {
 				", particleEffect=" + particleEffect +
 				", containerData=" + containerData +
 				", keysData=" + keysData +
-				", spawning=" + spawning +
+				", spawning=" + spawningContainerWithCooldown +
 				", enchant=" + enchant +
 				", cooldown=" + cooldown +
 				", builder=" + builder +
@@ -111,7 +111,7 @@ public final class ContainerDataBuilder {
 		private List<String> particleEffect;
 		private Map<Location, ContainerData> containerData;
 		private Map<String, KeysData> keysData;
-		private boolean spawning;
+		private boolean spawningContainerWithCooldown;
 		private boolean enchant;
 		private boolean randomSpawn;
 		private long cooldown;
@@ -151,8 +151,8 @@ public final class ContainerDataBuilder {
 			return this;
 		}
 
-		public Builder setSpawning(boolean spawning) {
-			this.spawning = spawning;
+		public Builder setSpawningContainerWithCooldown(boolean spawningContainerWithCooldown) {
+			this.spawningContainerWithCooldown = spawningContainerWithCooldown;
 			return this;
 		}
 
@@ -185,7 +185,7 @@ public final class ContainerDataBuilder {
 					", particleEffect=" + particleEffect +
 					", containerData=" + containerData +
 					", keysData=" + keysData +
-					", spawning=" + spawning +
+					", spawning=" + spawningContainerWithCooldown +
 					", enchant=" + enchant +
 					", cooldown=" + cooldown +
 					'}';

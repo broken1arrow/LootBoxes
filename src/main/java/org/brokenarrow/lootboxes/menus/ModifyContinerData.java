@@ -212,6 +212,7 @@ public class ModifyContinerData extends MenuHolder {
 		private final MenuButton keys;
 		private final MenuButton changeIcon;
 		private final MenuButton changeDisplayName;
+		private final MenuButton generateLootWhenClicking;
 		private final MenuButton coolddownBetweenContainers;
 		private final MenuButton containers;
 		private final MenuButton backButton;
@@ -337,16 +338,45 @@ public class ModifyContinerData extends MenuHolder {
 							gui.getLore()).makeItemStack();
 				}
 			};
+			generateLootWhenClicking = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					if (containerDataBuilder != null) {
+						if (containerDataBuilder.isSpawningContainerWithCooldown() == click.isLeftClick()) return;
+
+						ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+						builder.setSpawningContainerWithCooldown(click.isLeftClick());
+						containerDataCache.setContainerData(container, builder.build());
+					}
+					updateButtons();
+				}
+
+				@Override
+				public ItemStack getItem() {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Generate_Loot_When_Clicking").placeholders("", containerDataBuilder.isSpawningContainerWithCooldown()).build();
+					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
 			coolddownBetweenContainers = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					if (!containerDataBuilder.isSpawningContainerWithCooldown()) return;
 					new SpecifyTime(container).start(player);
 				}
 
 				@Override
 				public ItemStack getItem() {
 					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
-					GuiTempletsYaml gui = guiTemplets.menuKey("Cooldown_Container").placeholders("", containerDataBuilder.getCooldown()).build();
+					GuiTempletsYaml gui;
+					if (containerDataBuilder.isSpawningContainerWithCooldown())
+						gui = guiTemplets.menuKey("Cooldown_Container").placeholders("", containerDataBuilder.getCooldown()).build();
+					else
+						gui = guiTemplets.menuKey("Cooldown_Container_Generate_Loot_is_on").placeholders("", containerDataBuilder.getCooldown()).build();
+
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
@@ -434,6 +464,8 @@ public class ModifyContinerData extends MenuHolder {
 				return animation;
 			if (guiTemplets.menuKey("Change_DisplayName").build().getSlot().contains(slot))
 				return changeDisplayName;
+			if (guiTemplets.menuKey("Generate_Loot_When_Clicking").build().getSlot().contains(slot))
+				return generateLootWhenClicking;
 			if (guiTemplets.menuKey("Keys_To_Open_Container").build().getSlot().contains(slot))
 				return keys;
 			if (guiTemplets.menuKey("Change_Icon").build().getSlot().contains(slot))

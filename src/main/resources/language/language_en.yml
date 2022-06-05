@@ -65,6 +65,9 @@ CONTAINER_OPEN:
   LOOKED_CONTAINER_TRY_OPEN: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and needed this key:s&6 {1}&f."
   LOOKED_CONTAINER_NOT_RIGHT_ITEM: "&fThis container is locked becuse you neeed right item in hand.Item you have&6 {0}&f and item you need:&6 {1}&f."
   LOOKED_CONTAINER_NOT_RIGHT_AMOUNT: "&fThis container is locked becuse  you don´t have right amount of items.You have&6 {0}&f and need&6 {1}&f."
+  LOOKED_CONTAINER_NO_LOOTTABLE_LINKED: "&fIs no loottable linked to this {0} container data, you need set up or add existing loottable."
+  LOOKED_CONTAINER_NO_KEY_ADDED: "&fNo key is added to this container."
+  OPEN_CONTAINER: "&fYou have now open container, hope you get some nice candy!!!."
   LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED."
   UNLOOKED_CONTAINER_SOUND: "ENTITY_VILLAGER_CELEBRATE"
 

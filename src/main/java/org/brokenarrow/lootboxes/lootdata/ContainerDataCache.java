@@ -72,12 +72,13 @@ public class ContainerDataCache extends YamlUtil {
 	public void setCacheContainerDataCache(String container, Material material) {
 
 		ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
-		builder.setContainerDataLinkedToLootTable("").setSpawning(true).setCooldown(1800).setParticleEffect(new ArrayList<>())
+		builder.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffect(new ArrayList<>())
 				.setEnchant(false).setIcon(material).setDisplayname("").setLore(new ArrayList<>()).setContainerData(new HashMap<>())
 				.setKeysData(new HashMap<>());
 
 		cacheContainerData.put(container, builder.build());
 		saveTask();
+		addContainerToSpawnTask(container, 1800);
 	}
 
 	public ContainerDataBuilder getCacheContainerData(String container) {
@@ -105,8 +106,11 @@ public class ContainerDataCache extends YamlUtil {
 
 	public KeysData getCacheKey(String container, String keyName) {
 		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
-		if (containerDataBuilder != null)
+		if (containerDataBuilder != null) {
+			if (keyName.startsWith("Keys_"))
+				return containerDataBuilder.getKeysData().get(keyName);
 			return containerDataBuilder.getKeysData().get("Keys_" + keyName);
+		}
 
 		return null;
 	}
@@ -222,6 +226,9 @@ public class ContainerDataCache extends YamlUtil {
 		return cacheContainerData.containsKey(key);
 	}
 
+	public void addContainerToSpawnTask(String mainKey, long cooldown) {
+		Lootboxes.getInstance().getSpawnedContainers().setCachedTimeMap(mainKey, cooldown);
+	}
 
 	public List<String> getContainerData() {
 		return cacheContainerData.keySet().stream().filter(Objects::nonNull).collect(Collectors.toList());
@@ -233,6 +240,8 @@ public class ContainerDataCache extends YamlUtil {
 		cacheContainerData.put(containers, containerDataBuilder);
 
 		addChachedLocation(containers, new HashMap<>(), new HashMap<>());
+		if (!containerDataBuilder.isSpawningContainerWithCooldown())
+			addContainerToSpawnTask(containers, containerDataBuilder.getCooldown());
 		saveTask();
 	}
 
@@ -242,12 +251,6 @@ public class ContainerDataCache extends YamlUtil {
 
 	@Override
 	protected void save() {
-		/*customConfig.set("Data", null);
-		for (Map.Entry<?, ?> childrenKey : serialize().entrySet())
-			if (childrenKey != null) {
-
-				customConfig.set((String) childrenKey.getKey(), childrenKey.getValue());
-			}*/
 		super.save();
 		System.out.println("saveToString() \n" + customConfig.saveToString());
 	}
@@ -259,7 +262,7 @@ public class ContainerDataCache extends YamlUtil {
 			if (childrenKey != null) {
 				ContainerDataBuilder data = this.cacheContainerData.get(childrenKey);
 				serializeData.put(childrenKey + "." + "LootTable_Linked", data.getLootTableLinked());
-				serializeData.put(childrenKey + "." + "Spawning", data.isSpawning());
+				serializeData.put(childrenKey + "." + "Spawning", data.isSpawningContainerWithCooldown());
 				serializeData.put(childrenKey + "." + "Cooldown", data.getCooldown());
 				serializeData.put(childrenKey + "." + "Animation", data.getParticleEffects());
 				serializeData.put(childrenKey + "." + "Random_spawn", data.isRandomSpawn());
@@ -293,7 +296,7 @@ public class ContainerDataCache extends YamlUtil {
 				if (mainKey == null) continue;
 
 				String lootTableLinked = this.customConfig.getString("Data." + mainKey + "." + "LootTable_Linked");
-				boolean spawning = this.customConfig.getBoolean("Data." + mainKey + "." + "Spawning");
+				boolean spawningContainerWithCooldown = this.customConfig.getBoolean("Data." + mainKey + "." + "Spawning");
 				long cooldown = this.customConfig.getLong("Data." + mainKey + "." + "Cooldown");
 				List<String> animation = this.customConfig.getStringList("Data." + mainKey + "." + "Animation");
 				boolean enchant = this.customConfig.getBoolean("Data." + mainKey + "." + "Enchant");
@@ -322,7 +325,7 @@ public class ContainerDataCache extends YamlUtil {
 				addChachedLocation(mainKey, containerDataMap, keysDataMap);
 				ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
 				builder.setContainerDataLinkedToLootTable(lootTableLinked)
-						.setSpawning(spawning)
+						.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 						.setCooldown(cooldown)
 						.setParticleEffect(animation)
 						.setEnchant(enchant)
@@ -333,7 +336,9 @@ public class ContainerDataCache extends YamlUtil {
 						.setContainerData(containerDataMap)
 						.setKeysData(keysDataMap);
 				cacheContainerData.put(mainKey, builder.build());
-				Lootboxes.getInstance().getSpawnedContainers().setCachedTimeMap(mainKey, cooldown);
+				if (spawningContainerWithCooldown)
+					addContainerToSpawnTask(mainKey, cooldown);
+
 			}
 	}
 

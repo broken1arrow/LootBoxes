@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
@@ -10,15 +11,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtask;
 
 public class SpawnedContainers {
 
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
-	Map<String, Long> cachedTimeMap = new HashMap<>();
-	Map<String, Long> tempCache = new HashMap<>();
+	private final Map<String, Long> cachedTimeMap = new HashMap<>();
+	private final Map<String, Long> tempCache = new HashMap<>();
+	private final Set<String> removeKey = new HashSet<>();
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
@@ -33,23 +38,29 @@ public class SpawnedContainers {
 			} else if (System.currentTimeMillis() >= time) {
 				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(key);
 				if (containerDataBuilder == null) return;
+
+				if (!containerDataBuilder.isSpawningContainerWithCooldown()) {
+					removeKey.add(key);
+					return;
+				}
 				spawnContainer(containerDataBuilder);
 				setCachedTimeMap(key, containerDataBuilder.getCooldown());
 			}
 		}
-
-		if (tempCache != null && !tempCache.isEmpty()) {
-			cachedTimeMap.putAll(tempCache);
-			for (String key : cachedTimeMap.keySet())
-				tempCache.remove(key);
+		removeKeyFromCache();
+		if (!tempCache.isEmpty()) {
+			runtask(() -> {
+				cachedTimeMap.putAll(tempCache);
+				cachedTimeMap.keySet().forEach(tempCache::remove);
+			}, true);
 		}
 	}
 
 	public void spawnContainer(ContainerDataBuilder containerData) {
-		Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerData.getLinkedContainerData();
+		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
-		for (Map.Entry<Location, org.brokenarrow.lootboxes.builder.ContainerData> entry : containerDataMap.entrySet()) {
-			org.brokenarrow.lootboxes.builder.ContainerData containerData1 = entry.getValue();
+		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
+			ContainerData containerData1 = entry.getValue();
 			Location location = entry.getKey();
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
 				location.getBlock().setType(containerData1.getContainerType());
@@ -59,7 +70,7 @@ public class SpawnedContainers {
 				setCustomName(location, containerData.getDisplayname());
 
 				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
-		
+
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {
 					inventory.setContents(item);
@@ -68,6 +79,15 @@ public class SpawnedContainers {
 		}
 	}
 
+	public Set<String> getRemoveKey() {
+		return removeKey;
+	}
+
+	public void removeKeyFromCache() {
+		if (removeKey.isEmpty()) return;
+
+		runtask(() -> removeKey.forEach(cachedTimeMap::remove), true);
+	}
 
 	public Map<String, Long> getCachedTimeMap() {
 		return cachedTimeMap;
