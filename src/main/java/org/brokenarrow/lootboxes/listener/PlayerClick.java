@@ -85,9 +85,11 @@ public class PlayerClick implements Listener {
 			if (!player.hasPermission("lootboxes.link.containers")) return;
 			if (checkBlockIsContainer(blockPlaced)) {
 				Location location = blockPlaced.getLocation();
+				if (!player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 
 				String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 				ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
+				if (data == null) return;
 				removeData(data, location, metadata);
 				ADD_CONTINERS_RIGHT_CLICK_BLOCK.sendMessage(player, location);
 			}
