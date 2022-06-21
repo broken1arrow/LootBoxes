@@ -1,21 +1,21 @@
 package org.brokenarrow.lootboxes.lootdata;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.RandomUntility;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.brokenarrow.lootboxes.untlity.RandomUntility.chance;
-import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
-
 public class MakeLootTable {
 	LootItems lootItems = LootItems.getInstance();
 	ItemData itemData = ItemData.getInstance();
 	private int minimumAmountOfItems = 0;
 	private int maxAmountOfItems = 0;
+	private final RandomUntility random = Lootboxes.getInstance().getRandomUntility();
 
 	public ItemStack[] makeLottable(String table) {
 		List<ItemStack> itemStacks = new ArrayList<>();
@@ -28,7 +28,7 @@ public class MakeLootTable {
 			if (lootData.getMaterial() == Material.AIR) continue;
 
 			if (backupcounter == -1) {
-				backupcounter = Math.max(randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 0);
+				backupcounter = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 0);
 			}
 			int amountOfItems = randomNumber(lootData);
 
@@ -38,7 +38,7 @@ public class MakeLootTable {
 			if (amountIfItemsMax > this.maxAmountOfItems)
 				break;
 			amountIfItemsMax++;
-			if (!chance(lootData.getChance()))
+			if (!random.chance(lootData.getChance()))
 				continue;
 
 			itemStacks.add(createItem(lootData, amountOfItems));
@@ -55,7 +55,7 @@ public class MakeLootTable {
 	}
 
 	private int randomNumber(LootData lootData) {
-		return Math.max(randomIntNumber(lootData.getMinimum(), lootData.getMaximum()), 0);
+		return Math.max(random.randomIntNumber(lootData.getMinimum(), lootData.getMaximum()), 0);
 	}
 
 	private ItemStack createItem(LootData lootData, int amountOfItems) {

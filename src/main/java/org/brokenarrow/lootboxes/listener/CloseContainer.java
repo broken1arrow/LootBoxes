@@ -29,13 +29,16 @@ public class CloseContainer implements Listener {
 	public void closeLootContainer(InventoryCloseEvent event) {
 		Location location = event.getInventory().getLocation();
 		if (location == null) return;
+		Player player = (Player) event.getPlayer();
+		if (player.hasPermission("lootboxes.bypass.open.requirement")) return;
+
 		Inventory inventory = getInventory(location);
 		if (inventory != null) {
 			LocationData locationData = containerDataCache.getLocationData(location);
 			if (locationData == null) return;
 			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
 			if (containerData == null) return;
-			
+
 			if (settings.getSettings().isRemoveContainerWhenPlayerClose() && containerData.isSpawningContainerWithCooldown()) {
 				location.getBlock().setType(Material.AIR);
 			} else {
@@ -48,7 +51,6 @@ public class CloseContainer implements Listener {
 				inventory.clear();
 			}
 		}
-		Player player = (Player) event.getPlayer();
 	}
 }
 

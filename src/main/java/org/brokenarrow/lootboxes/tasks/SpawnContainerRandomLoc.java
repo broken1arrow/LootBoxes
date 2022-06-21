@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.untlity.RandomUntility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
-import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
 
 public class SpawnContainerRandomLoc {
 
@@ -25,6 +25,7 @@ public class SpawnContainerRandomLoc {
 	private String containerdataName;
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
+	private RandomUntility randomUntility = lootboxes.getRandomUntility();
 
 	public void task() {
 		if (settings.isRandomContinerSpawn())
@@ -93,9 +94,9 @@ public class SpawnContainerRandomLoc {
 		int z = location.getBlockZ();
 
 
-		int randomY = randomIntNumber(-20, 20);
-		int randomX = randomIntNumber(-20, 20);
-		int randomZ = randomIntNumber(-20, 20);
+		int randomY = randomUntility.randomIntNumber(-20, 20);
+		int randomX = randomUntility.randomIntNumber(-20, 20);
+		int randomZ = randomUntility.randomIntNumber(-20, 20);
 
 
 		int numberX = x + randomX;

@@ -53,49 +53,63 @@ public class OpenContainer implements Listener {
 				containerDataName = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
 			}
 			LocationData locationData = containerDataCache.getLocationData(location);
-			if (locationData != null) {
-				if (key == null || containerDataName == null) {
-					List<String> list = new ArrayList<>();
-					for (KeysData values : locationData.getKeys().values())
-						list.add(TranslatePlaceHolders.translatePlaceholders(values.getDisplayName(), values.getKeyName(), values.getLootTableLinked(), values.getAmountNeeded(), values.getItemType()));
+			if (locationData == null) return;
 
+			if (key == null || containerDataName == null) {
+				List<String> list = new ArrayList<>();
+				for (KeysData values : locationData.getKeys().values()) {
+					if (values.getItemType() == null || values.getItemType().isAir())
+						break;
+					list.add(TranslatePlaceHolders.translatePlaceholders(values.getDisplayName(), values.getKeyName(), values.getLootTableLinked(), values.getAmountNeeded(), values.getItemType()));
+				}
+				if (!list.isEmpty()) {
 					LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
 
 					event.setCancelled(true);
 					playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
 					return;
 				}
-			} else return;
+			}
+
 			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(containerDataName);
-			if (containerData.getKeysData() == null || containerData.getKeysData().isEmpty()) {
-				return;
+			if (containerData == null) {
+				containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
 			}
+			if (key != null && containerData.getKeysData() != null) {
+				if (!key.startsWith("Keys_"))
+					key = "Keys_" + key;
+				KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
+				if (dataCacheCacheKey == null) {
 
-			if (!key.startsWith("Keys_"))
-				key = "Keys_" + key;
-			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
-			if (dataCacheCacheKey == null) {
-
-				lootboxes.getLogger().log(Level.WARNING, "Of some reson is key data null, this shold not hapend");
-				event.setCancelled(true);
-				return;
-			}
-
-			if (dataCacheCacheKey.getAmountNeeded() <= 0) return;
-
-			if (itemStack.getType() != dataCacheCacheKey.getItemType()) {
-				event.setCancelled(true);
-				LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), dataCacheCacheKey.getItemType());
-			}
-			if (itemStack.getAmount() < dataCacheCacheKey.getAmountNeeded()) {
-				event.setCancelled(true);
-				LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
+					lootboxes.getLogger().log(Level.WARNING, "Of some reson is key data null, this shold not hapend");
+					event.setCancelled(true);
+					return;
+				}
+				Material material = dataCacheCacheKey.getItemType();
+				if (material != null && !material.isAir() /*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
+					if (dataCacheCacheKey.getAmountNeeded() <= 0) return;
+					if (itemStack.getType() != material) {
+						event.setCancelled(true);
+						LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), material);
+					}
+					if (itemStack.getAmount() < dataCacheCacheKey.getAmountNeeded()) {
+						event.setCancelled(true);
+						LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
+					}
+				}
+				if (event.useInteractedBlock() != Event.Result.DENY) {
+					player.getInventory().remove(itemStack);
+					int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
+					itemStack.setAmount(amount);
+					player.getInventory().addItem(itemStack);
+				}
 			}
 
 			if (containerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
 				String time = "0";
-				if (lootboxes.getSpawnedContainers().getCachedTimeMap() != null)
-					time = toTimeFromMillis(lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName) - System.currentTimeMillis());
+				Long cachedTime = lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName);
+				if (cachedTime != null)
+					time = toTimeFromMillis(cachedTime - System.currentTimeMillis());
 				HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);
 				event.setCancelled(true);
 				return;
@@ -117,10 +131,7 @@ public class OpenContainer implements Listener {
 				OPEN_CONTAINER.sendMessage(player);
 			}
 			lootboxes.getSpawnedContainers().setRefill(location, false);
-			player.getInventory().remove(itemStack);
-			int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
-			itemStack.setAmount(amount);
-			player.getInventory().addItem(itemStack);
+
 		}
 	}
 

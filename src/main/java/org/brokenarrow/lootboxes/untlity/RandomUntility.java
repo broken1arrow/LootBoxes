@@ -25,27 +25,32 @@ public final class RandomUntility extends Random {
 		}
 	}
 
-	public static int randomIntNumber(int origin, int bound) {
+	public RandomUntility newRandomsSeed() {
+		random = new Random(seedUniquifier() ^ System.nanoTime());
+		return this;
+	}
+
+	public int randomIntNumber(int origin, int bound) {
 		return randomIntNumber(origin, bound, false);
 	}
 
-	public static int randomIntNumber(int origin, int bound, boolean newRandomsSeed) {
+	public int randomIntNumber(int origin, int bound, boolean newRandomsSeed) {
 		if (newRandomsSeed)
-			new RandomUntility();
+			newRandomsSeed();
 		return origin + nextRandomInt(bound - origin + 1);
 	}
 
-	public static boolean chance(final int percent) {
+	public boolean chance(final int percent) {
 		return chance(percent, false);
 	}
 
-	public static boolean chance(final int percent, boolean newRandomsSeed) {
+	public boolean chance(final int percent, boolean newRandomsSeed) {
 		if (newRandomsSeed)
-			new RandomUntility();
+			newRandomsSeed();
 		return random.nextDouble() * 100D < percent;
 	}
 
-	public static int nextRandomInt(int bound) {
+	public int nextRandomInt(int bound) {
 		if (bound < 0)
 			bound = 1;
 		return random.nextInt(bound);

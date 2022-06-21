@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.untlity;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
@@ -13,8 +14,6 @@ import java.util.*;
 
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
-import static org.brokenarrow.lootboxes.untlity.RandomUntility.chance;
-import static org.brokenarrow.lootboxes.untlity.RandomUntility.randomIntNumber;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
@@ -22,6 +21,7 @@ public class RandomKey {
 
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final RandomUntility random = Lootboxes.getInstance().getRandomUntility();
 
 	public ItemStack[] makeRandomAmountOfItems(EntityType entety) {
 		List<ItemStack> itemStacks = new ArrayList<>();
@@ -42,7 +42,7 @@ public class RandomKey {
 
 		int amountOfItems = randomNumber(keyMobDropData);
 
-		if (!chance(keyMobDropData.getChance()))
+		if (!random.chance(keyMobDropData.getChance()))
 			return null;
 		Map<String, Object> map = new HashMap<>();
 
@@ -59,7 +59,7 @@ public class RandomKey {
 	}
 
 	private int randomNumber(KeyMobDropData keyMobDropData) {
-		return Math.max(randomIntNumber(keyMobDropData.getMinimum(), keyMobDropData.getMaximum()), 0);
+		return Math.max(random.randomIntNumber(keyMobDropData.getMinimum(), keyMobDropData.getMaximum()), 0);
 	}
 
 	private ItemStack createItem(Material material, int amountOfItems) {

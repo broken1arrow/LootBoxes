@@ -56,7 +56,6 @@ public class ContainerDataCache extends YamlUtil {
 	public void addChachedLocation(String continerDataName, Map<Location, ContainerData> map, Map<String, KeysData> keysDataMap) {
 		Set<Location> linkedContainerData;
 		Map<String, KeysData> cacheKeysData;
-		this.chachedLocations.clear();
 		if (map.isEmpty()) {
 			linkedContainerData = this.getLinkedContainers(continerDataName).keySet();
 		} else
@@ -65,8 +64,10 @@ public class ContainerDataCache extends YamlUtil {
 			cacheKeysData = this.getCacheKeysData(continerDataName);
 		} else
 			cacheKeysData = keysDataMap;
-		for (Location location : linkedContainerData)
-			putChachedLocations(location, new LocationData(continerDataName, cacheKeysData));
+		for (Location location : linkedContainerData) {
+			if (location != null)
+				putChachedLocations(location, new LocationData(continerDataName, cacheKeysData));
+		}
 	}
 
 	public void setCacheContainerDataCache(String container, Material material) {
@@ -152,8 +153,12 @@ public class ContainerDataCache extends YamlUtil {
 		return null;
 	}
 
-	public Map<String, KeysData> getCacheKeysData(String container) {
-		return cacheContainerData.get(container).getKeysData();
+	public Map<String, KeysData> getCacheKeysData(String containerDataCacheName) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getKeysData();
+
+		return new HashMap<>();
 	}
 
 	public void setKeyData(String containerData, String keyName, KeysData keysData) {
@@ -167,6 +172,8 @@ public class ContainerDataCache extends YamlUtil {
 
 		this.cacheContainerData.put(containerData, builder.build());
 		addChachedLocation(containerData, new HashMap<>(), keysDataMap);
+		if (containerDataBuilder.isSpawningContainerWithCooldown())
+			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
 		saveTask();
 	}
 
@@ -204,10 +211,12 @@ public class ContainerDataCache extends YamlUtil {
 
 		ContainerDataBuilder.Builder builder = getCacheContainerBuilder(container);
 		checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + container + " null");
-		builder.setKeysData(keyDataMap);
+		ContainerDataBuilder containerDataBuilder = builder.setKeysData(keyDataMap).build();
 
-		this.cacheContainerData.put(container, builder.build());
+		this.cacheContainerData.put(container, containerDataBuilder);
 		addChachedLocation(container, new HashMap<>(), keyDataMap);
+		if (containerDataBuilder.isSpawningContainerWithCooldown())
+			addContainerToSpawnTask(container, containerDataBuilder.getCooldown());
 		saveTask();
 
 	}
@@ -234,14 +243,13 @@ public class ContainerDataCache extends YamlUtil {
 		return cacheContainerData.keySet().stream().filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
-	public void setContainerData(String containers, ContainerDataBuilder containerDataBuilder) {
+	public void setContainerData(String containerData, ContainerDataBuilder containerDataBuilder) {
 		//ContainerDataBuilder lootDataMap = cacheContainerData.get(lootTable);
+		cacheContainerData.put(containerData, containerDataBuilder);
 
-		cacheContainerData.put(containers, containerDataBuilder);
-
-		addChachedLocation(containers, new HashMap<>(), new HashMap<>());
+		addChachedLocation(containerData, new HashMap<>(), new HashMap<>());
 		if (!containerDataBuilder.isSpawningContainerWithCooldown())
-			addContainerToSpawnTask(containers, containerDataBuilder.getCooldown());
+			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
 		saveTask();
 	}
 
@@ -288,12 +296,12 @@ public class ContainerDataCache extends YamlUtil {
 
 	@Override
 	protected void loadSettingsFromYaml() {
-		Map<Location, ContainerData> containerDataMap = new HashMap<>();
-		Map<String, KeysData> keysDataMap = new HashMap<>();
 		ConfigurationSection MainConfigKeys = customConfig.getConfigurationSection("Data");
 		if (MainConfigKeys != null)
 			for (String mainKey : MainConfigKeys.getKeys(false)) {
 				if (mainKey == null) continue;
+				Map<Location, ContainerData> containerDataMap = new HashMap<>();
+				Map<String, KeysData> keysDataMap = new HashMap<>();
 
 				String lootTableLinked = this.customConfig.getString("Data." + mainKey + "." + "LootTable_Linked");
 				boolean spawningContainerWithCooldown = this.customConfig.getBoolean("Data." + mainKey + "." + "Spawning");
@@ -306,22 +314,28 @@ public class ContainerDataCache extends YamlUtil {
 				boolean randomSpawn = this.customConfig.getBoolean("Data." + mainKey + "." + "Random_spawn");
 
 				ConfigurationSection innerConfigKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Keys");
-				for (String innerKey : innerConfigKeys.getKeys(false)) {
-					int keys = this.customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Amount_Of_Keys");
-					String itemType = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Itemtype");
-					String displayName = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Display_name");
-					List<String> keyLore = this.customConfig.getStringList("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Lore");
-					keysDataMap.put("Keys_" + innerKey, new KeysData(innerKey, displayName, lootTableLinked, keys, itemType, keyLore));
-				}
+				if (innerConfigKeys == null) {
+					System.out.println("Keys " + mainKey + " are not valid or null");
+				} else
+					for (String innerKey : innerConfigKeys.getKeys(false)) {
+						int keys = this.customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Amount_Of_Keys");
+						String itemType = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Itemtype");
+						String displayName = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Display_name");
+						List<String> keyLore = this.customConfig.getStringList("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Lore");
+						keysDataMap.put("Keys_" + innerKey, new KeysData(innerKey, displayName, lootTableLinked, keys, itemType, keyLore));
+					}
 
 				ConfigurationSection containersKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Containers");
-				for (String innerKey : containersKeys.getKeys(false)) {
-					String facing = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Facing");
-					String containerType = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Container_Type");
-					if (isLocation(innerKey) == null)
-						System.out.println("location " + innerKey + " are not valid or null");
-					containerDataMap.put(isLocation(innerKey), new ContainerData(facing, containerType));
-				}
+				if (containersKeys == null) {
+					System.out.println("Containers " + mainKey + " are not valid or null");
+				} else
+					for (String innerKey : containersKeys.getKeys(false)) {
+						String facing = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Facing");
+						String containerType = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Container_Type");
+						if (isLocation(innerKey) == null)
+							System.out.println("location " + innerKey + " are not valid or null");
+						containerDataMap.put(isLocation(innerKey), new ContainerData(facing, containerType));
+					}
 				addChachedLocation(mainKey, containerDataMap, keysDataMap);
 				ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
 				builder.setContainerDataLinkedToLootTable(lootTableLinked)

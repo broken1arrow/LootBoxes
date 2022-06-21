@@ -30,7 +30,6 @@ public class SpawnedContainers {
 	private final ItemData itemData = ItemData.getInstance();
 
 	public void task() {
-
 		for (Map.Entry<String, Long> entry : cachedTimeMap.entrySet()) {
 			long time = entry.getValue();
 			String key = entry.getKey();
@@ -64,6 +63,7 @@ public class SpawnedContainers {
 			ContainerData containerData1 = entry.getValue();
 			Location location = entry.getKey();
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
+
 				location.getBlock().setType(containerData1.getContainerType());
 
 				location.getBlock().setType(containerData1.getContainerType());
