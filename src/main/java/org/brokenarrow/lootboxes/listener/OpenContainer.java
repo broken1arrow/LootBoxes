@@ -21,7 +21,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
@@ -75,7 +74,11 @@ public class OpenContainer implements Listener {
 			if (containerData == null) {
 				containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
 			}
-			if (key != null && containerData.getKeysData() != null) {
+
+			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
+			if (!checkIfPlayerHasItem(dataCacheCacheKey, key, player, itemStack)) {
+				event.setCancelled(true);
+			/*if (key != null && containerData.getKeysData() != null) {
 				if (!key.startsWith("Keys_"))
 					key = "Keys_" + key;
 				KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
@@ -86,7 +89,7 @@ public class OpenContainer implements Listener {
 					return;
 				}
 				Material material = dataCacheCacheKey.getItemType();
-				if (material != null && !material.isAir() /*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
+				if (material != null && !material.isAir()) {
 					if (dataCacheCacheKey.getAmountNeeded() <= 0) return;
 					if (itemStack.getType() != material) {
 						event.setCancelled(true);
@@ -96,13 +99,8 @@ public class OpenContainer implements Listener {
 						event.setCancelled(true);
 						LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
 					}
-				}
-				if (event.useInteractedBlock() != Event.Result.DENY) {
-					player.getInventory().remove(itemStack);
-					int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
-					itemStack.setAmount(amount);
-					player.getInventory().addItem(itemStack);
-				}
+				}*/
+
 			}
 
 			if (containerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
@@ -122,17 +120,42 @@ public class OpenContainer implements Listener {
 				playSound(player, UNLOOKED_CONTAINER_SOUND.languageMessages());
 			}
 
-			if (!containerData.isSpawningContainerWithCooldown()) {
-				if (!spawnLootWhenClicking(containerData, location, block))
-					LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
-				else
-					OPEN_CONTAINER.sendMessage(player);
+			if (!containerData.isSpawningContainerWithCooldown() && !spawnLootWhenClicking(containerData, location, block)) {
+				LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
 			} else {
 				OPEN_CONTAINER.sendMessage(player);
 			}
 			lootboxes.getSpawnedContainers().setRefill(location, false);
-
+			if (key != null) {
+				int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
+				player.getInventory().remove(itemStack);
+				itemStack.setAmount(amount);
+				player.getInventory().addItem(itemStack);
+			}
 		}
+	}
+
+	private boolean checkIfPlayerHasItem(KeysData dataCacheCacheKey, String key, Player player, ItemStack itemStack) {
+		boolean checkVaidItems = true;
+		if (dataCacheCacheKey == null) {
+			//lootboxes.getLogger().log(Level.WARNING, "Of some reson is key data null, this shold not hapend");
+			return true;
+		}
+		if (key != null) {
+			Material material = dataCacheCacheKey.getItemType();
+			if (material != null && !material.isAir() /*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
+				if (dataCacheCacheKey.getAmountNeeded() <= 0) return true;
+				if (itemStack.getType() != material) {
+					LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), material);
+					checkVaidItems = false;
+				}
+				if (itemStack.getAmount() < dataCacheCacheKey.getAmountNeeded()) {
+					LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
+					checkVaidItems = false;
+				}
+			}
+		}
+		return checkVaidItems;
 	}
 
 	private boolean spawnLootWhenClicking(ContainerDataBuilder containerData, Location location, Block block) {

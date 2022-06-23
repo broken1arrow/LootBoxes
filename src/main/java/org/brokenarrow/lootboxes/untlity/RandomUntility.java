@@ -47,6 +47,8 @@ public final class RandomUntility extends Random {
 	public boolean chance(final int percent, boolean newRandomsSeed) {
 		if (newRandomsSeed)
 			newRandomsSeed();
+		if (percent == 100)
+			return true;
 		return random.nextDouble() * 100D < percent;
 	}
 

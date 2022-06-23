@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.commandprompt.SetKeyName;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -225,6 +226,7 @@ public class EditKeysToOpen extends MenuHolder {
 		private final MenuButton mobDropKey;
 		private final GuiTempletsYaml.Builder guiTemplets;
 		private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
+		private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettings();
 
 		public EditKey(String containerData, String keyName) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Key").placeholders("");
@@ -255,16 +257,16 @@ public class EditKeysToOpen extends MenuHolder {
 				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
 
 
-					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					int amount = 0;
 					if (clickType == ClickType.LEFT)
 						amount += 1;
 					if (clickType == ClickType.RIGHT)
 						amount -= 1;
 					if (clickType == ClickType.SHIFT_LEFT)
-						amount += 10;
+						amount += settings.getIncrese();
 					if (clickType == ClickType.SHIFT_RIGHT)
-						amount -= 10;
+						amount -= settings.getDecrese();
 					int amountCached = keysData.getAmountNeeded() + amount;
 					if (amountCached > 64)
 						amountCached = 64;
@@ -272,13 +274,13 @@ public class EditKeysToOpen extends MenuHolder {
 						amountCached = 0;
 					containerDataCacheInstance.setKeyData(KeysToSave.AMOUNT_NEEDED, amountCached, containerData, keyName);
 
-					updateButtons();
+					EditKey.this.updateButton(this);
 				}
 
 				@Override
 				public ItemStack getItem() {
-					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
-					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded()).build();
+					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded(), settings.getIncrese(), settings.getDecrese()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),
@@ -293,7 +295,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
 					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 					GuiTempletsYaml gui = guiTemplets.menuKey("Alter_Display_name").placeholders("", placeholderDisplayName).build();
 

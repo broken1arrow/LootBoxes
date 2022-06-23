@@ -34,6 +34,7 @@ public class Settings extends YamlUtil {
 		boolean randomContinerSpawn = customConfig.getBoolean("Random_Continer_Spawn");
 		boolean saveMetadataOnItem = customConfig.getBoolean("Save_Metadata_On_Item");
 		boolean removeContainerWhenPlayerClose = customConfig.getBoolean("Remove_Container_When_player_close");
+		boolean debug = customConfig.getBoolean("Debug");
 		int increse = customConfig.getInt("Max_and_min_amount.Increse_with");
 		int decrese = customConfig.getInt("Max_and_min_amount.Decrese_with");
 		String language = customConfig.getString("Language");
@@ -62,6 +63,7 @@ public class Settings extends YamlUtil {
 				.setLinkToolLore(linkToolLore)
 				.setPlaceContainerDisplayName(placeContainerDisplayName)
 				.setPlaceContainerLore(placeContainerLore)
+				.setDebug(debug)
 				.build();
 
 		settings.put("Settings", settingsData);

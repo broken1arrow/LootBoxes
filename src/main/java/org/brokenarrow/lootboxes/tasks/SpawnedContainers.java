@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.brokenarrow.lootboxes.untlity.DebugMessages.sendDebug;
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtask;
 
@@ -30,6 +31,8 @@ public class SpawnedContainers {
 	private final ItemData itemData = ItemData.getInstance();
 
 	public void task() {
+		sendDebug("task cache " + cachedTimeMap, this.getClass());
+
 		for (Map.Entry<String, Long> entry : cachedTimeMap.entrySet()) {
 			long time = entry.getValue();
 			String key = entry.getKey();
@@ -62,6 +65,9 @@ public class SpawnedContainers {
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
 			ContainerData containerData1 = entry.getValue();
 			Location location = entry.getKey();
+			sendDebug("spawnContainer, loottable: " + lootTableLinked, this.getClass());
+			sendDebug("spawnContainer, location: " + location, this.getClass());
+			sendDebug("spawnContainer, containerData: " + containerData1, this.getClass());
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
 
 				location.getBlock().setType(containerData1.getContainerType());

@@ -5,6 +5,7 @@ import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.CustomizeItem;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.menu.library.utility.Item.Tuple;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.enchantments.Enchantment;
@@ -12,9 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
@@ -60,20 +60,20 @@ public class SaveEnchantment extends SimpleConversation {
 			String fileName = data.getItemdataFileName();
 			String itemdataPath = data.getItemdataPath();
 			ItemStack item = itemData.getCacheItemData(fileName, itemdataPath);
-
+			Map<Enchantment, Tuple<Integer, Boolean>> enchantmentMap = new HashMap<>();
 			String filePatch;
+			enchantmentMap.put(enchantment, new Tuple<>(level, false));
 			if (item == null) {
-
-				item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantment).setEnchantmentsLevel(level).makeItemStack();
+				item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantmentMap, false).makeItemStack();
 				filePatch = itemData.setCacheItemData(item.getType() + "", item);
 				if (fileName == null)
 					fileName = itemData.getFileName();
 			} else {
-				Set<Enchantment> enchants = new HashSet<>();
 				if (item.getItemMeta() != null && !item.getItemMeta().getEnchants().isEmpty())
-					enchants.addAll(item.getItemMeta().getEnchants().keySet());
-				enchants.add(enchantment);
-				item = CreateItemUtily.of(item).addEnchantments(Arrays.asList(enchants.toArray())).setEnchantmentsLevel(level).makeItemStack();
+					for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet())
+						enchantmentMap.put(entry.getKey(), new Tuple<>(entry.getValue(), false));
+				
+				item = CreateItemUtily.of(item).addEnchantments(enchantmentMap, true).makeItemStack();
 				filePatch = itemData.updateCacheItemData(itemdataPath, item);
 			}
 			LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();

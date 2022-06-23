@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class ChatMessages {
+public class ChatMessages extends AllYamlFilesInFolder {
 	private static final Map<String, ChatMessages> chatMessagesMap = new HashMap<>();
 	private String messages;
 
@@ -76,6 +76,7 @@ public class ChatMessages {
 	public static ChatMessages SECONDS = new ChatMessages("SECONDS");
 
 	public ChatMessages(String idKey) {
+		super("language", true);
 		chatMessagesMap.put(idKey, this);
 	}
 
@@ -144,8 +145,6 @@ public class ChatMessages {
 
 		File file = new File(plugin.getDataFolder() + "/language", "language_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml");
 
-		new AllYamlFilesInFolder("language", true).getAllFiles();
-
 		if (!file.exists())
 			Lootboxes.getInstance().saveResource("language/language_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml", false);
 
@@ -163,5 +162,13 @@ public class ChatMessages {
 		}
 
 		return TextTranslator.toSpigotFormat(textTranslate);
+	}
+
+	@Override
+	public void saveDataToFile(File file) {
+	}
+
+	@Override
+	protected void loadSettingsFromYaml(File file) {
 	}
 }

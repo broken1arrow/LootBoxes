@@ -80,7 +80,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 					chance = 0;
 				builder.setChance(chance);
 				keyDropData.putCachedKeyData(continerData, keyName, builder.build());
-				updateButtons();
+				KeySettingsMobDrop.this.updateButton(this);
 			}
 
 			@Override
@@ -115,7 +115,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 					minimum = 0;
 				builder.setMinimum(minimum);
 				keyDropData.putCachedKeyData(continerData, keyName, builder.build());
-				updateButtons();
+				KeySettingsMobDrop.this.updateButton(this);
 			}
 
 			@Override
@@ -149,7 +149,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 					maximum = 0;
 				builder.setMaximum(maximum);
 				keyDropData.putCachedKeyData(continerData, keyName, builder.build());
-				updateButtons();
+				KeySettingsMobDrop.this.updateButton(this);
 			}
 
 			@Override

@@ -13,20 +13,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
-
-public class ItemData {
+public class ItemData extends AllYamlFilesInFolder {
 
 	@Getter
 	public static final ItemData instance = new ItemData();
-	private final AllYamlFilesInFolder yamlFiles;
+
 	private String fileName;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
-		this.yamlFiles = new AllYamlFilesInFolder("itemdata", true);
+		super("itemdata", true);
+
 	}
 
 	public Map<String, Map<String, ItemStack>> getCacheData() {
@@ -60,7 +59,7 @@ public class ItemData {
 		itemStackMap.put(itemdataPath, itemstack);
 		this.cacheItemData.put(getFileName(), itemStackMap);
 
-		runtaskLater(5, this::save, true);
+		saveTask(null);
 		return itemdataPath;
 	}
 
@@ -76,8 +75,8 @@ public class ItemData {
 		}
 		itemStackMap.put(itemdataPath, itemstack);
 		cacheItemData.put(getFileName(), itemStackMap);
-
-		runtaskLater(5, this::save, true);
+		
+		saveTask(null);
 		return itemdataPath;
 	}
 
@@ -108,36 +107,55 @@ public class ItemData {
 		return itemKey + "_" + order;
 	}
 
+	@Override
 	public String getFileName() {
 		return fileName;
 	}
 
+	@Override
+	public void saveDataToFile(File file) {
+
+	}
+
+	@Override
+	protected void loadSettingsFromYaml(File file) {
+
+	}
+
+	@Override
 	public void reload() {
 		if (customConfigFile == null) {
-			for (File file : this.yamlFiles.getAllFiles()) {
+			for (File file : getAllFiles()) {
 				customConfigFile = file;
 
 				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
 				getFilesData();
 			}
 		} else {
-			for (File file : this.yamlFiles.getAllFiles()) {
+			for (File file : getAllFiles()) {
 				customConfigFile = file;
 				getFilesData();
 			}
 		}
 	}
 
+	public void saveTask(String fileToSave) {
+		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, fileToSave);
+		//runtaskLater(5, () -> save(containerDataFileName), true);
+	}
+
+	@Override
 	public void save() {
 		save(null);
 	}
 
+	@Override
 	public void save(String fileToSave) {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "itemdata");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
 			for (File file : dataFolders) {
-				String fileName = this.yamlFiles.getFileName(file.getName());
+				String fileName = getNameOfFile(file.getName());
 
 				if (fileToSave == null || fileName.equals(fileToSave)) {
 					customConfig = YamlConfiguration.loadConfiguration(file);
@@ -160,7 +178,7 @@ public class ItemData {
 
 	private void getFilesData() {
 		try {
-			for (File key : yamlFiles.getYamlFiles("itemdata", "yml")) {
+			for (File key : getYamlFiles("itemdata")) {
 
 				customConfig.load(key);
 				Set<String> value = customConfig.getKeys(false);

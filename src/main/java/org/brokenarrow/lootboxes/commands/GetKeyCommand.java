@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.commands;
 
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -31,7 +32,7 @@ public class GetKeyCommand extends SubCommandsUtility {
 	protected void onCommand() {
 		String[] args = getArgs();
 
-		if (args.length >= 4) {
+		if (args.length >= 3) {
 			Player player = Bukkit.getPlayer(args[0]);
 			if (player == null)
 				player = Bukkit.getOfflinePlayer(args[0]).getPlayer();
@@ -40,13 +41,16 @@ public class GetKeyCommand extends SubCommandsUtility {
 			KeysData keysData = containerDataCacheInstance.getCacheKey(args[1], args[2]);
 			map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
 			map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), args[1]);
+			int amount = 1;
+			if (args.length >= 4)
+				amount = Integer.parseInt(args[3]);
 
 			String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
 					keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 			List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
 					keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 			if (player != null)
-				player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(Integer.parseInt(args[3])).makeItemStack());
+				player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(amount).makeItemStack());
 
 		}
 	}
@@ -57,21 +61,19 @@ public class GetKeyCommand extends SubCommandsUtility {
 		String containerData = joinRange(1, getArgs());
 		String key = joinRange(2, getArgs());
 		Set<String> keySet = containerDataCacheInstance.getCacheContainerData().keySet();
-
-
+		ContainerDataBuilder containerDataBuilder = null;
+		if (getArgs().length >= 2) {
+			containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerData.trim());
+		}
 		if (getArgs().length == 1) {
 			return TabUtil.complete(players, Bukkit.getOnlinePlayers().stream().map(Player::getDisplayName).collect(Collectors.toList()));
 		}
 		if (getArgs().length == 2)
 			return TabUtil.complete(containerData, keySet);
-		if (getArgs().length == 3) {
-			List<String> list = new ArrayList<>();
-			for (String value : keySet) {
-				Map<String, KeysData> cacheKeys = containerDataCacheInstance.getCacheKeys(value);
-				if (cacheKeys != null)
-					list.addAll(cacheKeys.keySet());
+		if (getArgs().length >= 3) {
+			if (containerDataBuilder != null) {
+				return TabUtil.complete(key, containerDataBuilder.getKeysData().keySet());
 			}
-			return TabUtil.complete(key, list);
 		}
 		if (getArgs().length == 4) {
 			return completeLastWord("<amount>");

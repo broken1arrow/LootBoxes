@@ -9,6 +9,7 @@ import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
 import org.brokenarrow.lootboxes.listener.*;
 import org.brokenarrow.lootboxes.lootdata.*;
 import org.brokenarrow.lootboxes.runTask.RunTask;
+import org.brokenarrow.lootboxes.runTask.SaveDataTask;
 import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
@@ -44,6 +45,7 @@ public class Lootboxes extends JavaPlugin {
 	private RandomUntility randomUntility;
 	private RegisterNbtAPI nbtAPI;
 	private LandProtectingLoader landProtectingLoader;
+	private SaveDataTask saveDataTask;
 
 	@Override
 	public void onLoad() {
@@ -65,6 +67,8 @@ public class Lootboxes extends JavaPlugin {
 		this.runTask.start();
 		this.spawnedContainers = new SpawnedContainers();
 		this.makeLootTable = new MakeLootTable();
+		this.saveDataTask = new SaveDataTask(this);
+		this.saveDataTask.start();
 		reloadFiles();
 		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
@@ -133,6 +137,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public SpawnContainerRandomLoc getSpawnLootContainer() {
 		return spawnContainerRandomLoc;
+	}
+
+	public SaveDataTask getSaveDataTask() {
+		return saveDataTask;
 	}
 
 	public RandomUntility getRandomUntility() {

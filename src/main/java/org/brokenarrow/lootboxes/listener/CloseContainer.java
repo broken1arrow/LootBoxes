@@ -41,15 +41,16 @@ public class CloseContainer implements Listener {
 
 			if (settings.getSettings().isRemoveContainerWhenPlayerClose() && containerData.isSpawningContainerWithCooldown()) {
 				location.getBlock().setType(Material.AIR);
-			} else {
-				if (!inventory.isEmpty()) {
-					for (ItemStack itemStack : inventory) {
-						if (itemStack == null) continue;
-						location.getWorld().dropItemNaturally(location, itemStack);
-					}
-				}
-				inventory.clear();
+
 			}
+			if (!inventory.isEmpty()) {
+				for (ItemStack itemStack : inventory) {
+					if (itemStack == null) continue;
+					location.getWorld().dropItemNaturally(location, itemStack);
+				}
+			}
+			inventory.clear();
+
 		}
 	}
 }

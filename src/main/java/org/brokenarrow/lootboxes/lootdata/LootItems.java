@@ -12,28 +12,30 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
+import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.ITEMS;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
-public class LootItems {
+public class LootItems extends AllYamlFilesInFolder {
 
 	@Getter
 	private static final LootItems instance = new LootItems();
-	
 
-	private final AllYamlFilesInFolder yamlFiles;
 	private File customConfigFile;
 	private FileConfiguration customConfig;
-	private boolean isUpperCase;
+	private BukkitTask id;
 	private final Map<String, Map<String, LootData>> cachedLoot = new HashMap<>();
 
+
 	public LootItems() {
-		this.yamlFiles = new AllYamlFilesInFolder("tables", true);
+		super("tables", true);
 	}
 
 	public Map<String, Map<String, LootData>> getCachedLoot() {
@@ -47,6 +49,19 @@ public class LootItems {
 
 	public void addTable(String table) {
 		cachedLoot.put(table, new HashMap<>());
+		if (getLootData(table, GLOBAL_VALUES.getKey()) == null) {
+			Map<String, LootData> data = new HashMap<>();
+			data.put(GLOBAL_VALUES.getKey(), new LootData.Builder()
+					.setChance(0)
+					.setMinimum(0)
+					.setMaximum(1)
+					.setMaterial(Material.AIR)
+					.setItemdataPath("")
+					.setItemdataFileName("")
+					.setHaveMetadata(false).build());
+			cachedLoot.put(table, data);
+		}
+
 		saveTask(table);
 	}
 
@@ -153,6 +168,16 @@ public class LootItems {
 		saveTask(table);
 	}
 
+	@Override
+	public boolean removeFile(String lootTableFileName) {
+		runtaskLater(5, () -> {
+					final File dataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", lootTableFileName + ".yml");
+					dataFolder.delete();
+				}
+				, true);
+		return false;
+	}
+
 	public void removeItem(String table, String itemToRemove) {
 		Map<String, LootData> items = cachedLoot.get(table);
 		if (items != null) {
@@ -170,35 +195,41 @@ public class LootItems {
 		return items.toArray(new ItemStack[0]);
 	}
 
+	@Override
 	public void reload() {
 		if (customConfigFile == null) {
-			for (File file : this.yamlFiles.getAllFiles()) {
+			for (File file : getAllFiles()) {
 				customConfigFile = file;
 
 				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
 				getFilesData();
 			}
 		} else {
-			for (File file : this.yamlFiles.getAllFiles()) {
+			for (File file : getAllFiles()) {
 				customConfigFile = file;
 				getFilesData();
 			}
 		}
 	}
 
+	@Override
 	public void save() {
 		save(null);
 	}
 
 	public void saveTask(String table) {
-		runtaskLater(5, () -> save(table), true);
+		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, table);
+		/*if (id != null && !id.isCancelled() && (Bukkit.getScheduler().isQueued(id.getTaskId()) || Bukkit.getScheduler().isCurrentlyRunning(id.getTaskId())))
+			return;
+		id = runtaskLater(5, () -> save(table), true);*/
 	}
 
+	@Override
 	public void save(String fileToSave) {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "tables");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
-			if (!this.yamlFiles.checkFolderExist(fileToSave, dataFolders)) {
+			if (!checkFolderExist(fileToSave, dataFolders)) {
 				final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", fileToSave + ".yml");
 				try {
 					newDataFolder.createNewFile();
@@ -209,7 +240,7 @@ public class LootItems {
 				}
 			}
 			for (File file : dataFolders) {
-				String fileName = this.yamlFiles.getFileName(file.getName());
+				String fileName = getNameOfFile(file.getName());
 
 				if (fileToSave == null || fileName.equals(fileToSave)) {
 					saveDataToFile(file);
@@ -219,8 +250,9 @@ public class LootItems {
 		}
 	}
 
+	@Override
 	public void saveDataToFile(File file) {
-		String fileName = this.yamlFiles.getFileName(file.getName());
+		String fileName = getNameOfFile(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		Map<String, LootData> settings = this.cachedLoot.get(fileName);
 		if (settings != null) {
@@ -230,7 +262,7 @@ public class LootItems {
 				/*if (!isUpperCase)
 					childrenKey = childrenKey.toLowerCase();*/
 				//final Material material = (Material) childrenKey;
-				if (childrenKey.equalsIgnoreCase("global_values") || childrenKey.equals("GLOBAL_VALUES")) {
+				if (childrenKey.equalsIgnoreCase("global_values")) {
 					customConfig.set("Global_Values." + ".Minimum", data.getMinimum());
 					customConfig.set("Global_Values." + ".Maximum", data.getMaximum());
 				} else if (data.getMaterial() != null) {
@@ -251,10 +283,15 @@ public class LootItems {
 		}
 	}
 
+	@Override
+	protected void loadSettingsFromYaml(File file) {
+
+	}
+
 
 	private void getFilesData() {
 		try {
-			for (File key : yamlFiles.getYamlFiles("tables", "yml")) {
+			for (File key : getYamlFiles("tables")) {
 
 				customConfig.load(key);
 				Set<String> value = customConfig.getKeys(false);
@@ -269,58 +306,66 @@ public class LootItems {
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
 		Map<String, LootData> data = new HashMap<>();
-		for (String value : values) {
-			ConfigurationSection configs = customConfig.getConfigurationSection(value);
+		ConfigurationSection configs = customConfig.getConfigurationSection(ITEMS.getKey());
+		if (configs != null)
+			for (String childrenKey : configs.getKeys(false)) {
+				if (childrenKey == null) continue;
+				String path = ITEMS.getKey() + "." + childrenKey;
 
-			if (value.equals("Items")) {
-				if (configs != null)
-					for (String childrenKey : configs.getKeys(false)) {
-						if (childrenKey == null) continue;
+				int chance = customConfig.getInt(path + ".Chance");
+				int minimum = customConfig.getInt(path + ".Minimum");
 
-						int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
-						int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
+				int maximum = customConfig.getInt(path + ".Maximum");
+				String itemStack = customConfig.getString(path + ".ItemType", "AIR");
+				if (itemStack.equals("AIR"))
+					itemStack = childrenKey.toUpperCase();
+				Material material = Enums.getIfPresent(Material.class, itemStack).orNull();
+				boolean haveMetadata = customConfig.getBoolean(path + ".Metadata");
+				String itemdata = customConfig.getString(path + ".Itemdata");
+				String itemdataFileName = customConfig.getString(path + ".Itemdata_Filename", ItemData.getInstance().getFileName());
 
-						int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
-						String itemStack = customConfig.getString(value + "." + childrenKey + ".ItemType", "AIR");
-						if (itemStack.equals("AIR"))
-							itemStack = new String(childrenKey).toUpperCase();
-						Material material = Enums.getIfPresent(Material.class, itemStack).orNull();
-						boolean haveMetadata = customConfig.getBoolean(value + "." + childrenKey + ".Metadata");
-						String itemdata = customConfig.getString(value + "." + childrenKey + ".Itemdata");
-						String itemdataFileName = customConfig.getString(value + "." + childrenKey + ".Itemdata_Filename", ItemData.getInstance().getFileName());
-
-						data.put(childrenKey, new org.brokenarrow.lootboxes.builder.LootData.Builder()
-								.setChance(chance)
-								.setMinimum(minimum)
-								.setMaximum(maximum)
-								.setMaterial(material)
-								.setItemdataPath(itemdata)
-								.setItemdataFileName(itemdataFileName)
-								.setHaveMetadata(haveMetadata).build());
-					}
-			} else if (value.equals("Global_Values")) {
-				int minimum = customConfig.getInt(value + ".Minimum");
-				int maximum = customConfig.getInt(value + ".Maximum");
-
-				org.brokenarrow.lootboxes.builder.LootData globalValues = data.get("Global_Values");
-				if (globalValues != null) {
-					if (globalValues.getMinimum() > 0)
-						minimum = globalValues.getMinimum();
-					if (globalValues.getMaximum() > 0)
-						maximum = globalValues.getMaximum();
-				}
-
-				data.put(value, new org.brokenarrow.lootboxes.builder.LootData.Builder()
-						.setChance(0)
+				data.put(childrenKey, new LootData.Builder()
+						.setChance(chance)
 						.setMinimum(minimum)
 						.setMaximum(maximum)
-						.setMaterial(Material.AIR)
-						.setItemdataPath("")
-						.setItemdataFileName("")
-						.setHaveMetadata(false).build());
+						.setMaterial(material)
+						.setItemdataPath(itemdata)
+						.setItemdataFileName(itemdataFileName)
+						.setHaveMetadata(haveMetadata).build());
 			}
+
+		String path = GLOBAL_VALUES.getKey();
+		int minimum = customConfig.getInt(path + ".Minimum", 0);
+		int maximum = customConfig.getInt(path + ".Maximum", 2);
+
+		LootData globalValues = data.get(GLOBAL_VALUES.getKey());
+		if (globalValues != null) {
+			if (globalValues.getMinimum() > 0)
+				minimum = globalValues.getMinimum();
+			if (globalValues.getMaximum() > 0)
+				maximum = globalValues.getMaximum();
 		}
-		this.cachedLoot.put(this.yamlFiles.getFileName(String.valueOf(key)), data);
+		data.put(path, new LootData.Builder()
+				.setChance(0).setMinimum(minimum)
+				.setMaximum(maximum)
+				.setMaterial(Material.AIR)
+				.setHaveMetadata(false).
+				build());
+
+		this.cachedLoot.put(getNameOfFile(String.valueOf(key)), data);
 	}
 
+	public enum YamlKey {
+		GLOBAL_VALUES("Global_Values"),
+		ITEMS("Items");
+		private final String key;
+
+		YamlKey(String key) {
+			this.key = key;
+		}
+
+		public String getKey() {
+			return key;
+		}
+	}
 }

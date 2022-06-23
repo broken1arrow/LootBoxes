@@ -9,6 +9,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+
+import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
 
 public class MakeLootTable {
 	LootItems lootItems = LootItems.getInstance();
@@ -28,30 +31,35 @@ public class MakeLootTable {
 			if (lootData.getMaterial() == Material.AIR) continue;
 
 			if (backupcounter == -1) {
-				backupcounter = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 0);
+				backupcounter = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 1);
 			}
 			int amountOfItems = randomNumber(lootData);
 
-			if (backupcounter > 0 && amountIfItemsMax == backupcounter)
-				backupItemstacks.add(createItem(lootData, amountOfItems));
+			if (lootData.getMinimum() > 0 && backupItemstacks.isEmpty())
+				backupItemstacks.add(createItem(lootData, amountOfItems <= 0 ? 1 : amountOfItems));
 
 			if (amountIfItemsMax > this.maxAmountOfItems)
 				break;
-			amountIfItemsMax++;
 			if (!random.chance(lootData.getChance()))
 				continue;
-
+			amountIfItemsMax++;
 			itemStacks.add(createItem(lootData, amountOfItems));
 		}
 		if (itemStacks.isEmpty())
-			return backupItemstacks.toArray(new ItemStack[0]);
+			return backupItemstacks.toArray(new ItemStack[1]);
 		else
-			return itemStacks.toArray(new ItemStack[0]);
+			return itemStacks.toArray(new ItemStack[itemStacks.size() + 2]);
 	}
 
 	private void setGlobalValues(String table) {
-		this.maxAmountOfItems = lootItems.getLootData(table, "Global_Values").getMaximum();
-		this.minimumAmountOfItems = lootItems.getLootData(table, "Global_Values").getMinimum();
+		LootData lootData = lootItems.getLootData(table, GLOBAL_VALUES.getKey());
+		if (lootData == null) {
+			Lootboxes.getInstance().getLogger().log(Level.WARNING, "this table " + table + " don´t have Global_Values set.");
+			return;
+		}
+
+		this.maxAmountOfItems = lootData.getMaximum();
+		this.minimumAmountOfItems = lootData.getMinimum();
 	}
 
 	private int randomNumber(LootData lootData) {

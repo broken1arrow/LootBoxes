@@ -127,22 +127,27 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		}
 	}
 
+	@Override
 	public void save() {
 		save(null);
 	}
 
-	public void removeFile(String containerDataFileName) {
+	@Override
+	public boolean removeFile(String containerDataFileName) {
 		runtaskLater(5, () -> {
 					final File dataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/keysDropData", containerDataFileName + ".yml");
 					dataFolder.delete();
 				}
 				, true);
+		return false;
 	}
 
 	public void saveTask(String containerDataFileName) {
-		runtaskLater(5, () -> save(containerDataFileName), true);
+		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, containerDataFileName);
+		//runtaskLater(5, () -> save(containerDataFileName), true);
 	}
 
+	@Override
 	public void save(String fileToSave) {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "keysDropData");
 		final File[] dataFolders = dataFolder.listFiles();
@@ -158,7 +163,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 				}
 			} else {
 				for (File file : dataFolders) {
-					if (getFileName(file.getName()).equals(fileToSave)) {
+					if (getNameOfFile(file.getName()).equals(fileToSave)) {
 						saveDataToFile(file);
 						return;
 					}
@@ -171,8 +176,9 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		}
 	}
 
+	@Override
 	public void saveDataToFile(File file) {
-		String fileName = getFileName(file.getName());
+		String fileName = getNameOfFile(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		Map<String, KeyMobDropData> settings = this.cachedKeyData.get(fileName);
 		if (settings != null) {
@@ -207,10 +213,15 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		}
 	}
 
+	@Override
+	protected void loadSettingsFromYaml(File file) {
+
+	}
+
 
 	private void getFilesData() {
 		try {
-			for (File key : getYamlFiles("keysDropData", "yml")) {
+			for (File key : getYamlFiles("keysDropData")) {
 
 				customConfig.load(key);
 				Set<String> value = customConfig.getKeys(false);
@@ -225,6 +236,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
 		Map<String, KeyMobDropData> data = new HashMap<>();
+		String fileName = getNameOfFile(key.getName());
 		for (String value : values) {
 			ConfigurationSection configs = customConfig.getConfigurationSection(value);
 			if (configs != null)
@@ -235,7 +247,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 					List<EntityType> entityList = convertStringToEntityType(customConfig.getStringList(value + "." + childrenKey + ".Entity_list"));
 					if (entityList != null && !entityList.isEmpty()) {
 						for (EntityType entityType : entityList)
-							this.entityCache.put(getFileName(key.getName()) + "_" + childrenKey + "#" + entityType, new EntityKeyData(childrenKey, getFileName(key.getName())));
+							this.entityCache.put(getNameOfFile(key.getName()) + "_" + childrenKey + "#" + entityType, new EntityKeyData(childrenKey, fileName));
 					}
 					KeyMobDropData.Builder builder = new KeyMobDropData.Builder();
 					builder.setChance(chance)
@@ -243,11 +255,11 @@ public class KeyDropData extends AllYamlFilesInFolder {
 							.setMaximum(maximum)
 							.setEntityTypes(entityList)
 							.setKeyName(childrenKey)
-							.setContainerDataFileName(getFileName(String.valueOf(key)));
+							.setContainerDataFileName(fileName);
 					data.put(childrenKey, builder.build());
 				}
 		}
-		cachedKeyData.put(getFileName(key.getName()), data);
+		cachedKeyData.put(fileName, data);
 	}
 
 	private List<EntityType> convertStringToEntityType(List<String> entityList) {

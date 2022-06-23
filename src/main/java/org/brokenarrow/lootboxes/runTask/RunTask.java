@@ -26,6 +26,8 @@ public class RunTask extends BukkitRunnable {
 	public void run() {
 		this.lootboxes.getSpawnLootContainer().task();
 		this.lootboxes.getSpawnedContainers().task();
+
+
 	}
 
 

@@ -1,6 +1,9 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.builder.LootData;
+import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.CreateTable;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -14,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
 
 public class EditCreateLootTable extends MenuHolder {
 
@@ -83,10 +88,10 @@ public class EditCreateLootTable extends MenuHolder {
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
 
 				if (object instanceof String) {
-				/*	ItemStack itemStack = data.get(object);
-					ItemMeta itemMeta = itemStack.getItemMeta();
-					if (itemMeta != null && itemMeta.hasDisplayName())*/
-					new EditCreateItems((String) object).menuOpen(player);
+					if (click.isLeftClick())
+						new EditCreateItems((String) object).menuOpen(player);
+					else
+						new EditLootTable((String) object).menuOpen(player);
 				}
 			}
 
@@ -168,31 +173,139 @@ public class EditCreateLootTable extends MenuHolder {
 		return null;
 	}
 
-	public class ConfirmIfItemHaveMetadata extends MenuHolder {
+	public static class EditLootTable extends MenuHolder {
 
-		private final MenuButton confirmSave;
+		private final MenuButton removeLootTable;
+		private final MenuButton maxAmount;
+		private final MenuButton minAmount;
+		private final MenuButton backButton;
+		private final GuiTempletsYaml.Builder guiTemplets;
+		private final LootItems lootTable = LootItems.getInstance();
+		private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettings();
 
-		public ConfirmIfItemHaveMetadata(Map<Integer, ItemStack> item) {
-			setMenuSize(5);
-			confirmSave = new MenuButton() {
+		public EditLootTable(String lootTableName) {
+			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_loot_table").placeholders(lootTableName);
+
+			setMenuSize(guiTemplets.build().getGuiSize());
+			setTitle(guiTemplets.build().getGuiTitle());
+			removeLootTable = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-
+					lootTable.removeFile(lootTableName);
+					new EditLootTable(lootTableName).menuOpen(player);
 				}
 
 				@Override
 				public ItemStack getItem() {
-					return null;
+					GuiTempletsYaml gui = guiTemplets.menuKey("Remove_loot_table").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
 				}
 			};
+			maxAmount = new MenuButton() {
 
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
+					int amount = 0;
+					if (click == ClickType.LEFT)
+						amount += 1;
+					if (click == ClickType.RIGHT)
+						amount -= 1;
+					if (click == ClickType.SHIFT_LEFT)
+						amount += settings.getIncrese();
+					if (click == ClickType.SHIFT_RIGHT)
+						amount -= settings.getDecrese();
+					int amountCached = lootData.getMaximum() + amount;
+					if (amountCached > 54)
+						amountCached = 54;
+					if (amountCached < lootData.getMinimum())
+						amountCached = lootData.getMinimum() + 1;
+					if (amountCached < 0)
+						amountCached = 0;
+					LootData.Builder builder = lootData.getBuilder().setMaximum(amountCached);
+					lootTable.setCachedLoot(lootTableName, GLOBAL_VALUES.getKey(), builder.build());
+					EditLootTable.this.updateButton(this);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(lootData.getMaximum(), settings.getIncrese(), settings.getDecrese()).build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
+			minAmount = new MenuButton() {
+
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
+					int amount = 0;
+					if (click == ClickType.LEFT)
+						amount += 1;
+					if (click == ClickType.RIGHT)
+						amount -= 1;
+					if (click == ClickType.SHIFT_LEFT)
+						amount += settings.getIncrese();
+					if (click == ClickType.SHIFT_RIGHT)
+						amount -= settings.getDecrese();
+					int amountCached = lootData.getMinimum() + amount;
+					if (amountCached > 54)
+						amountCached = 54;
+					if (amountCached > lootData.getMaximum())
+						amountCached = lootData.getMaximum() - 1;
+					if (amountCached < 0)
+						amountCached = 0;
+
+
+					LootData.Builder builder = lootData.getBuilder().setMinimum(amountCached);
+					lootTable.setCachedLoot(lootTableName, GLOBAL_VALUES.getKey(), builder.build());
+					EditLootTable.this.updateButton(this);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(lootData.getMinimum(), settings.getIncrese(), settings.getDecrese()).build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+
+			};
+			backButton = new MenuButton() {
+				@Override
+				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+					new EditCreateLootTable().menuOpen(player);
+				}
+
+				@Override
+				public ItemStack getItem() {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+
+					return CreateItemUtily.of(gui.getIcon(),
+							gui.getDisplayName(),
+							gui.getLore()).makeItemStack();
+				}
+			};
 		}
 
 		@Override
 		public MenuButton getButtonAt(int slot) {
-			if (slot == 40)
-				return confirmSave;
-
+			if (guiTemplets.menuKey("Remove_loot_table").build().getSlot().contains(slot))
+				return removeLootTable;
+			if (guiTemplets.menuKey("Change_Maximum").build().getSlot().contains(slot))
+				return maxAmount;
+			if (guiTemplets.menuKey("Change_Minimum").build().getSlot().contains(slot))
+				return minAmount;
+			if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
+				return backButton;
 			return null;
 		}
 	}

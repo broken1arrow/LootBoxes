@@ -176,6 +176,9 @@ public class PlayerClick implements Listener {
 		Player player = event.getPlayer();
 		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name()))
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
+		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name()))
+			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), Lootboxes.getInstance());
+
 	}
 
 	@EventHandler
@@ -183,5 +186,7 @@ public class PlayerClick implements Listener {
 		Player player = event.getPlayer();
 		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name()))
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
+		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name()))
+			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), Lootboxes.getInstance());
 	}
 }

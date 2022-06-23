@@ -174,8 +174,10 @@ Gui_Templets:
       Icon: PAPER
       Slot: 0
       Lore:
-        - "&aLeftclick to change items inside loottable and"
+        - "&2Leftclick&a to change items inside loottable and"
         - "&aget info on all current items you have added."
+        - "&6"
+        - "&2Rightclick&a for edit this loottable or remove it."
     Create_Table:
       Display_name: "&bCreate new table"
       Enchant: true
@@ -230,6 +232,46 @@ Gui_Templets:
       Slot: 0-8
       Lore:
         - ""
+  # edit the loottable
+  Edit_loot_table:
+    Menu_Size: 5
+    Menu_Title: "&1Edit loottable: {0}"
+    Change_Minimum:
+      Display_name: "&bChange minimum amount {0}"
+      Enchant: true
+      Icon: GOLDEN_CARROT
+      Slot: 2
+      Lore:
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to decrese  with&6 1"
+        - "&aRightclick and shift to decrese with&6 {2}"
+    Change_Maximum:
+      Display_name: "&bChange maximum amount {0}"
+      Enchant: true
+      Icon: TROPICAL_FISH
+      Slot: 3
+      Lore:
+        - "&aLeftclick to increse with&6 1"
+        - "&aLeftclick and shift to increse with&6 {1}"
+        - "&aRightclick to increse with&6 1"
+        - "&aRightclick and shift to increse with&6 {2}"
+    Remove_loot_table:
+      Display_name: "&bRemove loottable"
+      Enchant: true
+      Icon: BARRIER
+      Slot: 0
+      Lore:
+        - "&aRemove this loottable"
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 4
+      Lore:
+        - ""
+        - "&aGo back to List"
+        - "&aof loot tables."
   ######################################################
   # CustomizeItem menu.
   CustomizeItem:
