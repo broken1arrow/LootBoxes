@@ -6,8 +6,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class YamlUtil {
@@ -92,13 +90,7 @@ public abstract class YamlUtil {
 	public Map<?, ?> serialize() {
 		return null;
 	}
-
-	public static Map<?, ?> serializeData(Object valueTosave, String... childrenPath) {
-		Map<String, Object> serializeData = new LinkedHashMap<>();
-		serializeData.put("Data." + (childrenPath != null && childrenPath.length > 0 ? Arrays.toString(childrenPath).replace(",", ".") : ""), valueTosave);
-
-		return serializeData;
-	}
+	
 
 	protected abstract void loadSettingsFromYaml();
 

@@ -229,19 +229,19 @@ public class LootItems extends AllYamlFilesInFolder {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "tables");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
-			if (!checkFolderExist(fileToSave, dataFolders)) {
-				final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", fileToSave + ".yml");
-				try {
-					newDataFolder.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					saveDataToFile(newDataFolder);
+			if (fileToSave != null)
+				if (!checkFolderExist(fileToSave, dataFolders)) {
+					final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/tables", fileToSave + ".yml");
+					try {
+						newDataFolder.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						saveDataToFile(newDataFolder);
+					}
 				}
-			}
 			for (File file : dataFolders) {
 				String fileName = getNameOfFile(file.getName());
-
 				if (fileToSave == null || fileName.equals(fileToSave)) {
 					saveDataToFile(file);
 				}

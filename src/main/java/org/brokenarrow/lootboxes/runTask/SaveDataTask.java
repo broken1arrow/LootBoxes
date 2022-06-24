@@ -27,19 +27,22 @@ public class SaveDataTask extends BukkitRunnable {
 	public void start() {
 		if (task != null && (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()) || Bukkit.getScheduler().isQueued(task.getTaskId())))
 			Bukkit.getScheduler().cancelTask(task.getTaskId());
-		task = runTaskLaterAsynchronously(this.lootboxes, 20L);
+		System.out.println("tttttt ");
+		task = runTaskTimerAsynchronously(this.lootboxes, 0, 20L);
+		System.out.println("tttttt " + task);
 	}
 
 	@Override
 	public void run() {
-		if (amount + 20 >= 100)
+		if (amount >= 100)
 			task();
 		amount++;
 	}
 
 	public void task() {
-		for (Map.Entry<AllYamlFilesInFolder, String> entry : getCacheSave().entrySet())
+		for (Map.Entry<AllYamlFilesInFolder, String> entry : this.getCacheSave().entrySet())
 			entry.getKey().save(entry.getValue());
+		this.getCacheSave().clear();
 		amount = 0;
 
 		if (!tempcache.isEmpty()) {

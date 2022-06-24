@@ -74,6 +74,8 @@ public class ChatMessages extends AllYamlFilesInFolder {
 	public static ChatMessages HOURS = new ChatMessages("HOURS");
 	public static ChatMessages MINUTES = new ChatMessages("MINUTES");
 	public static ChatMessages SECONDS = new ChatMessages("SECONDS");
+	public static ChatMessages TRUE = new ChatMessages("BOOLEAN_TRUE");
+	public static ChatMessages FALSE = new ChatMessages("BOOLEAN_FALSE");
 
 	public ChatMessages(String idKey) {
 		super("language", true);

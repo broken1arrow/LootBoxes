@@ -93,6 +93,11 @@ public class Lootboxes extends JavaPlugin {
 		this.getLogger().log(Level.INFO, "Start Lootboxes");
 	}
 
+	@Override
+	public void onDisable() {
+		saveFiles();
+	}
+
 	public void reloadFiles() {
 		this.settings.reload();
 		ContainerDataCache.getInstance().reload();
@@ -101,6 +106,13 @@ public class Lootboxes extends JavaPlugin {
 		ItemData.getInstance().reload();
 		KeyDropData.getInstance().reload();
 		ChatMessages.messagesReload(this);
+	}
+
+	public void saveFiles() {
+		ContainerDataCache.getInstance().save();
+		LootItems.getInstance().save();
+		ItemData.getInstance().save();
+		KeyDropData.getInstance().save();
 	}
 
 	public static Lootboxes getInstance() {

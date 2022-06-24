@@ -79,6 +79,8 @@ TELEPORT:
 
 RELOAD: "&fYou have successful reload the config files"
 
+BOOLEAN_TRUE: "yes"
+BOOLEAN_FALSE: "no"
 # change name on timeunit.
 # singular names.
 DAY: " day"

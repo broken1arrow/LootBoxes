@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.builder;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Guidata;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -296,9 +297,9 @@ public class GuiTempletsYaml {
 
 	private static String ifContainsBoolen(String text) {
 		if (text.contains("true"))
-			return text.replace("true", "yes");//ChatMessages.BOOLEAN_TRUE.languageMessages());
+			return text.replace("true", ChatMessages.TRUE.languageMessages());
 		else if (text.contains("false"))
-			return text.replace("false", "no");//ChatMessages.BOOLEAN_FALSE.languageMessages());
+			return text.replace("false", ChatMessages.FALSE.languageMessages());
 		else
 			return text;
 	}

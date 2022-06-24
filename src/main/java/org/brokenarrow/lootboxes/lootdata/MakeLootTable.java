@@ -24,18 +24,15 @@ public class MakeLootTable {
 		List<ItemStack> itemStacks = new ArrayList<>();
 		List<ItemStack> backupItemstacks = new ArrayList<>();
 		int amountIfItemsMax = 0;
-		int backupcounter = -1;
 		setGlobalValues(table);
 
 		for (LootData lootData : lootItems.getCachedTableContents(table).values()) {
 			if (lootData.getMaterial() == Material.AIR) continue;
 
-			if (backupcounter == -1) {
-				backupcounter = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 1);
-			}
+
 			int amountOfItems = randomNumber(lootData);
 
-			if (lootData.getMinimum() > 0 && backupItemstacks.isEmpty())
+			if (this.minimumAmountOfItems > 0)
 				backupItemstacks.add(createItem(lootData, amountOfItems <= 0 ? 1 : amountOfItems));
 
 			if (amountIfItemsMax > this.maxAmountOfItems)
@@ -46,9 +43,19 @@ public class MakeLootTable {
 			itemStacks.add(createItem(lootData, amountOfItems));
 		}
 		if (itemStacks.isEmpty())
-			return backupItemstacks.toArray(new ItemStack[1]);
+			return setBackupItems(backupItemstacks);
 		else
 			return itemStacks.toArray(new ItemStack[itemStacks.size() + 2]);
+	}
+
+	private ItemStack[] setBackupItems(List<ItemStack> backupItemstacks) {
+		List<ItemStack> itemstacks = new ArrayList<>();
+		int size = backupItemstacks.size();
+		int amount = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 1);
+		for (int i = 0; i < amount; i++) {
+			itemstacks.add(backupItemstacks.get(random.randomIntNumber(this.minimumAmountOfItems, size - 1)));
+		}
+		return itemstacks.toArray(new ItemStack[itemstacks.size() + 1]);
 	}
 
 	private void setGlobalValues(String table) {

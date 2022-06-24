@@ -256,7 +256,7 @@ public class ContainerDataCache extends YamlUtil {
 	}
 
 	@Override
-	protected void save() {
+	public void save() {
 		super.save();
 		System.out.println("saveToString() \n" + customConfig.saveToString());
 	}
@@ -351,7 +351,7 @@ public class ContainerDataCache extends YamlUtil {
 						.setRandomSpawn(randomSpawn)
 						.setContainerData(containerDataMap)
 						.setKeysData(keysDataMap);
-				
+
 				cacheContainerData.put(mainKey, builder.build());
 				if (spawningContainerWithCooldown)
 					addContainerToSpawnTask(mainKey, cooldown);

@@ -152,24 +152,26 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "keysDropData");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
-			if (!checkFolderExist(fileToSave, dataFolders)) {
-				final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/keysDropData", fileToSave + ".yml");
-				try {
-					newDataFolder.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					saveDataToFile(newDataFolder);
-				}
-			} else {
-				for (File file : dataFolders) {
-					if (getNameOfFile(file.getName()).equals(fileToSave)) {
-						saveDataToFile(file);
-						return;
+			if (fileToSave != null)
+				if (!checkFolderExist(fileToSave, dataFolders)) {
+					final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/keysDropData", fileToSave + ".yml");
+					try {
+						newDataFolder.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						saveDataToFile(newDataFolder);
+					}
+				} else {
+					for (File file : dataFolders) {
+						String fileName = getNameOfFile(file.getName());
+						if (fileName.equals(fileToSave)) {
+							saveDataToFile(file);
+							return;
+						}
 					}
 				}
-			}
-			if (fileToSave == null)
+			else
 				for (File file : dataFolders) {
 					saveDataToFile(file);
 				}
