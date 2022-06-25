@@ -26,6 +26,7 @@ public abstract class AllYamlFilesInFolder {
 
 	private final String folderName;
 	private final String fileName;
+	private final String yamlMainpath;
 	private final boolean shallGenerateFiles;
 	private FileConfiguration customConfig;
 	private String extension;
@@ -33,15 +34,20 @@ public abstract class AllYamlFilesInFolder {
 	private final Plugin plugin = Lootboxes.getInstance();
 
 	public AllYamlFilesInFolder(String folderName, boolean shallGenerateFiles) {
-		this(folderName, "", shallGenerateFiles);
+		this(folderName, "", "", shallGenerateFiles);
 	}
 
-	public AllYamlFilesInFolder(String folderName, String filename, boolean shallGenerateFiles) {
+	public AllYamlFilesInFolder(String folderName, String yamlMainpath, boolean shallGenerateFiles) {
+		this(folderName, "", yamlMainpath, shallGenerateFiles);
+	}
+
+	public AllYamlFilesInFolder(String folderName, String filename, String yamlMainpath, boolean shallGenerateFiles) {
 		if (this.plugin == null)
 			throw new RuntimeException("You have not set the plugin, becuse it is null");
 		this.folderName = folderName;
 		this.fileName = filename;
 		this.shallGenerateFiles = shallGenerateFiles;
+		this.yamlMainpath = yamlMainpath;
 	}
 
 	public abstract void saveDataToFile(File file);
@@ -100,13 +106,13 @@ public abstract class AllYamlFilesInFolder {
 		}
 	}
 
-	public void save() {
-		save(null);
-	}
-
 	public boolean removeFile(String filename) {
 		final File dataFolder = new File(getParent(), filename + "." + getExtension());
 		return dataFolder.delete();
+	}
+
+	public void save() {
+		save(null);
 	}
 
 	public void save(String fileToSave) {
@@ -126,6 +132,8 @@ public abstract class AllYamlFilesInFolder {
 				} else {
 					for (File file : dataFolders) {
 						if (getNameOfFile(file.getName()).equals(fileToSave)) {
+							if (!yamlMainpath.isEmpty() && serialize() != null)
+								saveToFile(file);
 							saveDataToFile(file);
 							return;
 						}
@@ -133,9 +141,28 @@ public abstract class AllYamlFilesInFolder {
 				}
 			} else
 				for (File file : dataFolders) {
+					if (!yamlMainpath.isEmpty() && serialize() != null)
+						saveToFile(file);
 					saveDataToFile(file);
 				}
 		}
+	}
+
+	public void saveToFile(File file) {
+		try {
+			customConfig.set(yamlMainpath, null);
+			for (Map.Entry<?, ?> childrenKey : serialize().entrySet())
+				if (childrenKey != null) {
+					customConfig.set(yamlMainpath + "." + childrenKey.getKey(), childrenKey.getValue());
+				}
+			customConfig.save(file);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public Map<?, ?> serialize() {
+		return null;
 	}
 
 	public String getName() {
@@ -193,14 +220,14 @@ public abstract class AllYamlFilesInFolder {
 				for (String file : filenamesFromDir) {
 					if (map.contains(getNameOfFile(file))) {
 
-						File outFile = new File(getParent(), file);
+						File outFile = new File(file);
 						if (!outFile.exists())
 							this.plugin.saveResource(file, false);
 					}
 				}
 			} else {
 				for (String file : filenamesFromDir) {
-					File outFile = new File(getParent(), file);
+					File outFile = new File(file);
 					if (!outFile.exists())
 						this.plugin.saveResource(file, false);
 				}

@@ -42,6 +42,7 @@ public class OpenContainer implements Listener {
 			Location location = block.getLocation();
 			ItemStack itemStack = event.getItem();
 			Player player = event.getPlayer();
+		
 			if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 			if (player.hasPermission("lootboxes.bypass.open.requirement")) return;
 

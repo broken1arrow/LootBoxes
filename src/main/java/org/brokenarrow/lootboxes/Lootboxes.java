@@ -2,6 +2,9 @@ package org.brokenarrow.lootboxes;
 
 
 import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
+import org.brokenarrow.lootboxes.builder.ContainerData;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
@@ -19,6 +22,7 @@ import org.brokenarrow.lootboxes.untlity.*;
 import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
 import org.brokenarrow.menu.library.RegisterMenuAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -56,7 +60,9 @@ public class Lootboxes extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		setServerVersion(this);
-
+		ConfigurationSerialization.registerClass(KeysData.class);
+		ConfigurationSerialization.registerClass(ContainerData.class);
+		ConfigurationSerialization.registerClass(ContainerDataBuilder.class);
 		this.nbtAPI = new RegisterNbtAPI(this, false);
 		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
@@ -106,6 +112,7 @@ public class Lootboxes extends JavaPlugin {
 		ItemData.getInstance().reload();
 		KeyDropData.getInstance().reload();
 		ChatMessages.messagesReload(this);
+
 	}
 
 	public void saveFiles() {

@@ -1,13 +1,16 @@
 package org.brokenarrow.lootboxes.builder;
 
-import com.google.common.base.Enums;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
-public final class KeysData {
+public final class KeysData implements ConfigurationSerializable {
 	private final String keyName;
 	private final String displayName;
 	private final String lootTableLinked;
@@ -36,8 +39,8 @@ public final class KeysData {
 
 
 	private Material addMatrial(final String itemType) {
-		checkNotNull(itemType, "This item are null.");
-		Material material = Enums.getIfPresent(Material.class, itemType).orNull();
+		checkNotNull(itemType, "This item are null. for this key: " + keyName);
+		Material material = Material.getMaterial(itemType);
 		checkNotNull(material, "This " + itemType + " are not valid");
 
 		return material;
@@ -108,5 +111,43 @@ public final class KeysData {
 				", itemType=" + itemType +
 				", lore=" + lore +
 				'}';
+	}
+
+	/**
+	 * Creates a Map representation of this class.
+	 * <p>
+	 * This class must provide a method to restore this class, as defined in
+	 * the {@link ConfigurationSerializable} interface javadocs.
+	 *
+	 * @return Map containing the current state of this class
+	 */
+	@NotNull
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> keysData = new LinkedHashMap<>();
+		keysData.put("keyName", keyName);
+		keysData.put("displayName", displayName);
+		keysData.put("lootTableLinked", lootTableLinked);
+		keysData.put("amountNeeded", amountNeeded);
+		keysData.put("itemType", itemType + "");
+		keysData.put("lore", lore);
+		return keysData;
+	}
+
+	public static KeysData deserialize(Map<String, Object> map) {
+		//Material itemType = Material.getMaterial((String) map.get("itemType"));
+		String keyName = (String) map.get("keyName");
+		String displayName = (String) map.get("displayName");
+		String lootTableLinked = (String) map.get("lootTableLinked");
+		int amountNeeded = (int) map.get("amountNeeded");
+		String itemType = (String) map.get("itemType");
+		List<?> lore = (List<?>) map.get("lore");
+
+		return new KeysData(keyName,
+				displayName,
+				lootTableLinked,
+				amountNeeded,
+				itemType,
+				(List<String>) lore);
 	}
 }

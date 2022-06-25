@@ -152,7 +152,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "keysDropData");
 		final File[] dataFolders = dataFolder.listFiles();
 		if (dataFolder.exists() && dataFolders != null) {
-			if (fileToSave != null)
+			if (fileToSave != null) {
 				if (!checkFolderExist(fileToSave, dataFolders)) {
 					final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/keysDropData", fileToSave + ".yml");
 					try {
@@ -171,7 +171,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 						}
 					}
 				}
-			else
+			} else
 				for (File file : dataFolders) {
 					saveDataToFile(file);
 				}

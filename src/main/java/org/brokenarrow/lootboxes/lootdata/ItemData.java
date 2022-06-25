@@ -19,8 +19,7 @@ public class ItemData extends AllYamlFilesInFolder {
 	public static final ItemData instance = new ItemData();
 
 	private String fileName;
-	private File customConfigFile;
-	private FileConfiguration customConfig;
+	private FileConfiguration customConfig = getCustomConfig();
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
@@ -75,7 +74,7 @@ public class ItemData extends AllYamlFilesInFolder {
 		}
 		itemStackMap.put(itemdataPath, itemstack);
 		cacheItemData.put(getFileName(), itemStackMap);
-		
+
 		saveTask(null);
 		return itemdataPath;
 	}
@@ -115,27 +114,31 @@ public class ItemData extends AllYamlFilesInFolder {
 	@Override
 	public void saveDataToFile(File file) {
 
+		customConfig = YamlConfiguration.loadConfiguration(file);
+		customConfig.set("Items", null);
+		for (Map.Entry<String, Map<String, ItemStack>> entry : this.getCacheData().entrySet()) {
+
+			for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
+				customConfig.set("Items." + ent.getKey(), ent.getValue());
+			}
+		}
+		try {
+			customConfig.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void loadSettingsFromYaml(File file) {
-
-	}
-
-	@Override
-	public void reload() {
-		if (customConfigFile == null) {
-			for (File file : getAllFiles()) {
-				customConfigFile = file;
-
-				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-				getFilesData();
-			}
-		} else {
-			for (File file : getAllFiles()) {
-				customConfigFile = file;
-				getFilesData();
-			}
+		try {
+			customConfig.load(file);
+			Set<String> value = customConfig.getKeys(false);
+			loadSettingsFromYaml(file, value);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -144,53 +147,39 @@ public class ItemData extends AllYamlFilesInFolder {
 		//runtaskLater(5, () -> save(containerDataFileName), true);
 	}
 
-	@Override
-	public void save() {
-		save(null);
-	}
+	/*
+		@Override
+		public void save() {
+			save(null);
+		}
 
-	@Override
-	public void save(String fileToSave) {
-		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "itemdata");
-		final File[] dataFolders = dataFolder.listFiles();
-		if (dataFolder.exists() && dataFolders != null) {
-			for (File file : dataFolders) {
-				String fileName = getNameOfFile(file.getName());
+		@Override
+		public void save(String fileToSave) {
+			final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "itemdata");
+			final File[] dataFolders = dataFolder.listFiles();
+			if (dataFolder.exists() && dataFolders != null) {
+				for (File file : dataFolders) {
+					String fileName = getNameOfFile(file.getName());
 
-				if (fileToSave == null || fileName.equals(fileToSave)) {
-					customConfig = YamlConfiguration.loadConfiguration(file);
-					customConfig.set("Items", null);
-					for (Map.Entry<String, Map<String, ItemStack>> entry : cacheItemData.entrySet()) {
+					if (fileToSave == null || fileName.equals(fileToSave)) {
+						customConfig = YamlConfiguration.loadConfiguration(file);
+						customConfig.set("Items", null);
+						for (Map.Entry<String, Map<String, ItemStack>> entry : cacheItemData.entrySet()) {
 
-						for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
-							customConfig.set("Items." + ent.getKey(), ent.getValue());
+							for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
+								customConfig.set("Items." + ent.getKey(), ent.getValue());
+							}
 						}
-					}
-					try {
-						customConfig.save(file);
-					} catch (IOException e) {
-						e.printStackTrace();
+						try {
+							customConfig.save(file);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
 		}
-	}
-
-	private void getFilesData() {
-		try {
-			for (File key : getYamlFiles("itemdata")) {
-
-				customConfig.load(key);
-				Set<String> value = customConfig.getKeys(false);
-				loadSettingsFromYaml(key, value);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-	}
-
+	*/
 	protected void loadSettingsFromYaml(File key, Set<String> values) {
 		List<ItemStack> items = new ArrayList<>();
 		Map<String, ItemStack> stack = new HashMap<>();

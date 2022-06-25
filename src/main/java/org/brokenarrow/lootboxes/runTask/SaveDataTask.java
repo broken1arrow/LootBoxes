@@ -27,9 +27,7 @@ public class SaveDataTask extends BukkitRunnable {
 	public void start() {
 		if (task != null && (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()) || Bukkit.getScheduler().isQueued(task.getTaskId())))
 			Bukkit.getScheduler().cancelTask(task.getTaskId());
-		System.out.println("tttttt ");
 		task = runTaskTimerAsynchronously(this.lootboxes, 0, 20L);
-		System.out.println("tttttt " + task);
 	}
 
 	@Override

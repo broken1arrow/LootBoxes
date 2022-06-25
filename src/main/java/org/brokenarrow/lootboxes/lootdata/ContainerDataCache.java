@@ -267,27 +267,38 @@ public class ContainerDataCache extends YamlUtil {
 		for (String childrenKey : this.cacheContainerData.keySet())
 			if (childrenKey != null) {
 				ContainerDataBuilder data = this.cacheContainerData.get(childrenKey);
-				serializeData.put(childrenKey + "." + "LootTable_Linked", data.getLootTableLinked());
+				serializeData.put(childrenKey, data);
+				/*serializeData.put(childrenKey + "." + "LootTable_Linked", data.getLootTableLinked());
 				serializeData.put(childrenKey + "." + "Spawning", data.isSpawningContainerWithCooldown());
 				serializeData.put(childrenKey + "." + "Cooldown", data.getCooldown());
 				serializeData.put(childrenKey + "." + "Animation", data.getParticleEffects());
-				serializeData.put(childrenKey + "." + "Random_spawn", data.isRandomSpawn());
-				for (KeysData keyData : data.getKeysData().values()) {
+				serializeData.put(childrenKey + "." + "Random_spawn", data.isRandomSpawn());*/
+                /*for (KeysData keyData : data.getKeysData().values()) {
+					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName(), keyData);*/
+				/*
 					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Amount_Of_Keys", keyData.getAmountNeeded());
 					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Itemtype", keyData.getItemType().name());
 					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Display_name", keyData.getDisplayName());
-					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Lore", keyData.getLore());
+					serializeData.put(childrenKey + "." + "Keys" + "." + keyData.getKeyName() + "." + "Lore", keyData.getLore());*/
+				/*
 				}
-				serializeData.put(childrenKey + "." + "Enchant", data.isEnchant());
+				*/
+				/*serializeData.put(childrenKey + "." + "Enchant", data.isEnchant());
 				serializeData.put(childrenKey + "." + "Icon", data.getIcon().name());
 				serializeData.put(childrenKey + "." + "Display_name", data.getDisplayname());
-				serializeData.put(childrenKey + "." + "Lore", data.getLore());
+				serializeData.put(childrenKey + "." + "Lore", data.getLore());*/
+				/*
 				for (Map.Entry<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerData : data.getLinkedContainerData().entrySet()) {
 					String serializeLoc = serializeLoc(containerData.getKey(), false);
+					serializeData.put(childrenKey + "." + "Containers" + "." + serializeLoc, containerData);*/
+				/*
 					serializeData.put(childrenKey + "." + "Containers" + "." + serializeLoc + "." + "Facing", containerData.getValue().getFacing().name());
 					serializeData.put(childrenKey + "." + "Containers" + "." + serializeLoc + "." + "Container_Type", containerData.getValue().getContainerType().name());
-				}
+				*/
+				/*
+				}*/
 			}
+		System.out.println("serializeData " + serializeData);
 		return serializeData;
 	}
 
@@ -298,63 +309,78 @@ public class ContainerDataCache extends YamlUtil {
 		if (MainConfigKeys != null)
 			for (String mainKey : MainConfigKeys.getKeys(false)) {
 				if (mainKey == null) continue;
-				Map<Location, ContainerData> containerDataMap = new HashMap<>();
-				Map<String, KeysData> keysDataMap = new HashMap<>();
+				ContainerDataBuilder containerDataBuilder = this.customConfig.getObject("Data." + mainKey, ContainerDataBuilder.class);
+				ContainerDataBuilder builder;
+				System.out.println("containerDataBuilder " + containerDataBuilder);
+				if (containerDataBuilder != null) {
+					builder = containerDataBuilder;
+				} else {
+					Map<Location, ContainerData> containerDataMap = new HashMap<>();
+					Map<String, KeysData> keysDataMap = new HashMap<>();
+					String lootTableLinked = this.customConfig.getString("Data." + mainKey + "." + "LootTable_Linked");
+					boolean spawningContainerWithCooldown = this.customConfig.getBoolean("Data." + mainKey + "." + "Spawning");
+					long cooldown = this.customConfig.getLong("Data." + mainKey + "." + "Cooldown");
+					List<String> animation = this.customConfig.getStringList("Data." + mainKey + "." + "Animation");
+					boolean enchant = this.customConfig.getBoolean("Data." + mainKey + "." + "Enchant");
+					Material icon = Enums.getIfPresent(Material.class, this.customConfig.getString("Data." + mainKey + "." + "Icon", "AIR")).orNull();
+					String display_name = this.customConfig.getString("Data." + mainKey + "." + "Display_name");
+					List<String> lore = this.customConfig.getStringList("Data." + mainKey + "." + "Lore");
+					boolean randomSpawn = this.customConfig.getBoolean("Data." + mainKey + "." + "Random_spawn");
 
-				String lootTableLinked = this.customConfig.getString("Data." + mainKey + "." + "LootTable_Linked");
-				boolean spawningContainerWithCooldown = this.customConfig.getBoolean("Data." + mainKey + "." + "Spawning");
-				long cooldown = this.customConfig.getLong("Data." + mainKey + "." + "Cooldown");
-				List<String> animation = this.customConfig.getStringList("Data." + mainKey + "." + "Animation");
-				boolean enchant = this.customConfig.getBoolean("Data." + mainKey + "." + "Enchant");
-				Material icon = Enums.getIfPresent(Material.class, this.customConfig.getString("Data." + mainKey + "." + "Icon", "AIR")).orNull();
-				String display_name = this.customConfig.getString("Data." + mainKey + "." + "Display_name");
-				List<String> lore = this.customConfig.getStringList("Data." + mainKey + "." + "Lore");
-				boolean randomSpawn = this.customConfig.getBoolean("Data." + mainKey + "." + "Random_spawn");
 
-				ConfigurationSection innerConfigKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Keys");
-				if (innerConfigKeys == null) {
-					System.out.println("Keys " + mainKey + " are not valid or null");
-				} else
-					for (String innerKey : innerConfigKeys.getKeys(false)) {
-						int keys = this.customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Amount_Of_Keys");
-						String itemType = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Itemtype");
-						String displayName = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Display_name");
-						List<String> keyLore = this.customConfig.getStringList("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Lore");
-						if (innerKey.contains(" "))
-							innerKey = innerKey.trim().replace(" ", "_");
-						keysDataMap.put(innerKey, new KeysData(innerKey, displayName, lootTableLinked, keys, itemType, keyLore));
-					}
+					ConfigurationSection innerConfigKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Keys");
+					if (innerConfigKeys == null) {
+						System.out.println("Keys " + mainKey + " are not valid or null");
+					} else
+						for (String innerKey : innerConfigKeys.getKeys(false)) {
 
-				ConfigurationSection containersKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Containers");
-				if (containersKeys == null) {
-					System.out.println("Containers " + mainKey + " are not valid or null");
-				} else
-					for (String innerKey : containersKeys.getKeys(false)) {
-						String facing = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Facing");
-						String containerType = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Container_Type");
-						if (isLocation(innerKey) == null)
-							System.out.println("location " + innerKey + " are not valid or null");
-						containerDataMap.put(isLocation(innerKey), new ContainerData(facing, containerType));
-					}
+							int keys = this.customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Amount_Of_Keys");
+							String itemType = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Itemtype");
+							String displayName = this.customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Display_name");
+							List<String> keyLore = this.customConfig.getStringList("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Lore");
+
+							if (innerKey.contains(" "))
+								innerKey = innerKey.trim().replace(" ", "_");
+							KeysData keysData = new KeysData(innerKey, displayName, lootTableLinked, keys, itemType, keyLore);
+
+							keysDataMap.put(innerKey, keysData);
+						}
+
+					ConfigurationSection containersKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Containers");
+					if (containersKeys == null) {
+						System.out.println("Containers " + mainKey + " are not valid or null");
+					} else
+						for (String innerKey : containersKeys.getKeys(false)) {
+
+							String facing = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Facing");
+							String containerType = this.customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Container_Type");
+							ContainerData containerData = new ContainerData(facing, containerType);
+
+							if (isLocation(innerKey) == null)
+								System.out.println("location " + innerKey + " are not valid or null");
+							containerDataMap.put(isLocation(innerKey), containerData);
+						}
+					builder = new ContainerDataBuilder.Builder()
+							.setContainerDataLinkedToLootTable(lootTableLinked)
+							.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
+							.setCooldown(cooldown)
+							.setParticleEffect(animation)
+							.setEnchant(enchant)
+							.setIcon(icon)
+							.setDisplayname(display_name)
+							.setLore(lore)
+							.setRandomSpawn(randomSpawn)
+							.setContainerData(containerDataMap)
+							.setKeysData(keysDataMap).build();
+				}
 				if (mainKey.contains(" "))
 					mainKey = mainKey.trim().replace(" ", "_");
-				addChachedLocation(mainKey, containerDataMap, keysDataMap);
-				ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
-				builder.setContainerDataLinkedToLootTable(lootTableLinked)
-						.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
-						.setCooldown(cooldown)
-						.setParticleEffect(animation)
-						.setEnchant(enchant)
-						.setIcon(icon)
-						.setDisplayname(display_name)
-						.setLore(lore)
-						.setRandomSpawn(randomSpawn)
-						.setContainerData(containerDataMap)
-						.setKeysData(keysDataMap);
+				addChachedLocation(mainKey, builder.getLinkedContainerData(), builder.getKeysData());
 
-				cacheContainerData.put(mainKey, builder.build());
-				if (spawningContainerWithCooldown)
-					addContainerToSpawnTask(mainKey, cooldown);
+
+				cacheContainerData.put(mainKey, builder);
+				if (builder.isSpawningContainerWithCooldown())
+					addContainerToSpawnTask(mainKey, builder.getCooldown());
 
 			}
 	}

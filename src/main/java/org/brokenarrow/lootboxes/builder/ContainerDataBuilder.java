@@ -1,12 +1,19 @@
 package org.brokenarrow.lootboxes.builder;
 
+import org.brokenarrow.lootboxes.untlity.errors.Valid;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ContainerDataBuilder {
+import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castList;
+import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
+
+public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 	private final String lootTableLinked;
 	private final Material icon;
@@ -85,22 +92,6 @@ public final class ContainerDataBuilder {
 		return builder;
 	}
 
-	@Override
-	public String toString() {
-		return "ContainerDataBuilder{" +
-				"lootTableLinked='" + lootTableLinked + '\'' +
-				", icon=" + icon +
-				", displayname='" + displayname + '\'' +
-				", lore=" + lore +
-				", particleEffect=" + particleEffect +
-				", containerData=" + containerData +
-				", keysData=" + keysData +
-				", spawning=" + spawningContainerWithCooldown +
-				", enchant=" + enchant +
-				", cooldown=" + cooldown +
-				", builder=" + builder +
-				'}';
-	}
 
 	public static final class Builder {
 
@@ -191,5 +182,83 @@ public final class ContainerDataBuilder {
 					'}';
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "ContainerDataBuilder{" +
+				"lootTableLinked='" + lootTableLinked + '\'' +
+				", icon=" + icon +
+				", displayname='" + displayname + '\'' +
+				", lore=" + lore +
+				", particleEffect=" + particleEffect +
+				", containerData=" + containerData +
+				", keysData=" + keysData +
+				", spawning=" + spawningContainerWithCooldown +
+				", enchant=" + enchant +
+				", cooldown=" + cooldown +
+				", builder=" + builder +
+				'}';
+	}
+
+	/**
+	 * Creates a Map representation of this class.
+	 * <p>
+	 * This class must provide a method to restore this class, as defined in
+	 * the {@link ConfigurationSerializable} interface javadocs.
+	 *
+	 * @return Map containing the current state of this class
+	 */
+	@NotNull
+	@Override
+	public Map<String, Object> serialize() {
+		Map<String, Object> keysData = new LinkedHashMap<>();
+		keysData.put("LootTable_linked", this.lootTableLinked);
+		keysData.put("Icon", this.icon + "");
+		keysData.put("Display_name", this.displayname);
+		keysData.put("Lore", this.lore);
+		keysData.put("Particle_effect", this.particleEffect);
+		keysData.put("Spawn_with_cooldown", this.spawningContainerWithCooldown);
+		keysData.put("Enchant", this.enchant);
+		keysData.put("Random_spawn", this.randomSpawn);
+		keysData.put("Cooldown", this.cooldown);
+		keysData.put("Keys", this.keysData);
+		keysData.put("Containers", this.containerData);
+		return keysData;
+	}
+
+	public static ContainerDataBuilder deserialize(Map<String, Object> map) {
+
+
+		String lootTableLinked = (String) map.get("LootTable_linked");
+		String icon = (String) map.get("Icon");
+		String displayName = (String) map.get("Display_name");
+		List<String> lore = castList((List<?>) map.get("Lore"), String.class);
+		List<String> particleEffect = castList((List<?>) map.get("Particle_effect"), String.class);
+		Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
+		Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
+		boolean spawningContainerWithCooldown = (boolean) map.get("Spawn_with_cooldown");
+		boolean enchant = (boolean) map.get("Enchant");
+		boolean randomSpawn = (boolean) map.get("Random_spawn");
+		long cooldown = (Integer) map.get("Cooldown");
+		Valid.checkNotNull(icon, "Material is null for this container");
+		Material material = Material.getMaterial(icon);
+		if (material == null)
+			material = Material.CHEST;
+		ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder()
+				.setContainerDataLinkedToLootTable(lootTableLinked)
+				.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
+				.setCooldown(cooldown)
+				.setParticleEffect(particleEffect)
+				.setEnchant(enchant)
+				.setIcon(material)
+				.setDisplayname(displayName)
+				.setLore(lore)
+				.setRandomSpawn(randomSpawn)
+				.setContainerData(containers)
+				.setKeysData(keys);
+
+		return builder.build();
+	}
+
 
 }
