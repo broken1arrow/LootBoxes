@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
-import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
+import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
-public class KeyDropData extends AllYamlFilesInFolder {
+public class KeyDropData extends SimpleYamlHelper {
 
 	@Getter
 	private static final KeyDropData instance = new KeyDropData();
@@ -42,26 +42,26 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		return cachedKeyData;
 	}
 
-	public Map<String, KeyMobDropData> getKeyMobDropValues(String fileName) {
+	public Map<String, KeyMobDropData> getKeyMobDropValues(final String fileName) {
 		return cachedKeyData.get(fileName);
 	}
 
-	public Set<EntityKeyData> getEntityCache(EntityType entityType) {
-		Set<EntityKeyData> entityKeyDataSet = new HashSet<>();
-		for (Map.Entry<String, EntityKeyData> entry : this.entityCache.entrySet()) {
-			String[] key = entry.getKey().split("#");
+	public Set<EntityKeyData> getEntityCache(final EntityType entityType) {
+		final Set<EntityKeyData> entityKeyDataSet = new HashSet<>();
+		for (final Map.Entry<String, EntityKeyData> entry : this.entityCache.entrySet()) {
+			final String[] key = entry.getKey().split("#");
 			if (key.length != 2) continue;
 			if (!key[1].equals(entityType.name())) continue;
 
-			EntityKeyData entityKeyData = entityCache.get(key[0] + "#" + key[1]);
+			final EntityKeyData entityKeyData = entityCache.get(key[0] + "#" + key[1]);
 			if (entityKeyData != null)
 				entityKeyDataSet.add(entityKeyData);
 		}
 		return entityKeyDataSet;
 	}
 
-	public boolean createKeyData(String containerDataFileName, String keyName) {
-		Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(containerDataFileName);
+	public boolean createKeyData(final String containerDataFileName, final String keyName) {
+		final Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(containerDataFileName);
 		if (dropDataMap != null) {
 			if (dropDataMap.containsKey(keyName)) {
 				Lootboxes.getInstance().getLogger().log(Level.WARNING, "This key is dublicate " + keyName + ". chose diffrent name");
@@ -76,31 +76,31 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		return true;
 	}
 
-	public void removeKeyMobDropData(String containerDataFileName, String keyName) {
-		Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(containerDataFileName);
+	public void removeKeyMobDropData(final String containerDataFileName, final String keyName) {
+		final Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(containerDataFileName);
 		if (dropDataMap != null) {
 			dropDataMap.remove(keyName);
 			saveTask(containerDataFileName);
 		}
 	}
 
-	public KeyMobDropData getKeyMobDropData(String fileName, String keyName) {
-		Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(fileName);
+	public KeyMobDropData getKeyMobDropData(final String fileName, final String keyName) {
+		final Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(fileName);
 		if (dropDataMap != null)
 			return dropDataMap.get(keyName);
 		return null;
 	}
 
-	public KeyMobDropData getKeyMobDropData(String keyName) {
-		for (Map<String, KeyMobDropData> dropDataMap : this.cachedKeyData.values()) {
-			KeyMobDropData keysData = dropDataMap.get(keyName);
+	public KeyMobDropData getKeyMobDropData(final String keyName) {
+		for (final Map<String, KeyMobDropData> dropDataMap : this.cachedKeyData.values()) {
+			final KeyMobDropData keysData = dropDataMap.get(keyName);
 			if (keysData != null)
 				return keysData;
 		}
 		return null;
 	}
 
-	public void putCachedKeyData(String fileName, String keyName, KeyMobDropData keyMobDropData) {
+	public void putCachedKeyData(final String fileName, final String keyName, final KeyMobDropData keyMobDropData) {
 		Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(fileName);
 		if (dropDataMap == null) {
 			dropDataMap = new HashMap<>();
@@ -113,81 +113,41 @@ public class KeyDropData extends AllYamlFilesInFolder {
 	@Override
 	public void reload() {
 		if (customConfigFile == null) {
-			for (File file : getAllFiles()) {
+			for (final File file : getAllFilesInPluginJar()) {
 				customConfigFile = file;
 
 				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
 				getFilesData();
 			}
 		} else {
-			for (File file : getAllFiles()) {
+			for (final File file : getAllFilesInPluginJar()) {
 				customConfigFile = file;
 				getFilesData();
 			}
 		}
 	}
 
-	@Override
-	public void save() {
-		save(null);
-	}
-
-	@Override
-	public boolean removeFile(String containerDataFileName) {
-		runtaskLater(5, () -> {
-					final File dataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/keysDropData", containerDataFileName + ".yml");
-					dataFolder.delete();
-				}
-				, true);
+	public boolean removeKey(final String fileName) {
+		runtaskLater(5, () -> removeFile(fileName), true);
 		return false;
 	}
 
-	public void saveTask(String containerDataFileName) {
+	public void saveTask(final String containerDataFileName) {
 		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, containerDataFileName);
 		//runtaskLater(5, () -> save(containerDataFileName), true);
 	}
 
-	@Override
-	public void save(String fileToSave) {
-		final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "keysDropData");
-		final File[] dataFolders = dataFolder.listFiles();
-		if (dataFolder.exists() && dataFolders != null) {
-			if (fileToSave != null) {
-				if (!checkFolderExist(fileToSave, dataFolders)) {
-					final File newDataFolder = new File(Lootboxes.getInstance().getDataFolder() + "/keysDropData", fileToSave + ".yml");
-					try {
-						newDataFolder.createNewFile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} finally {
-						saveDataToFile(newDataFolder);
-					}
-				} else {
-					for (File file : dataFolders) {
-						String fileName = getNameOfFile(file.getName());
-						if (fileName.equals(fileToSave)) {
-							saveDataToFile(file);
-							return;
-						}
-					}
-				}
-			} else
-				for (File file : dataFolders) {
-					saveDataToFile(file);
-				}
-		}
-	}
 
 	@Override
-	public void saveDataToFile(File file) {
-		String fileName = getNameOfFile(file.getName());
+	public void saveDataToFile(final File file) {
+		final String fileName = getNameOfFile(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
-		Map<String, KeyMobDropData> settings = this.cachedKeyData.get(fileName);
+		final Map<String, KeyMobDropData> settings = this.cachedKeyData.get(fileName);
 		if (settings != null) {
 			customConfig.set("Keys_Data", null);
-			for (String childrenKey : settings.keySet()) {
+			for (final String childrenKey : settings.keySet()) {
 				if (childrenKey == null) continue;
-				KeyMobDropData data = settings.get(childrenKey);
+				final KeyMobDropData data = settings.get(childrenKey);
 				if (data == null) {
 					customConfig.set("Keys_Data." + childrenKey + ".Chance", 2);
 					customConfig.set("Keys_Data." + childrenKey + ".Minimum", 1);
@@ -200,7 +160,7 @@ public class KeyDropData extends AllYamlFilesInFolder {
 					if (data.getEntityTypes() == null || data.getEntityTypes().isEmpty())
 						customConfig.set("Keys_Data." + childrenKey + ".Entity_list", new ArrayList<>());
 					else
-						for (EntityType entityType : data.getEntityTypes()) {
+						for (final EntityType entityType : data.getEntityTypes()) {
 							if (entityType != null) {
 								customConfig.set("Keys_Data." + childrenKey + ".Entity_list", data.getEntityTypes().stream().map(Enum::name).collect(Collectors.toList()));
 							}
@@ -209,49 +169,49 @@ public class KeyDropData extends AllYamlFilesInFolder {
 			}
 			try {
 				customConfig.save(file);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(File file) {
+	protected void loadSettingsFromYaml(final File file) {
 
 	}
 
 
 	private void getFilesData() {
 		try {
-			for (File key : getYamlFiles("keysDropData")) {
+			for (final File key : getFilesInPluginFolder("keysDropData")) {
 
 				customConfig.load(key);
-				Set<String> value = customConfig.getKeys(false);
+				final Set<String> value = customConfig.getKeys(false);
 				loadSettingsFromYaml(key, value);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
+		} catch (final InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected void loadSettingsFromYaml(File key, Set<String> values) {
-		Map<String, KeyMobDropData> data = new HashMap<>();
-		String fileName = getNameOfFile(key.getName());
-		for (String value : values) {
-			ConfigurationSection configs = customConfig.getConfigurationSection(value);
+	protected void loadSettingsFromYaml(final File key, final Set<String> values) {
+		final Map<String, KeyMobDropData> data = new HashMap<>();
+		final String fileName = getNameOfFile(key.getName());
+		for (final String value : values) {
+			final ConfigurationSection configs = customConfig.getConfigurationSection(value);
 			if (configs != null)
-				for (String childrenKey : configs.getKeys(false)) {
-					int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
-					int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
-					int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
-					List<EntityType> entityList = convertStringToEntityType(customConfig.getStringList(value + "." + childrenKey + ".Entity_list"));
+				for (final String childrenKey : configs.getKeys(false)) {
+					final int chance = customConfig.getInt(value + "." + childrenKey + ".Chance");
+					final int minimum = customConfig.getInt(value + "." + childrenKey + ".Minimum");
+					final int maximum = customConfig.getInt(value + "." + childrenKey + ".Maximum");
+					final List<EntityType> entityList = convertStringToEntityType(customConfig.getStringList(value + "." + childrenKey + ".Entity_list"));
 					if (entityList != null && !entityList.isEmpty()) {
-						for (EntityType entityType : entityList)
+						for (final EntityType entityType : entityList)
 							this.entityCache.put(getNameOfFile(key.getName()) + "_" + childrenKey + "#" + entityType, new EntityKeyData(childrenKey, fileName));
 					}
-					KeyMobDropData.Builder builder = new KeyMobDropData.Builder();
+					final KeyMobDropData.Builder builder = new KeyMobDropData.Builder();
 					builder.setChance(chance)
 							.setMinimum(minimum)
 							.setMaximum(maximum)
@@ -264,13 +224,13 @@ public class KeyDropData extends AllYamlFilesInFolder {
 		cachedKeyData.put(fileName, data);
 	}
 
-	private List<EntityType> convertStringToEntityType(List<String> entityList) {
+	private List<EntityType> convertStringToEntityType(final List<String> entityList) {
 		if (entityList == null || entityList.isEmpty()) return new ArrayList<>();
 
-		List<EntityType> list = new ArrayList<>();
-		for (String entity : entityList) {
+		final List<EntityType> list = new ArrayList<>();
+		for (final String entity : entityList) {
 			if (entity == null) continue;
-			EntityType entityType = Enums.getIfPresent(EntityType.class, entity).orNull();
+			final EntityType entityType = Enums.getIfPresent(EntityType.class, entity).orNull();
 			if (entityType == null) continue;
 
 			if (entityType.isAlive() && entityType.isSpawnable())

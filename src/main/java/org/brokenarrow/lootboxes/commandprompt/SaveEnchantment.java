@@ -23,7 +23,7 @@ public class SaveEnchantment extends SimpleConversation {
 	private final String itemToEdit;
 	private final Enchantment enchantment;
 
-	public SaveEnchantment(String lootTable, String itemToEdit, Enchantment enchantment) {
+	public SaveEnchantment(final String lootTable, final String itemToEdit, final Enchantment enchantment) {
 		this.lootTable = lootTable;
 		this.itemToEdit = itemToEdit;
 		this.enchantment = enchantment;
@@ -39,45 +39,44 @@ public class SaveEnchantment extends SimpleConversation {
 		private final ItemData itemData = ItemData.getInstance();
 
 		@Override
-		protected String getPrompt(ConversationContext context) {
+		protected String getPrompt(final ConversationContext context) {
 			return SAVE_ENCHANTMENT_SET_LEVEL.languageMessages();
 		}
 
 		@Nullable
 		@Override
-		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-			int level;
+		protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
+			final int level;
 			try {
 				level = Integer.parseInt(input);
-			} catch (NumberFormatException ignore) {
-				System.out.println("test v" + getPlayer(context));
+			} catch (final NumberFormatException ignore) {
 				SAVE_ENCHANTMENT_NOT_A_NUMBER.sendMessage(getPlayer(context), input);
 
 				return getFirstPrompt();
 
 			}
-			LootData data = lootItems.getLootData(lootTable, itemToEdit);
+			final LootData data = lootItems.getLootData(lootTable, itemToEdit);
 			String fileName = data.getItemdataFileName();
-			String itemdataPath = data.getItemdataPath();
+			final String itemdataPath = data.getItemdataPath();
 			ItemStack item = itemData.getCacheItemData(fileName, itemdataPath);
-			Map<Enchantment, Tuple<Integer, Boolean>> enchantmentMap = new HashMap<>();
-			String filePatch;
+			final Map<Enchantment, Tuple<Integer, Boolean>> enchantmentMap = new HashMap<>();
+			final String itemKeyPath;
 			enchantmentMap.put(enchantment, new Tuple<>(level, false));
 			if (item == null) {
 				item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantmentMap, false).makeItemStack();
-				filePatch = itemData.setCacheItemData(item.getType() + "", item);
+				itemKeyPath = itemData.setCacheItemData(lootTable, item.getType() + "", item);
 				if (fileName == null)
 					fileName = itemData.getFileName();
 			} else {
 				if (item.getItemMeta() != null && !item.getItemMeta().getEnchants().isEmpty())
-					for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet())
+					for (final Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet())
 						enchantmentMap.put(entry.getKey(), new Tuple<>(entry.getValue(), false));
-				
+
 				item = CreateItemUtily.of(item).addEnchantments(enchantmentMap, true).makeItemStack();
-				filePatch = itemData.updateCacheItemData(itemdataPath, item);
+				itemKeyPath = itemData.updateCacheItemData(fileName, itemdataPath, item);
 			}
-			LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
-			builder.setHaveMetadata(true).setItemdataFileName(fileName).setItemdataPath(filePatch);
+			final LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
+			builder.setHaveMetadata(true).setItemdataFileName(fileName).setItemdataPath(itemKeyPath);
 
 			SAVE_ENCHANTMENT_CONFIRM.sendMessage(getPlayer(context), input);
 

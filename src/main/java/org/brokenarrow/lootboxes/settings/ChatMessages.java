@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class ChatMessages extends AllYamlFilesInFolder {
+public class ChatMessages extends SimpleYamlHelper {
 	private static final Map<String, ChatMessages> chatMessagesMap = new HashMap<>();
 	private String messages;
 

@@ -34,23 +34,23 @@ public class CustomizeItem extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettings();
 
-	public CustomizeItem(String lootTable, String itemToEdit) {
+	public CustomizeItem(final String lootTable, final String itemToEdit) {
 
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "CustomizeItem").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		//setFillSpace(guiTemplets.build().getFillSpace());
-		LootData data = lootItems.getLootData(lootTable, itemToEdit);
+		final LootData data = lootItems.getLootData(lootTable, itemToEdit);
 		changeItem = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				new MatrialList(MenuKeys.CUSTOMIZEITEM_MENU, itemToEdit, lootTable, "").menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders(data.getMaterial()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Item").placeholders(data.getMaterial()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -59,13 +59,13 @@ public class CustomizeItem extends MenuHolder {
 		};
 		enchantItem = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				new EnchantMents(lootTable, itemToEdit, "").menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Enchant_Item").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Enchant_Item").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -74,9 +74,9 @@ public class CustomizeItem extends MenuHolder {
 		};
 		this.changeChance = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				LootData.Builder builder = data.getBuilder();
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				final LootData.Builder builder = data.getBuilder();
 
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
@@ -99,8 +99,8 @@ public class CustomizeItem extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance(), settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance(), settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -109,9 +109,9 @@ public class CustomizeItem extends MenuHolder {
 		};
 		this.changeMiniAmount = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				LootData.Builder builder = data.getBuilder();
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				final LootData.Builder builder = data.getBuilder();
 
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
@@ -133,8 +133,8 @@ public class CustomizeItem extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getMinimum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getMinimum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -143,9 +143,9 @@ public class CustomizeItem extends MenuHolder {
 		};
 		this.changeMaxAmount = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				LootData.Builder builder = data.getBuilder();
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				final LootData.Builder builder = data.getBuilder();
 
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
@@ -167,8 +167,8 @@ public class CustomizeItem extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getMaximum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getMaximum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -178,15 +178,22 @@ public class CustomizeItem extends MenuHolder {
 		removeButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
 				//lootItems.getLootData(lootTable, itemToEdit);
 				//lootItems.setLootData();
-				lootItems.removeItem(lootTable, itemToEdit);
+				final Map<String, LootData> data = lootItems.getCachedTableContents(lootTable);
+				final LootData lootData = data.get(itemToEdit);
+				if (lootData != null) {
+					ItemData.getInstance().removeCacheItemData(lootData.getItemdataFileName(), lootData.getItemdataPath());
+				}
+				data.remove(itemToEdit);
+				lootItems.saveTask(lootTable);
+				new EditCreateItems(lootTable).menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Remove_Button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Remove_Button").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -198,13 +205,13 @@ public class CustomizeItem extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
 				new EditCreateItems(lootTable).menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -216,7 +223,7 @@ public class CustomizeItem extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getButtonAt(int slot) {
+	public MenuButton getButtonAt(final int slot) {
 
 		if (guiTemplets.menuKey("Change_Item").build().getSlot().contains(slot))
 			return changeItem;
@@ -247,9 +254,9 @@ public class CustomizeItem extends MenuHolder {
 		private final LootItems lootItems = LootItems.getInstance();
 		private final ItemData itemData = ItemData.getInstance();
 
-		public EnchantMents(String lootTable, String itemToEdit, String enchantMentsToSearchFor) {
+		public EnchantMents(final String lootTable, final String itemToEdit, final String enchantMentsToSearchFor) {
 			super(Lootboxes.getInstance().getEnchantmentList().getEnchantments(enchantMentsToSearchFor));
-			Map<ItemStack, Enchantment> cachedEnchantment = new HashMap<>();
+			final Map<ItemStack, Enchantment> cachedEnchantment = new HashMap<>();
 			this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "EnchantMents").placeholders("");
 
 			setMenuSize(guiTemplets.build().getGuiSize());
@@ -258,7 +265,7 @@ public class CustomizeItem extends MenuHolder {
 
 			seachButton = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 					//Enchantment.SILK_TOUCH
 					if (clickType.isLeftClick())
 						new SeachForEnchantment(lootTable, itemToEdit).start(player);
@@ -268,7 +275,7 @@ public class CustomizeItem extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
 
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
@@ -277,19 +284,19 @@ public class CustomizeItem extends MenuHolder {
 
 			enchantmentsList = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 
 					if (clickType.isLeftClick()) {
 						if (o instanceof Enchantment)
 							new SaveEnchantment(lootTable, itemToEdit, (Enchantment) o).start(player);
 					} else if (clickType.isRightClick()) {
 						if (o instanceof Enchantment) {
-							Enchantment enchantment = (Enchantment) o;
-							LootData data = lootItems.getLootData(lootTable, itemToEdit);
-							ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
+							final Enchantment enchantment = (Enchantment) o;
+							final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+							final ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
 							boolean hasenchantsLeft = false;
 							if (item.getItemMeta() != null) {
-								ItemMeta metadata = item.getItemMeta();
+								final ItemMeta metadata = item.getItemMeta();
 								metadata.removeEnchant(enchantment);
 								item.setItemMeta(metadata);
 								hasenchantsLeft = !metadata.getEnchants().isEmpty();
@@ -298,10 +305,10 @@ public class CustomizeItem extends MenuHolder {
 							CreateItemUtily.of(item).addEnchantments(enchantment);
 
 							//String filePatch = itemData.setCacheItemData(data.getItemdataPath(), item);
-							itemData.updateCacheItemData(data.getItemdataPath(), item);
+							itemData.updateCacheItemData(data.getItemdataFileName(), data.getItemdataPath(), item);
 							if (!hasenchantsLeft)
 								itemData.removeCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
-							LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
+							final LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
 							builder.setHaveMetadata(hasenchantsLeft);
 
 							lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
@@ -316,7 +323,7 @@ public class CustomizeItem extends MenuHolder {
 				}
 
 				@Override
-				public ItemStack getItem(Object object) {
+				public ItemStack getItem(final Object object) {
 
 					Enchantment enchantment = null;
 					if (object instanceof Enchantment)
@@ -324,21 +331,19 @@ public class CustomizeItem extends MenuHolder {
 					if (object instanceof ItemStack)
 						enchantment = cachedEnchantment.get(object);
 
-					LootData data = lootItems.getLootData(lootTable, itemToEdit);
-					ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
+					final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+					final ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
 
 
 					GuiTempletsYaml gui = guiTemplets.menuKey("Enchant_Item").placeholders("", object instanceof Enchantment ? enchantment.getKey().getKey() : enchantment != null ? enchantment.getKey().getKey() : "").build();
 
-					//System.out.println("object " + object);
-					boolean haveEnchant = item != null && item.getItemMeta() != null && enchantment != null && item.getItemMeta().hasEnchant(enchantment);
+					final boolean haveEnchant = item != null && item.getItemMeta() != null && enchantment != null && item.getItemMeta().hasEnchant(enchantment);
 					if (haveEnchant)
 						gui = guiTemplets.menuKey("Item_Has_Enchantment").placeholders("", enchantment.getKey().getKey(), item.getItemMeta().getEnchants().get(enchantment).shortValue()).build();
 
-					ItemStack itemStack = CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
+					final ItemStack itemStack = CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).setGlow(haveEnchant).setShowEnchantments(!haveEnchant).makeItemStack();
 					cachedEnchantment.put(itemStack, enchantment);
-					//System.out.println("itemStack " + itemStack);
 					return itemStack;
 				}
 			};
@@ -353,7 +358,7 @@ public class CustomizeItem extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
 
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
@@ -369,20 +374,20 @@ public class CustomizeItem extends MenuHolder {
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}
 			};
 			backButton = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 					new CustomizeItem(lootTable, itemToEdit).menuOpen(player);
 				}
 
 				@Override
 				public ItemStack getItem() {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),
@@ -393,12 +398,12 @@ public class CustomizeItem extends MenuHolder {
 		}
 
 		@Override
-		public MenuButton getFillButtonAt(Object o) {
+		public MenuButton getFillButtonAt(final Object o) {
 			return enchantmentsList;
 		}
 
 		@Override
-		public MenuButton getButtonAt(int slot) {
+		public MenuButton getButtonAt(final int slot) {
 
 			if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
 				return seachButton;

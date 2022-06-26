@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.lootdata;
 
 import lombok.Getter;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
+import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,13 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class ItemData extends AllYamlFilesInFolder {
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
+
+public class ItemData extends SimpleYamlHelper {
 
 	@Getter
 	public static final ItemData instance = new ItemData();
-
-	private String fileName;
-	private FileConfiguration customConfig = getCustomConfig();
+	private FileConfiguration customConfig;
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
@@ -31,120 +31,134 @@ public class ItemData extends AllYamlFilesInFolder {
 		return cacheItemData;
 	}
 
-	public ItemStack getCacheItemData(String filname, String itemdataPath) {
-		Map<String, ItemStack> data = cacheItemData.get(filname);
+	public ItemStack getCacheItemData(final String filname, final String itemdataPath) {
+		final Map<String, ItemStack> data = cacheItemData.get(filname);
 		if (data != null)
 			return data.get(itemdataPath);
 		return null;
 	}
 
-	public ItemStack removeCacheItemData(String filname, String itemdataPath) {
-		Map<String, ItemStack> data = cacheItemData.get(filname);
+	public void removeCacheItemData(final String filname, final String itemdataPath) {
+		final Map<String, ItemStack> data = cacheItemData.get(filname);
 		if (data != null)
-			return data.remove(itemdataPath);
-		return null;
+			data.remove(itemdataPath);
+		saveTask(filname);
 	}
 
-	public ItemStack getCacheItemData(String path) {
+	public ItemStack getCacheItemData(final String path) {
 		return getCacheItemData(getFileName(), path);
 	}
 
-	public String updateCacheItemData(String itemdataPath, ItemStack itemstack) {
-		Map<String, ItemStack> itemStackMap = this.cacheItemData.get(getFileName());
+	public String updateCacheItemData(final String fileName, final String itemDataPath, final ItemStack itemstack) {
+		Map<String, ItemStack> itemStackMap = this.cacheItemData.get(fileName);
 
 		if (itemStackMap == null) {
 			itemStackMap = new HashMap<>();
 		}
-		itemStackMap.put(itemdataPath, itemstack);
-		this.cacheItemData.put(getFileName(), itemStackMap);
+		itemStackMap.put(itemDataPath, itemstack);
+		this.cacheItemData.put(fileName, itemStackMap);
 
-		saveTask(null);
-		return itemdataPath;
+		saveTask(fileName);
+		return itemDataPath;
 	}
 
-	public String setCacheItemData(String itemdataPath, ItemStack itemstack) {
-		Map<String, ItemStack> itemStackMap = cacheItemData.get(getFileName());
+	public String setCacheItemData(final String lootTable, String itemKeyPath, final ItemStack itemstack) {
+		final String itemDataPath = getItemDataPath(lootTable);
+		Map<String, ItemStack> itemStackMap = cacheItemData.get(itemDataPath);
 
-		if (itemdataPath == null || itemdataPath.isEmpty())
+		if (itemKeyPath == null || itemKeyPath.isEmpty())
 			return null;
-		itemdataPath = getFirstAvailableName(itemdataPath);
+		itemKeyPath = getFirstAvailableName(itemKeyPath);
 
 		if (itemStackMap == null) {
 			itemStackMap = new HashMap<>();
 		}
-		itemStackMap.put(itemdataPath, itemstack);
-		cacheItemData.put(getFileName(), itemStackMap);
+		itemStackMap.put(itemKeyPath, itemstack);
+		cacheItemData.put(itemDataPath, itemStackMap);
 
-		saveTask(null);
-		return itemdataPath;
+		saveTask(itemDataPath);
+		return itemKeyPath;
 	}
 
-	public String setCacheItemData(String itemdataPath, ItemStack itemstack, boolean itemIsNull) {
-		Map<String, ItemStack> itemStackMap = cacheItemData.get(getFileName());
+	public String setCacheItemData(final String lootTable, String itemKeyPath, final ItemStack itemstack, final boolean itemIsNull) {
+		final String itemDataPath = getItemDataPath(lootTable);
+		Map<String, ItemStack> itemStackMap = cacheItemData.get(itemDataPath);
 
-		itemdataPath = getFirstAvailableName(itemdataPath);
+		itemKeyPath = getFirstAvailableName(itemKeyPath);
 		if (itemStackMap == null) {
 			itemStackMap = new HashMap<>();
 		}
-		itemStackMap.put(itemdataPath, itemstack);
-		cacheItemData.put(getFileName(), itemStackMap);
-		return itemdataPath;
+		itemStackMap.put(itemKeyPath, itemstack);
+		cacheItemData.put(itemDataPath, itemStackMap);
+		saveTask(itemDataPath);
+		return itemDataPath;
 	}
 
-	public boolean isCacheItemData(String itemKey) {
-		Map<String, ItemStack> data = cacheItemData.get(getFileName());
+	public boolean isCacheItemData(final String itemKey) {
+		final Map<String, ItemStack> data = cacheItemData.get(getFileName());
 
 		if (data != null)
 			return data.get(itemKey) != null;
 		return false;
 	}
 
-	public String getFirstAvailableName(String itemKey) {
+	public String getFirstAvailableName(final String itemKey) {
 		int order = 0;
 		while (isCacheItemData(itemKey + "_" + order))
 			order += 1;
 		return itemKey + "_" + order;
 	}
 
-	@Override
-	public String getFileName() {
-		return fileName;
+
+	public String getItemDataPath(final String lootTableName) {
+		if (!lootTableName.startsWith("item_meta_"))
+			return "item_meta_" + lootTableName;
+		return lootTableName;
 	}
 
 	@Override
-	public void saveDataToFile(File file) {
+	public void saveDataToFile(final File file) {
 
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		customConfig.set("Items", null);
-		for (Map.Entry<String, Map<String, ItemStack>> entry : this.getCacheData().entrySet()) {
+		for (final Map.Entry<String, Map<String, ItemStack>> entry : this.getCacheData().entrySet()) {
+			if (entry.getValue() == null || entry.getValue().isEmpty()) {
+				removeItemData(getNameOfFile(file.getName()));
+				continue;
+			}
+			for (final Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
 
-			for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
 				customConfig.set("Items." + ent.getKey(), ent.getValue());
 			}
 		}
 		try {
 			customConfig.save(file);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(File file) {
+	protected void loadSettingsFromYaml(final File file) {
 		try {
+			customConfig = getCustomConfig();
 			customConfig.load(file);
-			Set<String> value = customConfig.getKeys(false);
+			final Set<String> value = customConfig.getKeys(false);
 			loadSettingsFromYaml(file, value);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
+		} catch (final InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void saveTask(String fileToSave) {
-		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, fileToSave);
-		//runtaskLater(5, () -> save(containerDataFileName), true);
+	public boolean removeItemData(final String fileName) {
+		runtaskLater(5, () -> removeFile(this.getItemDataPath(fileName)), true);
+		return false;
+	}
+
+	public void saveTask(final String lootTableName) {
+		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, this.getItemDataPath(lootTableName));
 	}
 
 	/*
@@ -180,25 +194,18 @@ public class ItemData extends AllYamlFilesInFolder {
 			}
 		}
 	*/
-	protected void loadSettingsFromYaml(File key, Set<String> values) {
-		List<ItemStack> items = new ArrayList<>();
-		Map<String, ItemStack> stack = new HashMap<>();
-		for (String value : values) {
-			ConfigurationSection configs = customConfig.getConfigurationSection(value);
+	protected void loadSettingsFromYaml(final File key, final Set<String> values) {
+		final List<ItemStack> items = new ArrayList<>();
+		final Map<String, ItemStack> stack = new HashMap<>();
+		for (final String value : values) {
+			final ConfigurationSection configs = customConfig.getConfigurationSection(value);
 			if (configs != null) {
-				for (String childrenKey : configs.getKeys(false)) {
-					ItemStack itemStack = customConfig.getItemStack(value + "." + childrenKey);
+				for (final String childrenKey : configs.getKeys(false)) {
+					final ItemStack itemStack = customConfig.getItemStack(value + "." + childrenKey);
 					stack.put(childrenKey, itemStack);
 				}
 			}
 			cacheItemData.put(key.getName().replace(".yml", ""), stack);
-			//items.add(itemStack);
-
 		}
-		fileName = String.valueOf(key.getName().replace(".yml", ""));
-	/*9	if (!items.isEmpty())
-			cacheItemData.put(key.getName().replace(".yml", ""), items.toArray(new ItemStack[0]));*/
-
-		//save("test");
 	}
 }

@@ -113,7 +113,7 @@ Gui_Templets:
       Display_name: "&bSave all items"
       Enchant: true
       Slot: 40
-      Icon: BARRIER
+      Icon: GOLD_BLOCK
       Lore:
         - ""
         - "&2Do you want to"

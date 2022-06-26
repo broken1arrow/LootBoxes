@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.runTask;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.settings.AllYamlFilesInFolder;
+import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -14,12 +14,12 @@ import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtask;
 
 public class SaveDataTask extends BukkitRunnable {
 
-	public SaveDataTask(Lootboxes lootboxes) {
+	public SaveDataTask(final Lootboxes lootboxes) {
 		this.lootboxes = lootboxes;
 	}
 
-	private final Map<AllYamlFilesInFolder, String> cacheSave = new LinkedHashMap<>();
-	private final Map<AllYamlFilesInFolder, String> tempcache = new ConcurrentHashMap<>();
+	private final Map<SimpleYamlHelper, String> cacheSave = new LinkedHashMap<>();
+	private final Map<SimpleYamlHelper, String> tempcache = new ConcurrentHashMap<>();
 	private int amount;
 	private final Lootboxes lootboxes;
 	private BukkitTask task;
@@ -32,13 +32,13 @@ public class SaveDataTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (amount >= 100)
+		if (amount >= 20)
 			task();
 		amount++;
 	}
 
 	public void task() {
-		for (Map.Entry<AllYamlFilesInFolder, String> entry : this.getCacheSave().entrySet())
+		for (final Map.Entry<SimpleYamlHelper, String> entry : this.getCacheSave().entrySet())
 			entry.getKey().save(entry.getValue());
 		this.getCacheSave().clear();
 		amount = 0;
@@ -51,11 +51,11 @@ public class SaveDataTask extends BukkitRunnable {
 		}
 	}
 
-	public Map<AllYamlFilesInFolder, String> getCacheSave() {
+	public Map<SimpleYamlHelper, String> getCacheSave() {
 		return cacheSave;
 	}
 
-	public void addToSaveCache(AllYamlFilesInFolder instance, String filename) {
+	public void addToSaveCache(final SimpleYamlHelper instance, final String filename) {
 		tempcache.put(instance, filename);
 	}
 
