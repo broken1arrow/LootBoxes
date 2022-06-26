@@ -31,15 +31,19 @@ public class ItemData extends SimpleYamlHelper {
 		return cacheItemData;
 	}
 
+	public Map<String, ItemStack> getCachedItems(final String fileName) {
+		return cacheItemData.get(fileName);
+	}
+
 	public ItemStack getCacheItemData(final String filname, final String itemdataPath) {
-		final Map<String, ItemStack> data = cacheItemData.get(filname);
+		final Map<String, ItemStack> data = cacheItemData.get(getItemDataPath(filname));
 		if (data != null)
 			return data.get(itemdataPath);
 		return null;
 	}
 
 	public void removeCacheItemData(final String filname, final String itemdataPath) {
-		final Map<String, ItemStack> data = cacheItemData.get(filname);
+		final Map<String, ItemStack> data = cacheItemData.get(getItemDataPath(filname));
 		if (data != null)
 			data.remove(itemdataPath);
 		saveTask(filname);
@@ -121,16 +125,16 @@ public class ItemData extends SimpleYamlHelper {
 
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		customConfig.set("Items", null);
-		for (final Map.Entry<String, Map<String, ItemStack>> entry : this.getCacheData().entrySet()) {
-			if (entry.getValue() == null || entry.getValue().isEmpty()) {
-				removeItemData(getNameOfFile(file.getName()));
-				continue;
-			}
-			for (final Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
+		final Map<String, ItemStack> cachedItems = this.getCachedItems(getItemDataPath(getNameOfFile(file.getName())));
 
-				customConfig.set("Items." + ent.getKey(), ent.getValue());
+		if (cachedItems != null)
+			for (final Map.Entry<String, ItemStack> entry : cachedItems.entrySet()) {
+				if (entry.getKey() == null || entry.getKey().isEmpty()) {
+					removeItemData(getNameOfFile(file.getName()));
+					continue;
+				}
+				customConfig.set("Items." + entry.getKey(), entry.getValue());
 			}
-		}
 		try {
 			customConfig.save(file);
 		} catch (final IOException e) {
@@ -161,39 +165,6 @@ public class ItemData extends SimpleYamlHelper {
 		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, this.getItemDataPath(lootTableName));
 	}
 
-	/*
-		@Override
-		public void save() {
-			save(null);
-		}
-
-		@Override
-		public void save(String fileToSave) {
-			final File dataFolder = new File(Lootboxes.getInstance().getDataFolder(), "itemdata");
-			final File[] dataFolders = dataFolder.listFiles();
-			if (dataFolder.exists() && dataFolders != null) {
-				for (File file : dataFolders) {
-					String fileName = getNameOfFile(file.getName());
-
-					if (fileToSave == null || fileName.equals(fileToSave)) {
-						customConfig = YamlConfiguration.loadConfiguration(file);
-						customConfig.set("Items", null);
-						for (Map.Entry<String, Map<String, ItemStack>> entry : cacheItemData.entrySet()) {
-
-							for (Map.Entry<String, ItemStack> ent : entry.getValue().entrySet()) {
-								customConfig.set("Items." + ent.getKey(), ent.getValue());
-							}
-						}
-						try {
-							customConfig.save(file);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-	*/
 	protected void loadSettingsFromYaml(final File key, final Set<String> values) {
 		final List<ItemStack> items = new ArrayList<>();
 		final Map<String, ItemStack> stack = new HashMap<>();
@@ -205,7 +176,7 @@ public class ItemData extends SimpleYamlHelper {
 					stack.put(childrenKey, itemStack);
 				}
 			}
-			cacheItemData.put(key.getName().replace(".yml", ""), stack);
+			cacheItemData.put(getItemDataPath(key.getName().replace(".yml", "")), stack);
 		}
 	}
 }
