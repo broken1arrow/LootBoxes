@@ -205,7 +205,10 @@ public abstract class SimpleYamlHelper {
 			this.getCustomConfig().set(this.yamlMainpath, null);
 			for (final Map.Entry<?, ?> childrenKey : serialize().entrySet())
 				if (childrenKey != null) {
-					this.getCustomConfig().set(this.yamlMainpath + "." + childrenKey.getKey(), childrenKey.getValue());
+					final Object obj = childrenKey.getValue();
+				/*	if (obj instanceof Particle)
+						obj = obj.toString();*/
+					this.getCustomConfig().set(this.yamlMainpath + "." + childrenKey.getKey(), obj);
 				}
 			this.getCustomConfig().save(file);
 		} catch (final Exception ex) {

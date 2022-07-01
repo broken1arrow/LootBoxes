@@ -32,7 +32,7 @@ public class ContainersLinkedList extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
-	public ContainersLinkedList(String container, String itemsToSearchFor) {
+	public ContainersLinkedList(final String container, final String itemsToSearchFor) {
 		super(Arrays.asList(ContainerDataCache.getInstance().getLinkedContainerData(container).keySet().toArray()));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
@@ -41,18 +41,18 @@ public class ContainersLinkedList extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 
 
 			/*	if (clickType.isLeftClick())
-					new SeachForItem(container, "").start(player);
+					new SeachInMenu(container, "").start(player);
 				else
 					new ContainersLinkedList(container, "").menuOpen(player);*/
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -61,13 +61,13 @@ public class ContainersLinkedList extends MenuHolder {
 
 		itemList = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 
 				if (o instanceof Location) {
 
-					ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 					if (containerDataBuilder != null) {
-						ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+						final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 						Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
 						if (containerDataMap == null)
 							containerDataMap = new HashMap<>();
@@ -78,10 +78,10 @@ public class ContainersLinkedList extends MenuHolder {
 							containerDataCache.setContainerData(container, builder.build());
 						}
 						if (clickType.isLeftClick()) {
-							TeleportPlayer teleport = new TeleportPlayer(player, (Location) o);
+							final TeleportPlayer teleport = new TeleportPlayer(player, (Location) o);
 							if (teleport.teleportPlayer()) {
-								Location teleportLoc = teleport.getFinalTeleportLoc();
-								
+								final Location teleportLoc = teleport.getFinalTeleportLoc();
+
 								if (teleportLoc.getZ() - 0.5 == ((Location) o).getZ() && teleportLoc.getX() - 0.5 == ((Location) o).getX())
 									CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
 								else if (teleportLoc.equals(o))
@@ -100,12 +100,12 @@ public class ContainersLinkedList extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(Object object) {
+			public ItemStack getItem(final Object object) {
 
 				Location location = null;
 				if (object instanceof Location)
 					location = (Location) object;
-				GuiTempletsYaml gui;
+				final GuiTempletsYaml gui;
 				if (location != null)
 					gui = guiTemplets.menuKey("Container_list").placeholders(location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ()).build();
 				else
@@ -128,7 +128,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -146,20 +146,20 @@ public class ContainersLinkedList extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}
 		};
 		backButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -172,12 +172,12 @@ public class ContainersLinkedList extends MenuHolder {
 
 
 	@Override
-	public MenuButton getFillButtonAt(Object o) {
+	public MenuButton getFillButtonAt(final Object o) {
 		return itemList;
 	}
 
 	@Override
-	public MenuButton getButtonAt(int slot) {
+	public MenuButton getButtonAt(final int slot) {
 
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
 			return seachButton;

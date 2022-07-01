@@ -8,9 +8,11 @@ import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
+import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
 import org.brokenarrow.lootboxes.listener.*;
 import org.brokenarrow.lootboxes.lootdata.*;
+import org.brokenarrow.lootboxes.runTask.HeavyTasks;
 import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.runTask.SaveDataTask;
 import org.brokenarrow.lootboxes.settings.ChatMessages;
@@ -41,11 +43,12 @@ public class Lootboxes extends JavaPlugin {
 	private ParticleEffectList particleEffectList;
 	private MobList mobList;
 	private boolean placeholderAPIMissing;
-
+	private CheckChunkLoadUnload checkChunkLoadUnload;
 	private CommandRegister commandRegister;
+	private SpawnContainerEffectsTask spawnContainerEffectsTask;
 	private SpawnedContainers spawnedContainers;
 	private MakeLootTable makeLootTable;
-
+	private HeavyTasks heavyTasks;
 	private RandomUntility randomUntility;
 	private RegisterNbtAPI nbtAPI;
 	private LandProtectingLoader landProtectingLoader;
@@ -75,6 +78,9 @@ public class Lootboxes extends JavaPlugin {
 		this.makeLootTable = new MakeLootTable();
 		this.saveDataTask = new SaveDataTask(this);
 		this.saveDataTask.start();
+		this.checkChunkLoadUnload = new CheckChunkLoadUnload(this);
+		this.heavyTasks = new HeavyTasks();
+		this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
 		reloadFiles();
 		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
@@ -82,10 +88,12 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new OpenContainer(), this);
 		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
 		Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
+		Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
 		new RegisterMenuAPI(this);
 		commandRegister = new CommandRegister(this, "lootbox");
 		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand(), new GetKeyCommand());
 		this.mobList = new MobList();
+		heavyTasks.start();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
 			 * We register the EventListener here, when PlaceholderAPI is installed.
@@ -126,8 +134,20 @@ public class Lootboxes extends JavaPlugin {
 		return plugin;
 	}
 
+	public HeavyTasks getHeavyTasks() {
+		return heavyTasks;
+	}
+
+	public SpawnContainerEffectsTask getSpawnContainerEffectsTask() {
+		return spawnContainerEffectsTask;
+	}
+
 	public RunTask getRunTask() {
 		return this.runTask;
+	}
+
+	public CheckChunkLoadUnload getCheckChunkLoadUnload() {
+		return checkChunkLoadUnload;
 	}
 
 	public RegisterNbtAPI getNbtAPI() {

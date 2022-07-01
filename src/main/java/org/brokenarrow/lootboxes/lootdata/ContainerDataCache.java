@@ -7,6 +7,7 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.convertStringList;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.isLocation;
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
@@ -28,6 +30,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	private static final ContainerDataCache instance = new ContainerDataCache();
 	private final Map<String, ContainerDataBuilder> cacheContainerData = new HashMap<>();
 	private final Map<Location, LocationData> chachedLocations = new HashMap<>();
+	private final Map<String, List<Location>> chunkData = new HashMap<>();
 
 	public ContainerDataCache() {
 		super("container_data.db", "Data", true, true);
@@ -63,8 +66,10 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		} else
 			cacheKeysData = keysDataMap;
 		for (final Location location : linkedContainerData) {
-			if (location != null)
+			if (location != null) {
 				putChachedLocations(location, new LocationData(continerDataName, cacheKeysData));
+				setChunkData(location);
+			}
 		}
 	}
 
@@ -83,6 +88,50 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 	public ContainerDataBuilder getCacheContainerData(final String container) {
 		return cacheContainerData.get(container);
+	}
+
+	/**
+	 * Set list of locations contected to same chunk.
+	 *
+	 * @param location were the container is placed.
+	 */
+	public void setChunkData(final Location location) {
+
+		final int x = location.getBlockX() >> 4;
+		final int z = location.getBlockZ() >> 4;
+		final List<Location> list = new ArrayList<>();
+		final List<Location> locationList = this.chunkData.get(x + "=" + z);
+		if (locationList != null) {
+			if (!locationList.isEmpty())
+				list.addAll(locationList);
+		}
+		if (!list.contains(location))
+			list.add(location);
+		this.chunkData.put(x + "=" + z, list);
+	}
+
+	/**
+	 * Get list of locations where continers are located
+	 * in the chunk.
+	 *
+	 * @param x the container is placed in.
+	 * @return list of locations.
+	 */
+	public List<Location> getChunkData(final int x, final int z) {
+		return this.chunkData.get(x + "=" + z);
+	}
+
+	/**
+	 * Get list of locations where continers are located
+	 * in the chunk.
+	 *
+	 * @param chunk the container is placed in.
+	 * @return list of locations.
+	 */
+	public List<Location> getChunkData(final Chunk chunk) {
+		final int x = chunk.getX();
+		final int z = chunk.getZ();
+		return this.chunkData.get(x + "=" + z);
 	}
 
 	public Map<Location, ContainerData> getLinkedContainerData(final String container) {
@@ -246,6 +295,10 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		addChachedLocation(containerData, new HashMap<>(), new HashMap<>());
 		if (!containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
+		final ContainerDataBuilder data = this.getCacheContainerData(containerData);
+		if (data != null)
+			for (final Location location : data.getLinkedContainerData().keySet())
+				setChunkData(location);
 		saveTask();
 	}
 
@@ -332,7 +385,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 							.setContainerDataLinkedToLootTable(lootTableLinked)
 							.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 							.setCooldown(cooldown)
-							.setParticleEffect(animation)
+							.setParticleEffect(convertStringList(animation))
 							.setEnchant(enchant)
 							.setIcon(icon)
 							.setDisplayname(display_name)

@@ -1093,7 +1093,7 @@ Gui_Templets:
       Lore:
         - ""
         - "&aLeftclick to teleport to container."
-        - "&Raightclick to remove this container."
+        - "&aRightclick to remove this container."
     Seach_button:
       Display_name: "&bSeach for a location"
       Enchant: true
@@ -1266,15 +1266,15 @@ Gui_Templets:
   # Customize with mobs shall drop this key menu.
   Key_Settings_MobDrop:
     Menu_Size: 45
-    Menu_Title: "&1Edit this key: {0}"
+    Menu_Title: "&1Edit mob drops: {0}"
     Mobs_some_drop_this_key:
-      Display_name: "&bChange the dropps"
+      Display_name: "&bChange the mobs"
       Enchant: true
       Icon: FIREWORK_STAR
       Slot: 19
       Lore:
         - "&aChange the mobs some dropp this key"
-        - "Current mobs dropp this key: "
+        - "&aCurrent mobs dropp this key: "
         - "&6{0}"
     Change_Chance:
       Display_name: "&bCurrent Chance {0}"

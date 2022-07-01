@@ -21,9 +21,9 @@ public class ParticleEffectList {
 		}*/
 	}
 
-	public List<Particle> getParticleList(String enchantMentsToSearchFor) {
-		if (enchantMentsToSearchFor != null && !enchantMentsToSearchFor.isEmpty())
-			return particleList.stream().filter((effect) -> effect.name().contains(enchantMentsToSearchFor.toUpperCase())).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
+	public List<Particle> getParticleList(final String particleToSearchFor) {
+		if (particleToSearchFor != null && !particleToSearchFor.isEmpty())
+			return particleList.stream().filter((effect) -> effect.name().contains(particleToSearchFor.toUpperCase())).sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
 		return particleList;
 
 	}

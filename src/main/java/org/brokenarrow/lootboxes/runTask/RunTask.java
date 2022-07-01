@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.Random;
 
 public class RunTask extends BukkitRunnable {
-	public RunTask(Lootboxes lootboxes) {
+	public RunTask(final Lootboxes lootboxes) {
 		this.lootboxes = lootboxes;
 	}
 
@@ -26,7 +26,7 @@ public class RunTask extends BukkitRunnable {
 	public void run() {
 		this.lootboxes.getSpawnLootContainer().task();
 		this.lootboxes.getSpawnedContainers().task();
-
+		this.lootboxes.getSpawnContainerEffectsTask().runTask();
 
 	}
 

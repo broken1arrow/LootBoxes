@@ -9,14 +9,10 @@ import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.KEY_SETTINGS_MOBDROP;
 
@@ -31,7 +27,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettings();
 
-	public KeySettingsMobDrop(String continerData, String keyName) {
+	public KeySettingsMobDrop(final String continerData, final String keyName) {
 
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, "");
 
@@ -41,17 +37,15 @@ public class KeySettingsMobDrop extends MenuHolder {
 
 		this.setMobsDropThisKey = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				new EntityTypeListMenu(KEY_SETTINGS_MOBDROP, continerData, keyName, "").menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				List<String> list = new ArrayList<>();
-				for (EntityType entety : data.getEntityTypes())
-					list.add(entety.name());
-				GuiTempletsYaml gui = guiTemplets.menuKey("Mobs_some_drop_this_key").placeholders(data.getEntityTypes(), data != null ? data.getKeyName() : "").build();
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Mobs_some_drop_this_key").placeholders(data != null ? data.getEntityTypes() : "", data != null ? data.getKeyName() : "").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -60,9 +54,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 		};
 		this.changeChance = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				KeyMobDropData.Builder builder = data.getBuilder();
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+				final KeyMobDropData.Builder builder = data.getBuilder();
 
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
@@ -85,9 +79,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
 
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data != null ? data.getChance() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data != null ? data.getChance() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -96,9 +90,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 		};
 		this.changeMiniAmount = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				KeyMobDropData.Builder builder = data.getBuilder();
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+				final KeyMobDropData.Builder builder = data.getBuilder();
 
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
@@ -120,8 +114,8 @@ public class KeySettingsMobDrop extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data != null ? data.getMinimum() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data != null ? data.getMinimum() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -130,9 +124,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 		};
 		this.changeMaxAmount = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				KeyMobDropData.Builder builder = data.getBuilder();
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+				final KeyMobDropData.Builder builder = data.getBuilder();
 
 				int amount = 0;
 				if (clickType == ClickType.LEFT)
@@ -154,8 +148,8 @@ public class KeySettingsMobDrop extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data != null ? data.getMaximum() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data != null ? data.getMaximum() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -166,13 +160,13 @@ public class KeySettingsMobDrop extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
 				new EditKeysToOpen.EditKey(continerData, keyName).menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -184,7 +178,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getButtonAt(int slot) {
+	public MenuButton getButtonAt(final int slot) {
 
 		if (guiTemplets.menuKey("Mobs_some_drop_this_key").build().getSlot().contains(slot))
 			return setMobsDropThisKey;

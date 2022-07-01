@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
-import org.brokenarrow.lootboxes.commandprompt.SeachForItem;
+import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -28,7 +28,7 @@ public class MatrialList extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
-	public MatrialList(MenuKeys menuKey, String value, String container, String itemsToSearchFor) {
+	public MatrialList(final MenuKeys menuKey, final String value, final String container, final String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
@@ -37,17 +37,17 @@ public class MatrialList extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 
 				if (clickType.isLeftClick())
-					new SeachForItem(MenuKeys.MATRIALLIST_MENU, menuKey, container, value).start(player);
+					new SeachInMenu(MenuKeys.MATRIALLIST_MENU, menuKey, container, value).start(player);
 				else
 					new MatrialList(menuKey, value, container, "").menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -56,13 +56,13 @@ public class MatrialList extends MenuHolder {
 
 		itemList = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				if (o instanceof Material) {
 
 					if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
-						ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+						final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
 						if (containerDataBuilder != null) {
-							ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+							final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 							builder.setIcon((Material) o);
 							containerDataCache.setContainerData(container, builder.build());
 							new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
@@ -86,7 +86,7 @@ public class MatrialList extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(Object object) {
+			public ItemStack getItem(final Object object) {
 
 				ItemStack itemstack = null;
 				if (object instanceof Material)
@@ -95,7 +95,7 @@ public class MatrialList extends MenuHolder {
 					itemstack = (ItemStack) object;
 				if (itemstack == null)
 					return null;
-				GuiTempletsYaml gui = guiTemplets.menuKey("Item_list").placeholders("", itemstack.getType()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Item_list").placeholders("", itemstack.getType()).build();
 				return CreateItemUtily.of(itemstack, gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}
@@ -112,7 +112,7 @@ public class MatrialList extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -129,14 +129,14 @@ public class MatrialList extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}
 		};
 		backButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
@@ -148,7 +148,7 @@ public class MatrialList extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -161,12 +161,12 @@ public class MatrialList extends MenuHolder {
 
 
 	@Override
-	public MenuButton getFillButtonAt(Object o) {
+	public MenuButton getFillButtonAt(final Object o) {
 		return itemList;
 	}
 
 	@Override
-	public MenuButton getButtonAt(int slot) {
+	public MenuButton getButtonAt(final int slot) {
 
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
 			return seachButton;

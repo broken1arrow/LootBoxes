@@ -286,7 +286,7 @@ public class ModifyContinerData extends MenuHolder {
 			animation = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
-					new ParticleAnimantion(container).menuOpen(player);
+					new ParticleAnimantion(container, "").menuOpen(player);
 				}
 
 				@Override

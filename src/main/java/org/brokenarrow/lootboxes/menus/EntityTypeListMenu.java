@@ -4,7 +4,7 @@ import org.apache.commons.lang.WordUtils;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
-import org.brokenarrow.lootboxes.commandprompt.SeachForItem;
+import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -33,7 +33,7 @@ public class EntityTypeListMenu extends MenuHolder {
 	private final Lootboxes plugin = Lootboxes.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 
-	public EntityTypeListMenu(MenuKeys menuKey, String container, String value, String itemsToSearchFor) {
+	public EntityTypeListMenu(final MenuKeys menuKey, final String container, final String value, final String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMobList().getEntityTypeList(itemsToSearchFor));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "EntityType_List_Menu").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
@@ -42,17 +42,17 @@ public class EntityTypeListMenu extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 
 				if (clickType.isLeftClick())
-					new SeachForItem(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
+					new SeachInMenu(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
 				else
 					new EntityTypeListMenu(menuKey, container, value, "").menuOpen(player);
 			}
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -61,13 +61,13 @@ public class EntityTypeListMenu extends MenuHolder {
 
 		entityTypeList = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 
 				if (o instanceof EntityType) {
 					if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
-						KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
-						KeyMobDropData.Builder builder = data.getBuilder();
-						List<EntityType> entityTypes = data.getEntityTypes();
+						final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
+						final KeyMobDropData.Builder builder = data.getBuilder();
+						final List<EntityType> entityTypes = data.getEntityTypes();
 
 						if (clickType == ClickType.LEFT) {
 							entityTypes.add((EntityType) o);
@@ -88,15 +88,15 @@ public class EntityTypeListMenu extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(Object object) {
+			public ItemStack getItem(final Object object) {
 
 				if (object instanceof EntityType) {
-					KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
-					Material material = plugin.getMobList().makeSpawnEggs((EntityType) object);
+					final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
+					final Material material = plugin.getMobList().makeSpawnEggs((EntityType) object);
 
-					GuiTempletsYaml gui = guiTemplets.menuKey("EntityType_list").placeholders(WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), material).build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("EntityType_list").placeholders(WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), material).build();
 					return CreateItemUtily.of(material, gui.getDisplayName(),
-							gui.getLore()).setGlow(data.getEntityTypes().contains(object)).makeItemStack();
+							gui.getLore()).setGlow(data != null && data.getEntityTypes().contains(object)).makeItemStack();
 				}
 				return null;
 			}
@@ -112,7 +112,7 @@ public class EntityTypeListMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
@@ -128,14 +128,14 @@ public class EntityTypeListMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
 				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}
 		};
 		backButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
 				if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
@@ -150,7 +150,7 @@ public class EntityTypeListMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -163,12 +163,12 @@ public class EntityTypeListMenu extends MenuHolder {
 
 
 	@Override
-	public MenuButton getFillButtonAt(Object o) {
+	public MenuButton getFillButtonAt(final Object o) {
 		return entityTypeList;
 	}
 
 	@Override
-	public MenuButton getButtonAt(int slot) {
+	public MenuButton getButtonAt(final int slot) {
 
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
 			return seachButton;

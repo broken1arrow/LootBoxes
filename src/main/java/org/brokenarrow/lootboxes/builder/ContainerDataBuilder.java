@@ -3,15 +3,18 @@ package org.brokenarrow.lootboxes.builder;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castList;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
+import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.convertStringList;
 
 public final class ContainerDataBuilder implements ConfigurationSerializable {
 
@@ -19,7 +22,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private final Material icon;
 	private final String displayname;
 	private final List<String> lore;
-	private final List<String> particleEffect;
+	private final List<Particle> particleEffect;
 	private final Map<Location, ContainerData> containerData;
 	private final Map<String, KeysData> keysData;
 	private final boolean spawningContainerWithCooldown;
@@ -28,7 +31,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private final long cooldown;
 	private final Builder builder;
 
-	private ContainerDataBuilder(Builder builder) {
+	private ContainerDataBuilder(final Builder builder) {
 
 		this.lootTableLinked = builder.containerDataLinkedToLootTable;
 		this.particleEffect = builder.particleEffect;
@@ -48,7 +51,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return lootTableLinked;
 	}
 
-	public List<String> getParticleEffects() {
+	public List<Particle> getParticleEffects() {
 		return particleEffect;
 	}
 
@@ -99,7 +102,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		private Material icon;
 		private String displayname;
 		private List<String> lore;
-		private List<String> particleEffect;
+		private List<Particle> particleEffect;
 		private Map<Location, ContainerData> containerData;
 		private Map<String, KeysData> keysData;
 		private boolean spawningContainerWithCooldown;
@@ -107,57 +110,57 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		private boolean randomSpawn;
 		private long cooldown;
 
-		public Builder setContainerDataLinkedToLootTable(String ContainerDataLinkedToLootTable) {
+		public Builder setContainerDataLinkedToLootTable(final String ContainerDataLinkedToLootTable) {
 			this.containerDataLinkedToLootTable = ContainerDataLinkedToLootTable;
 			return this;
 		}
 
-		public Builder setParticleEffect(List<String> particleEffect) {
+		public Builder setParticleEffect(final List<Particle> particleEffect) {
 			this.particleEffect = particleEffect;
 			return this;
 		}
 
-		public Builder setIcon(Material icon) {
+		public Builder setIcon(final Material icon) {
 			this.icon = icon;
 			return this;
 		}
 
-		public Builder setDisplayname(String displayname) {
+		public Builder setDisplayname(final String displayname) {
 			this.displayname = displayname;
 			return this;
 		}
 
-		public Builder setLore(List<String> lore) {
+		public Builder setLore(final List<String> lore) {
 			this.lore = lore;
 			return this;
 		}
 
-		public Builder setContainerData(Map<Location, ContainerData> containerData) {
+		public Builder setContainerData(final Map<Location, ContainerData> containerData) {
 			this.containerData = containerData;
 			return this;
 		}
 
-		public Builder setKeysData(Map<String, KeysData> keysData) {
+		public Builder setKeysData(final Map<String, KeysData> keysData) {
 			this.keysData = keysData;
 			return this;
 		}
 
-		public Builder setSpawningContainerWithCooldown(boolean spawningContainerWithCooldown) {
+		public Builder setSpawningContainerWithCooldown(final boolean spawningContainerWithCooldown) {
 			this.spawningContainerWithCooldown = spawningContainerWithCooldown;
 			return this;
 		}
 
-		public Builder setEnchant(boolean enchant) {
+		public Builder setEnchant(final boolean enchant) {
 			this.enchant = enchant;
 			return this;
 		}
 
-		public Builder setRandomSpawn(boolean randomSpawn) {
+		public Builder setRandomSpawn(final boolean randomSpawn) {
 			this.randomSpawn = randomSpawn;
 			return this;
 		}
 
-		public Builder setCooldown(long cooldown) {
+		public Builder setCooldown(final long cooldown) {
 			this.cooldown = cooldown;
 			return this;
 		}
@@ -211,12 +214,12 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	@NotNull
 	@Override
 	public Map<String, Object> serialize() {
-		Map<String, Object> keysData = new LinkedHashMap<>();
+		final Map<String, Object> keysData = new LinkedHashMap<>();
 		keysData.put("LootTable_linked", this.lootTableLinked);
 		keysData.put("Icon", this.icon + "");
 		keysData.put("Display_name", this.displayname);
 		keysData.put("Lore", this.lore);
-		keysData.put("Particle_effect", this.particleEffect);
+		keysData.put("Particle_effect", this.particleEffect.stream().map(Enum::name).collect(Collectors.toList()));
 		keysData.put("Spawn_with_cooldown", this.spawningContainerWithCooldown);
 		keysData.put("Enchant", this.enchant);
 		keysData.put("Random_spawn", this.randomSpawn);
@@ -226,29 +229,29 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return keysData;
 	}
 
-	public static ContainerDataBuilder deserialize(Map<String, Object> map) {
+	public static ContainerDataBuilder deserialize(final Map<String, Object> map) {
 
 
-		String lootTableLinked = (String) map.get("LootTable_linked");
-		String icon = (String) map.get("Icon");
-		String displayName = (String) map.get("Display_name");
-		List<String> lore = castList((List<?>) map.get("Lore"), String.class);
-		List<String> particleEffect = castList((List<?>) map.get("Particle_effect"), String.class);
-		Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
-		Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
-		boolean spawningContainerWithCooldown = (boolean) map.get("Spawn_with_cooldown");
-		boolean enchant = (boolean) map.get("Enchant");
-		boolean randomSpawn = (boolean) map.get("Random_spawn");
-		long cooldown = (Integer) map.get("Cooldown");
+		final String lootTableLinked = (String) map.get("LootTable_linked");
+		final String icon = (String) map.get("Icon");
+		final String displayName = (String) map.get("Display_name");
+		final List<String> lore = castList((List<?>) map.get("Lore"), String.class);
+		final List<String> particleEffect = castList((List<?>) map.get("Particle_effect"), String.class);
+		final Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
+		final Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
+		final boolean spawningContainerWithCooldown = (boolean) map.get("Spawn_with_cooldown");
+		final boolean enchant = (boolean) map.get("Enchant");
+		final boolean randomSpawn = (boolean) map.get("Random_spawn");
+		final long cooldown = (Integer) map.get("Cooldown");
 		Valid.checkNotNull(icon, "Material is null for this container");
 		Material material = Material.getMaterial(icon);
 		if (material == null)
 			material = Material.CHEST;
-		ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder()
+		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder()
 				.setContainerDataLinkedToLootTable(lootTableLinked)
 				.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 				.setCooldown(cooldown)
-				.setParticleEffect(particleEffect)
+				.setParticleEffect(convertStringList(particleEffect))
 				.setEnchant(enchant)
 				.setIcon(material)
 				.setDisplayname(displayName)
