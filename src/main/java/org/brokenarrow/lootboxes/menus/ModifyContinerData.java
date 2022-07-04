@@ -292,7 +292,7 @@ public class ModifyContinerData extends MenuHolder {
 				@Override
 				public ItemStack getItem() {
 
-					final GuiTempletsYaml gui = guiTemplets.menuKey("Particle_Animantion").placeholders("", containerDataCache.getCacheContainerData(container).getParticleEffects()).build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Particle_Animantion").placeholders("", containerDataCache.getParticlesList(container)).build();
 					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
 							gui.getLore()).makeItemStack();
 				}

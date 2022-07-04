@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
@@ -17,6 +18,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MatrialList extends MenuHolder {
 
 	private final MenuButton backButton;
@@ -28,9 +32,11 @@ public class MatrialList extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
-	public MatrialList(final MenuKeys menuKey, final String value, final String container, final String itemsToSearchFor) {
+	public MatrialList(final MenuKeys menuKey, final Object value, final String container, final String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders("");
+		final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
+
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
@@ -60,22 +66,44 @@ public class MatrialList extends MenuHolder {
 				if (o instanceof Material) {
 
 					if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
-						final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
-						if (containerDataBuilder != null) {
-							final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+
+						if (data != null) {
+							final ContainerDataBuilder.Builder builder = data.getBuilder();
 							builder.setIcon((Material) o);
 							containerDataCache.setContainerData(container, builder.build());
 							new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 						}
 					}
 					if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
-						containerDataCache.setKeyData(KeysToSave.ITEM_TYPE, o, container, value);
-						new EditKeysToOpen.EditKey(container, value).menuOpen(player);
+						containerDataCache.setKeyData(KeysToSave.ITEM_TYPE, o, container, (String) value);
+						new EditKeysToOpen.EditKey(container, (String) value).menuOpen(player);
 
 					}
 					if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
-						lootItems.setLootData(LootDataSave.ITEM, container, value, o);
-						new CustomizeItem(container, value).menuOpen(player);
+						lootItems.setLootData(LootDataSave.ITEM, container, (String) value, o);
+						new CustomizeItem(container, (String) value).menuOpen(player);
+					}
+
+					if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
+						final ContainerDataBuilder.Builder builder = data.getBuilder();
+						final ParticleEffect particleEffect = data.getParticleEffect(value);
+						List<ParticleEffect> particleEffectList = data.getParticles();
+
+						if (particleEffect != null) {
+							final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
+							if (clickType.isLeftClick())
+								particleBuilder.setMaterial((Material) o);
+							if (clickType.isRightClick())
+								particleBuilder.setMaterial(null);
+							if (particleEffectList == null)
+								particleEffectList = new ArrayList<>();
+							else
+								particleEffectList.remove(particleEffect);
+							particleEffectList.add(particleBuilder.build());
+							builder.setParticleEffects(particleEffectList);
+							containerDataCache.setContainerData(container, builder.build());
+						}
+						new ParticleSettings(container, value).menuOpen(player);
 					}
 				}
 			}
@@ -140,9 +168,14 @@ public class MatrialList extends MenuHolder {
 				if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
-					new EditKeysToOpen.EditKey(container, value).menuOpen(player);
+					new EditKeysToOpen.EditKey(container, (String) value).menuOpen(player);
 				if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
-					new CustomizeItem(container, value).menuOpen(player);
+					new CustomizeItem(container, (String) value).menuOpen(player);
+				}
+				if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
+					new ParticleSettings(container, value).menuOpen(player);
+
+
 				}
 			}
 

@@ -2,9 +2,7 @@ package org.brokenarrow.lootboxes;
 
 
 import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
-import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
@@ -29,8 +27,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
 
-import static org.brokenarrow.lootboxes.untlity.ServerVersion.setServerVersion;
-
 
 public class Lootboxes extends JavaPlugin {
 	private RunTask runTask;
@@ -53,6 +49,7 @@ public class Lootboxes extends JavaPlugin {
 	private RegisterNbtAPI nbtAPI;
 	private LandProtectingLoader landProtectingLoader;
 	private SaveDataTask saveDataTask;
+	private ServerVersion serverVersion;
 
 	@Override
 	public void onLoad() {
@@ -62,10 +59,13 @@ public class Lootboxes extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		setServerVersion(this);
+		this.serverVersion = new ServerVersion(this);
+
 		ConfigurationSerialization.registerClass(KeysData.class);
 		ConfigurationSerialization.registerClass(ContainerData.class);
 		ConfigurationSerialization.registerClass(ContainerDataBuilder.class);
+		ConfigurationSerialization.registerClass(ParticleEffect.class);
+		ConfigurationSerialization.registerClass(ParticleDustOptions.class);
 		this.nbtAPI = new RegisterNbtAPI(this, false);
 		this.settings = new Settings();
 		this.randomUntility = new RandomUntility();
@@ -114,7 +114,9 @@ public class Lootboxes extends JavaPlugin {
 
 	public void reloadFiles() {
 		this.settings.reload();
+	
 		ContainerDataCache.getInstance().reload();
+
 		GuiTempletSettings.getInstance().reload();
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
@@ -140,6 +142,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public SpawnContainerEffectsTask getSpawnContainerEffectsTask() {
 		return spawnContainerEffectsTask;
+	}
+
+	public ServerVersion getServerVersion() {
+		return serverVersion;
 	}
 
 	public RunTask getRunTask() {

@@ -79,8 +79,6 @@ public abstract class SimpleYamlHelper {
 		final int pos = name.lastIndexOf(".");
 		if (pos == -1)
 			return name + "." + this.getExtension();
-		System.out.println("checkIfFileHasExtensio " + name.substring(pos + 1));
-		System.out.println("checkIfFileHasExtensio " + name);
 		this.setExtension(name.substring(pos));
 		return name;
 	}
@@ -136,9 +134,9 @@ public abstract class SimpleYamlHelper {
 			if (!file.exists()) {
 				this.plugin.saveResource(file.getName(), false);
 			}
-			if (this.firstLoad)
+			if (this.firstLoad) {
 				this.customConfig = YamlConfiguration.loadConfiguration(file);
-			else
+			} else
 				this.customConfig.load(file);
 			loadSettingsFromYaml(file);
 		}

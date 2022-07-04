@@ -806,11 +806,60 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
+  # Settings for particle in this menu.
+  Particle_Settings:
+    Menu_Size: 45
+    Menu_Title: "&1Edit this particle {0}"
+    Matrial:
+      Display_name: "&6Change matrial {0}"
+      Enchant: false
+      Icon: GOLDEN_APPLE
+      Slot: 10
+      Lore:
+        - "&6"
+        - "&aCurrent matrial is:&6 {1} "
+    Data:
+      Display_name: "&6Change data {0}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 12
+      Lore:
+        - "&6"
+        - "&aCurrent data is:&6 {1} "
+    Colors:
+      Display_name: "&6Change colors {0}"
+      Enchant: false
+      Icon: RED_WOOL
+      Slot: 14
+      Lore:
+        - "&6"
+        - "&aCurrent colors set:&6 {1} "
+    Particle_Size:
+      Display_name: "&6Change size {0}"
+      Enchant: false
+      Icon: CYAN_DYE
+      Slot: 16
+      Lore:
+        - "&6"
+        - "&aSize of the particle (for"
+        - "&aredstone particle)."
+        - "&6"
+        - "&aCurrent size:&6 {1} "
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amenu before."
+  ######################################################
   # List_of loot tables in this menu. click on one to set the table to your
   # containers shall use to spawn items.
   List_of_loottables:
     Menu_Size: 45
-    Menu_Title: "&1List of loottables. Page: {0}"
+    Menu_Title: "&1List of loottables"
     # slots you want to use to add items inside.
     FillSpace: 9-35
     Loot_Tables:

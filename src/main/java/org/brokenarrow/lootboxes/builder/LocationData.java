@@ -2,12 +2,12 @@ package org.brokenarrow.lootboxes.builder;
 
 import java.util.Map;
 
-public class LocationData {
+public final class LocationData {
 
 	private final String continerData;
 	private final Map<String, KeysData> keys;
 
-	public LocationData(String continerData, Map<String, KeysData> keys) {
+	public LocationData(final String continerData, final Map<String, KeysData> keys) {
 		this.continerData = continerData;
 		this.keys = keys;
 	}

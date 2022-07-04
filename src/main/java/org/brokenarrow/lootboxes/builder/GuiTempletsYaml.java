@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GuiTempletsYaml {
+public final class GuiTempletsYaml {
 
 	private final Player player;
 	private final UUID uuid;
@@ -26,7 +26,7 @@ public class GuiTempletsYaml {
 	private final GuiTempletSettings guiTemplets = GuiTempletSettings.getInstance();
 	private static final Lootboxes plugin = Lootboxes.getInstance();
 
-	private GuiTempletsYaml(Builder builder) {
+	private GuiTempletsYaml(final Builder builder) {
 		this.player = builder.player;
 		this.uuid = builder.uuid;
 		this.placeholders = builder.placeholder;
@@ -54,7 +54,7 @@ public class GuiTempletsYaml {
 		return menuItemKey;
 	}
 
-	public static GuiTempletsYaml of(Player player, String menuName, String menuItemKey, Object... placeholder) {
+	public static GuiTempletsYaml of(final Player player, final String menuName, final String menuItemKey, final Object... placeholder) {
 		return new Builder(player, menuName, menuItemKey).placeholders(placeholder).build();
 	}
 
@@ -88,36 +88,36 @@ public class GuiTempletsYaml {
 	}
 
 
-	public String getDisplayName(Player player, String menuName, String menuItemKey, Object... placeholder) {
+	public String getDisplayName(final Player player, final String menuName, final String menuItemKey, final Object... placeholder) {
 		if (player != null)
 			if (!plugin.isPlaceholderAPIMissing())
 				return PlaceholderAPI.setPlaceholders(player, getDisplayName(menuName, menuItemKey, placeholder));
 		return getDisplayName(menuName, menuItemKey, placeholder);
 	}
 
-	public String getDisplayName(String menuName, String menuItemKey, Object... placeholders) {
+	public String getDisplayName(final String menuName, final String menuItemKey, final Object... placeholders) {
 		if (menuName != null && menuItemKey != null) {
-			Guidata displayname = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			final Guidata displayname = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.DisplayName, displayname))
 				return translatePlaceholders(displayname.getDisplayname(), placeholders);
 		}
 		return "";
 	}
 
-	public List<String> getLore(Player player, String menuName, String menuItemKey, Object... placeholder) {
+	public List<String> getLore(final Player player, final String menuName, final String menuItemKey, final Object... placeholder) {
 		if (player != null)
 			if (!plugin.isPlaceholderAPIMissing())
 				return PlaceholderAPI.setPlaceholders(player, getLore(menuName, menuItemKey, placeholder));
 		return getLore(menuName, menuItemKey, placeholder);
 	}
 
-	public List<String> getLore(String menuName, String menuItemKey, Object... placeholders) {
-		List<String> lores = new ArrayList<>();
+	public List<String> getLore(final String menuName, final String menuItemKey, final Object... placeholders) {
+		final List<String> lores = new ArrayList<>();
 		if (menuName != null && menuItemKey != null) {
-			Guidata guidata = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			final Guidata guidata = guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.Lore, guidata))
-				for (String lore : guidata.getLore()) {
-					boolean containsPlaceholder = checkListForPlaceholders(lores, lore, placeholders);
+				for (final String lore : guidata.getLore()) {
+					final boolean containsPlaceholder = checkListForPlaceholders(lores, lore, placeholders);
 					/*if (lore.contains("{" + containsList(placeholders) + "}") && containsList(placeholders) != -1)
 						for (Object text : (List<?>) placeholders[containsList(placeholders)])
 							lores.add(lore.replace("{" + containsList(placeholders) + "}", text));*/
@@ -129,12 +129,12 @@ public class GuiTempletsYaml {
 		return Collections.singletonList("");
 	}
 
-	public static boolean checkListForPlaceholders(List<String> lores, String lore, Object... placeholder) {
-		int number = containsList(placeholder);
+	public static boolean checkListForPlaceholders(final List<String> lores, final String lore, final Object... placeholder) {
+		final int number = containsList(placeholder);
 		if (number < 0) return false;
 
 		if (lore.contains("{" + number + "}")) {
-			for (Object text : (List<?>) placeholder[number])
+			for (final Object text : (List<?>) placeholder[number])
 				if (text instanceof String)
 					lores.add(lore.replace(("{" + number + "}"), (String) text));
 				else
@@ -144,7 +144,7 @@ public class GuiTempletsYaml {
 		return false;
 	}
 
-	public static int containsList(Object... placeholder) {
+	public static int containsList(final Object... placeholder) {
 		if (placeholder != null)
 			for (int i = 0; i < placeholder.length; i++)
 				if (placeholder[i] instanceof List)
@@ -152,7 +152,7 @@ public class GuiTempletsYaml {
 		return -1;
 	}
 
-	public static String translatePlaceholders(String rawText, Object... placeholders) {
+	public static String translatePlaceholders(String rawText, final Object... placeholders) {
 
 		if (placeholders != null)
 			for (int i = 0; i < placeholders.length; i++) {
@@ -163,9 +163,9 @@ public class GuiTempletsYaml {
 		return ifContainsBoolen(rawText);
 	}
 
-	public String getGuiTitle(String menuName, Object... placeholders) {
+	public String getGuiTitle(final String menuName, final Object... placeholders) {
 		if (menuName != null) {
-			Map<String, Guidata> gui = this.guiTemplets.getGuiValues(menuName);
+			final Map<String, Guidata> gui = this.guiTemplets.getGuiValues(menuName);
 			if (gui != null)
 				return ChatColor.translateAlternateColorCodes('&', translatePlaceholders(gui.get(menuName).getMenuTitle(), placeholders));
 		}
@@ -176,14 +176,14 @@ public class GuiTempletsYaml {
 		return getFillSpace(this.menuName, null);
 	}
 
-	public List<Integer> getFillSpace(String menuItemKey) {
+	public List<Integer> getFillSpace(final String menuItemKey) {
 		return getFillSpace(this.menuName, menuItemKey);
 	}
 
-	public List<Integer> getFillSpace(String menuName, String menuItemKey) {
-		List<Integer> slotList = new ArrayList<>();
+	public List<Integer> getFillSpace(final String menuName, final String menuItemKey) {
+		final List<Integer> slotList = new ArrayList<>();
 		if (menuName != null) {
-			Guidata guiData;
+			final Guidata guiData;
 			if (menuItemKey == null)
 				guiData = guiTemplets.getGuiValues(menuName).get(menuName);
 			else
@@ -191,30 +191,30 @@ public class GuiTempletsYaml {
 
 			if (!checkNull(menuName, null, YamlKeys.FillSpace, guiData)) return new ArrayList<>();
 
-			String slots = guiData.getMenuFillSpace();
+			final String slots = guiData.getMenuFillSpace();
 			try {
-				for (String slot : slots.split(",")) {
+				for (final String slot : slots.split(",")) {
 					if (slot.equals("")) {
 						continue;
 					}
 					if (slot.contains("-")) {
-						int firstSlot = Integer.parseInt(slot.split("-")[0]);
-						int lastSlot = Integer.parseInt(slot.split("-")[1]);
+						final int firstSlot = Integer.parseInt(slot.split("-")[0]);
+						final int lastSlot = Integer.parseInt(slot.split("-")[1]);
 						slotList.addAll(IntStream.rangeClosed(firstSlot, lastSlot).boxed().collect(Collectors.toList()));
 					} else
 						slotList.add(Integer.valueOf(slot));
 
 				}
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				throw new NumberFormatException("can not parse this " + slots + " as numbers.");
 			}
 		}
 		return slotList;
 	}
 
-	public int getMaxAmountOfItems(String menuName) {
+	public int getMaxAmountOfItems(final String menuName) {
 		if (menuName != null) {
-			Guidata guiData = guiTemplets.getGuiValues(menuName).get(menuName);
+			final Guidata guiData = guiTemplets.getGuiValues(menuName).get(menuName);
 			if (checkNull(menuName, null, YamlKeys.MaxAmountOfItems, guiData))
 				return guiData.getMenuMaxAmountOfItems();
 		}
@@ -223,27 +223,27 @@ public class GuiTempletsYaml {
 
 	public int getGuiSize() {
 		if (this.menuName != null) {
-			Guidata guiData = this.guiTemplets.getGuiValues(this.menuName).get(this.menuName);
+			final Guidata guiData = this.guiTemplets.getGuiValues(this.menuName).get(this.menuName);
 			if (checkNull(this.menuName, null, YamlKeys.GuiSize, guiData))
 				return guiData.getMenuSize();
 		}
 		return 9;
 	}
 
-	public int getGuiSize(String menuName) {
+	public int getGuiSize(final String menuName) {
 		if (menuName != null) {
-			Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName);
+			final Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName);
 			if (checkNull(menuName, null, YamlKeys.GuiSize, guiData))
 				return guiData.getMenuSize();
 		}
 		return 9;
 	}
 
-	public List<Integer> getSlot(String menuName, String menuItemKey) {
-		List<Integer> slotList = new ArrayList<>();
+	public List<Integer> getSlot(final String menuName, final String menuItemKey) {
+		final List<Integer> slotList = new ArrayList<>();
 		String slots = null;
 		if (menuName != null && menuItemKey != null) {
-			Guidata guidata = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			final Guidata guidata = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (checkNull(menuName, menuItemKey, YamlKeys.Slot, guidata))
 				slots = guidata.getSlot();
 
@@ -251,33 +251,33 @@ public class GuiTempletsYaml {
 				return new ArrayList<>();
 
 			try {
-				for (String slot : slots.split(",")) {
+				for (final String slot : slots.split(",")) {
 					if (slot.equals("")) {
 						continue;
 					}
 					if (slot.contains("-")) {
-						int firstSlot = Integer.parseInt(slot.split("-")[0]);
-						int lastSlot = Integer.parseInt(slot.split("-")[1]);
+						final int firstSlot = Integer.parseInt(slot.split("-")[0]);
+						final int lastSlot = Integer.parseInt(slot.split("-")[1]);
 						slotList.addAll(IntStream.rangeClosed(firstSlot, lastSlot).boxed().collect(Collectors.toList()));
 					} else
 						slotList.add(Integer.valueOf(slot));
 
 				}
-			} catch (NumberFormatException e) {
+			} catch (final NumberFormatException e) {
 				throw new NumberFormatException("can not parse this " + slots + " as numbers.");
 			}
 		}
 		return slotList;
 	}
 
-	public ItemStack getIcon(String menuName, String menuItemKey, UUID player) {
+	public ItemStack getIcon(final String menuName, final String menuItemKey, final UUID player) {
 
 		if (menuName != null && menuItemKey != null) {
-			Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
+			final Guidata guiData = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey);
 			if (!checkNull(menuName, menuItemKey, YamlKeys.Icon, guiData)) return null;
 
-			String icon = guiData.getIcon();
-			boolean glow = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey).isGlow();
+			final String icon = guiData.getIcon();
+			final boolean glow = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey).isGlow();
 
 			if (icon.startsWith("uuid="))
 				return SkullCreator.itemFromUuid(UUID.fromString(icon.replaceFirst("uuid=", "")));
@@ -295,7 +295,7 @@ public class GuiTempletsYaml {
 		return CreateItemUtily.of(null).makeItemStack();
 	}
 
-	private static String ifContainsBoolen(String text) {
+	private static String ifContainsBoolen(final String text) {
 		if (text.contains("true"))
 			return text.replace("true", ChatMessages.TRUE.languageMessages());
 		else if (text.contains("false"))
@@ -304,13 +304,13 @@ public class GuiTempletsYaml {
 			return text;
 	}
 
-	public static List<String> colorize(List<String> original) {
+	public static List<String> colorize(final List<String> original) {
 		return original.stream().map(line -> ChatColor.translateAlternateColorCodes(
 				'&', line)).collect(Collectors.toList());
 	}
 
 
-	private static boolean checkNull(String menu, String menuItemKey, YamlKeys typeOfKeyMissing, Guidata object) {
+	private static boolean checkNull(final String menu, final String menuItemKey, final YamlKeys typeOfKeyMissing, final Guidata object) {
 		if (object == null)
 			plugin.getLogger().log(Level.INFO, "In this menu " + menu + (menuItemKey != null ? " and this icon " + menuItemKey : "") + ", do you missing this " + typeOfKeyMissing.name() + " key in your guitemplet.yml.");
 		return object != null;
@@ -339,33 +339,33 @@ public class GuiTempletsYaml {
 		private Builder() {
 		}
 
-		public Builder(Player player, String menuName) {
+		public Builder(final Player player, final String menuName) {
 			this.player = player;
 			this.menuName = menuName;
 		}
 
-		public Builder(Player player, String menuName, String menuKey) {
+		public Builder(final Player player, final String menuName, final String menuKey) {
 			this.player = player;
 			this.menuName = menuName;
 			this.menuKey = menuKey;
 		}
 
-		public Builder menuName(String menuName) {
+		public Builder menuName(final String menuName) {
 			this.menuName = menuName;
 			return this;
 		}
 
-		public Builder menuKey(String menuKey) {
+		public Builder menuKey(final String menuKey) {
 			this.menuKey = menuKey;
 			return this;
 		}
 
-		public Builder uuid(UUID uuid) {
+		public Builder uuid(final UUID uuid) {
 			this.uuid = uuid;
 			return this;
 		}
 
-		public Builder placeholders(Object... placeholder) {
+		public Builder placeholders(final Object... placeholder) {
 			this.placeholder = placeholder;
 			return this;
 		}

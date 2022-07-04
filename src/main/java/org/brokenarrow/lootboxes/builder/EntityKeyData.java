@@ -1,10 +1,10 @@
 package org.brokenarrow.lootboxes.builder;
 
-public class EntityKeyData {
+public final class EntityKeyData {
 	private final String keyName;
 	private final String containerDataFileName;
 
-	public EntityKeyData(String keyName, String containerDataFileName) {
+	public EntityKeyData(final String keyName, final String containerDataFileName) {
 		this.keyName = keyName;
 		this.containerDataFileName = containerDataFileName;
 	}

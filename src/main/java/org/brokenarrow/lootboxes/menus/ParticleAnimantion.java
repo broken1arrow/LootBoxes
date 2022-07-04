@@ -3,11 +3,15 @@ package org.brokenarrow.lootboxes.menus;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
+import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
+import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Location;
@@ -17,8 +21,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
 
@@ -31,8 +36,10 @@ public class ParticleAnimantion extends MenuHolder {
 	private final MenuButton seachButton;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-	private final org.brokenarrow.lootboxes.lootdata.ItemData itemData = org.brokenarrow.lootboxes.lootdata.ItemData.getInstance();
+	private final ItemData itemData = ItemData.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
+	private final ParticleEffectList particleEffectList = Lootboxes.getInstance().getParticleEffectList();
+	private final SpawnContainerEffectsTask spawnContainerEffectsTask = Lootboxes.getInstance().getSpawnContainerEffectsTask();
 	private final GuiTempletsYaml.Builder guiTemplets;
 
 	public ParticleAnimantion(final String container, final String particleToSearchFor) {
@@ -50,7 +57,7 @@ public class ParticleAnimantion extends MenuHolder {
 				if (click.isLeftClick())
 					new SeachInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
 				else
-					new ParticleAnimantion(container, "");
+					new ParticleAnimantion(container, "").menuOpen(player);
 			}
 
 			@Override
@@ -86,26 +93,34 @@ public class ParticleAnimantion extends MenuHolder {
 				if (object instanceof Particle) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					final ContainerDataBuilder.Builder builder = data.getBuilder();
-					final List<Particle> particleEffect = data.getParticleEffects();
-					final Particle particle = (Particle) object;
-					if (particleEffect != null) {
+					if (click.isRightClick()) {
+						data.removeParticle(object);
+					} else {
+						final Particle particle = (Particle) object;
+						if (particle.getDataType() != Void.class)
+							new ParticleSettings(container, object).menuOpen(player);
+						List<ParticleEffect> particleEffect = data.getParticles();
+						ParticleEffect.Builder particleBuilder = new ParticleEffect.Builder();
+						if (particleEffect == null)
+							particleEffect = new ArrayList<>();
+
 						if (!particleEffect.isEmpty())
-							player.sendMessage("You change the loottable from " + data.getLootTableLinked() + " to " + object);
+							player.sendMessage("Your added effects before " + particleEffect.stream().map(effect -> effect.getParticle() != null ? effect.getParticle() : effect.getEffect()).collect(Collectors.toList()) + " ,new effect added " + object);
+						particleBuilder.setParticle(particle);
+						if (click.isLeftClick()) {
+							if (data.containsParticle(particle)) {
+								player.sendMessage("You not change this " + particle + " effect from the the old one in list");
+							} else
+								particleEffect.add(particleBuilder.build());
+						}
 
-						if (particleEffect.contains(particle))
-							player.sendMessage("Your change do not change the loottable is same as the old, old " + data.getLootTableLinked() + " new name " + object);
-						if (click.isLeftClick())
-							particleEffect.add(particle);
-						if (click.isRightClick())
-							particleEffect.remove(particle);
 					}
-
-					builder.setParticleEffect(particleEffect != null ? particleEffect : Collections.singletonList(particle));
 					containerDataCache.setContainerData(container, builder.build());
-					for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
-						Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+					if (click.isLeftClick()) {
+						for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
+							spawnContainerEffectsTask.addLocationInList(location);
 
-					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
+					}
 				}
 			}
 
@@ -119,13 +134,12 @@ public class ParticleAnimantion extends MenuHolder {
 			public ItemStack getItem(final Object object) {
 
 				if (object instanceof Particle) {
-					final GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(((Particle) object).name().equals("BLOCK_MARKER") ? "BARRIER" : object).build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(object).build();
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-					final List<Particle> particleEffect = data.getParticleEffects();
 
-					return CreateItemUtily.of(Lootboxes.getInstance().getParticleEffectList().checkParticleList((Particle) object),
+					return CreateItemUtily.of(particleEffectList.checkParticleList((Particle) object),
 							gui.getDisplayName(),
-							gui.getLore()).setGlow(particleEffect.contains((Particle) object)).makeItemStack();
+							gui.getLore()).setGlow(data.containsParticle(object)).makeItemStack();
 				}
 			/*	if (object instanceof ItemStack) {
 					ItemStack item = ((ItemStack) object);

@@ -43,6 +43,18 @@ SPECIFY_TIME:
   TYPE_TIME: "&fType in time in seconds"
   CONFIRM: "&fHave now set time: {0}"
 
+SET_DATA_ON_PARTICLE:
+  START_TYPE: "&fType in valid number from 0 to for examle 10."
+
+SET_COLOR_ON_PARTICLE:
+  START_TYPE: "&fType in valid numbers like this 1,255,50, the order is r,g,b."
+
+SET_PARTICLE_SIZE:
+  START_TYPE: "&fType in valid numbers from 1 to for examle 10, for set size of particle"
+  ZERO_OR_LESS: "&fyou can't set value below 0."
+
+NOT_VALID_NUMBER: "&fThis {0} is not a valid number."
+
 ADD_CONTINERS:
   TURNED_ON_ADD_CONTAINERS: "&fLeftclick to add location and rightclick to remove location,turn off while leftclicking air and sneaking."
   TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "&fLeftclick to add location and rightclick to remove location, for turn it off dropp item or switch slot."

@@ -16,12 +16,12 @@ public final class ContainerData implements ConfigurationSerializable {
 	private final BlockFace facing;
 	private final Material containerType;
 
-	public ContainerData(BlockFace facing, Material containerType) {
+	public ContainerData(final BlockFace facing, final Material containerType) {
 		this.facing = facing;
 		this.containerType = containerType;
 	}
 
-	public ContainerData(String facing, String containerType) {
+	public ContainerData(final String facing, final String containerType) {
 		this.facing = addBlockFace(facing);
 		this.containerType = addMatrial(containerType);
 	}
@@ -29,7 +29,7 @@ public final class ContainerData implements ConfigurationSerializable {
 
 	public BlockFace addBlockFace(final String facing) {
 		checkNotNull(facing, "This block face are null.");
-		BlockFace blockFace = Enums.getIfPresent(BlockFace.class, facing).orNull();
+		final BlockFace blockFace = Enums.getIfPresent(BlockFace.class, facing).orNull();
 		checkNotNull(blockFace, "This " + facing + " are not valid");
 
 		return blockFace;
@@ -37,8 +37,8 @@ public final class ContainerData implements ConfigurationSerializable {
 
 	public Material addMatrial(final String containerType) {
 		checkNotNull(containerType, "This containerType are null.");
-		Material material = Enums.getIfPresent(Material.class, containerType).orNull();
-		checkNotNull(material, "This " + containerType + " are not valid");
+		final Material material = Material.getMaterial(containerType);
+		checkNotNull(material, "This material " + containerType + " are not valid");
 
 		return material;
 	}
@@ -70,16 +70,15 @@ public final class ContainerData implements ConfigurationSerializable {
 	@NotNull
 	@Override
 	public Map<String, Object> serialize() {
-		Map<String, Object> keysData = new LinkedHashMap<>();
+		final Map<String, Object> keysData = new LinkedHashMap<>();
 		keysData.put("facing", facing + "");
 		keysData.put("containerType", containerType + "");
 		return keysData;
 	}
 
-	public static ContainerData deserialize(Map<String, Object> map) {
-		//Material itemType = Material.getMaterial((String) map.get("itemType"));
-		String facing = (String) map.get("facing");
-		String containerType = (String) map.get("containerType");
+	public static ContainerData deserialize(final Map<String, Object> map) {
+		final String facing = (String) map.get("facing");
+		final String containerType = (String) map.get("containerType");
 
 		return new ContainerData(facing,
 				containerType);

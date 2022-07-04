@@ -2,16 +2,12 @@ package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.builder.LocationData;
+import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -77,7 +73,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		if (container.contains(" "))
 			container = container.trim().replace(" ", "_");
 		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
-		builder.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffect(new ArrayList<>())
+		builder.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffects(new ArrayList<>())
 				.setEnchant(false).setIcon(material).setDisplayname("").setLore(new ArrayList<>()).setContainerData(new HashMap<>())
 				.setKeysData(new HashMap<>());
 
@@ -88,6 +84,24 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 	public ContainerDataBuilder getCacheContainerData(final String container) {
 		return cacheContainerData.get(container);
+	}
+
+	@Nullable
+	public ParticleEffect getParticleEffect(final String container, Object particle) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		if (containerDataBuilder != null)
+			return containerDataBuilder.getParticleEffect(particle);
+		return null;
+	}
+
+	public List<Particle> getParticlesList(final String container) {
+		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		if (containerDataBuilder != null) {
+			List<ParticleEffect> list = containerDataBuilder.getParticles();
+			if (list != null)
+				return list.stream().map(ParticleEffect::getParticle).collect(Collectors.toList());
+		}
+		return new ArrayList<>();
 	}
 
 	/**
@@ -291,7 +305,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	public void setContainerData(final String containerData, final ContainerDataBuilder containerDataBuilder) {
 		//ContainerDataBuilder lootDataMap = cacheContainerData.get(lootTable);
 		cacheContainerData.put(containerData, containerDataBuilder);
-
+		System.out.println("setContainerData " + containerDataBuilder);
 		addChachedLocation(containerData, new HashMap<>(), new HashMap<>());
 		if (!containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
@@ -313,6 +327,8 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 	@Override
 	public Map<?, ?> serialize() {
+		if (this.cacheContainerData.isEmpty()) return null;
+
 		final Map<String, Object> serializeData = new LinkedHashMap<>();
 		for (final String childrenKey : this.cacheContainerData.keySet())
 			if (childrenKey != null) {
@@ -385,7 +401,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 							.setContainerDataLinkedToLootTable(lootTableLinked)
 							.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 							.setCooldown(cooldown)
-							.setParticleEffect(convertStringList(animation))
+							.setParticleEffects(convertToParticleEffect(convertStringList(animation)))
 							.setEnchant(enchant)
 							.setIcon(icon)
 							.setDisplayname(display_name)
@@ -404,6 +420,27 @@ public class ContainerDataCache extends SimpleYamlHelper {
 					addContainerToSpawnTask(mainKey, builder.getCooldown());
 
 			}
+	}
+
+	public List<ParticleEffect> convertToParticleEffect(List<?> objectList) {
+		List<ParticleEffect> list = new ArrayList<>();
+		if (objectList == null || objectList.isEmpty()) return list;
+
+		for (final Object particle : objectList) {
+			final ParticleEffect.Builder builder = new ParticleEffect.Builder();
+			if (particle instanceof Particle) {
+
+				final Particle part = (Particle) particle;
+				builder.setParticle(part).setDataType(part.getDataType());
+			} else if (particle instanceof Effect) {
+
+				final Effect part = (Effect) particle;
+				builder.setEffect(part).setDataType(part.getData());
+			}
+			list.add(builder.build());
+		}
+
+		return list;
 	}
 
 	public static ContainerDataCache getInstance() {

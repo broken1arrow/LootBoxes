@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import com.google.common.base.Enums;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -28,7 +29,7 @@ public class MobList {
 
 			// Special cases
 			if (type.name().equals("ZOMBIFIED_PIGLIN"))
-				if (ServerVersion.newerThan(ServerVersion.v1_15))
+				if (Lootboxes.getInstance().getServerVersion().newerThan(ServerVersion.Version.v1_15))
 					name = "ZOMBIFIED_PIGLIN_SPAWN_EGG";
 				else
 					name = "ZOMBIE_PIGMAN_SPAWN_EGG";

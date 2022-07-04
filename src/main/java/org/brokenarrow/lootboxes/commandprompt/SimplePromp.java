@@ -13,6 +13,8 @@ public abstract class SimplePromp extends ValidatingPrompt implements Cloneable 
 
 	protected abstract String getPrompt(ConversationContext context);
 
+	private Player player = null;
+
 	@NotNull
 	@Override
 	public final String getPromptText(final @NotNull ConversationContext context) {
@@ -24,6 +26,20 @@ public abstract class SimplePromp extends ValidatingPrompt implements Cloneable 
 		return true;
 	}
 
+	public final SimpleConversation start(final Player player) {
+		this.player = player;
+
+		SimpleConversation conversation = new SimpleConversation() {
+			@Override
+			protected Prompt getFirstPrompt() {
+				return SimplePromp.this;
+			}
+
+		};
+		conversation.start(player);
+		return conversation;
+	}
+	
 	/**
 	 * Called when the whole conversation is over. This is called before {@link SimpleConversation#onConversationEnd(ConversationAbandonedEvent)}
 	 *

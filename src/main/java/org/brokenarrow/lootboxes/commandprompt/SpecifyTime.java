@@ -38,7 +38,12 @@ public class SpecifyTime extends SimpleConversation {
 			ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(container));
 			if (data != null) {
 				ContainerDataBuilder.Builder builder = data.getBuilder();
-				builder.setCooldown(Long.parseLong(input));
+				try {
+					builder.setCooldown(Long.parseLong(input));
+				} catch (NumberFormatException e) {
+					getPlayer(context).sendRawMessage("this " + input + " are not valid number");
+					return getFirstPrompt();
+				}
 				containerDataCache.setContainerData(container, builder.build());
 				SPECIFY_TIME_CONFIRM.sendMessage(getPlayer(context), input);
 			}

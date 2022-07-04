@@ -18,9 +18,9 @@ public class SeachInMenu extends SimpleConversation {
 	private MenuKeys menuAcces;
 	private final MenuKeys menuKey;
 	private final String lootTable;
-	private final String itemToEdit;
+	private final Object itemToEdit;
 
-	public SeachInMenu(final MenuKeys menuAcces, final MenuKeys menuKey, final String nameOfTableOrContainer, final String itemToEdit) {
+	public SeachInMenu(final MenuKeys menuAcces, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
 		this.menuAcces = menuAcces;
 		this.menuKey = menuKey;
 		this.lootTable = nameOfTableOrContainer;
@@ -46,7 +46,7 @@ public class SeachInMenu extends SimpleConversation {
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
 			if (menuAcces == ENTITY_TYPE_LISTMENU)
-				new EntityTypeListMenu(menuKey, lootTable, itemToEdit, input).menuOpen(getPlayer(context));
+				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
 			if (menuAcces == PARTICLE_ANIMANTION)
 				new ParticleAnimantion(lootTable, input).menuOpen(getPlayer(context));
 			else

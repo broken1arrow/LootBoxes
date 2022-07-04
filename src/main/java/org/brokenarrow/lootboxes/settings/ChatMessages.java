@@ -64,6 +64,10 @@ public class ChatMessages extends SimpleYamlHelper {
 	public static ChatMessages CONTINER_IS_NOT_OBSTACLE = new ChatMessages("TELEPORT.CONTINER_IS_NOT_OBSTACLE");
 	public static ChatMessages CONTINER_IS_OBSTACLE_ON_ALL_SIDES = new ChatMessages("TELEPORT.CONTINER_IS_OBSTACLE_ON_ALL_SIDES");
 	public static ChatMessages CONTINER_IS_OBSTACLE_ON_SOME_SIDES = new ChatMessages("TELEPORT.CONTINER_IS_OBSTACLE_ON_SOME_SIDES");
+	public static ChatMessages SET_DATA_ON_PARTICLE_START_TYPE = new ChatMessages("SET_DATA_ON_PARTICLE.START_TYPE");
+	public static ChatMessages SET_COLOR_ON_PARTICLE_START_TYPE = new ChatMessages("SET_COLOR_ON_PARTICLE.START_TYPE");
+	public static ChatMessages SET_PARTICLE_SIZE_START_TYPE = new ChatMessages("SET_PARTICLE_SIZE.START_TYPE");
+	public static ChatMessages SET_PARTICLE_SIZE_ZERO_OR_LESS = new ChatMessages("SET_PARTICLE_SIZE.ZERO_OR_LESS");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 	public static ChatMessages RELOAD = new ChatMessages("RELOAD");
 	public static ChatMessages DAY = new ChatMessages("DAY");

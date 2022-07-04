@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.untlity;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class ListOfContainers {
 		materials.add(Material.DROPPER);
 		materials.add(Material.CHEST);
 		materials.add(Material.TRAPPED_CHEST);
-		if (ServerVersion.newerThan(ServerVersion.v1_13))
+		if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_14))
 			materials.add(Material.BARREL);
 
 		return materials;
