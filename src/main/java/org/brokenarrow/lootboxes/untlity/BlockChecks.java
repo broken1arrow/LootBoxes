@@ -82,7 +82,7 @@ public class BlockChecks {
 	 */
 	public static boolean checkBlockIsContainer(Block block) {
 		if (block == null) return false;
-		
+
 		switch (block.getType()) {
 			case HOPPER:
 			case DISPENSER:

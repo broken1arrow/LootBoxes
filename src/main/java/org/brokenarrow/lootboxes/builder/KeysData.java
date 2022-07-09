@@ -127,7 +127,7 @@ public final class KeysData implements ConfigurationSerializable {
 		Map<String, Object> keysData = new LinkedHashMap<>();
 		keysData.put("keyName", keyName);
 		keysData.put("display_name", displayName);
-		keysData.put("lootTable_Linked", lootTableLinked);
+		keysData.put("lootTable_linked", lootTableLinked);
 		keysData.put("amount_of_keys_to_open", amountNeeded);
 		keysData.put("itemType", itemType + "");
 		keysData.put("lore", lore);
@@ -136,11 +136,13 @@ public final class KeysData implements ConfigurationSerializable {
 
 	public static KeysData deserialize(Map<String, Object> map) {
 		String keyName = (String) map.get("keyName");
-		String displayName = (String) map.get("displayName");
+		String displayName = (String) map.get("display_name");
+		if (displayName == null)
+			displayName = (String) map.get("Displayname");
 		Object lootTableLinkedObj = map.get("lootTableLinked");
 		String lootTableLinked;
 		if (lootTableLinkedObj == null)
-			lootTableLinked = (String) map.get("lootTable_Linked");
+			lootTableLinked = (String) map.get("lootTable_linked");
 		else
 			lootTableLinked = (String) lootTableLinkedObj;
 		Object amountNeededObj = map.get("amountNeeded");

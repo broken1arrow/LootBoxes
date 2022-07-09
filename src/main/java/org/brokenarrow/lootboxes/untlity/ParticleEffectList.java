@@ -69,7 +69,6 @@ public class ParticleEffectList {
 	private void cacheParticleWithItemStack() {
 		this.particlesCached.put("ASH", CreateItemUtily.of(Material.COAL).makeItemStack());
 		this.particlesCached.put("BLOCK_DUST", CreateItemUtily.of(Material.HAY_BLOCK).makeItemStack());
-		this.particlesCached.put("BLOCK_MARKER", CreateItemUtily.of(Material.SHIELD).makeItemStack());
 		this.particlesCached.put("BARRIER", CreateItemUtily.of(Material.BARRIER).makeItemStack());
 		this.particlesCached.put("BUBBLE_COLUMN_UP", CreateItemUtily.of(Material.WATER_BUCKET).makeItemStack());
 		this.particlesCached.put("BUBBLE_POP", CreateItemUtily.of(Material.WATER_BUCKET).makeItemStack());
@@ -123,31 +122,33 @@ public class ParticleEffectList {
 		this.particlesCached.put("SNOWFLAKE", CreateItemUtily.of("SNOW_BALL").makeItemStack());
 		ItemStack itemStack = CreateItemUtily.of("MONSTER_EGG").makeItemStack();
 		SpawnEggMeta itemMeta = (SpawnEggMeta) itemStack.getItemMeta();
+		ItemStack itemStackWitch = itemStack.clone();
 		if (itemMeta != null) {
 			itemMeta.setSpawnedType(EntityType.WITCH);
-			itemStack.setItemMeta(itemMeta);
+			itemStackWitch.setItemMeta(itemMeta);
 		}
-		this.particlesCached.put("SPELL", itemStack);
-		this.particlesCached.put("SPELL_INSTANT", itemStack);
-		this.particlesCached.put("SPELL_MOB", itemStack);
-		this.particlesCached.put("SPELL_MOB_AMBIENT", itemStack);
-		this.particlesCached.put("SPELL_WITCH", itemStack);
-
+		this.particlesCached.put("SPELL", itemStackWitch);
+		this.particlesCached.put("SPELL_INSTANT", itemStackWitch);
+		this.particlesCached.put("SPELL_MOB", itemStackWitch);
+		this.particlesCached.put("SPELL_MOB_AMBIENT", itemStackWitch);
+		this.particlesCached.put("SPELL_WITCH", itemStackWitch);
+		ItemStack itemStackLlama = itemStack.clone();
 		if (itemMeta != null) {
 			itemMeta.setSpawnedType(EntityType.LLAMA);
-			itemStack.setItemMeta(itemMeta);
+			itemStackLlama.setItemMeta(itemMeta);
 		}
 
-		this.particlesCached.put("SPIT", itemStack);
+		this.particlesCached.put("SPIT", itemStackLlama);
 		this.particlesCached.put("SQUID_INK", CreateItemUtily.of("INK_SACK").makeItemStack());
+		ItemStack itemStackVillager = itemStack.clone();
 		if (itemMeta != null) {
 			itemMeta.setSpawnedType(EntityType.VILLAGER);
-			itemStack.setItemMeta(itemMeta);
+			itemStackVillager.setItemMeta(itemMeta);
 		}
 		this.particlesCached.put("TOTEM", CreateItemUtily.of("TOTEM").makeItemStack());
 		this.particlesCached.put("TOWN_AURA", CreateItemUtily.of("MYCEL").makeItemStack());
-		this.particlesCached.put("VILLAGER_ANGRY", itemStack);
-		this.particlesCached.put("VILLAGER_HAPPY", itemStack);
+		this.particlesCached.put("VILLAGER_ANGRY", itemStackVillager);
+		this.particlesCached.put("VILLAGER_HAPPY", itemStackVillager);
 
 	}
 
@@ -202,6 +203,8 @@ public class ParticleEffectList {
 	}
 
 	private void itemsAddedIn1_17() {
+		this.particlesCached.put("BLOCK_MARKER", CreateItemUtily.of(Material.SHIELD).makeItemStack());
+		this.particlesCached.put("DUST_COLOR_TRANSITION", CreateItemUtily.of(Material.REDSTONE).makeItemStack());
 		this.particlesCached.put("DRIPPING_DRIPSTONE_LAVA", CreateItemUtily.of(Material.POINTED_DRIPSTONE).makeItemStack());
 		this.particlesCached.put("DRIPPING_DRIPSTONE_WATER", CreateItemUtily.of(Material.POINTED_DRIPSTONE).makeItemStack());
 		this.particlesCached.put("FALLING_DRIPSTONE_LAVA", CreateItemUtily.of(Material.POINTED_DRIPSTONE).makeItemStack());
@@ -227,7 +230,10 @@ public class ParticleEffectList {
 		final ItemStack itemStack = this.particlesCached.get(name);
 		if (itemStack != null)
 			return itemStack.clone();
-		return CreateItemUtily.of(Material.SMOOTH_STONE).makeItemStack().clone();
+		if (version.atLeast(ServerVersion.Version.v1_13))
+			return CreateItemUtily.of(Material.SMOOTH_STONE).makeItemStack().clone();
+		else
+			return CreateItemUtily.of("SMOOTH_STONE").makeItemStack().clone();
 	}
 
 	enum particles {

@@ -54,7 +54,7 @@ public class LinkTool implements Listener {
 		String metadata = nbt.getCompMetadata().getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS.name());
 		if (metadata == null)
 			metadata = nbt.getCompMetadata().getMetadata(itemStack, ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name());
-		
+
 		if (metadata != null) {
 			ADD_CONTINERS_YOU_DROP_LINK_TOOL.sendMessage(player);
 			Inventory inventory = player.getInventory();

@@ -57,7 +57,7 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	public Class<?> getDataType() {
 		return dataType;
 	}
-	
+
 	public ParticleDustOptions getParticleDustOptions() {
 		return particleDustOptions;
 	}

@@ -19,6 +19,7 @@ public class ModifyBlock {
 	public static void setCustomName(Location location, String text) {
 		Block block = location.getBlock();
 		if (!checkBlocktype(block)) return;
+		if (text == null) return;
 		text = TextTranslator.toSpigotFormat(text);
 
 		switch (block.getType()) {

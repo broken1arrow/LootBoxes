@@ -16,7 +16,7 @@ public class Valid {
 		if (!bolen)
 			throw new CatchExceptions(s);
 	}
-	
+
 	public static class CatchExceptions extends RuntimeException {
 		public CatchExceptions(Throwable throwable, String message) {
 			super(message, throwable);

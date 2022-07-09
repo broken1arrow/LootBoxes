@@ -621,7 +621,7 @@ Gui_Templets:
       Display_name: "&bParticle effeckt"
       Enchant: true
       Slot: 12
-      Icon: CHEST
+      Icon: NOTE_BLOCK
       Lore:
         - ""
         - "&2Leftclick to get list of particels you can add."

@@ -39,7 +39,7 @@ public abstract class SimplePromp extends ValidatingPrompt implements Cloneable 
 		conversation.start(player);
 		return conversation;
 	}
-	
+
 	/**
 	 * Called when the whole conversation is over. This is called before {@link SimpleConversation#onConversationEnd(ConversationAbandonedEvent)}
 	 *

@@ -358,7 +358,7 @@ public abstract class SimpleYamlHelper {
 				}
 			} else if (url.getProtocol().equals("jar")) {
 
-				final String dirname = !isSingelFile() ? directoryName : directoryName + "/";
+				final String dirname = isSingelFile() ? directoryName : directoryName + "/";
 				final String path = url.getPath();
 				final String jarPath = path.substring(5, path.indexOf("!"));
 				try (final JarFile jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8.name()))) {
@@ -368,7 +368,7 @@ public abstract class SimpleYamlHelper {
 						final String name = entry.getName();
 						if (!this.isSingelFile() && name.startsWith(this.getFileName())) {
 							filenames.add(name);
-						} else if (name.startsWith(dirname) && !dirname.equals(name)) {
+						} else if (name.startsWith(dirname)) {
 							final URL resource = this.plugin.getClass().getClassLoader().getResource(name);
 							if (resource != null) {
 								filenames.add(name);

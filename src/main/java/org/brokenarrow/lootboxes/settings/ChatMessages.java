@@ -67,8 +67,8 @@ public class ChatMessages extends SimpleYamlHelper {
 	public static ChatMessages SET_DATA_ON_PARTICLE_START_TYPE = new ChatMessages("SET_DATA_ON_PARTICLE.START_TYPE");
 	public static ChatMessages SET_DATA_ON_PARTICLE_ZERO_OR_LESS = new ChatMessages("SET_DATA_ON_PARTICLE.ZERO_OR_LESS");
 	public static ChatMessages SET_COLOR_ON_PARTICLE_START_TYPE = new ChatMessages("SET_COLOR_ON_PARTICLE.START_TYPE");
+	public static ChatMessages SET_COLOR_ON_PARTICLE_NEXT_COLOR = new ChatMessages("SET_COLOR_ON_PARTICLE.NEXT_COLOR");
 	public static ChatMessages SET_PARTICLE_SIZE_START_TYPE = new ChatMessages("SET_PARTICLE_SIZE.START_TYPE");
-	public static ChatMessages SET_PARTICLE_SIZE_NEXT_COLOR = new ChatMessages("SET_PARTICLE_SIZE.NEXT_COLOR");
 	public static ChatMessages SET_PARTICLE_SIZE_ZERO_OR_LESS = new ChatMessages("SET_PARTICLE_SIZE.ZERO_OR_LESS");
 
 	public static ChatMessages NOT_VALID_NUMBER = new ChatMessages("NOT_VALID_NUMBER");

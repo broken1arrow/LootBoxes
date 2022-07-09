@@ -7,7 +7,6 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,6 +27,7 @@ import static org.brokenarrow.lootboxes.untlity.ConvertToTime.toTimeFromMillis;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.*;
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
 import static org.brokenarrow.lootboxes.untlity.PlaySound.playSound;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 
 public class OpenContainer implements Listener {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
@@ -59,10 +59,12 @@ public class OpenContainer implements Listener {
 				List<String> list = new ArrayList<>();
 				for (KeysData values : locationData.getKeys().values()) {
 					if (values.getItemType() == null || values.getItemType().isAir())
-						break;
-					list.add(TranslatePlaceHolders.translatePlaceholders(values.getDisplayName(), values.getKeyName(), values.getLootTableLinked(), values.getAmountNeeded(), values.getItemType()));
+						continue;
+					list.add(translatePlaceholders(values.getDisplayName(), values.getKeyName(), values.getLootTableLinked(), values.getAmountNeeded(), values.getItemType()));
+					System.out.println("values values.getDisplayName() " + values.getDisplayName());
 				}
 				if (!list.isEmpty()) {
+					System.out.println("values " + list);
 					LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
 
 					event.setCancelled(true);
@@ -77,6 +79,12 @@ public class OpenContainer implements Listener {
 			}
 
 			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
+			if (containerData.getLootTableLinked() == null || containerData.getLootTableLinked().isEmpty()) {
+				LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
+				event.setCancelled(true);
+				return;
+			}
+
 			if (!checkIfPlayerHasItem(dataCacheCacheKey, key, player, itemStack)) {
 				event.setCancelled(true);
 			}

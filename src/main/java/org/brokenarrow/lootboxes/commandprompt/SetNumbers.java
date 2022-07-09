@@ -86,7 +86,7 @@ public class SetNumbers extends SimpleConversation {
 
 				particleBuilder.setDustOptions(new ParticleDustOptions(convertToColor(input), dustOptions == null || dustOptions.getSize() <= 0 ? (float) 0.5 : dustOptions.getSize()));
 				containerDataCache.setParticleEffects(container, particle, particleBuilder);
-				if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17))
+				if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) && particle.toString().startsWith("DUST_COLOR_TRANS"))
 					return new SecondNumberValue();
 			}
 			if (dataType == SET_PARTICLE_SIZE) {
@@ -110,7 +110,7 @@ public class SetNumbers extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			return SET_PARTICLE_SIZE_NEXT_COLOR.languageMessages();
+			return SET_COLOR_ON_PARTICLE_NEXT_COLOR.languageMessages();
 		}
 
 		@Nullable

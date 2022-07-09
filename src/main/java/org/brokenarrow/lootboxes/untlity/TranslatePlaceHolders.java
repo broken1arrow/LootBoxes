@@ -41,18 +41,21 @@ public class TranslatePlaceHolders {
 			for (int i = 0; i < placeholders.length; i++) {
 				if (placeholders[i] instanceof List)
 					continue;
+				if (rawText == null) continue;
 				rawText = rawText.replace("{" + i + "}", placeholders[i] != null ? placeholders[i].toString() : "");
 			}
 		return ifContainsBoolen(rawText);
 	}
 
 	private static String ifContainsBoolen(String text) {
-		if (text.contains("true"))
-			return text.replace("true", "yes");//ChatMessages.BOOLEAN_TRUE.languageMessages());
-		else if (text.contains("false"))
-			return text.replace("false", "no");//ChatMessages.BOOLEAN_FALSE.languageMessages());
-		else
-			return text;
+		if (text != null)
+			if (text.contains("true"))
+				return text.replace("true", "yes");//ChatMessages.BOOLEAN_TRUE.languageMessages());
+			else if (text.contains("false"))
+				return text.replace("false", "no");//ChatMessages.BOOLEAN_FALSE.languageMessages());
+			else
+				return text;
+		return "";
 	}
 
 }
