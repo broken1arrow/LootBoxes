@@ -14,6 +14,7 @@ import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
 import org.brokenarrow.menu.library.MenuButton;
 import org.brokenarrow.menu.library.MenuHolder;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -21,11 +22,12 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
+import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
+import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.getEffectType;
 
 public class ParticleAnimantion extends MenuHolder {
 
@@ -90,30 +92,13 @@ public class ParticleAnimantion extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
 
-				if (object instanceof Particle) {
+				if (object instanceof Particle || object instanceof Effect) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					final ContainerDataBuilder.Builder builder = data.getBuilder();
 					if (click.isRightClick()) {
-						data.removeParticle(object);
+						containerDataCache.removeParticleEffect(data, object);
 					} else {
-						final Particle particle = (Particle) object;
-						if (particle.getDataType() != Void.class)
-							new ParticleSettings(container, object).menuOpen(player);
-						List<ParticleEffect> particleEffect = data.getParticles();
-						ParticleEffect.Builder particleBuilder = new ParticleEffect.Builder();
-						if (particleEffect == null)
-							particleEffect = new ArrayList<>();
-
-						if (!particleEffect.isEmpty())
-							player.sendMessage("Your added effects before " + particleEffect.stream().map(effect -> effect.getParticle() != null ? effect.getParticle() : effect.getEffect()).collect(Collectors.toList()) + " ,new effect added " + object);
-						particleBuilder.setParticle(particle);
-						if (click.isLeftClick()) {
-							if (data.containsParticle(particle)) {
-								player.sendMessage("You not change this " + particle + " effect from the the old one in list");
-							} else
-								particleEffect.add(particleBuilder.build());
-						}
-
+						builder.setParticleEffects(setParticelData(player, data, container, object));
 					}
 					containerDataCache.setContainerData(container, builder.build());
 					if (click.isLeftClick()) {
@@ -121,6 +106,7 @@ public class ParticleAnimantion extends MenuHolder {
 							spawnContainerEffectsTask.addLocationInList(location);
 
 					}
+					updateButtons();
 				}
 			}
 
@@ -133,20 +119,20 @@ public class ParticleAnimantion extends MenuHolder {
 			@Override
 			public ItemStack getItem(final Object object) {
 
-				if (object instanceof Particle) {
-					final GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(object).build();
+				if (object instanceof Particle || object instanceof Effect) {
+					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(bountifyCapitalized(object)).build();
+
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
+					boolean containsEffect = containerDataCache.containsParticleEffect(data, object);
+					if (containsEffect)
+						gui = guiTemplets.menuKey("Particle_list_selected").placeholders(bountifyCapitalized(object)).build();
 
-					return CreateItemUtily.of(particleEffectList.checkParticleList((Particle) object),
+
+					return CreateItemUtily.of(particleEffectList.checkParticleList(object),
 							gui.getDisplayName(),
-							gui.getLore()).setGlow(data.containsParticle(object)).makeItemStack();
+							gui.getLore()).setGlow(containsEffect).makeItemStack();
 				}
-			/*	if (object instanceof ItemStack) {
-					ItemStack item = ((ItemStack) object);
-					if (cacheItemData.get(item) == null) return null;
 
-					return item;
-				}*/
 				return null;
 			}
 		};
@@ -189,6 +175,32 @@ public class ParticleAnimantion extends MenuHolder {
 	public MenuButton getFillButtonAt(final Object o) {
 		return listOfItems;
 
+	}
+
+	public Map<Object, ParticleEffect> setParticelData(Player player, ContainerDataBuilder data, String container, Object object) {
+		if ((object instanceof Particle && ((Particle) object).getDataType() != Void.class) || getEffectType(String.valueOf(object)) != getEffectType("PARTICLE"))
+			new ParticleSettings(container, object).menuOpen(player);
+		Map<Object, ParticleEffect> particleEffect = data.getParticleEffects();
+		ParticleEffect.Builder particleBuilder = new ParticleEffect.Builder();
+
+		if (!particleEffect.isEmpty())
+			player.sendMessage("Your added effects before " + particleEffect.values().stream().map(effect -> effect.getParticle() != null ? effect.getParticle() : effect.getEffect()).collect(Collectors.toList()) + " ,new effect added " + object);
+
+		if (object instanceof Particle) {
+			particleBuilder.setParticle((Particle) object);
+			particleBuilder.setDataType(((Particle) object).getDataType());
+		}
+		if (object instanceof Effect) {
+			particleBuilder.setEffect((Effect) object);
+			particleBuilder.setDataType(((Effect) object).getData());
+		}
+
+		if (containerDataCache.containsParticleEffect(data, object)) {
+			player.sendMessage("You not change this " + object + " effect from the the old one in list");
+		} else
+			particleEffect.put(object, particleBuilder.build());
+
+		return particleEffect;
 	}
 
 	@Override

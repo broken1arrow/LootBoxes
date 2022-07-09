@@ -126,20 +126,30 @@ public final class KeysData implements ConfigurationSerializable {
 	public Map<String, Object> serialize() {
 		Map<String, Object> keysData = new LinkedHashMap<>();
 		keysData.put("keyName", keyName);
-		keysData.put("displayName", displayName);
-		keysData.put("lootTableLinked", lootTableLinked);
-		keysData.put("amountNeeded", amountNeeded);
+		keysData.put("display_name", displayName);
+		keysData.put("lootTable_Linked", lootTableLinked);
+		keysData.put("amount_of_keys_to_open", amountNeeded);
 		keysData.put("itemType", itemType + "");
 		keysData.put("lore", lore);
 		return keysData;
 	}
 
 	public static KeysData deserialize(Map<String, Object> map) {
-		//Material itemType = Material.getMaterial((String) map.get("itemType"));
 		String keyName = (String) map.get("keyName");
 		String displayName = (String) map.get("displayName");
-		String lootTableLinked = (String) map.get("lootTableLinked");
-		int amountNeeded = (int) map.get("amountNeeded");
+		Object lootTableLinkedObj = map.get("lootTableLinked");
+		String lootTableLinked;
+		if (lootTableLinkedObj == null)
+			lootTableLinked = (String) map.get("lootTable_Linked");
+		else
+			lootTableLinked = (String) lootTableLinkedObj;
+		Object amountNeededObj = map.get("amountNeeded");
+		int amountNeeded;
+		if (amountNeededObj == null)
+			amountNeeded = (int) map.getOrDefault("amount_of_keys_to_open", 1);
+		else
+			amountNeeded = (int) amountNeededObj;
+
 		String itemType = (String) map.get("itemType");
 		List<?> lore = (List<?>) map.get("lore");
 

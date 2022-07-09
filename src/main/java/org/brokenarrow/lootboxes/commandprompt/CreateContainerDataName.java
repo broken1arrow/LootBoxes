@@ -41,7 +41,7 @@ public class CreateContainerDataName extends SimpleConversation {
 				return getFirstPrompt();
 			}
 			CREATE_CONTAINER_DATA_NAME_CONFIRM.sendMessage(getPlayer(context), input);
-			containerDataCache.setCacheContainerDataCache(input, material);
+			containerDataCache.setNewContainerData(input, material);
 			new ModifyContinerData().menuOpen(getPlayer(context));
 			return null;
 		}

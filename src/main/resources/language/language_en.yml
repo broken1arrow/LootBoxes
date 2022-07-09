@@ -44,14 +44,16 @@ SPECIFY_TIME:
   CONFIRM: "&fHave now set time: {0}"
 
 SET_DATA_ON_PARTICLE:
-  START_TYPE: "&fType in valid number from 0 to for examle 10."
+  START_TYPE: "&fType in valid number from 0 to for examle 10. To go back with out set anything cancel or quit."
+  ZERO_OR_LESS: "&fyou can't set value below 0. You typed {0}"
 
 SET_COLOR_ON_PARTICLE:
-  START_TYPE: "&fType in valid numbers like this 1,255,50, the order is r,g,b."
+  START_TYPE: "&fType in rgb color like this 1,255,50 or 1 255 50, the order is r,g,b. To go back with out set anything cancel or quit."
+  NEXT_COLOR: "&fType in second rgb color like this 1,255,50 or 1 255 50, the order is r,g,b. To go back with out set anything cancel or quit."
 
 SET_PARTICLE_SIZE:
   START_TYPE: "&fType in valid numbers from 1 to for examle 10, for set size of particle"
-  ZERO_OR_LESS: "&fyou can't set value below 0."
+  ZERO_OR_LESS: "&fyou can't set value below 0. You typed {0}"
 
 NOT_VALID_NUMBER: "&fThis {0} is not a valid number."
 

@@ -4,9 +4,11 @@ import com.google.common.base.Enums;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
+import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -20,9 +22,6 @@ import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
 public class ContainerDataCache extends SimpleYamlHelper {
 
-	//private final SimpleYamlHelper yamlFiles;
-//	private File customConfigFile;
-//	private FileConfiguration customConfig;
 	private static final ContainerDataCache instance = new ContainerDataCache();
 	private final Map<String, ContainerDataBuilder> cacheContainerData = new HashMap<>();
 	private final Map<Location, LocationData> chachedLocations = new HashMap<>();
@@ -69,39 +68,102 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		}
 	}
 
-	public void setCacheContainerDataCache(String container, final Material material) {
+	public void setNewContainerData(String container, final Material material) {
 		if (container.contains(" "))
 			container = container.trim().replace(" ", "_");
 		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
-		builder.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffects(new ArrayList<>())
+		builder.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffects(new HashMap<>())
 				.setEnchant(false).setIcon(material).setDisplayname("").setLore(new ArrayList<>()).setContainerData(new HashMap<>())
 				.setKeysData(new HashMap<>());
 
 		cacheContainerData.put(container, builder.build());
 		saveTask();
-		addContainerToSpawnTask(container, 1800);
+		this.addContainerToSpawnTask(container, 1800);
 	}
 
 	public ContainerDataBuilder getCacheContainerData(final String container) {
-		return cacheContainerData.get(container);
+		return this.getCacheContainerData().get(container);
 	}
 
 	@Nullable
 	public ParticleEffect getParticleEffect(final String container, Object particle) {
-		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getParticleEffect(particle);
 		return null;
 	}
 
 	public List<Particle> getParticlesList(final String container) {
-		ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
 		if (containerDataBuilder != null) {
-			List<ParticleEffect> list = containerDataBuilder.getParticles();
-			if (list != null)
-				return list.stream().map(ParticleEffect::getParticle).collect(Collectors.toList());
+
+			Map<Object, ParticleEffect> list = containerDataBuilder.getParticleEffects();
+			return list.values().stream().map(ParticleEffect::getParticle).collect(Collectors.toList());
 		}
 		return new ArrayList<>();
+	}
+
+	public List<ParticleEffect> getParticleEffectList(final String container) {
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
+		if (containerDataBuilder != null) {
+
+			Map<Object, ParticleEffect> list = containerDataBuilder.getParticleEffects();
+			return new ArrayList<>(list.values());
+		}
+		return new ArrayList<>();
+	}
+
+	public boolean containsParticleEffect(@NotNull final String containerData, Object particle) {
+		if (particle == null) return false;
+
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerData);
+		if (containerDataBuilder == null) return false;
+
+		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+		if (particleEffect.isEmpty()) return false;
+
+		return particleEffect.containsKey(particle);
+	}
+
+	public boolean containsParticleEffect(@NotNull final ContainerDataBuilder containerDataBuilder, Object particle) {
+		if (particle == null) return false;
+
+		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+		if (particleEffect.isEmpty()) return false;
+
+		return particleEffect.containsKey(particle);
+	}
+
+	public void removeParticleEffect(@NotNull final String containerData, Object particle) {
+		if (particle == null) return;
+
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerData);
+		if (containerDataBuilder == null) return;
+
+		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+		if (particleEffect.isEmpty()) return;
+
+		particleEffect.remove(particle);
+	}
+
+	public void removeParticleEffect(@NotNull final ContainerDataBuilder containerDataBuilder, Object particle) {
+		if (particle == null) return;
+
+		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+		if (particleEffect.isEmpty()) return;
+
+		particleEffect.remove(particle);
+	}
+
+	public void setParticleEffects(@NotNull final String containerDataName, @NotNull Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
+		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataName);
+		final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
+		final Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+
+		particleEffect.put(particle, particleBuilder.build());
+		builder.setParticleEffects(particleEffect);
+
+		this.setContainerData(containerDataName, builder.build());
 	}
 
 	/**
@@ -160,7 +222,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public ContainerDataBuilder.Builder getCacheContainerBuilder(final String container) {
-		final ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getBuilder();
 
@@ -168,7 +230,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public KeysData getCacheKey(final String container, final String keyName) {
-		final ContainerDataBuilder containerDataBuilder = cacheContainerData.get(container);
+		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
 		if (containerDataBuilder != null) {
 			if (keyName.startsWith("Keys_"))
 				return containerDataBuilder.getKeysData().get(keyName);
@@ -179,7 +241,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public Map<String, KeysData> getCacheKeys(final String containerDataCacheName) {
-		final ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getKeysData();
 
@@ -187,7 +249,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public ContainerData getLinkedContainerData(final String containerDataCacheName, final Location location) {
-		final ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getLinkedContainerData().get(location);
 
@@ -195,7 +257,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public Map<Location, ContainerData> getLinkedContainers(final String containerDataCacheName) {
-		final ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getLinkedContainerData();
 
@@ -212,7 +274,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public Map<String, KeysData> getCacheKeysData(final String containerDataCacheName) {
-		final ContainerDataBuilder containerDataBuilder = cacheContainerData.get(containerDataCacheName);
+		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
 		if (containerDataBuilder != null)
 			return containerDataBuilder.getKeysData();
 
@@ -229,7 +291,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 		builder.setKeysData(keysDataMap);
 
-		this.cacheContainerData.put(containerData, builder.build());
+		this.setContainerData(containerData, builder.build());
 		addChachedLocation(containerData, new HashMap<>(), keysDataMap);
 		if (containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
@@ -272,12 +334,10 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + container + " null");
 		final ContainerDataBuilder containerDataBuilder = builder.setKeysData(keyDataMap).build();
 
-		this.cacheContainerData.put(container, containerDataBuilder);
-		addChachedLocation(container, new HashMap<>(), keyDataMap);
+		this.setContainerData(container, containerDataBuilder);
+		this.addChachedLocation(container, new HashMap<>(), keyDataMap);
 		if (containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(container, containerDataBuilder.getCooldown());
-		saveTask();
-
 	}
 
 	public List<String> getListOfKeys(final String containerDataCacheName) {
@@ -291,7 +351,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public boolean containsContainerData(final String key) {
-		return cacheContainerData.containsKey(key);
+		return this.getCacheContainerData(key) != null;
 	}
 
 	public void addContainerToSpawnTask(final String mainKey, final long cooldown) {
@@ -299,13 +359,12 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	}
 
 	public List<String> getContainerData() {
-		return cacheContainerData.keySet().stream().filter(Objects::nonNull).collect(Collectors.toList());
+		return this.getCacheContainerData().keySet().stream().filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	public void setContainerData(final String containerData, final ContainerDataBuilder containerDataBuilder) {
-		//ContainerDataBuilder lootDataMap = cacheContainerData.get(lootTable);
+
 		cacheContainerData.put(containerData, containerDataBuilder);
-		System.out.println("setContainerData " + containerDataBuilder);
 		addChachedLocation(containerData, new HashMap<>(), new HashMap<>());
 		if (!containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
@@ -327,12 +386,12 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 	@Override
 	public Map<?, ?> serialize() {
-		if (this.cacheContainerData.isEmpty()) return null;
+		if (this.getCacheContainerData().isEmpty()) return null;
 
 		final Map<String, Object> serializeData = new LinkedHashMap<>();
-		for (final String childrenKey : this.cacheContainerData.keySet())
+		for (final String childrenKey : this.getCacheContainerData().keySet())
 			if (childrenKey != null) {
-				final ContainerDataBuilder data = this.cacheContainerData.get(childrenKey);
+				final ContainerDataBuilder data = this.getCacheContainerData().get(childrenKey);
 				serializeData.put(childrenKey, data);
 			}
 		return serializeData;
@@ -346,7 +405,11 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		if (MainConfigKeys != null)
 			for (String mainKey : MainConfigKeys.getKeys(false)) {
 				if (mainKey == null) continue;
-				final ContainerDataBuilder containerDataBuilder = customConfig.getObject("Data." + mainKey, ContainerDataBuilder.class);
+				ContainerDataBuilder containerDataBuilder;
+				if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_13))
+					containerDataBuilder = customConfig.getObject("Data." + mainKey, ContainerDataBuilder.class);
+				else
+					containerDataBuilder = customConfig.getSerializable("Data." + mainKey, ContainerDataBuilder.class);
 				final ContainerDataBuilder builder;
 				System.out.println("containerDataBuilder " + containerDataBuilder);
 				if (containerDataBuilder != null) {
@@ -422,9 +485,9 @@ public class ContainerDataCache extends SimpleYamlHelper {
 			}
 	}
 
-	public List<ParticleEffect> convertToParticleEffect(List<?> objectList) {
-		List<ParticleEffect> list = new ArrayList<>();
-		if (objectList == null || objectList.isEmpty()) return list;
+	public static Map<Object, ParticleEffect> convertToParticleEffect(List<?> objectList) {
+		Map<Object, ParticleEffect> map = new HashMap<>();
+		if (objectList == null || objectList.isEmpty()) return map;
 
 		for (final Object particle : objectList) {
 			final ParticleEffect.Builder builder = new ParticleEffect.Builder();
@@ -437,10 +500,10 @@ public class ContainerDataCache extends SimpleYamlHelper {
 				final Effect part = (Effect) particle;
 				builder.setEffect(part).setDataType(part.getData());
 			}
-			list.add(builder.build());
+			map.put(particle, builder.build());
 		}
 
-		return list;
+		return map;
 	}
 
 	public static ContainerDataCache getInstance() {

@@ -9,11 +9,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castList;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
-import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.convertStringList;
+import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.*;
 
 public final class ContainerDataBuilder implements ConfigurationSerializable {
 
@@ -21,7 +25,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private final Material icon;
 	private final String displayname;
 	private final List<String> lore;
-	private final List<ParticleEffect> particles;
+	private final Map<Object, ParticleEffect> particleEffects;
 	private final Map<Location, ContainerData> containerData;
 	private final Map<String, KeysData> keysData;
 	private final boolean spawningContainerWithCooldown;
@@ -33,7 +37,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private ContainerDataBuilder(final Builder builder) {
 
 		this.lootTableLinked = builder.containerDataLinkedToLootTable;
-		this.particles = builder.particleEffects;
+		this.particleEffects = builder.particleEffects;
 		this.icon = builder.icon;
 		this.displayname = builder.displayname;
 		this.lore = builder.lore;
@@ -50,55 +54,17 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return lootTableLinked;
 	}
 
-	@Nullable
-	public List<ParticleEffect> getParticles() {
-		return particles;
+	@NotNull
+	public Map<Object, ParticleEffect> getParticleEffects() {
+		return particleEffects;
 	}
 
 	@Nullable
 	public ParticleEffect getParticleEffect(final Object o) {
 		if (o == null) return null;
-		if (this.getParticles() == null || this.getParticles().isEmpty()) return null;
+		if (this.getParticleEffects().isEmpty()) return null;
 
-		for (final ParticleEffect particleData : this.getParticles()) {
-			if (particleData.getParticle() != null && particleData.getParticle().equals(o)) {
-				return particleData;
-			}
-			if (particleData.getEffect() != null && particleData.getEffect().equals(o))
-				return particleData;
-		}
-		return null;
-	}
-
-	public boolean containsParticle(final Object o) {
-		if (o == null) return false;
-		if (this.getParticles() == null || this.getParticles().isEmpty()) return false;
-
-		for (final ParticleEffect particleData : this.getParticles()) {
-			if (particleData.getParticle() != null && particleData.getParticle().equals(o)) {
-				return true;
-			}
-			if (particleData.getEffect() != null && particleData.getEffect().equals(o))
-				return true;
-		}
-		return false;
-	}
-
-	public void removeParticle(final Object o) {
-		if (o == null) return;
-		if (this.getParticles() == null) return;
-
-		for (final ListIterator<ParticleEffect> particlesData = this.getParticles().listIterator(); particlesData.hasNext(); ) {
-			final ParticleEffect particleData = particlesData.next();
-			if (particleData.getParticle() != null && particleData.getParticle().equals(o)) {
-				particlesData.remove();
-				return;
-			}
-			if (particleData.getEffect() != null && particleData.getEffect().equals(o)) {
-				particlesData.remove();
-				return;
-			}
-		}
+		return this.getParticleEffects().get(o);
 	}
 
 	public Material getIcon() {
@@ -148,7 +114,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		private Material icon;
 		private String displayname;
 		private List<String> lore;
-		private List<ParticleEffect> particleEffects;
+		private Map<Object, ParticleEffect> particleEffects;
 		private Map<Location, ContainerData> containerData;
 		private Map<String, KeysData> keysData;
 		private boolean spawningContainerWithCooldown;
@@ -161,8 +127,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 			return this;
 		}
 
-		public Builder setParticleEffects(final List<ParticleEffect> particles) {
-			this.particleEffects = particles;
+		public Builder setParticleEffects(final Map<Object, ParticleEffect> particleEffects) {
+			this.particleEffects = particleEffects;
 
 			return this;
 		}
@@ -240,7 +206,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				", icon=" + icon +
 				", displayname='" + displayname + '\'' +
 				", lore=" + lore +
-				", particleEffect=" + particles +
+				", particleEffect=" + particleEffects +
 				", containerData=" + containerData +
 				", keysData=" + keysData +
 				", spawning=" + spawningContainerWithCooldown +
@@ -266,7 +232,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Icon", this.icon + "");
 		keysData.put("Display_name", this.displayname);
 		keysData.put("Lore", this.lore);
-		keysData.put("Particle_effect", this.particles);
+		keysData.put("Particle_effect", this.particleEffects.entrySet().stream().collect(Collectors.toMap(k -> k.getKey().toString(), Map.Entry::getValue)));
 		keysData.put("Spawn_with_cooldown", this.spawningContainerWithCooldown);
 		keysData.put("Enchant", this.enchant);
 		keysData.put("Random_spawn", this.randomSpawn);
@@ -280,13 +246,20 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 		final String lootTableLinked = (String) map.get("LootTable_linked");
 		final String icon = (String) map.get("Icon");
-		final String displayName = (String) map.get("Display_name");
+		final String displayName = (String) map.get("display_name");
 		final List<String> lore = castList((List<?>) map.get("Lore"), String.class);
-		final List<String> particleEffect = castList((List<?>) map.get("Particle_effect"), String.class);
-		List<ParticleEffect> particles = null;
+		final Object particleEffects = map.get("Particle_effect");
+		List<String> particleEffect = null;
+		Map<Object, ParticleEffect> particles = null;
+		List<ParticleEffect> particleEffectList = null;
+		if (particleEffects instanceof List) {
+			particleEffect = castList((List<?>) particleEffects, String.class);
+			if (particleEffect == null || particleEffect.isEmpty())
+				particleEffectList = castList((List<?>) particleEffects, ParticleEffect.class);
+		}
 
-		if (particleEffect == null || particleEffect.isEmpty())
-			particles = castList((List<?>) map.get("Particle_effect"), ParticleEffect.class);
+		if (particleEffects instanceof Map && (particleEffectList == null || particleEffectList.isEmpty()))
+			particles = castMap((Map<?, ?>) particleEffects, Object.class, ParticleEffect.class);
 
 		final Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
 		final Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
@@ -303,7 +276,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				.setContainerDataLinkedToLootTable(lootTableLinked)
 				.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 				.setCooldown(cooldown)
-				.setParticleEffects(particles != null ? particles : convertToParticleEffect(convertStringList(particleEffect)))
+				.setParticleEffects(particles != null ? particles.entrySet().stream().collect(Collectors.toMap(k -> getParticleOrEffect(k.getKey()), Map.Entry::getValue)) :
+						convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? convertParticleEffectList(particleEffectList) : convertStringList(particleEffect)))
 				.setEnchant(enchant)
 				.setIcon(material)
 				.setDisplayname(displayName)
@@ -315,9 +289,9 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return builder.build();
 	}
 
-	public static List<ParticleEffect> convertToParticleEffect(List<?> objectList) {
-		List<ParticleEffect> list = new ArrayList<>();
-		if (objectList == null || objectList.isEmpty()) return list;
+	public static Map<Object, ParticleEffect> convertToParticleEffect(List<?> objectList) {
+		Map<Object, ParticleEffect> map = new HashMap<>();
+		if (objectList == null || objectList.isEmpty()) return map;
 
 		for (final Object particle : objectList) {
 			final ParticleEffect.Builder builder = new ParticleEffect.Builder();
@@ -330,10 +304,11 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				final Effect part = (Effect) particle;
 				builder.setEffect(part).setDataType(part.getData());
 			}
-			list.add(builder.build());
+			if (particle instanceof Particle || particle instanceof Effect)
+				map.put(particle, builder.build());
 		}
 
-		return list;
+		return map;
 	}
 
 }

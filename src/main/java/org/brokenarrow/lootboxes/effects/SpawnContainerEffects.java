@@ -48,7 +48,7 @@ public class SpawnContainerEffects implements HeavyLoad {
 			if (this.effectType != null && !this.effectType.isEmpty())
 				effectType = this.effectType;
 			else
-				effectType = containerDataCache.getCacheContainerData(containerDataCache.getLocationData(containerLocation).getContinerData()).getParticles();
+				effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContinerData());
 
 			effect(containerLocation, effectType);
 		}
@@ -63,7 +63,7 @@ public class SpawnContainerEffects implements HeavyLoad {
 			for (final ParticleEffect particleEffect : effectType) {
 
 				if (particleEffect == null) continue;
-				
+
 				new CreateParticle(particleEffect, containerLocation.getWorld(), X, Y, Z).create();
 			/*	final Particle particle = particleEffect.getParticle();
 				if (particle == null) continue;

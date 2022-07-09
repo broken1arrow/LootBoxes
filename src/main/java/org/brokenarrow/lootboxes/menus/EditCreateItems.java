@@ -16,8 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
+
+import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
 
 public class EditCreateItems extends MenuHolder {
 	private final MenuButton saveItems;
@@ -116,7 +117,7 @@ public class EditCreateItems extends MenuHolder {
 						if (itemStack == null) return null;
 						final ItemStack clonedItem = itemStack.clone();
 						final GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
-								data.isHaveMetadata() && clonedItem.hasItemMeta() && clonedItem.getItemMeta().hasDisplayName() ? clonedItem.getItemMeta().getDisplayName() : clonedItem.getType().toString().toLowerCase(Locale.ROOT),
+								data.isHaveMetadata() && clonedItem.hasItemMeta() && clonedItem.getItemMeta().hasDisplayName() ? clonedItem.getItemMeta().getDisplayName() : bountifyCapitalized(clonedItem.getType()),
 								data.getChance(),
 								data.getMinimum(),
 								data.getMaximum(),

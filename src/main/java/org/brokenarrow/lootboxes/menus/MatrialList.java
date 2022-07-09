@@ -18,8 +18,9 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+
+import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
 
 public class MatrialList extends MenuHolder {
 
@@ -87,7 +88,7 @@ public class MatrialList extends MenuHolder {
 					if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
 						final ContainerDataBuilder.Builder builder = data.getBuilder();
 						final ParticleEffect particleEffect = data.getParticleEffect(value);
-						List<ParticleEffect> particleEffectList = data.getParticles();
+						Map<Object, ParticleEffect> particleEffectList = data.getParticleEffects();
 
 						if (particleEffect != null) {
 							final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
@@ -95,11 +96,8 @@ public class MatrialList extends MenuHolder {
 								particleBuilder.setMaterial((Material) o);
 							if (clickType.isRightClick())
 								particleBuilder.setMaterial(null);
-							if (particleEffectList == null)
-								particleEffectList = new ArrayList<>();
-							else
-								particleEffectList.remove(particleEffect);
-							particleEffectList.add(particleBuilder.build());
+
+							particleEffectList.put(value, particleBuilder.build());
 							builder.setParticleEffects(particleEffectList);
 							containerDataCache.setContainerData(container, builder.build());
 						}
@@ -123,7 +121,7 @@ public class MatrialList extends MenuHolder {
 					itemstack = (ItemStack) object;
 				if (itemstack == null)
 					return null;
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Item_list").placeholders("", itemstack.getType()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Item_list").placeholders("", bountifyCapitalized(itemstack.getType())).build();
 				return CreateItemUtily.of(itemstack, gui.getDisplayName(),
 						gui.getLore()).makeItemStack();
 			}

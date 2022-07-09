@@ -812,10 +812,21 @@ Gui_Templets:
     Menu_Title: "&1Edit this particle {0}"
     Matrial:
       Display_name: "&6Change matrial {0}"
+      Enchant: true
+      Icon: GOLDEN_APPLE
+      Slot: 10
+      Lore:
+        - "&6"
+        - "&aCurrent matrial is:&6 {1} "
+    Matrial_not_used:
+      Display_name: "&6Can't set matrial"
       Enchant: false
       Icon: GOLDEN_APPLE
       Slot: 10
       Lore:
+        - "&6"
+        - "&4This particle not use this"
+        - "&4setting."
         - "&6"
         - "&aCurrent matrial is:&6 {1} "
     Data:
@@ -826,9 +837,20 @@ Gui_Templets:
       Lore:
         - "&6"
         - "&aCurrent data is:&6 {1} "
+    Colors_not_used:
+      Display_name: "&6Can't set colors"
+      Enchant: false
+      Icon: RED_WOOL
+      Slot: 14
+      Lore:
+        - "&6"
+        - "&4This particle not use this"
+        - "&4setting."
+        - "&6"
+        - "&aCurrent colors set:&6 {1} "
     Colors:
       Display_name: "&6Change colors {0}"
-      Enchant: false
+      Enchant: true
       Icon: RED_WOOL
       Slot: 14
       Lore:
@@ -836,10 +858,24 @@ Gui_Templets:
         - "&aCurrent colors set:&6 {1} "
     Particle_Size:
       Display_name: "&6Change size {0}"
+      Enchant: true
+      Icon: CYAN_DYE
+      Slot: 16
+      Lore:
+        - "&6"
+        - "&aSize of the particle (for"
+        - "&aredstone particle)."
+        - "&6"
+        - "&aCurrent size:&6 {1} "
+    Particle_Size_not-used:
+      Display_name: "&6Cant set size"
       Enchant: false
       Icon: CYAN_DYE
       Slot: 16
       Lore:
+        - "&6"
+        - "&4This particle not use this"
+        - "&4setting."
         - "&6"
         - "&aSize of the particle (for"
         - "&aredstone particle)."
@@ -932,8 +968,31 @@ Gui_Templets:
       Icon: PAPER
       Slot: 0
       Lore:
-        - "&aChange particles some spawn arund the"
-        - "&achest or use several diffrent ones."
+        - "&aChange particles some spawn"
+        - "&aarund the chest or use"
+        - "&aseveral diffrent ones."
+        - "&6"
+        - "&aLeftclick to select and"
+        - "&ayou can also cange some"
+        - "&adata on the item."
+        - "&aRightclick to unselect"
+    Particle_list_selected:
+      Display_name: "&4Particle:&6 {0}"
+      Enchant: false
+      Icon: PAPER
+      Slot: 0
+      Lore:
+        - "&aYou have selected this particle"
+        - "&arightclick to unselect."
+        - "&6"
+        - "&aChange particles some spawn"
+        - "&aarund the chest or use"
+        - "&aseveral diffrent ones."
+        - "&6"
+        - "&aLeftclick to select and"
+        - "&ayou can also cange some"
+        - "&adata on the item."
+        - "&aRightclick to unselect"
     Seach_button:
       Display_name: "&bSeach for a particle"
       Enchant: true
@@ -998,6 +1057,7 @@ Gui_Templets:
       Lore:
         - "&aChange key to this continer."
         - "&aLeftclick if you want change the key."
+        - "&aShift and leftclick and you get the key."
         - "&aRightclick if you want remove this key."
         - ""
         - "&aAmount of keys needed: {1}"

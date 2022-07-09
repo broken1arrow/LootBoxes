@@ -42,7 +42,7 @@ public class OpenContainer implements Listener {
 			Location location = block.getLocation();
 			ItemStack itemStack = event.getItem();
 			Player player = event.getPlayer();
-		
+
 			if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 			if (player.hasPermission("lootboxes.bypass.open.requirement")) return;
 
@@ -79,29 +79,6 @@ public class OpenContainer implements Listener {
 			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
 			if (!checkIfPlayerHasItem(dataCacheCacheKey, key, player, itemStack)) {
 				event.setCancelled(true);
-			/*if (key != null && containerData.getKeysData() != null) {
-				if (!key.startsWith("Keys_"))
-					key = "Keys_" + key;
-				KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
-				if (dataCacheCacheKey == null) {
-
-					lootboxes.getLogger().log(Level.WARNING, "Of some reson is key data null, this shold not hapend");
-					event.setCancelled(true);
-					return;
-				}
-				Material material = dataCacheCacheKey.getItemType();
-				if (material != null && !material.isAir()) {
-					if (dataCacheCacheKey.getAmountNeeded() <= 0) return;
-					if (itemStack.getType() != material) {
-						event.setCancelled(true);
-						LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), material);
-					}
-					if (itemStack.getAmount() < dataCacheCacheKey.getAmountNeeded()) {
-						event.setCancelled(true);
-						LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
-					}
-				}*/
-
 			}
 
 			if (containerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {

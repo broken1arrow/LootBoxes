@@ -1,29 +1,36 @@
 Data:
   Global_Container:
+    ==: org.brokenarrow.lootboxes.builder.ContainerDataBuilder
     LootTable_Linked: ""
     Spawning: true
     Cooldown: 1800
+    Spawn_with_cooldown: true
     Random_spawn: false
-    Animation:
-      - FOG
+    Particle_effect:
+      SMOKE_NORMAL:
+        ==: org.brokenarrow.lootboxes.builder.ParticleEffect
+        Particle: SMOKE_NORMAL
+        Effect: 'null'
+        Material: 'null'
+        Data: 0
     Keys:
       Example_key:
-        Amount_Of_Keys: 1
-        Itemtype: TRIPWIRE_HOOK
-        Display_name: "&6key name {0}"
-        Lore:
+        ==: org.brokenarrow.lootboxes.builder.KeysData
+        amount_of_keys_to_open: 1
+        keyName: Example_key
+        itemType: TRIPWIRE_HOOK
+        display_name: "&6key name {0}"
+        lore:
           - "&aThis key open {1}"
           - "&aAmount of keys needed {2}."
     Enchant: false
     Icon: CHEST
-    Display_name: "&6Random loot"
+    Display_name: "Loot &6{0}"
     Lore:
       - "&aChange with loottable some are linked"
       - "&aand get info on all linked containers."
-    Containers:
-      'world 0 0 0':
-        Facing: NORTH
-        Container_Type: CHEST
+    Containers: {}
+
         
 
     

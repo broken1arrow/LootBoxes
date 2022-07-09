@@ -20,8 +20,7 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	private final Material material;
 	private final int data;
 	private final Class<?> dataType;
-	private Particle.DustOptions dustTransition;
-	private Particle.DustOptions dustOptions;
+
 	private final ParticleDustOptions particleDustOptions;
 	private final Builder builder;
 
@@ -58,15 +57,7 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	public Class<?> getDataType() {
 		return dataType;
 	}
-
-	public Particle.DustOptions getDustTransition() {
-		return dustTransition;
-	}
-
-	public Particle.DustOptions getDustOptions() {
-		return dustOptions;
-	}
-
+	
 	public ParticleDustOptions getParticleDustOptions() {
 		return particleDustOptions;
 	}

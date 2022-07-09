@@ -41,12 +41,12 @@ public class CreateParticle {
 
 	public void create() {
 		ParticleDustOptions particleDustOptions = this.particleDustOptions;
-		if (particleDustOptions != null)
+		if (particleDustOptions != null) {
 			if (version.newerThan(ServerVersion.Version.v1_16) && particleDustOptions.getToColor() != null)
 				spawnDustTransitionParticle(new Particle.DustTransition(particleDustOptions.getFromColor(), particleDustOptions.getToColor(), particleDustOptions.getSize()));
 			else
 				spawnDustOptionsParticle(new Particle.DustOptions(particleDustOptions.getFromColor(), particleDustOptions.getSize()));
-		else
+		} else
 			checkTypeParticle();
 	}
 
@@ -82,13 +82,14 @@ public class CreateParticle {
 	}
 
 	public void spawnParticle() {
+
 		if (particle == null) return;
 		if (this.material != null && this.dataType != Void.class) {
 			if (this.dataType == BlockData.class)
 				this.world.spawnParticle(particle, this.x, this.y, this.z, 0, 0.0, 0.0, 0.0, 3, this.material.createBlockData());
 			if (this.dataType == ItemStack.class)
 				this.world.spawnParticle(particle, this.x, this.y, this.z, 0, 0.0, 0.0, 0.0, 3, new ItemStack(this.material));
-		} else if (this.dataType == null || this.dataType == Void.class)
+		} else if (this.dataType == Void.class)
 			this.world.spawnParticle(particle, this.x, this.y, this.z, 0, 0.0, 0.0, 0.0, 3);
 	}
 }

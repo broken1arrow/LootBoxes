@@ -92,5 +92,15 @@ public final class CreateItemUtily {
 		return CreateItemStack.of(itemArray, displayName, lore);
 	}
 
+	/**
+	 * Start to create an item. Finish creation with {@link CreateItemStack#makeItemStackArray()}
+	 *
+	 * @param item  String name,Matrial or Itemstack.
+	 * @param color you want to use.
+	 * @return CreateItemUtily class or class with air item (if item are null).
+	 */
+	public static <T> CreateItemStack of(final Object item, final String color) {
+		return CreateItemStack.of(item, color);
+	}
 
 }

@@ -33,7 +33,7 @@ public abstract class SimpleYamlHelper {
 	private FileConfiguration customConfig;
 	private String extension;
 	private File customConfigFile;
-	private final Plugin plugin = Lootboxes.getInstance();
+	protected final Plugin plugin = Lootboxes.getInstance();
 	private final File dataFolder;
 
 	public SimpleYamlHelper(final String name, final boolean shallGenerateFiles) {
