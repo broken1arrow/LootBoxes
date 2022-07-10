@@ -27,31 +27,34 @@ public class SpawnContainerEffects implements HeavyLoad {
 		time = System.currentTimeMillis() + (1000L * (runTime != null ? runTime : 10));
 	}
 
-	private void spawnEffects() {
+	private boolean spawnEffects() {
 		if (checkChunkLoadUnload == null)
 			this.checkChunkLoadUnload = plugin.getCheckChunkLoadUnload();
 		//for (Location containerLocation : containerLocations) {
-		final long stoptime = (long) (System.nanoTime() + (1000_000 * MAX_MS_PER_TICK));
-		while (System.nanoTime() <= stoptime) {
-			if (locationInlist >= containerLocations.length) {
-				locationInlist = 0;
-				break;
-			}
-			final Location containerLocation = containerLocations[locationInlist];
-			locationInlist++;
-			if (containerLocation == null) return;
-			if (this.checkChunkLoadUnload.getChunkData(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4) == null || !containerLocation.getWorld().isChunkLoaded(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4)) {
-				plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
-				return;
-			}
-			final List<ParticleEffect> effectType;
-			if (this.effectType != null && !this.effectType.isEmpty())
-				effectType = this.effectType;
-			else
-				effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContinerData());
-
-			effect(containerLocation, effectType);
+		/*final long stoptime = (long) (System.nanoTime() + (1000_000 * MAX_MS_PER_TICK));
+		while (System.nanoTime() <= stoptime) {*/
+		if (locationInlist >= containerLocations.length) {
+			locationInlist = 0;
 		}
+		final Location containerLocation = containerLocations[locationInlist];
+		locationInlist++;
+		Boolean aBoolean = plugin.getSpawnedContainers().getHasRefill().get(containerLocation);
+		if (aBoolean != null && aBoolean)
+			if (containerLocation != null) {
+				if (this.checkChunkLoadUnload.getChunkData(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4) == null || !containerLocation.getWorld().isChunkLoaded(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4)) {
+					plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
+				}
+				final List<ParticleEffect> effectType;
+				if (this.effectType != null && !this.effectType.isEmpty())
+					effectType = this.effectType;
+				else
+					effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContinerData());
+
+				effect(containerLocation, effectType);
+				//}
+				return true;
+			}
+		return false;
 	}
 
 	public void effect(final Location containerLocation, final List<ParticleEffect> effectType) {
@@ -65,37 +68,13 @@ public class SpawnContainerEffects implements HeavyLoad {
 				if (particleEffect == null) continue;
 
 				new CreateParticle(particleEffect, containerLocation.getWorld(), X, Y, Z).create();
-			/*	final Particle particle = particleEffect.getParticle();
-				if (particle == null) continue;
-				if (plugin.getServerVersion().newerThan(ServerVersion.Version.v1_9)) {
-					if (!particle.name().contains("BLOCK_MARKER")) {
-						if (particle.name().equals("REDSTONE")) {
-							if (plugin.getServerVersion().newerThan(ServerVersion.Version.v1_13)) {
-
-								final Particle.DustOptions dustOptions = particleEffect.getDustOptions();
-								containerLocation.getWorld().spawnParticle(particle, X, Y, Z, 0, 0.0, 0.0, 0.0, 1.0, dustOptions);
-							} else
-								containerLocation.getWorld().spawnParticle(particle, X, Y, Z, 0, 5.0, 0.0, 5.0, 3);
-						} else
-							containerLocation.getWorld().spawnParticle(particle, X, Y, Z, 0, 0.0, 0.0, 0.0, 1.0);
-					} else if (particleEffect.getMaterial() != null)
-						containerLocation.getWorld().spawnParticle(Particle.valueOf("BLOCK_MARKER"), X, Y, Z, 0, 0.0, 0.0, 0.0, 1.0, particleEffect.getMaterial().createBlockData());
-					else
-						Lootboxes.getInstance().getLogger().log(Level.WARNING, "This particle " + particle + " is not valid");
-				} else {
-					final Effect effect = particleEffect.getEffect();
-					if (effect != null)
-						containerLocation.getWorld().playEffect(new Location(containerLocation.getWorld(), X, Y, Z), effect, 6);
-					else
-						containerLocation.getWorld().playEffect(new Location(containerLocation.getWorld(), X, Y, Z), Effect.valueOf("COLOURED_DUST"), Integer.MAX_VALUE);
-				}*/
 			}
 		}
 	}
 
 	@Override
-	public void compute() {
-		spawnEffects();
+	public boolean compute() {
+		return spawnEffects();
 	}
 
 	@Override
@@ -106,7 +85,7 @@ public class SpawnContainerEffects implements HeavyLoad {
 
 	@Override
 	public double getMilliPerTick() {
-		return 5;
+		return 4.5;
 	}
 
 	@Override

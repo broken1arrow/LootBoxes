@@ -2,7 +2,15 @@ package org.brokenarrow.lootboxes.api;
 
 public interface HeavyLoad {
 
-	void compute();
+	boolean compute();
+
+	default void computeTask() {
+		final long stoptime = (long) (System.nanoTime() + (1000_000 * this.getMilliPerTick()));
+		while (System.nanoTime() <= stoptime) {
+			if (!this.compute())
+				break;
+		}
+	}
 
 	default boolean reschedule() {
 		return false;

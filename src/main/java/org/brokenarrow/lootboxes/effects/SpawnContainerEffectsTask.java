@@ -28,12 +28,11 @@ public class SpawnContainerEffectsTask implements AddOrRemoveDataFromListAPI {
 
 	public void runTask() {
 
-		if (!loadingLocation)
-			if (!plugin.getHeavyTasks().isContainsMaxAmountInQueue("effectsOnChest", 2)) {
-				final SpawnContainerEffects task = new SpawnContainerEffects(null, null, this.locationsList.toArray(new Location[this.locationsList.size() + 1]));
-				runtask(() -> plugin.getHeavyTasks().addLoad(task), true);
-				plugin.getHeavyTasks().setMaxAmountEachEntityCanQueue("effectsOnChest", System.currentTimeMillis() + 250, task);
-			}
+		if (!loadingLocation) {
+			final SpawnContainerEffects task = new SpawnContainerEffects(null, null, this.locationsList.toArray(new Location[this.locationsList.size() + 1]));
+			runtask(() -> plugin.getHeavyTasks().addTask("effectsOnChest", 3, 3, task), true);
+		}
+
 
 		final Set<Location> locations = getDefultOrSecondaryList(this.cachedLocationsToAdd, this.cachedLocationsForRemoval);
 		if (locations != null && !locations.isEmpty()) {

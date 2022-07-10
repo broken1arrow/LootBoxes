@@ -138,7 +138,7 @@ public final class KeysData implements ConfigurationSerializable {
 		String keyName = (String) map.get("keyName");
 		String displayName = (String) map.get("display_name");
 		if (displayName == null)
-			displayName = (String) map.get("Displayname");
+			displayName = (String) map.get("displayName");
 		Object lootTableLinkedObj = map.get("lootTableLinked");
 		String lootTableLinked;
 		if (lootTableLinkedObj == null)

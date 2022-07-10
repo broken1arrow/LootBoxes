@@ -411,7 +411,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 				else
 					containerDataBuilder = customConfig.getSerializable("Data." + mainKey, ContainerDataBuilder.class);
 				final ContainerDataBuilder builder;
-				System.out.println("containerDataBuilder " + containerDataBuilder);
+
 				if (containerDataBuilder != null) {
 					builder = containerDataBuilder;
 				} else {

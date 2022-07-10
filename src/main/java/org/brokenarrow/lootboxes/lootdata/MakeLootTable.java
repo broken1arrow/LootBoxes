@@ -42,13 +42,15 @@ public class MakeLootTable {
 			amountIfItemsMax++;
 			itemStacks.add(createItem(lootData, amountOfItems));
 		}
-		if (itemStacks.isEmpty())
+		if (checkAir(itemStacks))
 			return setBackupItems(backupItemstacks);
 		else
 			return itemStacks.toArray(new ItemStack[itemStacks.size() + 2]);
 	}
 
 	private ItemStack[] setBackupItems(List<ItemStack> backupItemstacks) {
+		if (this.minimumAmountOfItems <= 0) return new ItemStack[0];
+
 		List<ItemStack> itemstacks = new ArrayList<>();
 		int size = backupItemstacks.size();
 		int amount = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 1);
@@ -56,6 +58,18 @@ public class MakeLootTable {
 			itemstacks.add(backupItemstacks.get(random.randomIntNumber(this.minimumAmountOfItems, size - 1)));
 		}
 		return itemstacks.toArray(new ItemStack[itemstacks.size() + 1]);
+	}
+
+	/**
+	 * This method check if added stacks is air or if list is null.
+	 *
+	 * @param itemStacks list ofr items to check
+	 * @return true if item is air or null.
+	 */
+	private boolean checkAir(List<ItemStack> itemStacks) {
+		if (itemStacks == null) return true;
+
+		return itemStacks.stream().allMatch(item -> item == null || item.getType().isAir());
 	}
 
 	private void setGlobalValues(String table) {

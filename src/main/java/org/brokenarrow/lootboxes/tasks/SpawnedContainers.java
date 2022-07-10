@@ -31,7 +31,6 @@ public class SpawnedContainers {
 	private final ItemData itemData = ItemData.getInstance();
 
 	public void task() {
-		sendDebug("task cache " + cachedTimeMap, this.getClass());
 
 		for (Map.Entry<String, Long> entry : cachedTimeMap.entrySet()) {
 			long time = entry.getValue();
