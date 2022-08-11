@@ -29,39 +29,24 @@ public class CheckChunkLoadUnload implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void chunkUnLoad(final ChunkUnloadEvent event) {
-		final int chunkX = event.getChunk().getX();
-		final int chunkZ = event.getChunk().getZ();
-
-		removeChunk(chunkX, chunkZ);
+		removeChunk(event.getChunk());
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void chunkLoad(final ChunkLoadEvent event) {
-		final int chunkX = event.getChunk().getX();
-		final int chunkZ = event.getChunk().getZ();
 		final Chunk chunk = event.getChunk();
 
 		final List<Location> locationList = containerDataCache.getChunkData(chunk);
-		if (locationList == null || locationList.isEmpty()) {
-			/*if (isCunkInCache(chunk)) {
-					this.chachedChunks.put(chunk.getX() + "=" + chunk.getZ(), chunk);
-					Map<Object, ChunkSnapshot> chachedChunkSnapshot = new HashMap<>();
-					chachedChunkSnapshot.put(chunk, chunk.getChunkSnapshot(true, false, false));
-
-					runtaskLater(20, () -> addToHpperCache(true, chachedChunkSnapshot, locationList), true);
-				}*/
-		} else {
-			this.chachedChunks.put(chunkX + "=" + chunkZ, chunk);
-			runtaskLater(5, () -> addToHopperCache(true, chunk.getChunkSnapshot(true, false, false), locationList), true);
+		if (locationList != null && !locationList.isEmpty()) {
+			this.setChachedChunks(chunk);
+			ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot(true, false, false);
+			runtaskLater(5, () -> addToHopperCache(true, chunkSnapshot, locationList), true);
 		}
 
 	}
 
 	public void addToHopperCache(final boolean loadingChunks, final ChunkSnapshot chunkSnapshot, final List<Location> locationList) {
-
-		final int chunkX = chunkSnapshot.getX();
-		final int chunkZ = chunkSnapshot.getZ();
-		final List<Location> locations = containerDataCache.getChunkData(chunkX, chunkZ);
+		final List<Location> locations = containerDataCache.getChunkData(chunkSnapshot);
 		for (final Location location : locations) {
 			addToCache(location, loadingChunks, chunkSnapshot);
 		}
@@ -111,6 +96,10 @@ public class CheckChunkLoadUnload implements Listener {
 			removeChunk(chunkX, chunkZ);
 		}
 
+	}
+
+	public void removeChunk(Chunk chunk) {
+		this.chachedChunks.remove(chunk.getX() + "=" + chunk.getZ());
 	}
 
 	public void removeChunk(final int chunkX, final int chunkZ) {

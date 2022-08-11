@@ -107,7 +107,8 @@ public class HeavyTasks extends BukkitRunnable {
 	public void checkIfTimeFinish() {
 
 		if (this.amount % 20 == 0) {
-			map.forEach((key, value) -> value.removeIf(time -> System.currentTimeMillis() >= time));
+			if (!map.isEmpty())
+				map.forEach((key, value) -> value.removeIf(time -> System.currentTimeMillis() >= time));
 		}
 
 	}

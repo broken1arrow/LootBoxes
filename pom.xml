@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.github.broken1arrow</groupId>
             <artifactId>MenuLibrary</artifactId>
-            <version>0.61</version>
+            <version>0.62</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -127,7 +127,7 @@
         <dependency>
             <groupId>com.github.broken1arrow</groupId>
             <artifactId>RBG-Gradients</artifactId>
-            <version>0.18</version>
+            <version>0.24</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

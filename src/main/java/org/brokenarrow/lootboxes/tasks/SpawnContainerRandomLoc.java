@@ -43,6 +43,7 @@ public class SpawnContainerRandomLoc {
 				}
 				this.time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
 			}
+		
 	}
 
 	public void setRandomSpawnedContiner() {

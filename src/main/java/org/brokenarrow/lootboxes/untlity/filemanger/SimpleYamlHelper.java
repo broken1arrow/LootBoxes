@@ -1,13 +1,23 @@
-package org.brokenarrow.lootboxes.settings;
+package org.brokenarrow.lootboxes.untlity.filemanger;
 
+import org.apache.commons.lang.StringUtils;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -26,7 +36,6 @@ import java.util.jar.JarFile;
 public abstract class SimpleYamlHelper {
 
 	private final String name;
-	private final String yamlMainpath;
 	private final boolean shallGenerateFiles;
 	private final boolean singelFile;
 	private boolean firstLoad = true;
@@ -37,21 +46,16 @@ public abstract class SimpleYamlHelper {
 	private final File dataFolder;
 
 	public SimpleYamlHelper(final String name, final boolean shallGenerateFiles) {
-		this(name, "", false, shallGenerateFiles);
+		this(name, false, shallGenerateFiles);
 	}
 
-	public SimpleYamlHelper(final String name, final String yamlMainpath, final boolean shallGenerateFiles) {
-		this(name, yamlMainpath, false, shallGenerateFiles);
-	}
-
-	public SimpleYamlHelper(final String name, final String yamlMainpath, final boolean singelFile, final boolean shallGenerateFiles) {
+	public SimpleYamlHelper(final String name, final boolean singelFile, final boolean shallGenerateFiles) {
 		if (this.plugin == null)
 			throw new RuntimeException("You have not set the plugin, becuse it is null");
 		this.dataFolder = this.plugin.getDataFolder();
 		this.singelFile = singelFile;
 		this.name = this.checkIfFileHasExtension(name);
 		this.shallGenerateFiles = shallGenerateFiles;
-		this.yamlMainpath = yamlMainpath;
 	}
 
 	public abstract void saveDataToFile(final File file);
@@ -190,32 +194,40 @@ public abstract class SimpleYamlHelper {
 	}
 
 	public void saveChecks(final File file) {
-		if (!this.yamlMainpath.isEmpty() && serialize() != null)
-			saveSerializeData(file);
-		else
-			saveDataToFile(file);
+		saveDataToFile(file);
 	}
 
-	public void saveSerializeData(final File file) {
-		if (isSingelFile() && !file.getName().equals(getName())) return;
-		try {
-			customConfig = YamlConfiguration.loadConfiguration(file);
-			this.getCustomConfig().set(this.yamlMainpath, null);
-			for (final Map.Entry<?, ?> childrenKey : serialize().entrySet())
-				if (childrenKey != null) {
-					final Object obj = childrenKey.getValue();
-				/*	if (obj instanceof Particle)
-						obj = obj.toString();*/
-					this.getCustomConfig().set(this.yamlMainpath + "." + childrenKey.getKey(), obj);
-				}
-			this.getCustomConfig().save(file);
-		} catch (final Exception ex) {
-			ex.printStackTrace();
+	@Nullable
+	public <T extends ConfigurationSerializeUtility> T getData(String path, final Class<T> clazz) {
+		Valid.checkBoolean(path != null, "path can't be null");
+		if (clazz == null) return null;
+
+		Map<String, Object> fileData = new HashMap<>();
+		ConfigurationSection configurationSection = customConfig.getConfigurationSection(path);
+		if (configurationSection != null)
+			for (String data : configurationSection.getKeys(true)) {
+				Object object = customConfig.get(path + "." + data);
+				if (object instanceof MemorySection) continue;
+				fileData.put(data, object);
+			}
+		Method deserializeMethod = getMethod(clazz, "deserialize", Map.class);
+		return invokeStatic(clazz, deserializeMethod, fileData);
+	}
+
+	public void setData(@NotNull final File file, @NotNull String path, @NotNull ConfigurationSerializeUtility configuration) {
+		Valid.checkBoolean(path != null, "path can't be null");
+		Valid.checkBoolean(configuration != null, "Serialize utility can't be null, need provide a class instance some implements ConfigurationSerializeUtility");
+		Valid.checkBoolean(configuration.serialize() != null, "Missing serialize method or it is null, can't serialize the class data.");
+
+		this.getCustomConfig().set(path, null);
+		for (Map.Entry<String, Object> key : configuration.serialize().entrySet()) {
+			this.getCustomConfig().set(path + "." + key.getKey(), SerializeData.serialize(key.getValue()));
 		}
-	}
-
-	public Map<?, ?> serialize() {
-		return null;
+		try {
+			this.getCustomConfig().save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -311,8 +323,12 @@ public abstract class SimpleYamlHelper {
 	}
 
 	public File[] getFilesInPluginFolder(final String directory) {
-		if (isSingelFile())
-			return new File(this.getDataFolder() + "").listFiles(file -> !file.isDirectory() && file.getName().equals(this.getName()));
+		if (isSingelFile()) {
+			File checkFile = new File(this.getDataFolder(), this.getName());
+			if (!checkFile.exists() && this.shallGenerateFiles)
+				createMissingFile();
+			return new File(checkFile.getParent()).listFiles(file -> !file.isDirectory() && file.getName().equals(getName(this.getName())));
+		}
 
 		final File dataFolder = new File(this.getDataFolder(), directory);
 		if (!dataFolder.exists() && !directory.isEmpty())
@@ -337,6 +353,21 @@ public abstract class SimpleYamlHelper {
 
 		if (pos > 0)
 			path = path.substring(0, pos);
+		return path;
+	}
+
+	public String getName(String path) {
+		Valid.checkBoolean(path != null && !path.isEmpty(), "The given path must not be empty!");
+		int pos;
+
+		if (path.lastIndexOf("/") == -1)
+			pos = path.lastIndexOf("\\");
+		else
+			pos = path.lastIndexOf("/");
+
+		if (pos > 0)
+			path = path.substring(pos + 1);
+
 		return path;
 	}
 
@@ -382,17 +413,64 @@ public abstract class SimpleYamlHelper {
 		return filenames;
 	}
 
+	private Method getMethod(final Class<?> clazz, final String methodName, final Class<?>... args) {
+		for (final Method method : clazz.getMethods())
+			if (method.getName().equals(methodName) && isClassListEqual(args, method.getParameterTypes())) {
+				method.setAccessible(true);
+				return method;
+			}
+
+		return null;
+	}
+
+	private <T extends ConfigurationSerializeUtility> T invokeStatic(final Class<T> clazz, final Method method, final Object... params) {
+		if (method == null) return null;
+		try {
+			Valid.checkBoolean(!Modifier.isStatic(method.getModifiers()), "deserialize method need to be static");
+			return clazz.cast(method.invoke(method, params));
+		} catch (final IllegalAccessException | InvocationTargetException ex) {
+			throw new CatchExceptions(ex, "Could not invoke static method " + method + " with params " + StringUtils.join(params));
+		}
+	}
+
+	private boolean isClassListEqual(Class<?>[] first, Class<?>[] second) {
+		if (first.length != second.length) {
+			return false;
+		} else {
+			for (int i = 0; i < first.length; ++i) {
+				if (first[i] != second[i]) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+
+	private void createMissingFile() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(getPath(), true));
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static class Valid extends RuntimeException {
 		public static void checkBoolean(final boolean b, final String s) {
 			if (!b)
 				throw new CatchExceptions(s);
 		}
+	}
 
-		private static class CatchExceptions extends RuntimeException {
-			public CatchExceptions(final String message) {
-				super(message);
-			}
+	private static class CatchExceptions extends RuntimeException {
+
+		public CatchExceptions(Exception exception, final String message) {
+			super(message, exception);
+		}
+
+		public CatchExceptions(final String message) {
+			super(message);
 		}
 	}
 }

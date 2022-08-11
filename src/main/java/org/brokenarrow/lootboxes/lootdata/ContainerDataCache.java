@@ -3,11 +3,12 @@ package org.brokenarrow.lootboxes.lootdata;
 import com.google.common.base.Enums;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.*;
-import org.brokenarrow.lootboxes.settings.SimpleYamlHelper;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	private final Map<String, List<Location>> chunkData = new HashMap<>();
 
 	public ContainerDataCache() {
-		super("container_data.db", "Data", true, true);
+		super("container_data.db", true, true);
 		//this.yamlFiles = new SimpleYamlHelper("container_data", true);
 	}
 
@@ -71,13 +72,15 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	public void setNewContainerData(String container, final Material material) {
 		if (container.contains(" "))
 			container = container.trim().replace(" ", "_");
-		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder();
-		builder.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffects(new HashMap<>())
+		final ContainerDataBuilder builder = new ContainerDataBuilder.Builder()
+				.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffects(new HashMap<>())
 				.setEnchant(false).setIcon(material).setDisplayname("").setLore(new ArrayList<>()).setContainerData(new HashMap<>())
-				.setKeysData(new HashMap<>());
+				.setKeysData(new HashMap<>())
+				.build();
 
-		cacheContainerData.put(container, builder.build());
+		cacheContainerData.put(container, builder);
 		saveTask();
+		addContainerToEffectList(builder);
 		this.addContainerToSpawnTask(container, 1800);
 	}
 
@@ -153,6 +156,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		if (particleEffect.isEmpty()) return;
 
 		particleEffect.remove(particle);
+		addContainerToEffectList(containerDataBuilder);
 	}
 
 	public void setParticleEffects(@NotNull final String containerDataName, @NotNull Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
@@ -162,8 +166,9 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 		particleEffect.put(particle, particleBuilder.build());
 		builder.setParticleEffects(particleEffect);
-
-		this.setContainerData(containerDataName, builder.build());
+		ContainerDataBuilder containerData = builder.build();
+		this.setContainerData(containerDataName, containerData);
+		addContainerToEffectList(containerData);
 	}
 
 	/**
@@ -204,9 +209,19 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	 * @param chunk the container is placed in.
 	 * @return list of locations.
 	 */
-	public List<Location> getChunkData(final Chunk chunk) {
-		final int x = chunk.getX();
-		final int z = chunk.getZ();
+	public List<Location> getChunkData(final Object chunk) {
+		Integer x = null;
+		Integer z = null;
+		if (chunk instanceof Chunk) {
+			x = ((Chunk) chunk).getX();
+			z = ((Chunk) chunk).getZ();
+		}
+		if (chunk instanceof ChunkSnapshot) {
+			x = ((ChunkSnapshot) chunk).getX();
+			z = ((ChunkSnapshot) chunk).getZ();
+		}
+		if (x == null || z == null)
+			return null;
 		return this.chunkData.get(x + "=" + z);
 	}
 
@@ -358,6 +373,14 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		Lootboxes.getInstance().getSpawnedContainers().setCachedTimeMap(mainKey, cooldown);
 	}
 
+	public void addContainerToEffectList(final ContainerDataBuilder containerDataBuilder) {
+		Map<Location, ContainerData> linkedcontainerData = containerDataBuilder.getLinkedContainerData();
+		if (linkedcontainerData == null || linkedcontainerData.isEmpty()) return;
+
+		for (Location location : linkedcontainerData.keySet())
+			Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+	}
+
 	public List<String> getContainerData() {
 		return this.getCacheContainerData().keySet().stream().filter(Objects::nonNull).collect(Collectors.toList());
 	}
@@ -370,8 +393,11 @@ public class ContainerDataCache extends SimpleYamlHelper {
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
 		final ContainerDataBuilder data = this.getCacheContainerData(containerData);
 		if (data != null)
-			for (final Location location : data.getLinkedContainerData().keySet())
+			for (final Location location : data.getLinkedContainerData().keySet()) {
 				setChunkData(location);
+				Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+			}
+
 		saveTask();
 	}
 
@@ -381,22 +407,21 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 	@Override
 	public void saveDataToFile(final File file) {
-
+		if (isSingelFile() && !file.getName().equals(getName())) return;
+		try {
+			YamlConfiguration customConfig = YamlConfiguration.loadConfiguration(file);
+			this.getCustomConfig().set("Data", null);
+			for (final Map.Entry<String, ContainerDataBuilder> childrenKey : cacheContainerData.entrySet())
+				if (childrenKey != null) {
+				/*	if (obj instanceof Particle)
+						obj = obj.toString();*/
+					this.getCustomConfig().set("Data" + "." + childrenKey.getKey(), childrenKey.getValue());
+				}
+			this.getCustomConfig().save(file);
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-
-	@Override
-	public Map<?, ?> serialize() {
-		if (this.getCacheContainerData().isEmpty()) return null;
-
-		final Map<String, Object> serializeData = new LinkedHashMap<>();
-		for (final String childrenKey : this.getCacheContainerData().keySet())
-			if (childrenKey != null) {
-				final ContainerDataBuilder data = this.getCacheContainerData().get(childrenKey);
-				serializeData.put(childrenKey, data);
-			}
-		return serializeData;
-	}
-
 
 	@Override
 	protected void loadSettingsFromYaml(final File file) {

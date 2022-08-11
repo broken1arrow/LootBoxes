@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.settings;
 
 import org.broken.lib.rbg.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
