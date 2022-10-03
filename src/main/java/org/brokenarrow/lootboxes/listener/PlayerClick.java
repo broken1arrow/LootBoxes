@@ -38,7 +38,7 @@ public class PlayerClick implements Listener {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
-	private final SettingsData setting = Lootboxes.getInstance().getSettings().getSettings();
+	private final SettingsData setting = Lootboxes.getInstance().getSettings().getSettingsData();
 
 	@EventHandler
 	public void playerPlaceBlock(BlockPlaceEvent event) {

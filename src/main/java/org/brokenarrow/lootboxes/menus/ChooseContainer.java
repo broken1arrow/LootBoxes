@@ -38,7 +38,7 @@ public class ChooseContainer extends MenuHolder {
 		setTitle(guiTemplets.build().getGuiTitle());
 
 		listOfItems = new MenuButton() {
-			private final SettingsData setting = settings.getSettings();
+			private final SettingsData setting = settings.getSettingsData();
 
 			@Override
 			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {

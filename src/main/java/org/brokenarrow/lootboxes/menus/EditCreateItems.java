@@ -221,8 +221,8 @@ public class EditCreateItems extends MenuHolder {
 					for (final ItemStack item : items.values()) {
 						if (item == null) continue;
 						String fileName = "";
-						if (item.hasItemMeta() && settings.getSettings().isSaveMetadataOnItem()) {
-							if (settings.getSettings().isWarnBeforeSaveWithMetadata()) {
+						if (item.hasItemMeta() && settings.getSettingsData().isSaveMetadataOnItem()) {
+							if (settings.getSettingsData().isWarnBeforeSaveWithMetadata()) {
 								new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
 								return;
 							} else {

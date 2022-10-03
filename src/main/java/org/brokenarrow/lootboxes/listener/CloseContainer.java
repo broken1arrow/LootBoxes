@@ -39,7 +39,7 @@ public class CloseContainer implements Listener {
 			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
 			if (containerData == null) return;
 
-			if (settings.getSettings().isRemoveContainerWhenPlayerClose() && containerData.isSpawningContainerWithCooldown()) {
+			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && containerData.isSpawningContainerWithCooldown()) {
 				location.getBlock().setType(Material.AIR);
 
 			}

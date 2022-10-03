@@ -69,6 +69,9 @@ ADD_CONTINERS:
   YOU_SWITCH_SLOT_LINK_TOOL: "&fYou will return to the menu."
   YOU_DONT_HAVE_PERMISSION_TO_LINK: "&fYou don´t have this permission {0}"
 
+RANDOM_LOOT_MESAGE:
+  TITEL: "&fNew lootchest on loc:|&6 {0}"
+
 
 CREATE_TABLE:
   TYPE_NAME: "&fType name on the table"

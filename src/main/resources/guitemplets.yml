@@ -647,21 +647,14 @@ Gui_Templets:
         - ""
         - "&2List of icons you can change too"
         - "&2for this container."
-    Generate_Loot_When_Clicking:
-      Display_name: "&bGenerate loot on timer"
+    Settings_container_data:
+      Display_name: "&bSettings"
       Enchant: true
-      Slot: 20
-      Icon: ENDER_EYE
+      Slot: 22
+      Icon: PAPER
       Lore:
         - ""
-        - "&2Set if it shall generate loot on"
-        - "&2timer or when player clicking"
-        - "&2on the container."
-        - "&2"
-        - "&3Leftclick to turn this on"
-        - "&3Rightclick to turn this off"
-        - "&2"
-        - "&2Auto fill on timer:&6 {1}"
+        - "&2Leftclick to open settings"
     Cooldown_Container_Generate_Loot_is_on:
       Display_name: "&bYou can´t set cooldown on the container"
       Enchant: true
@@ -729,32 +722,6 @@ Gui_Templets:
         - ""
         - "&4You can´t use this setting when"
         - "&4is used to random spawn a container."
-    Set_random_spawn:
-      Display_name: "&bRandom spawn {0}"
-      Enchant: true
-      Slot: 22
-      Icon: Elytra
-      Lore:
-        - ""
-        - "&2Enable this for use this container to random spawn"
-        - "&2your loottable arund all online players."
-        - "&6"
-        - "&2Left click to enable"
-        - "&2"
-        - "&2Right click to disabled"
-    Set_random_spawn_disabled:
-      Display_name: "&bRandom spawn {0}"
-      Enchant: false
-      Slot: 22
-      Icon: Elytra
-      Lore:
-        - ""
-        - "&2Enable this for use this container to random spawn"
-        - "&2your loottable arund all online players."
-        - "&6"
-        - "&2Left click to enable"
-        - "&2"
-        - "&2Right click to disabled"
     Change_DisplayName:
       Display_name: "&bDisplay name: {0}"
       Enchant: true
@@ -1566,6 +1533,181 @@ Gui_Templets:
         - ""
         - "&aGo back to"
         - "&amenu before."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # menu to set your container on random loot spawn.
+  Random_loot_container_menu:
+    Menu_Size: 45
+    Menu_Title: "&1Set type of container."
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    List_Of_ContainerTypes:
+      Display_name: "&bChoose this type: {0}"
+      Enchant: false
+      Icon: GOLD_INGOT
+      Slot: 40
+      Lore:
+        - "&aThis container will be used as loot chest"
+        - "&aif click on this button."
+        - ""
+        - "&aFacing: &6{1}"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&amenu before."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # menu for settings for your containerdata.
+  Settings_Container_Data:
+    Menu_Size: 45
+    Menu_Title: "&1Settings."
+    Random_loot_container_settings:
+      Display_name: "&bSet the container type"
+      Enchant: false
+      Slot: 10
+      Icon: SHULKER_BOX
+      Lore:
+        - "&3Set container type used for random spawn"
+        - "&3and also set facing of this container,"
+        - "&3you can also set random faceing."
+        - ""
+        - "&2Curently set item: {1}"
+        - "&2Curently set face: {2}"
+    Show_titel:
+      Display_name: "&bIf it shall show titel"
+      Enchant: false
+      Slot: 12
+      Icon: PAPER
+      Lore:
+        - "&3Show a tittel when new loot is added to chest"
+        - ""
+        - "&aIs set to: {1}"
+    Show_glow:
+      Display_name: "&bIf it continer shall glow"
+      Enchant: false
+      Slot: 14
+      Icon: GLOWSTONE
+      Lore:
+        - "&3set this to tru and the container will glow."
+        - ""
+        - "&aIs set to: {1}"
+    Set_random_spawn:
+      Display_name: "&bRandom spawn {0}"
+      Enchant: true
+      Slot: 16
+      Icon: Elytra
+      Lore:
+        - ""
+        - "&2Enable this for use this container to random spawn"
+        - "&2your loottable arund all online players."
+        - "&6"
+        - "&2Left click to enable"
+        - "&2"
+        - "&2Right click to disabled"
+    Set_random_spawn_disabled:
+      Display_name: "&bRandom spawn {0}"
+      Enchant: false
+      Slot: 16
+      Icon: Elytra
+      Lore:
+        - ""
+        - "&2Enable this for use this container to random spawn"
+        - "&2your loottable arund all online players."
+        - "&6"
+        - "&2Left click to enable"
+        - "&2"
+        - "&2Right click to disabled"
+    Attempts_to_spawn:
+      Display_name: "&bAmount of attempts"
+      Enchant: false
+      Slot: 21
+      Icon: SPAWNER
+      Lore:
+        - "&aHow many times it will try find valid spawn loc"
+        - ""
+        - "&aAttempts:&6{1}"
+    Attempts_to_spawn_random_spawn_off:
+      Display_name: "&cNot work when random spawn is off"
+      Enchant: false
+      Slot: 21
+      Icon: BARRIER
+      Lore:
+        - "&aHow many times it will try find valid spawn loc"
+        - ""
+        - "&aAttempts:&6{1}"
+    Generate_Loot_When_Clicking:
+      Display_name: "&bGenerate loot on timer"
+      Enchant: true
+      Slot: 19
+      Icon: ENDER_EYE
+      Lore:
+        - ""
+        - "&2Set if it shall generate loot on"
+        - "&2timer or when player clicking"
+        - "&2on the container."
+        - "&2"
+        - "&3Leftclick to turn this on"
+        - "&3Rightclick to turn this off"
+        - "&2"
+        - "&2Auto fill on timer:&6 {1}"
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: CHORUS_FRUIT
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&acontainer data."
     Placeholders:
       Display_name: "&b"
       Enchant: false

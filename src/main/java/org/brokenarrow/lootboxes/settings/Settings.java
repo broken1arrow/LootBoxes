@@ -19,7 +19,7 @@ public class Settings extends YamlUtil {
 		super.reload();
 	}
 
-	public SettingsData getSettings() {
+	public SettingsData getSettingsData() {
 		return settings.get("Settings");
 	}
 
@@ -45,7 +45,7 @@ public class Settings extends YamlUtil {
 
 		String placeContainerDisplayName = customConfig.getString("Place_container.Display_name");
 		List<String> placeContainerLore = customConfig.getStringList("Place_container.Lore");
-
+		
 		SettingsData settingsData = new SettingsData.Builder()
 				.setAmountOfBlocksBelowSurface(amountOfBlocksBelowSurface)
 				.setBlocksAwayFromPlayer(blocksAwayFromPlayer)

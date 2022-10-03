@@ -25,7 +25,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettings();
+	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettingsData();
 
 	public KeySettingsMobDrop(final String continerData, final String keyName) {
 

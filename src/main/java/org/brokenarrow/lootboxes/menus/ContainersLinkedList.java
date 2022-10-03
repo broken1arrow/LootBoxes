@@ -32,9 +32,9 @@ public class ContainersLinkedList extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
-	public ContainersLinkedList(final String container, final String itemsToSearchFor) {
-		super(Arrays.asList(ContainerDataCache.getInstance().getLinkedContainerData(container).keySet().toArray()));
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders("");
+	public ContainersLinkedList(final ContainerDataBuilder containerdata,final String containername, final String itemsToSearchFor) {
+		super(Arrays.asList(containerdata.getLinkedContainerData().keySet().toArray()));
+		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(containername);
 		setMenuSize(guiTemplets.build().getGuiSize());
 		setTitle(guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
@@ -65,7 +65,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 				if (o instanceof Location) {
 
-					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(container);
+					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containername);
 					if (containerDataBuilder != null) {
 						final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 						Map<Location, org.brokenarrow.lootboxes.builder.ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
@@ -75,7 +75,7 @@ public class ContainersLinkedList extends MenuHolder {
 							containerDataMap.remove(o);
 
 							builder.setContainerData(containerDataMap);
-							containerDataCache.setContainerData(container, builder.build());
+							containerDataCache.setContainerData(containername, builder.build());
 						}
 						if (clickType.isLeftClick()) {
 							final TeleportPlayer teleport = new TeleportPlayer(player, (Location) o);
@@ -154,7 +154,7 @@ public class ContainersLinkedList extends MenuHolder {
 		backButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
-				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
+				new ModifyContinerData.AlterContainerDataMenu(containername).menuOpen(player);
 			}
 
 			@Override

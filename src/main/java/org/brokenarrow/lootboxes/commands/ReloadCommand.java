@@ -24,6 +24,7 @@ public class ReloadCommand extends SubCommandsUtility {
 			GuiTempletSettings.getInstance().reload();
 			plugin.getSettings().reload();
 			ChatMessages.messagesReload(plugin);
+			plugin.getSpawnLootContainer().setRandomSpawnedContiner();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

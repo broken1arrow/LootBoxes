@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.builder;
 
+import com.google.common.base.Enums;
+import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -23,6 +25,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 	private final String lootTableLinked;
 	private final Material icon;
+	private final Material randonLootContainerItem;
+	private final Facing randonLootContainerFaceing;
 	private final String displayname;
 	private final List<String> lore;
 	private final Map<Object, ParticleEffect> particleEffects;
@@ -31,14 +35,20 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private final boolean spawningContainerWithCooldown;
 	private final boolean enchant;
 	private final boolean randomSpawn;
+	private final boolean showTitel;
+	private final boolean contanerShallglow;
 	private final long cooldown;
+	private final int attempts;
 	private final Builder builder;
+
 
 	private ContainerDataBuilder(final Builder builder) {
 
 		this.lootTableLinked = builder.containerDataLinkedToLootTable;
 		this.particleEffects = builder.particleEffects;
 		this.icon = builder.icon;
+		this.randonLootContainerItem = builder.randonLootContainerItem;
+		this.randonLootContainerFaceing= builder.randonLootContainerFaceing;
 		this.displayname = builder.displayname;
 		this.lore = builder.lore;
 		this.containerData = builder.containerData;
@@ -47,6 +57,9 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		this.enchant = builder.enchant;
 		this.cooldown = builder.cooldown;
 		this.randomSpawn = builder.randomSpawn;
+		this.showTitel =builder.showTitel;
+		this.contanerShallglow = builder.contanerShallglow;
+		this.attempts = builder.attempts;
 		this.builder = builder;
 	}
 
@@ -69,6 +82,14 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 	public Material getIcon() {
 		return icon;
+	}
+
+	public Material getRandonLootContainerItem() {
+		return randonLootContainerItem;
+	}
+
+	public Facing getRandonLootContainerFaceing() {
+		return randonLootContainerFaceing;
 	}
 
 	public String getDisplayname() {
@@ -95,6 +116,14 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return enchant;
 	}
 
+	public boolean isShowTitel() {
+		return showTitel;
+	}
+
+	public boolean isContanerShallglow() {
+		return contanerShallglow;
+	}
+
 	public boolean isRandomSpawn() {
 		return randomSpawn;
 	}
@@ -103,15 +132,20 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return cooldown;
 	}
 
+	public int getAttempts() {
+		return attempts;
+	}
+
 	public Builder getBuilder() {
 		return builder;
 	}
-
 
 	public static final class Builder {
 
 		private String containerDataLinkedToLootTable;
 		private Material icon;
+		public Material randonLootContainerItem;
+		public Facing randonLootContainerFaceing;
 		private String displayname;
 		private List<String> lore;
 		private Map<Object, ParticleEffect> particleEffects;
@@ -120,7 +154,10 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		private boolean spawningContainerWithCooldown;
 		private boolean enchant;
 		private boolean randomSpawn;
+		public boolean showTitel;
+		public boolean contanerShallglow;
 		private long cooldown;
+		public int attempts;
 
 		public Builder setContainerDataLinkedToLootTable(final String ContainerDataLinkedToLootTable) {
 			this.containerDataLinkedToLootTable = ContainerDataLinkedToLootTable;
@@ -135,6 +172,16 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 		public Builder setIcon(final Material icon) {
 			this.icon = icon;
+			return this;
+		}
+
+		public Builder setRandonLootContainerItem(Material randonLootContainerItem) {
+			this.randonLootContainerItem = randonLootContainerItem;
+			return this;
+		}
+
+		public Builder setRandonLootContainerFaceing(Facing randonLootContainerFaceing) {
+			this.randonLootContainerFaceing = randonLootContainerFaceing;
 			return this;
 		}
 
@@ -173,8 +220,23 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 			return this;
 		}
 
+		public Builder setShowTitel(boolean showTitel) {
+			this.showTitel = showTitel;
+			return this;
+		}
+
+		public Builder setContanerShallglow(boolean contanerShallglow) {
+			this.contanerShallglow = contanerShallglow;
+			return this;
+		}
+
 		public Builder setCooldown(final long cooldown) {
 			this.cooldown = cooldown;
+			return this;
+		}
+
+		public Builder setAttempts(int attempts) {
+			this.attempts = attempts;
 			return this;
 		}
 
@@ -187,14 +249,20 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 			return "Builder{" +
 					"containerDataLinkedToLootTable='" + containerDataLinkedToLootTable + '\'' +
 					", icon=" + icon +
+					", randonLootContainerItem=" + randonLootContainerItem +
+					", randonLootContainerFaceing=" + randonLootContainerFaceing +
 					", displayname='" + displayname + '\'' +
 					", lore=" + lore +
-					", particleEffect=" + particleEffects +
+					", particleEffects=" + particleEffects +
 					", containerData=" + containerData +
 					", keysData=" + keysData +
-					", spawning=" + spawningContainerWithCooldown +
+					", spawningContainerWithCooldown=" + spawningContainerWithCooldown +
 					", enchant=" + enchant +
+					", randomSpawn=" + randomSpawn +
+					", showTitel=" + showTitel +
+					", contanerShallglow=" + contanerShallglow +
 					", cooldown=" + cooldown +
+					", attempts=" + attempts +
 					'}';
 		}
 	}
@@ -204,14 +272,20 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return "ContainerDataBuilder{" +
 				"lootTableLinked='" + lootTableLinked + '\'' +
 				", icon=" + icon +
+				", randonLootContainerItem=" + randonLootContainerItem +
+				", randonLootContainerFaceing=" + randonLootContainerFaceing +
 				", displayname='" + displayname + '\'' +
 				", lore=" + lore +
-				", particleEffect=" + particleEffects +
+				", particleEffects=" + particleEffects +
 				", containerData=" + containerData +
 				", keysData=" + keysData +
-				", spawning=" + spawningContainerWithCooldown +
+				", spawningContainerWithCooldown=" + spawningContainerWithCooldown +
 				", enchant=" + enchant +
+				", randomSpawn=" + randomSpawn +
+				", showTitel=" + showTitel +
+				", contanerShallglow=" + contanerShallglow +
 				", cooldown=" + cooldown +
+				", attempts=" + attempts +
 				", builder=" + builder +
 				'}';
 	}
@@ -230,6 +304,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		final Map<String, Object> keysData = new LinkedHashMap<>();
 		keysData.put("LootTable_linked", this.lootTableLinked);
 		keysData.put("Icon", this.icon + "");
+		keysData.put("Random_loot_container", this.randonLootContainerItem + "");
+		keysData.put("Random_loot_faceing", this.randonLootContainerFaceing + "");
 		keysData.put("Display_name", this.displayname);
 		keysData.put("Lore", this.lore);
 		keysData.put("Particle_effect", this.particleEffects.entrySet().stream().collect(Collectors.toMap(k -> k.getKey().toString(), Map.Entry::getValue)));
@@ -237,8 +313,11 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Enchant", this.enchant);
 		keysData.put("Random_spawn", this.randomSpawn);
 		keysData.put("Cooldown", this.cooldown);
+		keysData.put("Random_loot_titel", this.showTitel);
+		keysData.put("Random_loot_glow", this.contanerShallglow);
 		keysData.put("Keys", this.keysData);
 		keysData.put("Containers", this.containerData);
+		keysData.put("Attempts", this.attempts);
 		return keysData;
 	}
 
@@ -269,10 +348,22 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		final boolean enchant = (boolean) map.get("Enchant");
 		final boolean randomSpawn = (boolean) map.get("Random_spawn");
 		final long cooldown = (Integer) map.get("Cooldown");
+		final Material random_loot_container = Material.getMaterial(String.valueOf(map.get("Random_loot_container")));
+		final String random_loot_faceing = (String) map.get("Random_loot_faceing");
+		final boolean random_loot_titel = (boolean) map.getOrDefault("Random_loot_titel", false);
+		final boolean  random_loot_glow = (boolean) map.getOrDefault("Random_loot_glow", false);
+		final int  attempts = (Integer) map.getOrDefault("Attempts", 1);
+		Facing blockFace = null;
+		if (random_loot_faceing != null)
+			blockFace = Enums.getIfPresent(Facing.class, random_loot_faceing).orNull();
+		if (blockFace == null)
+			blockFace = Facing.WEST;
+
 		Valid.checkNotNull(icon, "Material is null for this container");
 		Material material = Material.getMaterial(icon);
-		if (material == null)
+		if (material == null){
 			material = Material.CHEST;
+		}
 
 		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder()
 				.setContainerDataLinkedToLootTable(lootTableLinked)
@@ -282,11 +373,16 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 						convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? convertParticleEffectList(particleEffectList) : convertStringList(particleEffect)))
 				.setEnchant(enchant)
 				.setIcon(material)
+				.setRandonLootContainerItem(random_loot_container != null ?random_loot_container :  Material.CHEST)
+				.setRandonLootContainerFaceing(blockFace)
 				.setDisplayname(displayName)
 				.setLore(lore)
+				.setContanerShallglow(random_loot_glow)
+				.setShowTitel(random_loot_titel)
 				.setRandomSpawn(randomSpawn)
 				.setContainerData(containers)
-				.setKeysData(keys);
+				.setKeysData(keys)
+				.setAttempts( attempts);
 
 		return builder.build();
 	}

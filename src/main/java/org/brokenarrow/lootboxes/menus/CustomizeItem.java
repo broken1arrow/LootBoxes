@@ -32,7 +32,7 @@ public class CustomizeItem extends MenuHolder {
 	private final MenuButton changeMaxAmount;
 	private final GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
-	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettings();
+	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettingsData();
 
 	public CustomizeItem(final String lootTable, final String itemToEdit) {
 

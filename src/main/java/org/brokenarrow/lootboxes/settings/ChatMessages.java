@@ -71,6 +71,7 @@ public class ChatMessages extends SimpleYamlHelper {
 	public static ChatMessages SET_COLOR_ON_PARTICLE_NEXT_COLOR = new ChatMessages("SET_COLOR_ON_PARTICLE.NEXT_COLOR");
 	public static ChatMessages SET_PARTICLE_SIZE_START_TYPE = new ChatMessages("SET_PARTICLE_SIZE.START_TYPE");
 	public static ChatMessages SET_PARTICLE_SIZE_ZERO_OR_LESS = new ChatMessages("SET_PARTICLE_SIZE.ZERO_OR_LESS");
+	public static ChatMessages RANDOM_LOOT_MESAGE_TITEL = new ChatMessages("RANDOM_LOOT_MESAGE.TITEL");
 
 	public static ChatMessages NOT_VALID_NUMBER = new ChatMessages("NOT_VALID_NUMBER");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
@@ -154,10 +155,10 @@ public class ChatMessages extends SimpleYamlHelper {
 
 	public static void messagesReload(Plugin plugin) {
 
-		File file = new File(plugin.getDataFolder() + "/language", "language_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml");
+		File file = new File(plugin.getDataFolder() + "/language", "language_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml");
 
 		if (!file.exists())
-			Lootboxes.getInstance().saveResource("language/language_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml", false);
+			Lootboxes.getInstance().saveResource("language/language_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml", false);
 
 		YamlConfiguration loadedFile = YamlConfiguration.loadConfiguration(file);
 

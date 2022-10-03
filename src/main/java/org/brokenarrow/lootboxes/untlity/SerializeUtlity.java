@@ -5,7 +5,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 public class SerializeUtlity {
-
+	public static String serilazeLoc(Location location) {
+		return location.getWorld().getName() + " " + location.getBlockX() + " " + location.getBlockY() +   " " + location.getBlockZ();
+	}
 	public static Location isLocation(Object raw) {
 		String[] parts;
 		if (!raw.toString().contains(" "))

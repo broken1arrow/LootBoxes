@@ -226,7 +226,7 @@ public class EditKeysToOpen extends MenuHolder {
 		private final MenuButton mobDropKey;
 		private final GuiTempletsYaml.Builder guiTemplets;
 		private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
-		private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettings();
+		private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettingsData();
 
 		public EditKey(String containerData, String keyName) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Key").placeholders("");

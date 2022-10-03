@@ -11,7 +11,7 @@ import org.bukkit.plugin.Plugin;
 
 public class LandsProtection implements ProtectingProvider {
 	private final LandsIntegration lands;
-	
+
 	public LandsProtection(Plugin plugin) {
 		lands = new LandsIntegration(plugin);
 		try {
@@ -26,7 +26,6 @@ public class LandsProtection implements ProtectingProvider {
 	public boolean isAllowedToSpawnContainer(Location location) {
 		Area landsArea = lands.getAreaByLoc(location);
 		Flag flag = Flags.get("Lootboxesspawn");
-		System.out.println("landsArea " + landsArea);
 		if (landsArea == null) {
 			if (!lands.isClaimed(location) && flag != null)
 				return lands.getLandWorld(location.getWorld()).hasFlag(location, (LandFlag) flag);

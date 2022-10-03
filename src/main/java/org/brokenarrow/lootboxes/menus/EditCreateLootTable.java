@@ -181,7 +181,7 @@ public class EditCreateLootTable extends MenuHolder {
 		private final MenuButton backButton;
 		private final GuiTempletsYaml.Builder guiTemplets;
 		private final LootItems lootTable = LootItems.getInstance();
-		private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettings();
+		private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettingsData();
 
 		public EditLootTable(final String lootTableName) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_loot_table").placeholders(lootTableName);

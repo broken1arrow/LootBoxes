@@ -15,7 +15,7 @@ public class GuiTempletSettings extends YamlUtil {
 	private final Map<String, Map<String, Guidata>> chacheGuiSettings = new HashMap<>();
 
 	public GuiTempletSettings() {
-		super("guitemplets_" + Lootboxes.getInstance().getSettings().getSettings().getLanguage() + ".yml", "guitemplets.yml");
+		super("guitemplets_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml", "guitemplets.yml");
 
 	}
 
