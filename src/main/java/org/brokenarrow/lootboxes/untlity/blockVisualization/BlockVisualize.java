@@ -30,6 +30,7 @@ public class BlockVisualize {
 		} else if (BlockVisualizerUtility.isVisualized(block)) {
 			BlockVisualizerUtility.stopVisualizing(block);
 		}
+		BlockVisualizerUtility.VisualTask.getInstance().start();
 	}
 
 	public static boolean stopVisualizing(final Block block) {

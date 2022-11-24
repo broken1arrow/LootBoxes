@@ -17,22 +17,20 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 import static org.brokenarrow.lootboxes.untlity.ServerVersion.Version.*;
 
 public final class BlockVisualizerUtility {
-	private static final Map<Location, VisualizeData> visualizedBlocks = new HashMap<>();
+	private static final Map<Location, VisualizeData> visualizedBlocks = new ConcurrentHashMap<>();
 	private static final Lootboxes LOOTBOXES = Lootboxes.getInstance();
 
 	public static void visualize(@NotNull Block block, Material mask, String blockName) {
 		visualize(null, block, mask, blockName);
 	}
+
 	public static void visualize(Player viwer, @NotNull Block block, Material mask, String blockName) {
-		visualize( viwer,  block,  mask, blockName,false);
-		VisualTask.getInstance().start();
-	}
-	private static void visualize(Player viwer, @NotNull Block block, Material mask, String blockName,boolean runtask) {
 		if (block == null) {
 			throw new NullPointerException("block is marked non-null but is null");
 		} else {
@@ -234,7 +232,7 @@ public final class BlockVisualizerUtility {
 		BukkitTask task;
 
 		public void start() {
-			if (task == null || checkTaskRunning())
+			if (task == null)
 				task = runTaskTimer(LOOTBOXES, 0L, 20 * 6L);
 		}
 
@@ -262,9 +260,9 @@ public final class BlockVisualizerUtility {
 				VisualizeData visualizeData = visualizeBlocks.getValue();
 				if (visualizeData.getViwer() == null)
 					for (Player player : visualizeData.getPlayersAllowed())
-						visualize(player, location.getBlock(), visualizeData.getMask(), visualizeData.getText(),false);
+						visualize(player, location.getBlock(), visualizeData.getMask(), visualizeData.getText());
 				else
-					visualize(visualizeData.getViwer(), location.getBlock(), visualizeData.getMask(), visualizeData.getText(),false);
+					visualize(visualizeData.getViwer(), location.getBlock(), visualizeData.getMask(), visualizeData.getText());
 			}
 		}
 	}
