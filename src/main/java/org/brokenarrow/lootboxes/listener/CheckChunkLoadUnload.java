@@ -40,19 +40,19 @@ public class CheckChunkLoadUnload implements Listener {
 		if (locationList != null && !locationList.isEmpty()) {
 			this.setChachedChunks(chunk);
 			ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot(true, false, false);
-			runtaskLater(5, () -> addToHopperCache(true, chunkSnapshot, locationList), true);
+			runtaskLater(5, () -> addToHopperCache(chunkSnapshot, locationList), true);
 		}
 
 	}
 
-	public void addToHopperCache(final boolean loadingChunks, final ChunkSnapshot chunkSnapshot, final List<Location> locationList) {
+	public void addToHopperCache(final ChunkSnapshot chunkSnapshot, final List<Location> locationList) {
 		final List<Location> locations = containerDataCache.getChunkData(chunkSnapshot);
 		for (final Location location : locations) {
-			addToCache(location, loadingChunks, chunkSnapshot);
+			addToCache(location, chunkSnapshot);
 		}
 	}
 
-	public void addToCache(final Location location, final boolean loadingChunks, final ChunkSnapshot chunkSnapshot) {
+	public void addToCache(final Location location, final ChunkSnapshot chunkSnapshot) {
 		plugin.getSpawnContainerEffectsTask().addLocationInList(location);
 	}
 

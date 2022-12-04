@@ -410,6 +410,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 		if (isSingelFile() && !file.getName().equals(getName())) return;
 		try {
 			YamlConfiguration customConfig = YamlConfiguration.loadConfiguration(file);
+
 			this.getCustomConfig().set("Data", null);
 			for (final Map.Entry<String, ContainerDataBuilder> childrenKey : cacheContainerData.entrySet())
 				if (childrenKey != null) {

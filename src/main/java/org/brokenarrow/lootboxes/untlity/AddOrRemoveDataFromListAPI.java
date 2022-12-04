@@ -1,47 +1,82 @@
 package org.brokenarrow.lootboxes.untlity;
 
+import lombok.NonNull;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
 /**
  * This class is used to add or remove locations from the location cache for the different runnable
  * tasks. So it only processes what it needs to do only.
  */
-public interface AddOrRemoveDataFromListAPI {
+public abstract class  AddOrRemoveDataFromListAPI {
 
-	default void checkLocationsList(final List<Location> listToModify, final Set<Location> locationsToAddOrRemove, final boolean addToList) {
+	private final List<Location> locationsList = new ArrayList<>();
+	private final Map<Location, Boolean> cachedLocations = new ConcurrentHashMap<>();
+	private boolean goThruLocationList;
+	private boolean loadingLocation;
+	private BukkitTask task;
 
-		if (!locationsToAddOrRemove.isEmpty()) {
-			if (addToList) {
-				addLocationToList(listToModify, locationsToAddOrRemove);
-			} else {
-				removeLocationFromList(listToModify, locationsToAddOrRemove);
-			}
-			locationsToAddOrRemove.clear();
+	public void checkLocationsList() {
+		final Map<Location, Boolean> tempLoc = this.getTempLocations();
+		if (tempLoc.isEmpty()) return;
+		if (task == null) {
+			loadingLocation = true;
+			this.task = runtaskLater(1, () -> {
+				tempLoc.forEach((location, value) -> {
+					if (value) {
+						if (!this.locationsList.contains(location))
+							this.locationsList.add(location);
+					} else {
+						this.locationsList.remove(location);
+					}
+				});
+				loadingLocation = false;
+				task = null;
+				tempLoc.clear();
+			}, true);
 		}
 	}
 
-	default void addLocationToList(final List<Location> listToModify, final Set<Location> locationsToAdd) {
+	public Set<Location> getTempStoredLocations() {
+		final Map<Location, Boolean> dataSet = this.getTempLocations();
+		if (dataSet.isEmpty()) return null;
 
-		if (!locationsToAdd.isEmpty()) {
-			locationsToAdd.stream().filter(loc -> !listToModify.contains(loc)).forEach(listToModify::add);
-		}
-		locationsToAdd.clear();
+		return dataSet.keySet();
 	}
 
-	default void removeLocationFromList(final List<Location> listToModify, final Set<Location> locationsToRemove) {
-		if (!locationsToRemove.isEmpty()) {
-			locationsToRemove.forEach(listToModify::remove);
-		}
-		locationsToRemove.clear();
-	}
-
-	default Set<Location> getDefultOrSecondaryList(final Set<Location> defultlist, final Set<Location> secondList) {
+	public Set<Location> getDefultOrSecondaryList(final Set<Location> defultlist, final Set<Location> secondList) {
 		if (defultlist == null || secondList == null) return null;
 
 		return !defultlist.isEmpty() ? defultlist : !secondList.isEmpty() ? secondList : defultlist;
+	}
+
+	public void setGoThruLocationList(final boolean goThruLocationList) {
+		this.goThruLocationList = goThruLocationList;
+	}
+
+	protected List<Location> getLocationsList() {
+		return locationsList;
+	}
+	@NonNull
+	protected Map<Location, Boolean> getTempLocations() {
+		return cachedLocations;
+	}
+
+	/**
+	 * Check if it load locations to the list.
+	 *
+	 * @return true if it load locations.
+	 */
+	public boolean isLoadingLocation() {
+		return loadingLocation;
 	}
 
 	/**
@@ -49,7 +84,9 @@ public interface AddOrRemoveDataFromListAPI {
 	 *
 	 * @param location of the continer.
 	 */
-	void addLocationInList(final Location location);
+	public void addLocationInList(@NonNull final Location location) {
+		getTempLocations().put(location, true);
+	}
 
 	/**
 	 * Check if list contains location.
@@ -57,8 +94,8 @@ public interface AddOrRemoveDataFromListAPI {
 	 * @param location of the continer.
 	 * @return true if the list contains the container
 	 */
-	default boolean isLocationInList(final Location location) {
-		return false;
+	public boolean isLocationInList(@NonNull final Location location) {
+		return this.locationsList.contains(location);
 	}
 
 	/**
@@ -66,6 +103,8 @@ public interface AddOrRemoveDataFromListAPI {
 	 *
 	 * @param location of the container you want to remove.
 	 */
-	void removeLocationInList(final Location location);
+	public void removeLocationInList(@NonNull final Location location) {
+		getTempLocations().put(location, false);
+	}
 
 }
