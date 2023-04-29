@@ -215,7 +215,7 @@ public class EditCreateItems extends MenuHolder {
 			saveItems = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
-					final Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
+					final Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsOnSpecifiedSlots(menu, null, false);
 					if (items == null || items.isEmpty()) return;
 
 					for (final ItemStack item : items.values()) {

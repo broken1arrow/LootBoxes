@@ -227,7 +227,7 @@ public class EditCreateLootTable extends MenuHolder {
 						amountCached = 0;
 					final LootData.Builder builder = lootData.getBuilder().setMaximum(amountCached);
 					lootTable.setCachedLoot(lootTableName, GLOBAL_VALUES.getKey(), builder.build());
-					EditLootTable.this.updateButton(this);
+					updateButton(this);
 				}
 
 				@Override
@@ -265,7 +265,7 @@ public class EditCreateLootTable extends MenuHolder {
 
 					final LootData.Builder builder = lootData.getBuilder().setMinimum(amountCached);
 					lootTable.setCachedLoot(lootTableName, GLOBAL_VALUES.getKey(), builder.build());
-					EditLootTable.this.updateButton(this);
+					updateButton(this);
 				}
 
 				@Override

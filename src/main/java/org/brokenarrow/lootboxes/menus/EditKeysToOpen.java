@@ -387,13 +387,12 @@ public class EditKeysToOpen extends MenuHolder {
 			setMenuSize(guiTemplets.build().getGuiSize());
 			setTitle(guiTemplets.build().getGuiTitle());
 			setFillSpace(guiTemplets.build().getFillSpace());
-			/*setFillSpace(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));*/
 			setSlotsYouCanAddItems(true);
 
 			saveItems = new MenuButton() {
 				@Override
 				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-					Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsExceptBottomBar(menu, null, false);
+					Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsOnSpecifiedSlots(menu, null, false);
 					if (items == null || items.isEmpty()) return;
 
 					new SetKeyName(items.values().toArray(new ItemStack[0]), containerData).start(player);

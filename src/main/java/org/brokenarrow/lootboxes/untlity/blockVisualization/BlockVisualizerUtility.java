@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.untlity.blockVisualization;
 
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import lombok.NonNull;
 import org.broken.lib.rbg.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
@@ -16,7 +17,10 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
@@ -186,7 +190,7 @@ public final class BlockVisualizerUtility {
 		if (instance instanceof Entity) {
 			Entity entity = ((Entity) instance);
 			if (LOOTBOXES.getServerVersion().olderThan(v1_13)) {
-				menulibrary.dependencies.nbt.nbtapi.NBTEntity nbtEntity = new menulibrary.dependencies.nbt.nbtapi.NBTEntity((Entity) instance);
+				NBTEntity nbtEntity = new NBTEntity((Entity) instance);
 				nbtEntity.setInteger("NoGravity", !key ? 0 : 1);
 				entity.setGlowing(key);
 			} else {

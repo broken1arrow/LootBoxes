@@ -94,7 +94,9 @@ public class CustomizeItem extends MenuHolder {
 					chance = 0;
 				builder.setChance(chance);
 				lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-				CustomizeItem.this.updateButton(this);
+				updateButtons();
+				System.out.println("this.changeChanc");
+				updateButton(this);
 			}
 
 			@Override
@@ -128,7 +130,7 @@ public class CustomizeItem extends MenuHolder {
 					minimum = 0;
 				builder.setMinimum(minimum);
 				lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-				CustomizeItem.this.updateButton(this);
+				updateButton(this);
 			}
 
 			@Override
@@ -162,7 +164,7 @@ public class CustomizeItem extends MenuHolder {
 					maximum = 0;
 				builder.setMaximum(maximum);
 				lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-				CustomizeItem.this.updateButton(this);
+				updateButton(this);
 			}
 
 			@Override

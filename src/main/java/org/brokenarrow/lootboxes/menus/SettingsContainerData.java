@@ -50,7 +50,7 @@ public class SettingsContainerData extends MenuHolder {
 					builder.setAttempts(attempts);
 					containerDataCache.setContainerData(containerDataName, builder.build());
 				}
-				SettingsContainerData.this.updateButton(this);
+				updateButton(this);
 			}
 
 			@Override

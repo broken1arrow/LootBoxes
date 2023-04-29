@@ -79,9 +79,7 @@ public class SpawnContainerRandomLoc {
 			if (loc != null)
 				break;
 		}
-		System.out.println("spawnBlock spawnBlock" + loc);
 		if (loc != null) {
-			System.out.println("spawnBlock spawnBlock" + loc.getBlock().getType());
 			spawnContainer(containerDataBuilder, loc);
 			String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serilazeLoc(loc));
 			if (containerDataBuilder.isShowTitel() && message != null && !message.isEmpty()) {

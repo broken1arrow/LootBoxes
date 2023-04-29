@@ -61,10 +61,8 @@ public class OpenContainer implements Listener {
 					if (values.getItemType() == null || values.getItemType().isAir())
 						continue;
 					list.add(translatePlaceholders(values.getDisplayName(), values.getKeyName(), values.getLootTableLinked(), values.getAmountNeeded(), values.getItemType()));
-					System.out.println("values values.getDisplayName() " + values.getDisplayName());
 				}
 				if (!list.isEmpty()) {
-					System.out.println("values " + list);
 					LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
 
 					event.setCancelled(true);
