@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class SettingsContainerData extends MenuHolder {
 
@@ -36,7 +37,7 @@ public class SettingsContainerData extends MenuHolder {
 
 		attemptsToSpawn = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 				if (containerDataBuilder != null) {
 
@@ -68,7 +69,7 @@ public class SettingsContainerData extends MenuHolder {
 
 		generateLootWhenClicking = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 				if (containerDataBuilder != null) {
 					if (containerDataBuilder.isSpawningContainerWithCooldown() == click.isLeftClick()) return;
@@ -92,7 +93,7 @@ public class SettingsContainerData extends MenuHolder {
 		contanerShallglow = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 				if (containerDataBuilder != null) {
 					if (containerDataBuilder.isContanerShallglow() == click.isLeftClick()) return;
@@ -118,7 +119,7 @@ public class SettingsContainerData extends MenuHolder {
 		showTitelSpawnChest = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 				if (containerDataBuilder != null) {
 					if (containerDataBuilder.isShowTitel() == click.isLeftClick()) return;
@@ -141,7 +142,7 @@ public class SettingsContainerData extends MenuHolder {
 		};
 		randomLootContainer = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 				if (containerDataBuilder != null)
 					new ChoseRandomLootContainer(containerDataBuilder,containerDataName).menuOpen(player);
@@ -160,7 +161,7 @@ public class SettingsContainerData extends MenuHolder {
 		changeIfShallUsedToRandomSpawn = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 				if (containerDataBuilder != null) {
 					if (containerDataBuilder.isRandomSpawn() == click.isLeftClick()) return;
@@ -190,7 +191,7 @@ public class SettingsContainerData extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				new ModifyContinerData.AlterContainerDataMenu(containerDataName).menuOpen(player);
 			}
 

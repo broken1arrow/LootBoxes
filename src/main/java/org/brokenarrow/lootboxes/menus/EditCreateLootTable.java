@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class EditCreateLootTable extends MenuHolder {
 		setFillSpace(guiTemplets.build().getFillSpace());
 		createTable = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 //new SimpleConversation();
 				new CreateTable().start(player);
 			}
@@ -58,7 +59,7 @@ public class EditCreateLootTable extends MenuHolder {
 
 		newTable = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 			}
 
@@ -70,7 +71,7 @@ public class EditCreateLootTable extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				new MainMenu().menuOpen(player);
 			}
 
@@ -85,7 +86,7 @@ public class EditCreateLootTable extends MenuHolder {
 		};
 		listOfTables = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (object instanceof String) {
 					if (click.isLeftClick())
@@ -101,7 +102,7 @@ public class EditCreateLootTable extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(final Object object) {
+			public ItemStack getItem(final @NotNull Object object) {
 
 				if (object instanceof String) {
 					if (object.equals("Global_Values")) return null;
@@ -119,7 +120,7 @@ public class EditCreateLootTable extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
@@ -137,7 +138,7 @@ public class EditCreateLootTable extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
@@ -154,7 +155,7 @@ public class EditCreateLootTable extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(final Object o) {
+	public MenuButton getFillButtonAt(final @NotNull Object o) {
 		return listOfTables;
 
 	}
@@ -190,7 +191,7 @@ public class EditCreateLootTable extends MenuHolder {
 			setTitle(guiTemplets.build().getGuiTitle());
 			removeLootTable = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					lootTable.removeLootTable(lootTableName);
 					new EditLootTable(lootTableName).menuOpen(player);
 				}
@@ -207,7 +208,7 @@ public class EditCreateLootTable extends MenuHolder {
 			maxAmount = new MenuButton() {
 
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 					int amount = 0;
 					if (click == ClickType.LEFT)
@@ -243,7 +244,7 @@ public class EditCreateLootTable extends MenuHolder {
 			minAmount = new MenuButton() {
 
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 					int amount = 0;
 					if (click == ClickType.LEFT)
@@ -281,7 +282,7 @@ public class EditCreateLootTable extends MenuHolder {
 			};
 			backButton = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					new EditCreateLootTable().menuOpen(player);
 				}
 
