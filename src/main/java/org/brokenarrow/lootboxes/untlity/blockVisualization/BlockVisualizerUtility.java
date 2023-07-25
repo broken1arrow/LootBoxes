@@ -1,8 +1,7 @@
 package org.brokenarrow.lootboxes.untlity.blockVisualization;
 
 import de.tr7zw.changeme.nbtapi.NBTEntity;
-import lombok.NonNull;
-import org.broken.lib.rbg.TextTranslator;
+import org.broken.arrow.color.library.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
 import org.bukkit.Bukkit;
@@ -78,7 +77,7 @@ public final class BlockVisualizerUtility {
 		}
 	}
 
-	public static void stopVisualizing(@NonNull Block block) {
+	public static void stopVisualizing(@NotNull Block block) {
 		if (block == null) {
 			throw new NullPointerException("block is marked non-null but is null");
 		} else {
@@ -113,7 +112,7 @@ public final class BlockVisualizerUtility {
 
 	}
 
-	public static boolean isVisualized(@NonNull Block block) {
+	public static boolean isVisualized(@NotNull Block block) {
 		if (block == null) {
 			throw new NullPointerException("block is marked non-null but is null");
 		} else {
@@ -174,7 +173,7 @@ public final class BlockVisualizerUtility {
 
 	}
 
-	public static void apply(@NonNull Object instance, boolean key) {
+	public static void apply(@NotNull Object instance, boolean key) {
 	/*	if (instance instanceof FallingBlock) {
 			FallingBlock entity = ((FallingBlock) instance);
 			if (ServerVersion.olderThan(ServerVersion.v1_13)) {
@@ -243,6 +242,7 @@ public final class BlockVisualizerUtility {
 		public boolean checkTaskRunning() {
 			return task != null && (Bukkit.getScheduler().isQueued(task.getTaskId()) || Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()));
 		}
+
 		public void stop() {
 			if (checkTaskRunning())
 				task.cancel();

@@ -1,11 +1,14 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.itemcreator.library.utility.Tuple;
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.CustomizeItem;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
-import org.brokenarrow.menu.library.utility.Item.Tuple;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.enchantments.Enchantment;
@@ -24,17 +27,18 @@ public class SaveEnchantment extends SimpleConversation {
 	private final Enchantment enchantment;
 
 	public SaveEnchantment(final String lootTable, final String itemToEdit, final Enchantment enchantment) {
+		super(Lootboxes.getInstance());
 		this.lootTable = lootTable;
 		this.itemToEdit = itemToEdit;
 		this.enchantment = enchantment;
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new setLevel();
 	}
 
-	public class setLevel extends SimplePromp {
+	public class setLevel extends SimplePrompt {
 		private final LootItems lootItems = LootItems.getInstance();
 		private final ItemData itemData = ItemData.getInstance();
 

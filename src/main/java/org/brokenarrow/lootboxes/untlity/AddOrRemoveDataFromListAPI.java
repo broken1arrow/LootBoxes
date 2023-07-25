@@ -1,8 +1,8 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
  * This class is used to add or remove locations from the location cache for the different runnable
  * tasks. So it only processes what it needs to do only.
  */
-public abstract class  AddOrRemoveDataFromListAPI {
+public abstract class AddOrRemoveDataFromListAPI {
 
 	private final List<Location> locationsList = new ArrayList<>();
 	private final Map<Location, Boolean> cachedLocations = new ConcurrentHashMap<>();
@@ -65,7 +65,8 @@ public abstract class  AddOrRemoveDataFromListAPI {
 	protected List<Location> getLocationsList() {
 		return locationsList;
 	}
-	@NonNull
+
+	@NotNull
 	protected Map<Location, Boolean> getTempLocations() {
 		return cachedLocations;
 	}
@@ -84,7 +85,7 @@ public abstract class  AddOrRemoveDataFromListAPI {
 	 *
 	 * @param location of the continer.
 	 */
-	public void addLocationInList(@NonNull final Location location) {
+	public void addLocationInList(@NotNull final Location location) {
 		getTempLocations().put(location, true);
 	}
 
@@ -94,7 +95,7 @@ public abstract class  AddOrRemoveDataFromListAPI {
 	 * @param location of the continer.
 	 * @return true if the list contains the container
 	 */
-	public boolean isLocationInList(@NonNull final Location location) {
+	public boolean isLocationInList(@NotNull final Location location) {
 		return this.locationsList.contains(location);
 	}
 
@@ -103,7 +104,7 @@ public abstract class  AddOrRemoveDataFromListAPI {
 	 *
 	 * @param location of the container you want to remove.
 	 */
-	public void removeLocationInList(@NonNull final Location location) {
+	public void removeLocationInList(@NotNull final Location location) {
 		getTempLocations().put(location, false);
 	}
 

@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.bukkit.conversations.ConversationContext;
@@ -16,16 +19,17 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 	private final ContainerDataCache container = ContainerDataCache.getInstance();
 
 	public ContainerDataLinkedLootTable(ContainerDataBuilder containerData, String key) {
+		super(Lootboxes.getInstance());
 		this.containerData = containerData;
 		this.key = key;
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new Commandprompt();
 	}
 
-	public class Commandprompt extends SimplePromp {
+	public class Commandprompt extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {

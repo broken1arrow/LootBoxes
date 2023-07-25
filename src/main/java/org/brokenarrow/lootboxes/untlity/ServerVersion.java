@@ -1,12 +1,9 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 
 public final class ServerVersion {
 
-
-	@Getter
 	private final float currentServerVersion;
 
 	public boolean equals(Version version) {

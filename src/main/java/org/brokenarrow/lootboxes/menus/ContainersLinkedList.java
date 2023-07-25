@@ -1,19 +1,20 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.title.update.library.UpdateTitle;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TeleportPlayer;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
 
 
 			/*	if (clickType.isLeftClick())
@@ -61,7 +62,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 		itemList = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
 
 				if (o instanceof Location) {
 
@@ -100,7 +101,7 @@ public class ContainersLinkedList extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(final Object object) {
+			public ItemStack getItem(final @NotNull Object object) {
 
 				Location location = null;
 				if (object instanceof Location)
@@ -116,13 +117,13 @@ public class ContainersLinkedList extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_Linked_List"));
+				UpdateTitle.update(player, guiTemplets.build().getGuiTitle("Container_Linked_List"));
 				updateButtons();
 			}
 
@@ -136,11 +137,11 @@ public class ContainersLinkedList extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_Linked_List", getPageNumber()));
+				UpdateTitle.update(player, guiTemplets.build().getGuiTitle("Container_Linked_List", getPageNumber()));
 				updateButtons();
 			}
 
@@ -153,7 +154,7 @@ public class ContainersLinkedList extends MenuHolder {
 		};
 		backButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
 				new ModifyContinerData.AlterContainerDataMenu(containername).menuOpen(player);
 			}
 
@@ -172,7 +173,7 @@ public class ContainersLinkedList extends MenuHolder {
 
 
 	@Override
-	public MenuButton getFillButtonAt(final Object o) {
+	public MenuButton getFillButtonAt(final @NotNull Object o) {
 		return itemList;
 	}
 

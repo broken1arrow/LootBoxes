@@ -1,25 +1,26 @@
 package org.brokenarrow.lootboxes.settings;
 
+import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuiTempletSettings extends YamlUtil {
+public class GuiTempletSettings extends YamlFileManager {
 
 	private static final GuiTempletSettings instance = new GuiTempletSettings();
 	private final Map<String, Map<String, Guidata>> chacheGuiSettings = new HashMap<>();
 
 	public GuiTempletSettings() {
-		super("guitemplets_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml", "guitemplets.yml");
+		super(Lootboxes.getInstance(),"guitemplets_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml");
 
 	}
 
-	@Override
+/*	@Override
 	public void reload() {
 		if (customConfigFile == null) {
 			customConfigFile = new File(Lootboxes.getInstance().getDataFolder() + "/language", fileName);
@@ -41,12 +42,11 @@ public class GuiTempletSettings extends YamlUtil {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-
-
+	}*/
 	@Override
-	protected void loadSettingsFromYaml() {
+	protected void loadSettingsFromYaml(final File file)  {
 		Map<String, Guidata> yamlData = new HashMap<>();
+		FileConfiguration customConfig = this.getCustomConfig();
 		ConfigurationSection MainConfigKeys = customConfig.getConfigurationSection("Gui_Templets");
 
 		if (MainConfigKeys != null) {
@@ -56,16 +56,16 @@ public class GuiTempletSettings extends YamlUtil {
 					for (String innerChildrenKeys : innerConfigKeys.getKeys(false)) {
 						if (!innerChildrenKeys.equals("Menu_Size") && !innerChildrenKeys.equals("Menu_Title") && !innerChildrenKeys.equals("FillSpace")) {
 
-							int menuGuiSize = this.customConfig.getInt("Gui_Templets." + mainKey + "." + "Menu_Size");
-							String menuGuiTitle = this.customConfig.getString("Gui_Templets." + mainKey + "." + "Menu_Title");
-							String fillSpace = this.customConfig.getString("Gui_Templets." + mainKey + "." + "FillSpace");
-							int maxAmountOfItems = this.customConfig.getInt("Gui_Templets." + mainKey + "." + "Max_Amount_Of_Items");
+							int menuGuiSize = customConfig.getInt("Gui_Templets." + mainKey + "." + "Menu_Size");
+							String menuGuiTitle = customConfig.getString("Gui_Templets." + mainKey + "." + "Menu_Title");
+							String fillSpace = customConfig.getString("Gui_Templets." + mainKey + "." + "FillSpace");
+							int maxAmountOfItems = customConfig.getInt("Gui_Templets." + mainKey + "." + "Max_Amount_Of_Items");
 
-							String displayname = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Display_name");
-							String slot = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Slot");
-							String icon = this.customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Icon");
-							boolean glow = this.customConfig.getBoolean("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Enchant");
-							List<String> lore = this.customConfig.getStringList("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Lore");
+							String displayname = customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Display_name");
+							String slot = customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Slot");
+							String icon = customConfig.getString("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Icon");
+							boolean glow = customConfig.getBoolean("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Enchant");
+							List<String> lore = customConfig.getStringList("Gui_Templets." + mainKey + "." + innerChildrenKeys + ".Lore");
 
 							Guidata.Builder builder = new Guidata.Builder()
 									.setDisplayname(displayname)
@@ -104,6 +104,12 @@ public class GuiTempletSettings extends YamlUtil {
 	public static GuiTempletSettings getInstance() {
 		return instance;
 	}
+
+	@Override
+	protected void saveDataToFile(final File file) {
+
+	}
+
 	/*
 	public static class Guidata {
 		private int menuSize;

@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleDustOptions;
@@ -27,6 +29,7 @@ public class SetNumbers extends SimpleConversation {
 	private final ContainerDataBuilder data;
 
 	public SetNumbers(ParticleSettings.Type dataType, String container, Object particle) {
+		super(Lootboxes.getInstance());
 		this.container = container;
 		this.data = containerDataCache.getCacheContainerData(container);
 		this.dataType = dataType;
@@ -40,12 +43,12 @@ public class SetNumbers extends SimpleConversation {
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new FirstNumberValue();
 	}
 
 
-	public class FirstNumberValue extends SimplePromp {
+	public class FirstNumberValue extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
@@ -106,7 +109,7 @@ public class SetNumbers extends SimpleConversation {
 		}
 	}
 
-	public class SecondNumberValue extends SimplePromp {
+	public class SecondNumberValue extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {

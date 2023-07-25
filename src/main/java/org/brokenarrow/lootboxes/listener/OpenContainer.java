@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.listener;
 
-import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
+import org.broken.arrow.nbt.library.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
@@ -145,14 +145,17 @@ public class OpenContainer implements Listener {
 	private boolean spawnLootWhenClicking(ContainerDataBuilder containerData, Location location, Block block) {
 		String lootTableLinked = containerData.getLootTableLinked();
 		if (lootTableLinked != null && !lootTableLinked.isEmpty()) {
-			ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+			if (stacks == null) {
+				return false;
+			}
 			ContainerData containerData1 = containerData.getLinkedContainerData().get(location);
 			block.setType(containerData1.getContainerType());
 			setRotation(location, containerData1.getFacing());
 			setCustomName(location, containerData.getDisplayname());
 			Inventory inventory = getInventory(location);
 			if (inventory != null) {
-				inventory.setContents(item);
+				inventory.setContents(stacks);
 			}
 			return true;
 		}

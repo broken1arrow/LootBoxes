@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.EditCreateLootTable;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -15,11 +18,12 @@ public class CreateTable extends SimpleConversation {
 	private final LootItems lootItems = LootItems.getInstance();
 
 	public CreateTable() {
+		super(Lootboxes.getInstance());
 		setTimeout(80);
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new Command();
 	}
 
@@ -30,7 +34,7 @@ public class CreateTable extends SimpleConversation {
 	}
 
 
-	public class Command extends SimplePromp {
+	public class Command extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {

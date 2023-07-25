@@ -1,8 +1,5 @@
 package org.brokenarrow.lootboxes.untlity.command;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -11,7 +8,7 @@ import java.util.List;
 /**
  * Utility class for tab completion.
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+
 public final class TabUtil {
 
 	/**

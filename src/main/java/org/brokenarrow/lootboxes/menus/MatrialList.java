@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
@@ -10,13 +12,12 @@ import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.LootDataSave;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class MatrialList extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
 
 				if (clickType.isLeftClick())
 					new SeachInMenu(MenuKeys.MATRIALLIST_MENU, menuKey, container, value).start(player);
@@ -63,7 +64,7 @@ public class MatrialList extends MenuHolder {
 
 		itemList = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
 				if (o instanceof Material) {
 
 					if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
@@ -112,7 +113,7 @@ public class MatrialList extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(final Object object) {
+			public ItemStack getItem(final @NotNull Object object) {
 
 				ItemStack itemstack = null;
 				if (object instanceof Material)
@@ -128,7 +129,7 @@ public class MatrialList extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
@@ -146,7 +147,7 @@ public class MatrialList extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
@@ -162,7 +163,7 @@ public class MatrialList extends MenuHolder {
 		};
 		backButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory inventory, final ClickType clickType, final ItemStack itemStack, final Object o) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
 				if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
 					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
@@ -192,7 +193,7 @@ public class MatrialList extends MenuHolder {
 
 
 	@Override
-	public MenuButton getFillButtonAt(final Object o) {
+	public MenuButton getFillButtonAt(final @NotNull Object o) {
 		return itemList;
 	}
 

@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
@@ -13,7 +16,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
@@ -26,12 +34,13 @@ public class SetKeyName extends SimpleConversation {
 	private static final Map<Player, StoreData> chachedPlayer = new HashMap<>();
 
 	public SetKeyName(ItemStack[] itemStacks, String containerData) {
+		super(Lootboxes.getInstance());
 		this.itemStacks = itemStacks;
 		this.containerData = containerData;
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new Commandprompt();
 	}
 
@@ -43,7 +52,7 @@ public class SetKeyName extends SimpleConversation {
 		}
 	}
 
-	public class Commandprompt extends SimplePromp {
+	public class Commandprompt extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {

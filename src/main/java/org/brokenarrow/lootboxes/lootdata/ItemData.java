@@ -1,8 +1,7 @@
 package org.brokenarrow.lootboxes.lootdata;
 
-import lombok.Getter;
+import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,19 +10,22 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
-public class ItemData extends SimpleYamlHelper {
+public class ItemData extends YamlFileManager {
 
-	@Getter
 	public static final ItemData instance = new ItemData();
 	private FileConfiguration customConfig;
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
-		super("itemdata", true);
+		super(Lootboxes.getInstance(),"itemdata", true,true);
 
 	}
 
@@ -179,4 +181,9 @@ public class ItemData extends SimpleYamlHelper {
 			cacheItemData.put(getItemDataPath(key.getName().replace(".yml", "")), stack);
 		}
 	}
+
+	public static ItemData getInstance() {
+		return instance;
+	}
+
 }

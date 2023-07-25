@@ -1,8 +1,8 @@
 package org.brokenarrow.lootboxes.settings;
 
-import org.broken.lib.rbg.TextTranslator;
+import org.broken.arrow.color.library.TextTranslator;
+import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class ChatMessages extends SimpleYamlHelper {
+public class ChatMessages extends YamlFileManager {
 	private static final Map<String, ChatMessages> chatMessagesMap = new HashMap<>();
 	private String messages;
 
@@ -88,7 +88,7 @@ public class ChatMessages extends SimpleYamlHelper {
 	public static ChatMessages FALSE = new ChatMessages("BOOLEAN_FALSE");
 
 	public ChatMessages(String idKey) {
-		super("language", true);
+		super(Lootboxes.getInstance(),"language", true,true);
 		chatMessagesMap.put(idKey, this);
 	}
 

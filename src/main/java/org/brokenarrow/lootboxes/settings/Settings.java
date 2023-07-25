@@ -1,30 +1,32 @@
 package org.brokenarrow.lootboxes.settings;
 
+import org.broken.arrow.yaml.library.YamlFileManager;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.SettingsData;
+import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.HashMap;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-public class Settings extends YamlUtil {
+public class Settings extends YamlFileManager {
 
 	public Settings() {
-		super("Settings.yml", "Settings.yml");
+		super(Lootboxes.getInstance(),"Settings.yml",true,true);
 	}
-
-	private final Map<String, SettingsData> settings = new HashMap<>();
+	private SettingsData settings;
 
 	@Override
-	public void reload() {
-		super.reload();
+	protected void saveDataToFile(final File file) {
+
 	}
 
 	public SettingsData getSettingsData() {
-		return settings.get("Settings");
+		return settings;
 	}
 
 	@Override
-	protected void loadSettingsFromYaml() {
+	protected void loadSettingsFromYaml(final File file) {
+		FileConfiguration customConfig = this.getCustomConfig();
 
 		int blocksAwayFromPlayer = customConfig.getInt("Blocks_Away_From_Player");
 		int blocksBetweenContainers = customConfig.getInt("Blocks_Between_Containers");
@@ -45,8 +47,8 @@ public class Settings extends YamlUtil {
 
 		String placeContainerDisplayName = customConfig.getString("Place_container.Display_name");
 		List<String> placeContainerLore = customConfig.getStringList("Place_container.Lore");
-		
-		SettingsData settingsData = new SettingsData.Builder()
+
+		settings = new SettingsData.Builder()
 				.setAmountOfBlocksBelowSurface(amountOfBlocksBelowSurface)
 				.setBlocksAwayFromPlayer(blocksAwayFromPlayer)
 				.setBlocksBetweenContainers(blocksBetweenContainers)
@@ -65,7 +67,5 @@ public class Settings extends YamlUtil {
 				.setPlaceContainerLore(placeContainerLore)
 				.setDebug(debug)
 				.build();
-
-		settings.put("Settings", settingsData);
 	}
 }

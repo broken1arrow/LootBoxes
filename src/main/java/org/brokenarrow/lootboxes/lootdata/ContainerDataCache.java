@@ -1,19 +1,32 @@
 package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
+import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.*;
+import org.brokenarrow.lootboxes.builder.ContainerData;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.builder.LocationData;
+import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
-import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.convertStringList;
@@ -21,7 +34,7 @@ import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.isLocation;
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
-public class ContainerDataCache extends SimpleYamlHelper {
+public class ContainerDataCache extends YamlFileManager {
 
 	private static final ContainerDataCache instance = new ContainerDataCache();
 	private final Map<String, ContainerDataBuilder> cacheContainerData = new HashMap<>();
@@ -29,8 +42,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 	private final Map<String, List<Location>> chunkData = new HashMap<>();
 
 	public ContainerDataCache() {
-		super("container_data.db", true, true);
-		//this.yamlFiles = new SimpleYamlHelper("container_data", true);
+		super(Lootboxes.getInstance(), "container_data.db");
 	}
 
 
@@ -407,9 +419,8 @@ public class ContainerDataCache extends SimpleYamlHelper {
 
 	@Override
 	public void saveDataToFile(final File file) {
-		if (isSingelFile() && !file.getName().equals(getName())) return;
+		if (isSingleFile() && !file.getName().equals(getFileName())) return;
 		try {
-			YamlConfiguration customConfig = YamlConfiguration.loadConfiguration(file);
 
 			this.getCustomConfig().set("Data", null);
 			for (final Map.Entry<String, ContainerDataBuilder> childrenKey : cacheContainerData.entrySet())
@@ -418,7 +429,7 @@ public class ContainerDataCache extends SimpleYamlHelper {
 						obj = obj.toString();*/
 					this.getCustomConfig().set("Data" + "." + childrenKey.getKey(), childrenKey.getValue());
 				}
-			this.getCustomConfig().save(file);
+			this.saveToFile(file);
 		} catch (final Exception ex) {
 			ex.printStackTrace();
 		}

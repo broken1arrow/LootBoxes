@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
@@ -12,8 +14,6 @@ import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class ParticleAnimantion extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick())
 					new SeachInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
 				else
@@ -75,7 +76,7 @@ public class ParticleAnimantion extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 			}
 
@@ -90,7 +91,7 @@ public class ParticleAnimantion extends MenuHolder {
 		};
 		listOfItems = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (object instanceof Particle || object instanceof Effect) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
@@ -117,7 +118,7 @@ public class ParticleAnimantion extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(final Object object) {
+			public ItemStack getItem(final @NotNull Object object) {
 
 				if (object instanceof Particle || object instanceof Effect) {
 					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(bountifyCapitalized(object)).build();
@@ -138,7 +139,7 @@ public class ParticleAnimantion extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
@@ -156,7 +157,7 @@ public class ParticleAnimantion extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
@@ -172,7 +173,7 @@ public class ParticleAnimantion extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(final Object o) {
+	public MenuButton getFillButtonAt(final @NotNull Object o) {
 		return listOfItems;
 
 	}

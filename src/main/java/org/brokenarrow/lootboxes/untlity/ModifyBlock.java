@@ -1,8 +1,14 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import org.broken.lib.rbg.TextTranslator;
+import org.broken.arrow.color.library.TextTranslator;
 import org.bukkit.Location;
-import org.bukkit.block.*;
+import org.bukkit.block.Barrel;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.Hopper;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.inventory.Inventory;

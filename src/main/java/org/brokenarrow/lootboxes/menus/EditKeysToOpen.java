@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.KeysData;
@@ -12,13 +14,11 @@ import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
-import org.brokenarrow.menu.library.CheckItemsInsideInventory;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +57,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 
 			}
 
@@ -72,7 +72,7 @@ public class EditKeysToOpen extends MenuHolder {
 		};
 		addKeyButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new SaveNewKeys(containerData).menuOpen(player);
 			}
 
@@ -88,7 +88,7 @@ public class EditKeysToOpen extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new ModifyContinerData.AlterContainerDataMenu(containerData).menuOpen(player);
 			}
 
@@ -103,7 +103,7 @@ public class EditKeysToOpen extends MenuHolder {
 		};
 		listOfItems = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				if (object instanceof String) {
 
 					if (click.isShiftClick() && click.isLeftClick()) {
@@ -140,7 +140,7 @@ public class EditKeysToOpen extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(Object object) {
+			public ItemStack getItem(@NotNull Object object) {
 
 				if (object instanceof String) {
 					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, String.valueOf(object));
@@ -159,7 +159,7 @@ public class EditKeysToOpen extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
@@ -177,7 +177,7 @@ public class EditKeysToOpen extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
@@ -194,7 +194,7 @@ public class EditKeysToOpen extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(Object o) {
+	public MenuButton getFillButtonAt(@NotNull Object o) {
 		return listOfItems;
 
 	}
@@ -238,7 +238,7 @@ public class EditKeysToOpen extends MenuHolder {
 
 			this.changeItem = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory inventory, @NotNull ClickType clickType, @NotNull ItemStack itemStack, Object o) {
 					new MatrialList(EDIT_KEYS_FOR_OPEN_MENU, keyName, containerData, "").menuOpen(player);
 				}
 
@@ -254,7 +254,7 @@ public class EditKeysToOpen extends MenuHolder {
 			};
 			this.changeAmount = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory inventory, @NotNull ClickType clickType, @NotNull ItemStack itemStack, Object o) {
 
 
 					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
@@ -289,7 +289,7 @@ public class EditKeysToOpen extends MenuHolder {
 			};
 			this.displayName = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory inventory, @NotNull ClickType clickType, @NotNull ItemStack itemStack, Object o) {
 					new ChangeDisplaynameLore(EDITKEY, containerData, keyName, false).start(player);
 				}
 
@@ -306,7 +306,7 @@ public class EditKeysToOpen extends MenuHolder {
 			};
 			this.lore = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory inventory, ClickType clickType, ItemStack itemStack, Object o) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory inventory, @NotNull ClickType clickType, @NotNull ItemStack itemStack, Object o) {
 					new ChangeDisplaynameLore(EDITKEY, containerData, keyName, true).start(player);
 				}
 
@@ -323,7 +323,7 @@ public class EditKeysToOpen extends MenuHolder {
 			};
 			this.mobDropKey = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 					new KeySettingsMobDrop(containerData, keyName).menuOpen(player);
 				}
 
@@ -340,7 +340,7 @@ public class EditKeysToOpen extends MenuHolder {
 			this.backButton = new MenuButton() {
 
 				@Override
-				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 					new EditKeysToOpen(containerData).menuOpen(player);
 				}
 
@@ -391,8 +391,8 @@ public class EditKeysToOpen extends MenuHolder {
 
 			saveItems = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
-					Map<Integer, ItemStack> items = new CheckItemsInsideInventory().getItemsOnSpecifiedSlots(menu, null, false);
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
+					Map<Integer, ItemStack> items = Lootboxes.getInstance().getMenuApi().getCheckItemsInsideInventory().getItemsOnSpecifiedSlots(menu, null, false);
 					if (items == null || items.isEmpty()) return;
 
 					new SetKeyName(items.values().toArray(new ItemStack[0]), containerData).start(player);
@@ -410,7 +410,7 @@ public class EditKeysToOpen extends MenuHolder {
 			this.backButton = new MenuButton() {
 
 				@Override
-				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 					new EditKeysToOpen(containerData).menuOpen(player);
 				}
 

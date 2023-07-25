@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.ModifyContinerData;
 import org.bukkit.Material;
@@ -15,16 +18,17 @@ public class CreateContainerDataName extends SimpleConversation {
 	private final Material material;
 
 	public CreateContainerDataName(Material material) {
+		super(Lootboxes.getInstance());
 		this.material = material;
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new PromptInput();
 	}
 
 
-	public class PromptInput extends SimplePromp {
+	public class PromptInput extends SimplePrompt {
 
 
 		@Override

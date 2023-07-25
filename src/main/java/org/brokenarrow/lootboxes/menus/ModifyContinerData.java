@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.title.update.library.UpdateTitle;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
@@ -13,15 +16,13 @@ import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
-import org.brokenarrow.menu.library.NMS.UpdateTittleContainers;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class ModifyContinerData extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 			}
 
@@ -73,7 +74,7 @@ public class ModifyContinerData extends MenuHolder {
 		};
 		createContainerData = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				new CreateContainerDataName(Material.AIR).start(player);
 			}
 
@@ -90,7 +91,7 @@ public class ModifyContinerData extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				new MainMenu().menuOpen(player);
 			}
 
@@ -105,7 +106,7 @@ public class ModifyContinerData extends MenuHolder {
 		};
 		listOfItems = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (object instanceof String) {
 					if (click.isLeftClick())
@@ -124,7 +125,7 @@ public class ModifyContinerData extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(final Object object) {
+			public ItemStack getItem(final @NotNull Object object) {
 
 				if (object instanceof String) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(object));
@@ -144,13 +145,13 @@ public class ModifyContinerData extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
 				}
 
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()));
+				UpdateTitle.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()));
 				updateButtons();
 			}
 
@@ -164,11 +165,11 @@ public class ModifyContinerData extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
-				UpdateTittleContainers.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()));
+				UpdateTitle.update(player, guiTemplets.build().getGuiTitle("Container_data", getPageNumber()));
 				updateButtons();
 			}
 
@@ -183,7 +184,7 @@ public class ModifyContinerData extends MenuHolder {
 
 
 	@Override
-	public MenuButton getFillButtonAt(final Object o) {
+	public MenuButton getFillButtonAt(final @NotNull Object o) {
 		return listOfItems;
 
 	}
@@ -231,7 +232,7 @@ public class ModifyContinerData extends MenuHolder {
 
 			settingsForContainerData = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+				public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 					new SettingsContainerData(containerDataName).menuOpen(player);
 				}
 
@@ -246,7 +247,7 @@ public class ModifyContinerData extends MenuHolder {
 
 			containerLinkedToLootTable = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 					if (containerDataName != null && containerDataBuilder != null) {
 						if (click.isRightClick()) {
@@ -272,7 +273,7 @@ public class ModifyContinerData extends MenuHolder {
 			};
 			animation = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					new ParticleAnimantion(containerDataName, "").menuOpen(player);
 				}
 
@@ -286,7 +287,7 @@ public class ModifyContinerData extends MenuHolder {
 			};
 			keys = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					new EditKeysToOpen(containerDataName).menuOpen(player);
 				}
 
@@ -299,7 +300,7 @@ public class ModifyContinerData extends MenuHolder {
 			};
 			changeIcon = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					new MatrialList(ALTER_CONTAINER_DATA_MENU, "", containerDataName, "").menuOpen(player);
 				}
 
@@ -312,7 +313,7 @@ public class ModifyContinerData extends MenuHolder {
 			};
 			changeDisplayName = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					new ChangeDisplaynameLore(ALTER_CONTAINER_DATA_MENU, containerDataName, "", false).start(player);
 
 				}
@@ -328,7 +329,7 @@ public class ModifyContinerData extends MenuHolder {
 
 			coolddownBetweenContainers = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 					if (!containerDataBuilder.isSpawningContainerWithCooldown()) return;
 					new SpecifyTime(containerDataName).start(player);
@@ -349,7 +350,7 @@ public class ModifyContinerData extends MenuHolder {
 			};
 			containers = new MenuButton() {
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 					if (containerDataBuilder != null)
 						new ContainersLinkedList(containerDataBuilder, containerDataName,"").menuOpen(player);
@@ -370,7 +371,7 @@ public class ModifyContinerData extends MenuHolder {
 				private final SettingsData setting = settings.getSettingsData();
 
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 					if (containerDataBuilder != null && containerDataBuilder.isRandomSpawn()) return;
 
@@ -406,7 +407,7 @@ public class ModifyContinerData extends MenuHolder {
 			backButton = new MenuButton() {
 
 				@Override
-				public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					new ModifyContinerData().menuOpen(player);
 				}
 

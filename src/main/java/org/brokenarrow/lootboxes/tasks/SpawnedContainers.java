@@ -44,9 +44,11 @@ public class SpawnedContainers {
 					removeKey.add(key);
 					return;
 				}
-				spawnContainer(containerDataBuilder);
+				boolean failToSpawn = spawnContainer(containerDataBuilder);
 				setCachedTimeMap(key, containerDataBuilder.getCooldown());
-
+				if (!failToSpawn) {
+					removeKey.add(key);
+				}
 			}
 		}
 		removeKeyFromCache();
@@ -58,7 +60,7 @@ public class SpawnedContainers {
 		}
 	}
 
-	public void spawnContainer(ContainerDataBuilder containerData) {
+	public boolean spawnContainer(ContainerDataBuilder containerData) {
 		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
@@ -68,14 +70,15 @@ public class SpawnedContainers {
 			sendDebug("spawnContainer, location: " + location, this.getClass());
 			sendDebug("spawnContainer, containerData: " + containerData1, this.getClass());
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
-
+				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+				if (item == null) {
+					return false;
+				}
 				location.getBlock().setType(containerData1.getContainerType());
-
 				location.getBlock().setType(containerData1.getContainerType());
 				setRotation(location, containerData1.getFacing());
 				setCustomName(location, containerData.getDisplayname());
 
-				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
 				this.setRefill(location, true);
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {
@@ -83,6 +86,7 @@ public class SpawnedContainers {
 				}
 			}
 		}
+		return true;
 	}
 
 	public Set<String> getRemoveKey() {

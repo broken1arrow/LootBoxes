@@ -1,6 +1,8 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import org.brokenarrow.menu.library.utility.Item.CreateItemStack;
+import org.broken.arrow.itemcreator.library.CreateItemStack;
+import org.broken.arrow.itemcreator.library.ItemCreator;
+import org.brokenarrow.lootboxes.Lootboxes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,9 +11,13 @@ import java.util.List;
  * Make itemstacks simple with this class.
  */
 public final class CreateItemUtily {
+	private static final ItemCreator itemCreator;
 
-	private CreateItemUtily() {
+	static {
+		itemCreator = Lootboxes.getInstance().getItemCreator();
 	}
+
+	public static void load() {}
 
 	/**
 	 * Start to create simple item. Some have no displayname or
@@ -21,7 +27,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item) {
-		return CreateItemStack.of(item, null, (List<String>) null);
+		return itemCreator.of(item, null, (List<String>) null);
 	}
 
 	/**
@@ -34,7 +40,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item, final String itemMetaKey, String itemMetaValue) {
-		return CreateItemStack.of(item).setItemMetaData(itemMetaKey, itemMetaValue);
+		return itemCreator.of(item).setItemMetaData(itemMetaKey, itemMetaValue);
 	}
 
 	/**
@@ -49,7 +55,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item, final String displayName, final String... lore) {
-		return CreateItemStack.of(item, displayName, Arrays.asList(lore));
+		return itemCreator.of(item, displayName, Arrays.asList(lore));
 	}
 
 
@@ -62,7 +68,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item, final String displayName, final List<String> lore) {
-		return CreateItemStack.of(item, displayName, lore);
+		return itemCreator.of(item, displayName, lore);
 	}
 
 	/**
@@ -77,7 +83,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static <T> CreateItemStack of(final Iterable<T> itemArray, final String displayName, final String... lore) {
-		return CreateItemStack.of(itemArray, displayName, Arrays.asList(lore));
+		return itemCreator.of(itemArray, displayName, Arrays.asList(lore));
 	}
 
 	/**
@@ -89,7 +95,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static <T> CreateItemStack of(final Iterable<T> itemArray, final String displayName, final List<String> lore) {
-		return CreateItemStack.of(itemArray, displayName, lore);
+		return itemCreator.of(itemArray, displayName, lore);
 	}
 
 	/**
@@ -100,7 +106,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static <T> CreateItemStack of(final Object item, final String color) {
-		return CreateItemStack.of(item, color);
+		return itemCreator.of(item, color);
 	}
 
 }

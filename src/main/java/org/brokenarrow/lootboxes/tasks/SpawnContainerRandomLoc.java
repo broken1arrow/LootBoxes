@@ -101,6 +101,10 @@ public class SpawnContainerRandomLoc {
 		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
 		if (containerData.isRandomSpawn()){
+			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+			if (stacks == null) {
+				return;
+			}
 			location.getBlock().setType(containerData.getRandonLootContainerItem());
 			if (containerData.getRandonLootContainerFaceing() == Facing.RANDOM) {
 				Material material = containerData.getRandonLootContainerItem();
@@ -109,7 +113,6 @@ public class SpawnContainerRandomLoc {
 				setRotation(location, containerData.getRandonLootContainerFaceing().getFace());
 			setCustomName(location, containerData.getDisplayname());
 
-			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
 			Inventory inventory = getInventory(location);
 			if (inventory != null) {
 				inventory.setContents(stacks);
@@ -119,15 +122,17 @@ public class SpawnContainerRandomLoc {
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
 			ContainerData container = entry.getValue();
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
+				ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+				if (stacks == null) {
+					return;
+				}
 				location.getBlock().setType(container.getContainerType());
 				setRotation(location, container.getFacing());
 				setCustomName(location, containerData.getDisplayname());
 
-				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
-
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {
-					inventory.setContents(item);
+					inventory.setContents(stacks);
 				}
 			}
 		}

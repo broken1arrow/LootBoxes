@@ -1,15 +1,30 @@
 package org.brokenarrow.lootboxes;
 
 
-import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
-import org.brokenarrow.lootboxes.builder.*;
+import org.broken.arrow.itemcreator.library.ItemCreator;
+import org.broken.arrow.menu.library.RegisterMenuAPI;
+import org.broken.arrow.nbt.library.RegisterNbtAPI;
+import org.brokenarrow.lootboxes.builder.ContainerData;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.builder.ParticleDustOptions;
+import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
-import org.brokenarrow.lootboxes.listener.*;
-import org.brokenarrow.lootboxes.lootdata.*;
+import org.brokenarrow.lootboxes.listener.CheckChunkLoadUnload;
+import org.brokenarrow.lootboxes.listener.CloseContainer;
+import org.brokenarrow.lootboxes.listener.LinkTool;
+import org.brokenarrow.lootboxes.listener.MobDropListener;
+import org.brokenarrow.lootboxes.listener.OpenContainer;
+import org.brokenarrow.lootboxes.listener.PlayerClick;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ItemData;
+import org.brokenarrow.lootboxes.lootdata.KeyDropData;
+import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.lootdata.MakeLootTable;
 import org.brokenarrow.lootboxes.runTask.HeavyTasks;
 import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.runTask.SaveDataTask;
@@ -18,9 +33,13 @@ import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
 import org.brokenarrow.lootboxes.tasks.SpawnedContainers;
-import org.brokenarrow.lootboxes.untlity.*;
+import org.brokenarrow.lootboxes.untlity.EnchantmentList;
+import org.brokenarrow.lootboxes.untlity.MatrialList;
+import org.brokenarrow.lootboxes.untlity.MobList;
+import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
+import org.brokenarrow.lootboxes.untlity.RandomUntility;
+import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
-import org.brokenarrow.menu.library.RegisterMenuAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +69,8 @@ public class Lootboxes extends JavaPlugin {
 	private LandProtectingLoader landProtectingLoader;
 	private SaveDataTask saveDataTask;
 	private ServerVersion serverVersion;
+	private ItemCreator itemCreator;
+	private RegisterMenuAPI menuApi;
 
 	@Override
 	public void onLoad() {
@@ -60,7 +81,7 @@ public class Lootboxes extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		this.serverVersion = new ServerVersion(this);
-
+		this.itemCreator = new ItemCreator(this);
 		ConfigurationSerialization.registerClass(KeysData.class);
 		ConfigurationSerialization.registerClass(ContainerData.class);
 		ConfigurationSerialization.registerClass(ContainerDataBuilder.class);
@@ -89,7 +110,7 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
 		Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
 		Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
-		new RegisterMenuAPI(this);
+		this.menuApi = new RegisterMenuAPI(this);
 		commandRegister = new CommandRegister(this, "lootbox");
 		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand(), new GetKeyCommand());
 		this.mobList = new MobList();
@@ -143,8 +164,16 @@ public class Lootboxes extends JavaPlugin {
 		return spawnContainerEffectsTask;
 	}
 
+	public ItemCreator getItemCreator() {
+		return itemCreator;
+	}
+
 	public ServerVersion getServerVersion() {
 		return serverVersion;
+	}
+
+	public RegisterMenuAPI getMenuApi() {
+		return menuApi;
 	}
 
 	public RunTask getRunTask() {

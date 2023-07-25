@@ -6,13 +6,14 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.0.23-SNAPSHOT</version>
+    <version>0.0.24-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
+        <utility-library>0.40</utility-library>
     </properties>
     <repositories>
         <!--
@@ -106,12 +107,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.broken1arrow</groupId>
-            <artifactId>MenuLibrary</artifactId>
-            <version>0.91</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.pop4959</groupId>
             <artifactId>LWCX</artifactId>
             <version>master-ad0f824361-1</version>
@@ -123,12 +118,6 @@
             <scope>system</scope>
             <systemPath>H:/PluginsJarUseForAPI/CMILib-0.0.20.jar</systemPath>
             <version>3.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.broken1arrow</groupId>
-            <artifactId>RBG-Gradients</artifactId>
-            <version>0.24</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.mojang</groupId>
@@ -145,19 +134,49 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>24.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>Menu_Library</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.broken1arrow</groupId>
-            <artifactId>Item-NBT-API</artifactId>
-            <version>2.11.2</version>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>Color_Conversion</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>Yaml_Utility</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>Item_Creator</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>Conversation-Prompt</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>NBT</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>Title-Update</artifactId>
+            <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -203,7 +222,7 @@
                    You want to check and update the latest version periodically from
                    https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin
                -->
-                <version>3.2.4</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -225,6 +244,12 @@
                                 <includes>
                                     <include>com.github.broken1arrow:*</include>
                                     <include>com.github.broken1arrow.Item-NBT-API:item-nbt-api:*</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Conversation-Prompt</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Item_Creator</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Yaml_Utility</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Color_Conversion</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Menu_Library</include>
+                                    <include>com.github.broken1arrow.Utility-Library:NBT</include>
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>
                                                 <include>de.tr7zw:*</include>
@@ -244,6 +269,10 @@
                                      <pattern>net.kyori</pattern>
                                      <shadedPattern>${project.groupId}.${project.artifactId}.minimsg</shadedPattern>
                                  </relocation>-->
+                                <relocation>
+                                    <pattern>org.broken.arrow</pattern>
+                                    <shadedPattern>org.brokenarrow.lootboxes.lib</shadedPattern>
+                                </relocation>
                                 <relocation>
                                     <pattern>org.broken.lib.rbg</pattern>
                                     <shadedPattern>org.lib.test.rbglib</shadedPattern>

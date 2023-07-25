@@ -1,20 +1,21 @@
 package org.brokenarrow.lootboxes.menus;
 
 import org.apache.commons.lang.WordUtils;
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
@@ -41,7 +42,7 @@ public class ChooseContainer extends MenuHolder {
 			private final SettingsData setting = settings.getSettingsData();
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 
 				if (object instanceof Material) {
 					TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
@@ -60,7 +61,7 @@ public class ChooseContainer extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(Object object) {
+			public ItemStack getItem(@NotNull Object object) {
 				if (object instanceof Material) {
 					GuiTempletsYaml gui = guiTemplets.menuKey("List_Of_ContainerTypes").placeholders(WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase())).build();
 					return CreateItemUtily.of(object,
@@ -73,7 +74,7 @@ public class ChooseContainer extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					previousPage();
 				}
@@ -90,7 +91,7 @@ public class ChooseContainer extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
@@ -108,7 +109,7 @@ public class ChooseContainer extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 			}
 
@@ -125,7 +126,7 @@ public class ChooseContainer extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(Object object) {
+	public MenuButton getFillButtonAt(@NotNull Object object) {
 		return listOfItems;
 	}
 

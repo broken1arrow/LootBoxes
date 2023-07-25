@@ -1,14 +1,12 @@
 package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
-import lombok.Getter;
+import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.untlity.LootDataSave;
-import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -16,16 +14,20 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
 import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.ITEMS;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
-public class LootItems extends SimpleYamlHelper {
+public class LootItems extends YamlFileManager {
 
-	@Getter
+
 	private static final LootItems instance = new LootItems();
 
 	private File customConfigFile;
@@ -35,7 +37,7 @@ public class LootItems extends SimpleYamlHelper {
 
 
 	public LootItems() {
-		super("tables", true);
+		super(Lootboxes.getInstance(),"tables",false,true);
 	}
 
 	public Map<String, Map<String, LootData>> getCachedLoot() {
@@ -45,6 +47,10 @@ public class LootItems extends SimpleYamlHelper {
 	public Map<String, LootData> getCachedTableContents(final String table) {
 
 		return cachedLoot.get(table);
+	}
+
+	public static LootItems getInstance() {
+		return instance;
 	}
 
 	public void addTable(final String table) {
@@ -189,23 +195,6 @@ public class LootItems extends SimpleYamlHelper {
 		return items.toArray(new ItemStack[0]);
 	}
 
-	@Override
-	public void reload() {
-		if (customConfigFile == null) {
-			for (final File file : getAllFilesInPluginJar()) {
-				customConfigFile = file;
-
-				customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-				getFilesData();
-			}
-		} else {
-			for (final File file : getAllFilesInPluginJar()) {
-				customConfigFile = file;
-				getFilesData();
-			}
-		}
-	}
-
 	public void saveTask(final String table) {
 		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, table);
 	}
@@ -245,28 +234,10 @@ public class LootItems extends SimpleYamlHelper {
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(final File file) {
-
-	}
-
-
-	private void getFilesData() {
-		try {
-			for (final File key : getFilesInPluginFolder("tables")) {
-
-				customConfig.load(key);
-				final Set<String> value = customConfig.getKeys(false);
-				loadSettingsFromYaml(key, value);
-			}
-		} catch (final IOException e) {
-			e.printStackTrace();
-		} catch (final InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected void loadSettingsFromYaml(final File key, final Set<String> values) {
+	protected void loadSettingsFromYaml(final File key) {
+		System.out.println("loadSettingsFromYaml ");
 		final Map<String, LootData> data = new HashMap<>();
+		FileConfiguration customConfig = this.getCustomConfig();
 		final ConfigurationSection configs = customConfig.getConfigurationSection(ITEMS.getKey());
 		if (configs != null)
 			for (final String childrenKey : configs.getKeys(false)) {
@@ -294,7 +265,6 @@ public class LootItems extends SimpleYamlHelper {
 						.setItemdataFileName(itemdataFileName)
 						.setHaveMetadata(haveMetadata).build());
 			}
-
 		final String path = GLOBAL_VALUES.getKey();
 		int minimum = customConfig.getInt(path + ".Minimum", 0);
 		int maximum = customConfig.getInt(path + ".Maximum", 2);
@@ -307,12 +277,12 @@ public class LootItems extends SimpleYamlHelper {
 				maximum = globalValues.getMaximum();
 		}
 		data.put(path, new LootData.Builder()
-				.setChance(0).setMinimum(minimum)
+				.setChance(0)
+				.setMinimum(minimum)
 				.setMaximum(maximum)
 				.setMaterial(Material.AIR)
 				.setHaveMetadata(false).
 				build());
-
 		this.cachedLoot.put(getNameOfFile(String.valueOf(key)), data);
 	}
 

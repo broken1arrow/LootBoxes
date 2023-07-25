@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.ModifyContinerData;
@@ -17,15 +20,16 @@ public class SpecifyTime extends SimpleConversation {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
 	public SpecifyTime(String container) {
+		super(Lootboxes.getInstance());
 		this.container = container;
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new PromptInput();
 	}
 
-	public class PromptInput extends SimplePromp {
+	public class PromptInput extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {

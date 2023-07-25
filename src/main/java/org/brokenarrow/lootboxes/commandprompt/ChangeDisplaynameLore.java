@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
@@ -12,7 +15,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.ALTER_CONTAINER_DATA_MENU;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
@@ -27,6 +34,7 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 	private final boolean setlore;
 
 	public ChangeDisplaynameLore(MenuKeys menuAcces, String containerData, String keyName, boolean setlore) {
+		super(Lootboxes.getInstance());
 		this.menuAcces = menuAcces;
 		this.container = containerData;
 		this.keyName = keyName;
@@ -34,11 +42,11 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new Commandprompt();
 	}
 
-	public class Commandprompt extends SimplePromp {
+	public class Commandprompt extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {

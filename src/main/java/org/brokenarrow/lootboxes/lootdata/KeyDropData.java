@@ -1,11 +1,10 @@
 package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
-import lombok.Getter;
+import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
-import org.brokenarrow.lootboxes.untlity.filemanger.SimpleYamlHelper;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,15 +13,19 @@ import org.bukkit.entity.EntityType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
-public class KeyDropData extends SimpleYamlHelper {
+public class KeyDropData extends YamlFileManager {
 
-	@Getter
 	private static final KeyDropData instance = new KeyDropData();
 	private final Map<String, Map<String, KeyMobDropData>> cachedKeyData = new HashMap<>();
 	private final Map<String, EntityKeyData> entityCache = new HashMap<>();
@@ -30,7 +33,7 @@ public class KeyDropData extends SimpleYamlHelper {
 	private FileConfiguration customConfig;
 
 	public KeyDropData() {
-		super("keysDropData", true);
+		super(Lootboxes.getInstance(),"keysDropData");
 
 	}
 
@@ -237,5 +240,9 @@ public class KeyDropData extends SimpleYamlHelper {
 				list.add(entityType);
 		}
 		return list;
+	}
+
+	public static KeyDropData getInstance() {
+		return instance;
 	}
 }

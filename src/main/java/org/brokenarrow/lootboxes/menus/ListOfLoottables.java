@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
@@ -7,12 +9,11 @@ import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class ListOfLoottables extends MenuHolder {
 
 		seachButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 
 			}
 
@@ -55,7 +56,7 @@ public class ListOfLoottables extends MenuHolder {
 		backButton = new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
 			}
 
@@ -70,7 +71,7 @@ public class ListOfLoottables extends MenuHolder {
 		};
 		listOfItems = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				if (object instanceof String) {
 					ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					ContainerDataBuilder.Builder builder = data.getBuilder();
@@ -93,7 +94,7 @@ public class ListOfLoottables extends MenuHolder {
 			}
 
 			@Override
-			public ItemStack getItem(Object object) {
+			public ItemStack getItem(@NotNull Object object) {
 				if (object instanceof String) {
 					if (object.equals("Global_Values")) return null;
 					GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object).build();
@@ -107,7 +108,7 @@ public class ListOfLoottables extends MenuHolder {
 		};
 		previous = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 
 				if (click.isLeftClick()) {
 					previousPage();
@@ -125,7 +126,7 @@ public class ListOfLoottables extends MenuHolder {
 		};
 		forward = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(final Player player, final Inventory menu, final ClickType click, final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick()) {
 					nextPage();
 				}
@@ -142,7 +143,7 @@ public class ListOfLoottables extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(Object o) {
+	public MenuButton getFillButtonAt(@NotNull Object o) {
 		return listOfItems;
 
 	}

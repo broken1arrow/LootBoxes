@@ -1,5 +1,7 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.library.button.MenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
@@ -9,8 +11,6 @@ import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
-import org.brokenarrow.menu.library.MenuButton;
-import org.brokenarrow.menu.library.MenuHolder;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_SETTINGS;
 import static org.brokenarrow.lootboxes.menus.ParticleSettings.Type.*;
@@ -48,7 +49,7 @@ public class ParticleSettings extends MenuHolder {
 
 		setParticleType = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new ParticleAnimantion(container, "").menuOpen(player);
 			}
 
@@ -65,7 +66,7 @@ public class ParticleSettings extends MenuHolder {
 		};
 		setMatrial = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				if (isParticleThisClazz(particle, Material.class, MaterialData.class, BlockData.class, ItemStack.class))
 					new MatrialList(PARTICLE_SETTINGS, particle, container, "").menuOpen(player);
 			}
@@ -84,7 +85,7 @@ public class ParticleSettings extends MenuHolder {
 		};
 		setData = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new SetNumbers(SET_DATA, container, particle).start(player);
 			}
 
@@ -100,7 +101,7 @@ public class ParticleSettings extends MenuHolder {
 		};
 		setColors = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				if (isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
 					new SetNumbers(SET_COLORS, container, particle).start(player);
 			}
@@ -118,7 +119,7 @@ public class ParticleSettings extends MenuHolder {
 		};
 		setParticleSize = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				if (isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
 					new SetNumbers(SET_PARTICLE_SIZE, container, particle).start(player);
 			}
@@ -139,7 +140,7 @@ public class ParticleSettings extends MenuHolder {
 
 		backButton = new MenuButton() {
 			@Override
-			public void onClickInsideMenu(Player player, Inventory menu, ClickType click, ItemStack clickedItem, Object object) {
+			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
 				new ParticleAnimantion(container, "").menuOpen(player);
 			}
 

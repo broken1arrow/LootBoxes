@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.listener;
 
-import de.tr7zw.changeme.nbtapi.metodes.RegisterNbtAPI;
+import org.broken.arrow.nbt.library.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.ModifyContinerData;

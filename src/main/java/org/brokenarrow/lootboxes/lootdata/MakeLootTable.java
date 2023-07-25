@@ -7,8 +7,10 @@ import org.brokenarrow.lootboxes.untlity.RandomUntility;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
@@ -20,13 +22,16 @@ public class MakeLootTable {
 	private int maxAmountOfItems = 0;
 	private final RandomUntility random = Lootboxes.getInstance().getRandomUntility();
 
+	@Nullable
 	public ItemStack[] makeLottable(String table) {
 		List<ItemStack> itemStacks = new ArrayList<>();
 		List<ItemStack> backupItemstacks = new ArrayList<>();
 		int amountIfItemsMax = 0;
 		setGlobalValues(table);
+		Map<String, LootData> lootDataMap = lootItems.getCachedTableContents(table);
+		if (lootDataMap == null) return null;
 
-		for (LootData lootData : lootItems.getCachedTableContents(table).values()) {
+		for (LootData lootData : lootDataMap.values()) {
 			if (lootData.getMaterial() == Material.AIR) continue;
 
 
@@ -72,15 +77,16 @@ public class MakeLootTable {
 		return itemStacks.stream().allMatch(item -> item == null || item.getType().isAir());
 	}
 
-	private void setGlobalValues(String table) {
+	private boolean setGlobalValues(String table) {
 		LootData lootData = lootItems.getLootData(table, GLOBAL_VALUES.getKey());
 		if (lootData == null) {
-			Lootboxes.getInstance().getLogger().log(Level.WARNING, "this table " + table + " don´t have Global_Values set.");
-			return;
+			Lootboxes.getInstance().getLogger().log(Level.WARNING, "this table '" + table + "' don´t have 'Global_Values' set.");
+			return false;
 		}
 
 		this.maxAmountOfItems = lootData.getMaximum();
 		this.minimumAmountOfItems = lootData.getMinimum();
+		return true;
 	}
 
 	private int randomNumber(LootData lootData) {

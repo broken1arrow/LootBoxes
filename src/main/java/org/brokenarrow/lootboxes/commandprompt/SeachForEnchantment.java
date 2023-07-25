@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.menus.CustomizeItem;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -14,16 +17,17 @@ public class SeachForEnchantment extends SimpleConversation {
 	private final String itemToEdit;
 
 	public SeachForEnchantment(String lootTable, String itemToEdit) {
+		super(Lootboxes.getInstance());
 		this.lootTable = lootTable;
 		this.itemToEdit = itemToEdit;
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new ItemSeach();
 	}
 
-	public class ItemSeach extends SimplePromp {
+	public class ItemSeach extends SimplePrompt {
 		@Override
 		protected String getPrompt(ConversationContext context) {
 			return SEACH_FOR_ENCHANTMENT_TYPE_NAME.languageMessagePrefix();

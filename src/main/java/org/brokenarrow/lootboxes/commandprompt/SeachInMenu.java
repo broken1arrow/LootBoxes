@@ -1,5 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.prompt.library.SimpleConversation;
+import org.broken.arrow.prompt.library.SimplePrompt;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.menus.EntityTypeListMenu;
 import org.brokenarrow.lootboxes.menus.MatrialList;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
@@ -21,6 +24,7 @@ public class SeachInMenu extends SimpleConversation {
 	private final Object itemToEdit;
 
 	public SeachInMenu(final MenuKeys menuAcces, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
+		super(Lootboxes.getInstance());
 		this.menuAcces = menuAcces;
 		this.menuKey = menuKey;
 		this.lootTable = nameOfTableOrContainer;
@@ -28,11 +32,11 @@ public class SeachInMenu extends SimpleConversation {
 	}
 
 	@Override
-	protected Prompt getFirstPrompt() {
+	public Prompt getFirstPrompt() {
 		return new itemSeach();
 	}
 
-	public class itemSeach extends SimplePromp {
+	public class itemSeach extends SimplePrompt {
 		public itemSeach() {
 
 		}
