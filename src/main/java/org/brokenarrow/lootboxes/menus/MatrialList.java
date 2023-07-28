@@ -40,7 +40,8 @@ public class MatrialList extends MenuHolder {
 		final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(()-> guiTemplets.build().getGuiTitle("Matrial_List",this.getPageNumber()));
+		setTitle(()-> guiTemplets.build().getGuiTitle("Matrial_List", this.getPageNumber() +1));
+		setAutoTitleCurrentPage(false);
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		seachButton = new MenuButton() {

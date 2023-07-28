@@ -152,23 +152,23 @@ public final class GuiTempletsYaml {
 		return -1;
 	}
 
-	public static String translatePlaceholders(String rawText, final Object... placeholders) {
-
+	public static String translatePlaceholders(final String rawText, final Object... placeholders) {
+		String text = rawText;
 		if (placeholders != null)
 			for (int i = 0; i < placeholders.length; i++) {
 				if (placeholders[i] instanceof List)
 					continue;
-				rawText = rawText.replace("{" + i + "}", placeholders[i] != null ? placeholders[i].toString() : "");
+				text = text.replace("{" + i + "}", placeholders[i] != null ? placeholders[i].toString() : "");
 			}
-		return ifContainsBoolen(rawText);
+		return ifContainsBoolen(text);
 	}
 
 	public String getGuiTitle(final String menuName, final Object... placeholders) {
 		if (menuName != null) {
 			final Map<String, Guidata> gui = this.guiTemplets.getGuiValues(menuName);
-			if (gui != null)
+			if (gui != null) {
 				return ChatColor.translateAlternateColorCodes('&', translatePlaceholders(gui.get(menuName).getMenuTitle(), placeholders));
-		}
+			}		}
 		return "";
 	}
 

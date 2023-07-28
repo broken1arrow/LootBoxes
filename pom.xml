@@ -250,6 +250,7 @@
                                     <include>com.github.broken1arrow.Utility-Library:Color_Conversion</include>
                                     <include>com.github.broken1arrow.Utility-Library:Menu_Library</include>
                                     <include>com.github.broken1arrow.Utility-Library:NBT</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Title-Update</include>
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>
                                                 <include>de.tr7zw:*</include>

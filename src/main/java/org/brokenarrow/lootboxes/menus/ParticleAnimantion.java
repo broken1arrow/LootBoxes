@@ -36,7 +36,7 @@ public class ParticleAnimantion extends MenuHolder {
 	private final MenuButton listOfItems;
 	private final MenuButton forward;
 	private final MenuButton previous;
-	private final MenuButton seachButton;
+	private final MenuButton searchButton;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
@@ -54,7 +54,7 @@ public class ParticleAnimantion extends MenuHolder {
 		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
-		seachButton = new MenuButton() {
+		searchButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				if (click.isLeftClick())
@@ -121,12 +121,12 @@ public class ParticleAnimantion extends MenuHolder {
 			public ItemStack getItem(final @NotNull Object object) {
 
 				if (object instanceof Particle || object instanceof Effect) {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders(bountifyCapitalized(object)).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders("",bountifyCapitalized(object)).build();
 
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					boolean containsEffect = containerDataCache.containsParticleEffect(data, object);
 					if (containsEffect)
-						gui = guiTemplets.menuKey("Particle_list_selected").placeholders(bountifyCapitalized(object)).build();
+						gui = guiTemplets.menuKey("Particle_list_selected").placeholders("",bountifyCapitalized(object)).build();
 
 
 					return CreateItemUtily.of(particleEffectList.checkParticleList(object),
@@ -212,7 +212,7 @@ public class ParticleAnimantion extends MenuHolder {
 		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
 			return previous;
 		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton;
+			return searchButton;
 		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
 			return backButton;
 

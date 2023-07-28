@@ -372,7 +372,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Spawn_world_center", this.spawnContainerFromWorldCenter);
 		keysData.put("Min_radius", this.minRadius);
 		keysData.put("Max_radius", this.maxRadius);
-		keysData.put("Spawn-point", LocationSerializer.serializeLoc(spawnLocation));
+		keysData.put("Spawn-point", spawnLocation != null ? LocationSerializer.serializeLoc(spawnLocation) : null);
 		keysData.put("Containers", this.containerData);
 		return keysData;
 	}

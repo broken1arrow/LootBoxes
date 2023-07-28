@@ -930,7 +930,7 @@ Gui_Templets:
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     Particle_list:
-      Display_name: "&1Particle:&6 {0}"
+      Display_name: "&1Particle:&6 {1}"
       Enchant: false
       Icon: PAPER
       Slot: 0
@@ -944,7 +944,7 @@ Gui_Templets:
         - "&adata on the item."
         - "&aRight-Click to unselect"
     Particle_list_selected:
-      Display_name: "&4Particle:&6 {0}"
+      Display_name: "&4Particle:&6 {1}"
       Enchant: false
       Icon: PAPER
       Slot: 0
