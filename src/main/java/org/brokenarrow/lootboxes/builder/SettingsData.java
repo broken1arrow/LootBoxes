@@ -12,12 +12,12 @@ public final class SettingsData {
 	private final int amountOfBlocksBelowSurface;
 	private final int blocksAwayFromPlayer;
 	private final int blocksBetweenContainers;
-	private final int increse;
-	private final int decrese;
+	private final int increase;
+	private final int decrease;
 	private final boolean spawnOnSurface;
 	private final boolean warnBeforeSaveWithMetadata;
 	private final boolean saveMetadataOnItem;
-	private final boolean randomContinerSpawn;
+	private final boolean randomContainerSpawn;
 	private final boolean removeContainerWhenPlayerClose;
 	private final boolean debug;
 	private final Builder builder;
@@ -33,12 +33,12 @@ public final class SettingsData {
 		this.spawnOnSurface = builder.spawnOnSurface;
 		this.warnBeforeSaveWithMetadata = builder.warnBeforeSaveWithMetadata;
 		this.saveMetadataOnItem = builder.saveMetadataOnItem;
-		this.randomContinerSpawn = builder.randomContinerSpawn;
+		this.randomContainerSpawn = builder.randomContainerSpawn;
 		this.removeContainerWhenPlayerClose = builder.removeContainerWhenPlayerClose;
 		this.blocksAwayFromPlayer = builder.blocksAwayFromPlayer;
 		this.blocksBetweenContainers = builder.blocksBetweenContainers;
-		this.increse = builder.increse;
-		this.decrese = builder.decrese;
+		this.increase = builder.increase;
+		this.decrease = builder.decrease;
 		this.debug = builder.debug;
 		this.builder = builder;
 	}
@@ -84,12 +84,12 @@ public final class SettingsData {
 		return blocksBetweenContainers;
 	}
 
-	public int getIncrese() {
-		return increse;
+	public int getIncrease() {
+		return increase;
 	}
 
-	public int getDecrese() {
-		return decrese;
+	public int getDecrease() {
+		return decrease;
 	}
 
 	/**
@@ -109,8 +109,8 @@ public final class SettingsData {
 		return saveMetadataOnItem;
 	}
 
-	public boolean isRandomContinerSpawn() {
-		return randomContinerSpawn;
+	public boolean isRandomContainerSpawn() {
+		return randomContainerSpawn;
 	}
 
 	public boolean isRemoveContainerWhenPlayerClose() {
@@ -137,12 +137,12 @@ public final class SettingsData {
 		private int amountOfBlocksBelowSurface;
 		private int blocksAwayFromPlayer;
 		private int blocksBetweenContainers;
-		private int increse;
-		private int decrese;
+		private int increase;
+		private int decrease;
 		private boolean spawnOnSurface;
 		private boolean warnBeforeSaveWithMetadata;
 		private boolean saveMetadataOnItem;
-		private boolean randomContinerSpawn;
+		private boolean randomContainerSpawn;
 		private boolean removeContainerWhenPlayerClose;
 		public boolean debug;
 
@@ -197,13 +197,13 @@ public final class SettingsData {
 			return this;
 		}
 
-		public Builder setIncrese(int increse) {
-			this.increse = increse;
+		public Builder setIncrease(int increase) {
+			this.increase = increase;
 			return this;
 		}
 
-		public Builder setDecrese(int decrese) {
-			this.decrese = decrese;
+		public Builder setDecrease(int decrease) {
+			this.decrease = decrease;
 			return this;
 		}
 
@@ -240,8 +240,8 @@ public final class SettingsData {
 			return this;
 		}
 
-		public Builder setRandomContinerSpawn(boolean randomContinerSpawn) {
-			this.randomContinerSpawn = randomContinerSpawn;
+		public Builder setRandomContainerSpawn(boolean randomContainerSpawn) {
+			this.randomContainerSpawn = randomContainerSpawn;
 			return this;
 		}
 

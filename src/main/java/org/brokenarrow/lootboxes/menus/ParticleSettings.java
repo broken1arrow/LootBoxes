@@ -45,7 +45,7 @@ public class ParticleSettings extends MenuHolder {
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Settings").placeholders(particle);
 		final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle("Particle_Settings",this.getPageNumber()));
 
 		setParticleType = new MenuButton() {
 			@Override

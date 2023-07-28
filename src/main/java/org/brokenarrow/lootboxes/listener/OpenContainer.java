@@ -149,9 +149,9 @@ public class OpenContainer implements Listener {
 			if (stacks == null) {
 				return false;
 			}
-			ContainerData containerData1 = containerData.getLinkedContainerData().get(location);
-			block.setType(containerData1.getContainerType());
-			setRotation(location, containerData1.getFacing());
+			ContainerData containerDataLinked = containerData.getLinkedContainerData().get(location);
+			block.setType(containerDataLinked.getContainerType());
+			setRotation(location, containerDataLinked.getFacing());
 			setCustomName(location, containerData.getDisplayname());
 			Inventory inventory = getInventory(location);
 			if (inventory != null) {

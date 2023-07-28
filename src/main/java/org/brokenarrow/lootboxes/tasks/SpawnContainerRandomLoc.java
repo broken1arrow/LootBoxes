@@ -38,31 +38,35 @@ public class SpawnContainerRandomLoc {
 	public void task() {
 		this.settings = settingsData.getSettingsData();
 
-		if (settings.isRandomContinerSpawn()) {
+		if (settings.isRandomContainerSpawn()) {
 			if (this.time == 0) {
-				setRandomSpawnedContiner();
+				setRandomSpawnedContainer();
 			} else if (System.currentTimeMillis() >= this.time) {
 				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(this.containerdataName);
 				if (!containerDataBuilder.isRandomSpawn()) {
-					setRandomSpawnedContiner();
+					setRandomSpawnedContainer();
 				}
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					Location location = player.getLocation();
-					if (lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location))
-						spawnBlock(containerDataBuilder, location, player);
-				}
+				if (containerDataBuilder.isSpawnContainerFromWorldCenter()) {
+					if (containerDataBuilder.getSpawnLocation() != null)
+						spawnBlock(containerDataBuilder, containerDataBuilder.getSpawnLocation(), null);
+				} else
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						Location location = player.getLocation();
+						if (lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location))
+							spawnBlock(containerDataBuilder, location, player);
+					}
 				this.time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
 			}
 		}
 
 	}
 
-	public void setRandomSpawnedContiner() {
-		for (String containerdata : containerDataCacheInstance.getCacheContainerData().keySet()) {
-			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerdata);
+	public void setRandomSpawnedContainer() {
+		for (String containerData : containerDataCacheInstance.getCacheContainerData().keySet()) {
+			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerData);
 			if (containerDataBuilder.isRandomSpawn()) {
 				this.time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
-				this.containerdataName = containerdata;
+				this.containerdataName = containerData;
 				return;
 			}
 		}
@@ -73,20 +77,24 @@ public class SpawnContainerRandomLoc {
 		Block block = locationClone.getBlock();
 		if (locationClone.getY() - 1 != location.getY() && locationClone.getY() - 2 != location.getY())
 			if (block.getType() != Material.GLASS) block.setType(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);*/
+
 		Location loc = null;
 		for (int i = 0; i < containerDataBuilder.getAttempts(); i++) {
-			loc = checkLocation(location.clone(), player);
+			loc = checkLocation(location.clone(), player, containerDataBuilder.getMinRadius(), containerDataBuilder.getMaxRadius());
 			if (loc != null)
 				break;
 		}
 		if (loc != null) {
 			spawnContainer(containerDataBuilder, loc);
 			String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serilazeLoc(loc));
-			if (containerDataBuilder.isShowTitel() && message != null && !message.isEmpty()) {
-				 String[] mes =  message.split("\\|");
-				player.sendTitle(mes.length > 0 ? mes[0] : "", mes.length > 1 ? mes[1] : "", 1, 20 * 20, 1);
+			if (containerDataBuilder.isShowTitle() && message != null && !message.isEmpty()) {
+				String[] mes = message.split("\\|");
+				if (player != null)
+					player.sendTitle(mes.length > 0 ? mes[0] : "", mes.length > 1 ? mes[1] : "", 1, 20 * 20, 1);
+				else
+					Bukkit.broadcastMessage(mes.length > 0 ? mes[0] : "");
 			}
-			if (containerDataBuilder.isContanerShallglow()) {
+			if (containerDataBuilder.isContainerShallGlow()) {
 				final Location finalLoc = loc;
 				RunTimedTask.runtaskLater(20 * 5, () -> {
 					visulizeBlock(finalLoc.getBlock(), finalLoc, true);
@@ -100,17 +108,17 @@ public class SpawnContainerRandomLoc {
 	public void spawnContainer(ContainerDataBuilder containerData, Location location) {
 		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
-		if (containerData.isRandomSpawn()){
+		if (containerData.isRandomSpawn()) {
 			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
 			if (stacks == null) {
 				return;
 			}
-			location.getBlock().setType(containerData.getRandonLootContainerItem());
-			if (containerData.getRandonLootContainerFaceing() == Facing.RANDOM) {
-				Material material = containerData.getRandonLootContainerItem();
+			location.getBlock().setType(containerData.getRandomLootContainerItem());
+			if (containerData.getRandomLootContainerFacing() == Facing.RANDOM) {
+				Material material = containerData.getRandomLootContainerItem();
 				setRotation(location, Facing.getRandomFace(material == Material.CHEST || material == Material.TRAPPED_CHEST));
-			}else
-				setRotation(location, containerData.getRandonLootContainerFaceing().getFace());
+			} else
+				setRotation(location, containerData.getRandomLootContainerFacing().getFace());
 			setCustomName(location, containerData.getDisplayname());
 
 			Inventory inventory = getInventory(location);
@@ -138,17 +146,14 @@ public class SpawnContainerRandomLoc {
 		}
 	}
 
-	private Location checkLocation(Location location, Player player) {
-
-		Location locationClone = randomUntility.nextLocation(location.clone(), 10, 80, true, true);
+	private Location checkLocation(Location location, Player player, int minRadius, int maxRadius) {
 
 		/*Block block = locationClone.getBlock();
 		if (locationClone.getY() - 1 != location.getY() && locationClone.getY() - 2 != location.getY())
 			if (block.getType() != Material.GLASS) block.setType(Material.WHITE_GLAZED_TERRACOTTA);*/
 
 
-
-		Location locationSubtracted = locationClone;
+		Location locationSubtracted = randomUntility.nextLocation(location.clone(), minRadius, maxRadius, true, true);
 
 		if (this.settings != null && this.settings.isSpawnOnSurface()) {
 			World world = location.getWorld();
@@ -161,14 +166,14 @@ public class SpawnContainerRandomLoc {
 		return null;
 	}
 
-	private boolean checkIfLocationAreValid(Location location, int hight, Player player) {
+	private boolean checkIfLocationAreValid(Location location, int height, Player player) {
 		World world = location.getWorld();
 		int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
 
 		if (this.settings != null && this.settings.getAmountOfBlocksBelowSurface() > 0)
-			hight = hight + this.settings.getAmountOfBlocksBelowSurface();
+			height = height + this.settings.getAmountOfBlocksBelowSurface();
 
-		if (hight < highestBlock && !location.getBlock().isLiquid() && !checkBlock(location.getBlock()) && !isNearbyChest(location, this.settings != null ? settings.getBlocksBetweenContainers() : 10) && !isNearbyPlayer(player, location, this.settings != null ? settings.getBlocksAwayFromPlayer() : 30))
+		if (height < highestBlock && !location.getBlock().isLiquid() && !checkBlock(location.getBlock()) && !isNearbyChest(location, this.settings != null ? settings.getBlocksBetweenContainers() : 10) && !isNearbyPlayer(player, location, this.settings != null ? settings.getBlocksAwayFromPlayer() : 30))
 			return true;
 
 		return false;
@@ -199,6 +204,7 @@ public class SpawnContainerRandomLoc {
 				return material != Material.getMaterial("DEEPSLATE");
 		}
 	}
+
 	private boolean checkNearbyContainer(Block block) {
 		Material material = block.getType();
 		switch (block.getType()) {
@@ -214,6 +220,7 @@ public class SpawnContainerRandomLoc {
 				return false;
 		}
 	}
+
 	public boolean isNearbyChest(Location location, int amountOfBlocksBetweenContainers) {
 		boolean hasNearbyChest = false;
 		double amountOfBlocksToCheck;
@@ -236,6 +243,7 @@ public class SpawnContainerRandomLoc {
 	}
 
 	public boolean isNearbyPlayer(Player player, Location location, int amountAwayFromPlayer) {
+		if (player == null) return true;
 		boolean hasNearbyPlayer = false;
 		double amountOfBlocksToCheck;
 		Location playerLocation = player.getLocation();

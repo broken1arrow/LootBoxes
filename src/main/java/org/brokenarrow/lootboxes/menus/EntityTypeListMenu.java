@@ -38,7 +38,7 @@ public class EntityTypeListMenu extends MenuHolder {
 		super(Lootboxes.getInstance().getMobList().getEntityTypeList(itemsToSearchFor));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "EntityType_List_Menu").placeholders("");
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		seachButton = new MenuButton() {

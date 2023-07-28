@@ -52,7 +52,7 @@ public class EditKeysToOpen extends MenuHolder {
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Keys_To_Open").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		seachButton = new MenuButton() {
@@ -264,9 +264,9 @@ public class EditKeysToOpen extends MenuHolder {
 					if (clickType == ClickType.RIGHT)
 						amount -= 1;
 					if (clickType == ClickType.SHIFT_LEFT)
-						amount += settings.getIncrese();
+						amount += settings.getIncrease();
 					if (clickType == ClickType.SHIFT_RIGHT)
-						amount -= settings.getDecrese();
+						amount -= settings.getDecrease();
 					int amountCached = keysData.getAmountNeeded() + amount;
 					if (amountCached > 64)
 						amountCached = 64;
@@ -280,7 +280,7 @@ public class EditKeysToOpen extends MenuHolder {
 				@Override
 				public ItemStack getItem() {
 					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
-					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded(), settings.getIncrese(), settings.getDecrese()).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Change_Amount").placeholders(keysData.getAmountNeeded(), settings.getIncrease(), settings.getDecrease()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),

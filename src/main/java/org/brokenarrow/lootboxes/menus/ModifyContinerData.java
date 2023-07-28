@@ -226,7 +226,7 @@ public class ModifyContinerData extends MenuHolder {
 		public AlterContainerDataMenu(final String containerDataName) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Alter_ContainerData_Menu").placeholders(containerDataName);
 			setMenuSize(guiTemplets.build().getGuiSize());
-			setTitle(guiTemplets.build().getGuiTitle());
+			setTitle(()-> guiTemplets.build().getGuiTitle());
 			//setFillSpace(guiTemplets.build().getFillSpace());
 			final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 

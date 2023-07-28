@@ -37,7 +37,7 @@ public class EditCreateItems extends MenuHolder {
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_Items_For_LootTable").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		final Map<ItemStack, ItemData> cacheItemData = new HashMap<>();

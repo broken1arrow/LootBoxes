@@ -39,7 +39,7 @@ public class CustomizeItem extends MenuHolder {
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "CustomizeItem").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		//setFillSpace(guiTemplets.build().getFillSpace());
 		final LootData data = lootItems.getLootData(lootTable, itemToEdit);
 		changeItem = new MenuButton() {
@@ -84,9 +84,9 @@ public class CustomizeItem extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += settingsData.getIncrese();
+					amount += settingsData.getIncrease();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= settingsData.getDecrese();
+					amount -= settingsData.getDecrease();
 				int chance = data.getChance() + amount;
 				if (chance > 100)
 					chance = 100;
@@ -102,7 +102,7 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance(), settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data.getChance(), settingsData.getIncrease(), settingsData.getDecrease()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -121,9 +121,9 @@ public class CustomizeItem extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += settingsData.getIncrese();
+					amount += settingsData.getIncrease();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= settingsData.getDecrese();
+					amount -= settingsData.getDecrease();
 				int minimum = data.getMinimum() + amount;
 
 				if (minimum < 0)
@@ -136,7 +136,7 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getMinimum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data.getMinimum(), settingsData.getIncrease(), settingsData.getDecrease()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -155,9 +155,9 @@ public class CustomizeItem extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += settingsData.getIncrese();
+					amount += settingsData.getIncrease();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= settingsData.getDecrese();
+					amount -= settingsData.getDecrease();
 				int maximum = data.getMaximum() + amount;
 
 				if (maximum < 0)
@@ -170,7 +170,7 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getMaximum(), settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data.getMaximum(), settingsData.getIncrease(), settingsData.getDecrease()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),

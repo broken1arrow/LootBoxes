@@ -85,9 +85,17 @@ public class ContainerDataCache extends YamlFileManager {
 		if (container.contains(" "))
 			container = container.trim().replace(" ", "_");
 		final ContainerDataBuilder builder = new ContainerDataBuilder.Builder()
-				.setContainerDataLinkedToLootTable("").setSpawningContainerWithCooldown(true).setCooldown(1800).setParticleEffects(new HashMap<>())
-				.setEnchant(false).setIcon(material).setDisplayname("").setLore(new ArrayList<>()).setContainerData(new HashMap<>())
+				.setContainerDataLinkedToLootTable("")
+				.setSpawningContainerWithCooldown(true)
+				.setCooldown(1800)
+				.setParticleEffects(new HashMap<>())
+				.setEnchant(false)
+				.setIcon(material)
+				.setDisplayname("")
+				.setLore(new ArrayList<>())
+				.setContainerData(new HashMap<>())
 				.setKeysData(new HashMap<>())
+				.setSpawnContainerFromWorldCenter(true)
 				.build();
 
 		cacheContainerData.put(container, builder);
@@ -419,7 +427,7 @@ public class ContainerDataCache extends YamlFileManager {
 
 	@Override
 	public void saveDataToFile(final File file) {
-		if (isSingleFile() && !file.getName().equals(getFileName())) return;
+		//if (!isSingleFile() && !file.getName().equals(getFileName())) return;
 		try {
 
 			this.getCustomConfig().set("Data", null);

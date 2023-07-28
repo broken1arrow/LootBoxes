@@ -31,7 +31,7 @@ public class ChoseRandomLootContainer extends MenuHolder {
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Random_loot_container_menu");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		listOfItems = new MenuButton() {
@@ -43,13 +43,13 @@ public class ChoseRandomLootContainer extends MenuHolder {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containername);
 					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
 					if (click == ClickType.SHIFT_LEFT) {
-						builder.setRandonLootContainerItem( material);
+						builder.setRandomLootContainerItem( material);
 						containerDataCache.setContainerData(containername, builder.build());
 						updateButtons();
 						return;
 					}
 					boolean isChest = material == Material.CHEST || material == Material.TRAPPED_CHEST;
-					int ordinal = containerDataBuilder.getRandonLootContainerFaceing().ordinal();
+					int ordinal = containerDataBuilder.getRandomLootContainerFacing().ordinal();
 					if (click.isRightClick())
 						ordinal = ordinal + 1;
 					if (click.isLeftClick())
@@ -62,7 +62,7 @@ public class ChoseRandomLootContainer extends MenuHolder {
 					if (type == null)
 						type = Facing.getFace(0);
 
-					builder.setRandonLootContainerFaceing(type);
+					builder.setRandomLootContainerFacing(type);
 					containerDataCache.setContainerData(containername, builder.build());
 
 					updateButtons();
@@ -79,10 +79,10 @@ public class ChoseRandomLootContainer extends MenuHolder {
 			public ItemStack getItem(@NotNull Object object) {
 				if (object instanceof Material) {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containername);
-					GuiTempletsYaml gui = guiTemplets.menuKey("List_Of_ContainerTypes").placeholders(bountifyCapitalized(object.toString()),bountifyCapitalized(containerDataBuilder.getRandonLootContainerFaceing())).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("List_Of_ContainerTypes").placeholders(bountifyCapitalized(object.toString()),bountifyCapitalized(containerDataBuilder.getRandomLootContainerFacing())).build();
 					Material material = (Material) object;
 
-					if (containerDataBuilder.getRandonLootContainerItem() == material){
+					if (containerDataBuilder.getRandomLootContainerItem() == material){
 						return CreateItemUtily.of(gui.getIcon(),
 								gui.getDisplayName(),
 								gui.getLore()).makeItemStack();

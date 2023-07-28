@@ -37,7 +37,7 @@ public class ContainersLinkedList extends MenuHolder {
 		super(Arrays.asList(containerdata.getLinkedContainerData().keySet().toArray()));
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(containername);
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		seachButton = new MenuButton() {

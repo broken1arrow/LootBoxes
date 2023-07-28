@@ -36,7 +36,7 @@ public class ChooseContainer extends MenuHolder {
 
 		setFillSpace(guiTemplets.build().getFillSpace());
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 
 		listOfItems = new MenuButton() {
 			private final SettingsData setting = settings.getSettingsData();

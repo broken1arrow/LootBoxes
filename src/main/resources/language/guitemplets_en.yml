@@ -1,5 +1,5 @@
 #
-# All diffrent gui you can change.
+# All different gui you can change.
 #
 #
 
@@ -15,7 +15,7 @@ Gui_Templets:
       Icon: CHEST
       Lore:
         - ""
-        - "&2List of conected loot boxes"
+        - "&2List of connected loot boxes"
     Containers_No_Perms:
       Display_name: "&6List of containers"
       Slot: 11
@@ -56,8 +56,8 @@ Gui_Templets:
       Icon: ""
       Lore:
         - ""
-        - "&2LeftClick to edit this item"
-        - "&2RightClick to get the item"
+        - "&2Left-click to edit this item"
+        - "&2Right-Click to get the item"
         - "&aChance:&6 {1}"
         - "&aMinimum:&6 {2}"
         - "&aMaximum:&6 {3}"
@@ -143,9 +143,9 @@ Gui_Templets:
       Icon: BARRIER
       Lore:
         - ""
-        - "&2Rightclick to not save with metadata."
+        - "&2Right-Click to not save with metadata."
         - ""
-        - "&2Leftclick to save with metadata."
+        - "&2Left-click to save with metadata."
     Back_button:
       Display_name: "&bGo back to menu"
       Enchant: true
@@ -174,10 +174,10 @@ Gui_Templets:
       Icon: PAPER
       Slot: 0
       Lore:
-        - "&2Leftclick&a to change items inside loottable and"
+        - "&2Left-click&a to change items inside loottable and"
         - "&aget info on all current items you have added."
         - "&6"
-        - "&2Rightclick&a for edit this loottable or remove it."
+        - "&2Right-Click&a for edit this loottable or remove it."
     Create_Table:
       Display_name: "&bCreate new table"
       Enchant: true
@@ -242,20 +242,20 @@ Gui_Templets:
       Icon: GOLDEN_CARROT
       Slot: 2
       Lore:
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to decrese  with&6 1"
-        - "&aRightclick and shift to decrese with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease  with&6 1"
+        - "&aRight-Click and shift to decrease with&6 {2}"
     Change_Maximum:
       Display_name: "&bChange maximum amount {0}"
       Enchant: true
       Icon: TROPICAL_FISH
       Slot: 3
       Lore:
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to increse with&6 1"
-        - "&aRightclick and shift to increse with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease with&6 1"
+        - "&aRight-Click and shift to decrease with&6 {2}"
     Remove_loot_table:
       Display_name: "&bRemove loottable"
       Enchant: true
@@ -301,30 +301,30 @@ Gui_Templets:
       Icon: GREEN_DYE
       Slot: 30
       Lore:
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to decrese  with&6 1"
-        - "&aRightclick and shift to decrese  with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease  with&6 1"
+        - "&aRight-Click and shift to decrease  with&6 {2}"
     Change_Minimum:
       Display_name: "&bChange minimum amount {0}"
       Enchant: true
       Icon: GOLDEN_CARROT
       Slot: 32
       Lore:
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to decrese  with&6 1"
-        - "&aRightclick and shift to decrese with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease  with&6 1"
+        - "&aRight-Click and shift to decrease with&6 {2}"
     Change_Maximum:
       Display_name: "&bChange maximum amount {0}"
       Enchant: true
       Icon: TROPICAL_FISH
       Slot: 34
       Lore:
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to increse with&6 1"
-        - "&aRightclick and shift to increse with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease with&6 1"
+        - "&aRight-Click and shift to decrease with&6 {2}"
     Remove_Button:
       Display_name: "&bRemove item"
       Enchant: true
@@ -388,13 +388,13 @@ Gui_Templets:
       Lore:
         - "Change the item type"
     Seach_button:
-      Display_name: "&bSeach for a item"
+      Display_name: "&bSearch for a item"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "Leftclick for seach for a item"
-        - "Rightclick for reset the seach"
+        - "Left-click for search for a item."
+        - "Right-Click for reset the search."
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -456,19 +456,19 @@ Gui_Templets:
       Icon: BOOK
       Slot: 0
       Lore:
-        - "&aThis item alredy have this"
+        - "&aThis item already have this"
         - "&aenchantment. Click to change"
         - "&alevel."
         - ""
         - "&aCurrent enchant level: {2}"
     Seach_button:
-      Display_name: "&bSeach for a enchant"
+      Display_name: "&bSearch for a enchant"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a enchant"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for a enchant."
+        - "&aRight-Click for reset the search."
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -531,22 +531,22 @@ Gui_Templets:
         - "&aCooldown:&6 {2}"
         - "&aIcon:&6 {3}"
     Seach_button:
-      Display_name: "&bSeach for continer"
+      Display_name: "&bSearch for container"
       Enchant: true
       Icon: PAPER
       Slot: 39
       Lore:
-        - "&aLeftclick for seach for continer"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for container"
+        - "&aRight-Click for reset the search"
     CreateLoot_button:
-      Display_name: "&bCreate new continer"
+      Display_name: "&bCreate new container"
       Enchant: true
       Icon: PAPER
       Slot: 41
       Lore:
         - "&aClick and type in your name"
-        - "&aon the continer and it need"
-        - "&aunique name."
+        - "&aon the container and it need"
+        - "&unique name."
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -601,8 +601,8 @@ Gui_Templets:
       Icon: CHEST
       Lore:
         - ""
-        - "&2Leftclick to get list of existing loottables."
-        - "&2Rightclick if you want to type manually."
+        - "&2Left-click to get list of existing loottables."
+        - "&2Right-Click if you want to type manually."
     Container_Linked_To_LootTable_Random_Spawn:
       Display_name: "&bChange loottable:&6 {0}"
       Enchant: true
@@ -611,20 +611,20 @@ Gui_Templets:
       Lore:
         - "&3You have set this container to spawn"
         - "&3random containers. So it will use the"
-        - "&3set loottable for random spawn continer"
+        - "&3set loottable for random spawn container"
         - "&3on every player online."
         - ""
-        - "&2Leftclick to get list of existing loottables."
+        - "&2Left-click to get list of existing loottables."
         - ""
-        - "&2Rightclick if you want to type manually."
+        - "&2Right-Click if you want to type manually."
     Particle_Animantion:
-      Display_name: "&bParticle effeckt"
+      Display_name: "&bParticle effect"
       Enchant: true
       Slot: 12
       Icon: NOTE_BLOCK
       Lore:
         - ""
-        - "&2Leftclick to get list of particels you can add."
+        - "&2Left-click to get list of particles you can add."
         - "&2Effects on the container:"
         - "&2{1}"
     Keys_To_Open_Container:
@@ -634,7 +634,7 @@ Gui_Templets:
       Icon: TRIPWIRE_HOOK
       Lore:
         - ""
-        - "&2Leftclick to get list of keys"
+        - "&2Left-click to get list of keys"
         - "&2need to open container"
         - "&2Keys added to the container:"
         - "&2{1}"
@@ -654,29 +654,29 @@ Gui_Templets:
       Icon: PAPER
       Lore:
         - ""
-        - "&2Leftclick to open settings"
+        - "&2Left-click to open settings"
     Cooldown_Container_Generate_Loot_is_on:
-      Display_name: "&bYou can´t set cooldown on the container"
+      Display_name: "&bYou can´t set cool-down on the container"
       Enchant: true
       Slot: 28
       Icon: CLOCK
       Lore:
         - ""
         - "&2"
-        - "&4You can´t set cooldown, when"
+        - "&4You can´t set cool-down, when"
         - "&4generate loot is on."
         - "&6"
-        - "&2Current cooldown:"
+        - "&2Current cool-down:"
         - "&2{1} seconds"
     Cooldown_Container:
-      Display_name: "&bSet cooldown on the container"
+      Display_name: "&bSet cool-down on the container"
       Enchant: true
       Slot: 28
       Icon: CLOCK
       Lore:
         - ""
         - "&2"
-        - "&2Current cooldown:"
+        - "&2Current cool-down:"
         - "&2{1} seconds"
     Containers:
       Display_name: "&bContainers linked"
@@ -694,7 +694,7 @@ Gui_Templets:
       Icon: OBSERVER
       Lore:
         - "&3When you set it to random spawn"
-        - "&3a continer this will show what"
+        - "&3a container this will show what"
         - "&3you link this container to before"
         - "&3(if you have link containers before)."
         - ""
@@ -707,11 +707,11 @@ Gui_Templets:
       Icon: GOLDEN_SHOVEL
       Lore:
         - ""
-        - "&2Leftclick to link chest with hand"
+        - "&2Left-click to link chest with hand"
         - "&2"
-        - "&2Rightclick to link chest with a item"
+        - "&2Right-Click to link chest with a item"
         - "&6"
-        - "&2Shift and Rightclick to use container"
+        - "&2Shift and Right-Click to use container"
         - "&2some you can link with (will place it)."
     Add_remove_containers_Random_Spawn:
       Display_name: "&bRemove or add containers some are linked"
@@ -773,20 +773,20 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # Settings for particle in this menu.
+  # Settings for a particle in this menu.
   Particle_Settings:
     Menu_Size: 45
     Menu_Title: "&1Edit this particle {0}"
     Matrial:
-      Display_name: "&6Change matrial {0}"
+      Display_name: "&6Change material {0}"
       Enchant: true
       Icon: GOLDEN_APPLE
       Slot: 10
       Lore:
         - "&6"
-        - "&aCurrent matrial is:&6 {1} "
+        - "&aCurrent material is:&6 {1} "
     Matrial_not_used:
-      Display_name: "&6Can't set matrial"
+      Display_name: "&6Can't set material"
       Enchant: false
       Icon: GOLDEN_APPLE
       Slot: 10
@@ -795,7 +795,7 @@ Gui_Templets:
         - "&4This particle not use this"
         - "&4setting."
         - "&6"
-        - "&aCurrent matrial is:&6 {1} "
+        - "&aCurrent material is:&6 {1} "
     Data:
       Display_name: "&6Change data {0}"
       Enchant: false
@@ -858,7 +858,7 @@ Gui_Templets:
         - "&aGo back to"
         - "&amenu before."
   ######################################################
-  # List_of loot tables in this menu. click on one to set the table to your
+  # List_of loot tables in this menu. Click on one to set the table to your
   # containers shall use to spawn items.
   List_of_loottables:
     Menu_Size: 45
@@ -874,13 +874,13 @@ Gui_Templets:
         - "&aChange with loottable some are linked"
         - "&aand get info on all linked containers."
     Seach_button:
-      Display_name: "&bSeach for a Loot table"
+      Display_name: "&bSearch for a Loot table"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a Loot table"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for a Loot table"
+        - "&aRight-Click for reset the search"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -923,7 +923,7 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # List of particels you can chose spawn arund the container in this menu.
+  # List of particles you can choose spawn around the container in this menu.
   Particle_Animantion:
     Menu_Size: 45
     Menu_Title: "&1Particles. Page: {0}"
@@ -936,13 +936,13 @@ Gui_Templets:
       Slot: 0
       Lore:
         - "&aChange particles some spawn"
-        - "&aarund the chest or use"
-        - "&aseveral diffrent ones."
+        - "&aaround the chest or use"
+        - "&aseveral different ones."
         - "&6"
-        - "&aLeftclick to select and"
-        - "&ayou can also cange some"
+        - "&aLeft-click to select and"
+        - "&ayou can also change some"
         - "&adata on the item."
-        - "&aRightclick to unselect"
+        - "&aRight-Click to unselect"
     Particle_list_selected:
       Display_name: "&4Particle:&6 {0}"
       Enchant: false
@@ -950,24 +950,24 @@ Gui_Templets:
       Slot: 0
       Lore:
         - "&aYou have selected this particle"
-        - "&arightclick to unselect."
+        - "&aRight-Click to unselect."
         - "&6"
         - "&aChange particles some spawn"
         - "&aarund the chest or use"
-        - "&aseveral diffrent ones."
+        - "&aseveral different ones."
         - "&6"
-        - "&aLeftclick to select and"
-        - "&ayou can also cange some"
+        - "&aLeft-click to select and"
+        - "&ayou can also change some"
         - "&adata on the item."
-        - "&aRightclick to unselect"
+        - "&aRight-Click to unselect"
     Seach_button:
-      Display_name: "&bSeach for a particle"
+      Display_name: "&bSearch for a particle"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a particle"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for a particle"
+        - "&aRight-Click for reset the search"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1022,10 +1022,10 @@ Gui_Templets:
       Icon: PAPER
       Slot: 0
       Lore:
-        - "&aChange key to this continer."
-        - "&aLeftclick if you want change the key."
-        - "&aShift and leftclick and you get the key."
-        - "&aRightclick if you want remove this key."
+        - "&aChange key to this container."
+        - "&aLeft-click if you want change the key."
+        - "&aShift and Left-click and you get the key."
+        - "&aRight-Click if you want remove this key."
         - ""
         - "&aAmount of keys needed: {1}"
         - ""
@@ -1035,21 +1035,21 @@ Gui_Templets:
         - "&a"
         - "&6{3}"
     Seach_button:
-      Display_name: "&bSeach for a key"
+      Display_name: "&bSearch for a key"
       Enchant: true
       Icon: PAPER
       Slot: 39
       Lore:
-        - "&aLeftclick for seach for a key"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for a key"
+        - "&aRight-Click for reset the search"
     Add_key_button:
       Display_name: "&bAdd a key"
       Enchant: true
       Icon: TRIPWIRE_HOOK
       Slot: 41
       Lore:
-        - "&aLeftclick for add key."
-        - "&aRightclick"
+        - "&aLeft-click for add key."
+        - "&aRight-Click"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1106,13 +1106,13 @@ Gui_Templets:
       Lore:
         - "&aClick to change to this item."
     Seach_button:
-      Display_name: "&bSeach for a item"
+      Display_name: "&bSearch for a item"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a item"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for a item"
+        - "&aRight-Click for reset the search"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1168,16 +1168,16 @@ Gui_Templets:
       Slot: 0
       Lore:
         - ""
-        - "&aLeftclick to teleport to container."
-        - "&aRightclick to remove this container."
+        - "&aLeft-click to teleport to container."
+        - "&aRight-Click to remove this container."
     Seach_button:
-      Display_name: "&bSeach for a location"
+      Display_name: "&bSearch for a location"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a location"
-        - "&aRightclick to remove this container."
+        - "&aLeft-click for search for a location"
+        - "&aRight-Click to remove this container."
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1232,15 +1232,15 @@ Gui_Templets:
       Lore:
         - "&aCurrent item {0}."
     Change_Amount:
-      Display_name: "&bCange amount needed"
+      Display_name: "&bChange amount needed"
       Enchant: true
       Icon: CARROT
       Slot: 12
       Lore:
         - "&aCurrent amount needed:&6 {0}"
         - ""
-        - "&aLeftclick for add more items needed"
-        - "&aRightclick for remove items needed"
+        - "&aLeft-click for add more items needed"
+        - "&aRight-Click for remove items needed"
     Alter_Display_name:
       Display_name: "&bChange display name"
       Enchant: true
@@ -1268,7 +1268,7 @@ Gui_Templets:
         - "&2Current lore:"
         - "&6{1}"
     Mob_Drop_Key:
-      Display_name: "&bSettings for dropp key"
+      Display_name: "&bSettings for drop key"
       Enchant: true
       Slot: 28
       Icon: BAT_SPAWN_EGG
@@ -1349,8 +1349,8 @@ Gui_Templets:
       Icon: FIREWORK_STAR
       Slot: 19
       Lore:
-        - "&aChange the mobs some dropp this key"
-        - "&aCurrent mobs dropp this key: "
+        - "&aChange the mobs some drop this key"
+        - "&aCurrent mobs drop this key: "
         - "&6{0}"
     Change_Chance:
       Display_name: "&bCurrent Chance {0}"
@@ -1358,10 +1358,10 @@ Gui_Templets:
       Icon: GREEN_DYE
       Slot: 21
       Lore:
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to decrese  with&6 1"
-        - "&aRightclick and shift to decrese  with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease  with&6 1"
+        - "&aRight-Click and shift to decrease  with&6 {2}"
     Change_Minimum:
       Display_name: "&bChange minimum amount {0}"
       Enchant: true
@@ -1370,10 +1370,10 @@ Gui_Templets:
       Lore:
         - "&6Set minimum of keys mob can drop."
         - ""
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to decrese  with&6 1"
-        - "&aRightclick and shift to decrese with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease  with&6 1"
+        - "&aRight-Click and shift to decrease with&6 {2}"
     Change_Maximum:
       Display_name: "&bChange maximum amount {0}"
       Enchant: true
@@ -1382,10 +1382,10 @@ Gui_Templets:
       Lore:
         - "&6Set minimum of keys mob can drop."
         - ""
-        - "&aLeftclick to increse with&6 1"
-        - "&aLeftclick and shift to increse with&6 {1}"
-        - "&aRightclick to increse with&6 1"
-        - "&aRightclick and shift to increse with&6 {2}"
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-Click to decrease with&6 1"
+        - "&aRight-Click and shift to decrease with&6 {2}"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1440,16 +1440,16 @@ Gui_Templets:
       Icon: COMPASS
       Slot: 0
       Lore:
-        - "&aLeftclick to add entity"
-        - "&aRightclick to remove this entity."
+        - "&aLeft-click to add entity"
+        - "&aRight-Click to remove this entity."
     Seach_button:
-      Display_name: "&bSeach for a entity"
+      Display_name: "&bSearch for a entity"
       Enchant: true
       Icon: PAPER
       Slot: 40
       Lore:
-        - "&aLeftclick for seach for a entity"
-        - "&aRightclick for reset the seach"
+        - "&aLeft-click for search for a entity"
+        - "&aRight-Click for reset the search"
     Forward_button:
       Display_name: "&bForward"
       Enchant: true
@@ -1606,7 +1606,7 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # menu for settings for your containerdata.
+  # menu for settings for your container data.
   Settings_Container_Data:
     Menu_Size: 45
     Menu_Title: "&1Settings."
@@ -1618,12 +1618,12 @@ Gui_Templets:
       Lore:
         - "&3Set container type used for random spawn"
         - "&3and also set facing of this container,"
-        - "&3you can also set random faceing."
+        - "&3you can also set random facing."
         - ""
         - "&2Curently set item: {1}"
         - "&2Curently set face: {2}"
     Show_titel:
-      Display_name: "&bIf it shall show titel"
+      Display_name: "&bIf it shall show title"
       Enchant: false
       Slot: 12
       Icon: PAPER
@@ -1632,7 +1632,7 @@ Gui_Templets:
         - ""
         - "&aIs set to: {1}"
     Show_glow:
-      Display_name: "&bIf it continer shall glow"
+      Display_name: "&bIf it container shall glow"
       Enchant: false
       Slot: 14
       Icon: GLOWSTONE
@@ -1648,7 +1648,8 @@ Gui_Templets:
       Lore:
         - ""
         - "&2Enable this for use this container to random spawn"
-        - "&2your loottable arund all online players."
+        - "&2your loottable around all online players or from center"
+        - "&2of the world."
         - "&6"
         - "&2Left click to enable"
         - "&2"
@@ -1661,7 +1662,8 @@ Gui_Templets:
       Lore:
         - ""
         - "&2Enable this for use this container to random spawn"
-        - "&2your loottable arund all online players."
+        - "&2your loottable around all online players or from center"
+        - "&2of the world."
         - "&6"
         - "&2Left click to enable"
         - "&2"
@@ -1674,7 +1676,7 @@ Gui_Templets:
       Lore:
         - "&aHow many times it will try find valid spawn loc"
         - ""
-        - "&aAttempts:&6{1}"
+        - "&aAttempts: &6{1}"
     Attempts_to_spawn_random_spawn_off:
       Display_name: "&cNot work when random spawn is off"
       Enchant: false
@@ -1683,7 +1685,7 @@ Gui_Templets:
       Lore:
         - "&aHow many times it will try find valid spawn loc"
         - ""
-        - "&aAttempts:&6{1}"
+        - "&aAttempts: &6{1}"
     Generate_Loot_When_Clicking:
       Display_name: "&bGenerate loot on timer"
       Enchant: true
@@ -1695,10 +1697,68 @@ Gui_Templets:
         - "&2timer or when player clicking"
         - "&2on the container."
         - "&2"
-        - "&3Leftclick to turn this on"
-        - "&3Rightclick to turn this off"
+        - "&3Left-click to turn this on"
+        - "&3Right-click to turn this off"
         - "&2"
         - "&2Auto fill on timer:&6 {1}"
+    World_center:
+      Display_name: "&bUse world center"
+      Enchant: false
+      Slot: 28
+      Icon: MAP
+      Lore:
+        - "&aSet this to true if you want to use"
+        - "&athe world spawn. If false it will"
+        - "&atry spawn one around the player."
+        - ""
+        - "&aCurrently set to: &6{0}"
+    World_center_off:
+      Display_name: "&cNot work when random spawn is off"
+      Enchant: false
+      Slot: 28
+      Icon: BARRIER
+      Lore:
+        - "&aSet this to true if you want to use"
+        - "&athe world spawn. If false it will"
+        - "&atry spawn one around the player."
+        - ""
+        - "&aCurrently set to: &6{0}"
+    Min_radius:
+      Display_name: "&bMin radius"
+      Enchant: false
+      Slot: 23
+      Icon: CARROT
+      Lore:
+        - "&aSet min radius it can spawn container"
+        - ""
+        - "&aMin radius: &6{0}"
+    Min_radius_off:
+      Display_name: "&cNot work when random spawn is off"
+      Enchant: false
+      Slot: 23
+      Icon: BARRIER
+      Lore:
+        - "&aSet min radius it can spawn container"
+        - ""
+        - "&aMin radius: &6{0}"
+    Max_radius:
+      Display_name: "&bMax radius"
+      Enchant: false
+      Slot: 25
+      Icon: GOLDEN_CARROT
+      Lore:
+        - "&aSet max radius it can spawn container"
+        - ""
+        - "&aMax radius: &6{1}"
+    Max_radius_off:
+      Display_name: "&cNot work when random spawn is off"
+      Enchant: false
+      Slot: 25
+      Icon: BARRIER
+      Lore:
+        - "&aSet max radius it can spawn container"
+        - ""
+        - "&aMax radius: &6{1}"
     Back_button:
       Display_name: "&bBack"
       Enchant: true

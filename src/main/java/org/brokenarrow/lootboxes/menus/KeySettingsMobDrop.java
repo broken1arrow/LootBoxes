@@ -33,7 +33,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, "");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		//setFillSpace(guiTemplets.build().getFillSpace());
 
 		this.setMobsDropThisKey = new MenuButton() {
@@ -65,9 +65,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += settingsData.getIncrese();
+					amount += settingsData.getIncrease();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= settingsData.getDecrese();
+					amount -= settingsData.getDecrease();
 				int chance = data.getChance() + amount;
 				if (chance > 100)
 					chance = 100;
@@ -82,7 +82,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 			public ItemStack getItem() {
 				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
 
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data != null ? data.getChance() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Chance").placeholders(data != null ? data.getChance() : 0, settingsData.getIncrease(), settingsData.getDecrease()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -101,9 +101,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += settingsData.getIncrese();
+					amount += settingsData.getIncrease();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= settingsData.getDecrese();
+					amount -= settingsData.getDecrease();
 				int minimum = data.getMinimum() + amount;
 
 				if (minimum < 0)
@@ -116,7 +116,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data != null ? data.getMinimum() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(data != null ? data.getMinimum() : 0, settingsData.getIncrease(), settingsData.getDecrease()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),
@@ -135,9 +135,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 				if (clickType == ClickType.RIGHT)
 					amount -= 1;
 				if (clickType == ClickType.SHIFT_LEFT)
-					amount += settingsData.getIncrese();
+					amount += settingsData.getIncrease();
 				if (clickType == ClickType.SHIFT_RIGHT)
-					amount -= settingsData.getDecrese();
+					amount -= settingsData.getDecrease();
 				int maximum = data.getMaximum() + amount;
 
 				if (maximum < 0)
@@ -150,7 +150,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				final KeyMobDropData data = keyDropData.getKeyMobDropData(continerData, keyName);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data != null ? data.getMaximum() : 0, settingsData.getIncrese(), settingsData.getDecrese()).build();
+				final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(data != null ? data.getMaximum() : 0, settingsData.getIncrease(), settingsData.getDecrease()).build();
 
 				return CreateItemUtily.of(gui.getIcon(),
 						gui.getDisplayName(),

@@ -38,7 +38,7 @@ public class EditCreateLootTable extends MenuHolder {
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "LootTables").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 		createTable = new MenuButton() {
 			@Override
@@ -216,9 +216,9 @@ public class EditCreateLootTable extends MenuHolder {
 					if (click == ClickType.RIGHT)
 						amount -= 1;
 					if (click == ClickType.SHIFT_LEFT)
-						amount += settings.getIncrese();
+						amount += settings.getIncrease();
 					if (click == ClickType.SHIFT_RIGHT)
-						amount -= settings.getDecrese();
+						amount -= settings.getDecrease();
 					int amountCached = lootData.getMaximum() + amount;
 					if (amountCached > 54)
 						amountCached = 54;
@@ -234,7 +234,7 @@ public class EditCreateLootTable extends MenuHolder {
 				@Override
 				public ItemStack getItem() {
 					final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
-					final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(lootData.getMaximum(), settings.getIncrese(), settings.getDecrese()).build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Maximum").placeholders(lootData.getMaximum(), settings.getIncrease(), settings.getDecrease()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),
@@ -252,9 +252,9 @@ public class EditCreateLootTable extends MenuHolder {
 					if (click == ClickType.RIGHT)
 						amount -= 1;
 					if (click == ClickType.SHIFT_LEFT)
-						amount += settings.getIncrese();
+						amount += settings.getIncrease();
 					if (click == ClickType.SHIFT_RIGHT)
-						amount -= settings.getDecrese();
+						amount -= settings.getDecrease();
 					int amountCached = lootData.getMinimum() + amount;
 					if (amountCached > 54)
 						amountCached = 54;
@@ -272,7 +272,7 @@ public class EditCreateLootTable extends MenuHolder {
 				@Override
 				public ItemStack getItem() {
 					final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
-					final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(lootData.getMinimum(), settings.getIncrese(), settings.getDecrese()).build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Change_Minimum").placeholders(lootData.getMinimum(), settings.getIncrease(), settings.getDecrease()).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),

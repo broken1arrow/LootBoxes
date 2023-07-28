@@ -51,7 +51,7 @@ public class ParticleAnimantion extends MenuHolder {
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
 
 		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(guiTemplets.build().getGuiTitle());
+		setTitle(()-> guiTemplets.build().getGuiTitle());
 		setFillSpace(guiTemplets.build().getFillSpace());
 
 		seachButton = new MenuButton() {
