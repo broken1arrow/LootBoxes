@@ -30,7 +30,7 @@ import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
 import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
 import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.getEffectType;
 
-public class ParticleAnimantion extends MenuHolder {
+public class ParticleAnimation extends MenuHolder {
 
 	private final MenuButton backButton;
 	private final MenuButton listOfItems;
@@ -45,7 +45,7 @@ public class ParticleAnimantion extends MenuHolder {
 	private final SpawnContainerEffectsTask spawnContainerEffectsTask = Lootboxes.getInstance().getSpawnContainerEffectsTask();
 	private final GuiTempletsYaml.Builder guiTemplets;
 
-	public ParticleAnimantion(final String container, final String particleToSearchFor) {
+	public ParticleAnimation(final String container, final String particleToSearchFor) {
 		super(Lootboxes.getInstance().getParticleEffectList().getParticleList(particleToSearchFor));
 
 		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
@@ -60,7 +60,7 @@ public class ParticleAnimantion extends MenuHolder {
 				if (click.isLeftClick())
 					new SeachInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
 				else
-					new ParticleAnimantion(container, "").menuOpen(player);
+					new ParticleAnimation(container, "").menuOpen(player);
 			}
 
 			@Override

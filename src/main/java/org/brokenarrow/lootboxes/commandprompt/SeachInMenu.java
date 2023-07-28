@@ -6,7 +6,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.menus.EntityTypeListMenu;
 import org.brokenarrow.lootboxes.menus.MatrialList;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
-import org.brokenarrow.lootboxes.menus.ParticleAnimantion;
+import org.brokenarrow.lootboxes.menus.ParticleAnimation;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +52,7 @@ public class SeachInMenu extends SimpleConversation {
 			if (menuAcces == ENTITY_TYPE_LISTMENU)
 				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
 			if (menuAcces == PARTICLE_ANIMANTION)
-				new ParticleAnimantion(lootTable, input).menuOpen(getPlayer(context));
+				new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
 			else
 				new MatrialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
 

@@ -50,7 +50,7 @@ public class ParticleSettings extends MenuHolder {
 		setParticleType = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				new ParticleAnimantion(container, "").menuOpen(player);
+				new ParticleAnimation(container, "").menuOpen(player);
 			}
 
 			@Override
@@ -141,7 +141,7 @@ public class ParticleSettings extends MenuHolder {
 		backButton = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				new ParticleAnimantion(container, "").menuOpen(player);
+				new ParticleAnimation(container, "").menuOpen(player);
 			}
 
 			@Override
