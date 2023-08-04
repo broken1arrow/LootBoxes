@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.untlity.command;
 
 import org.jetbrains.annotations.NotNull;
 
-import static org.brokenarrow.lootboxes.untlity.command.CommandRegister.getCommandGroupUtility;
+import static org.brokenarrow.lootboxes.untlity.command.CommandRegisters.getCommandGroupUtility;
 
 public abstract class SubCommandsUtility extends CommandsUtility {
 

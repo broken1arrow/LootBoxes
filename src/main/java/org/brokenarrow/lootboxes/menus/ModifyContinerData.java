@@ -130,7 +130,8 @@ public class ModifyContinerData extends MenuHolder {
 				if (object instanceof String) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(object));
 					if (data != null) {
-						final GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object, data.getLootTableLinked(), data.getCooldown(), data.getIcon()).build();
+						String tableLinked = data.getLootTableLinked();
+						final GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object, tableLinked == null || tableLinked.isEmpty() ? "non" : tableLinked, data.getCooldown(), data.getIcon()).build();
 						ItemStack itemStack = null;
 						if (data.getIcon() == null || data.getIcon() == Material.AIR)
 							itemStack = CreateItemUtily.of(Material.CHEST).makeItemStack();
@@ -226,7 +227,7 @@ public class ModifyContinerData extends MenuHolder {
 		public AlterContainerDataMenu(final String containerDataName) {
 			guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Alter_ContainerData_Menu").placeholders(containerDataName);
 			setMenuSize(guiTemplets.build().getGuiSize());
-			setTitle(()-> guiTemplets.build().getGuiTitle());
+			setTitle(() -> guiTemplets.build().getGuiTitle());
 			//setFillSpace(guiTemplets.build().getFillSpace());
 			final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 
@@ -353,7 +354,7 @@ public class ModifyContinerData extends MenuHolder {
 				public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 					if (containerDataBuilder != null)
-						new ContainersLinkedList(containerDataBuilder, containerDataName,"").menuOpen(player);
+						new ContainersLinkedList(containerDataBuilder, containerDataName, "").menuOpen(player);
 				}
 
 				@Override

@@ -1,6 +1,8 @@
 package org.brokenarrow.lootboxes;
 
 
+import org.broken.arrow.command.library.CommandRegister;
+import org.broken.arrow.command.library.command.builders.CommandBuilder;
 import org.broken.arrow.itemcreator.library.ItemCreator;
 import org.broken.arrow.menu.library.RegisterMenuAPI;
 import org.broken.arrow.nbt.library.RegisterNbtAPI;
@@ -39,7 +41,6 @@ import org.brokenarrow.lootboxes.untlity.MobList;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
 import org.brokenarrow.lootboxes.untlity.RandomUntility;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
-import org.brokenarrow.lootboxes.untlity.command.CommandRegister;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,8 +50,7 @@ import java.util.logging.Level;
 
 public class Lootboxes extends JavaPlugin {
 	private RunTask runTask;
-	static Lootboxes plugin;
-	private ChatMessages chatMessages;
+	private static Lootboxes plugin;
 	private Settings settings;
 	private SpawnContainerRandomLoc spawnContainerRandomLoc;
 	private MatrialList matrialList;
@@ -111,8 +111,8 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
 		Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
 		this.menuApi = new RegisterMenuAPI(this);
-		commandRegister = new CommandRegister(this, "lootbox");
-		commandRegister.registerSubclass(new GuiCommand(), new ReloadCommand(), new GetKeyCommand());
+		commandRegister = new CommandRegister();
+		this.registerCommands();
 		this.mobList = new MobList();
 		heavyTasks.start();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -125,7 +125,7 @@ public class Lootboxes extends JavaPlugin {
 		} else {
 			placeholderAPIMissing = true;
 		}
-		this.getLogger().log(Level.INFO, "Start Lootboxes");
+		this.getLogger().log(Level.INFO, "Has start Lootboxes");
 	}
 
 	@Override
@@ -151,6 +151,24 @@ public class Lootboxes extends JavaPlugin {
 		ItemData.getInstance().save();
 		KeyDropData.getInstance().save();
 	}
+
+	public void registerCommands() {
+		commandRegister.registerMainCommand(this.getName(), "lootboxes|loot");
+		commandRegister.registerSubCommand(new CommandBuilder.Builder(
+				new GuiCommand())
+				.setPermission("lootboxes.command.menu")
+				.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
+				.build());
+		commandRegister.registerSubCommand(new CommandBuilder.Builder(new ReloadCommand())
+				.setPermission("lootboxes.command.reload")
+				.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
+				.build());
+		commandRegister.registerSubCommand(new CommandBuilder.Builder(new GetKeyCommand())
+				.setPermission("lootboxes.command.key")
+				.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
+				.build());
+	}
+
 
 	public static Lootboxes getInstance() {
 		return plugin;

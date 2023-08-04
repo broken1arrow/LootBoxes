@@ -97,7 +97,7 @@ public class ListOfLoottables extends MenuHolder {
 			public ItemStack getItem(@NotNull Object object) {
 				if (object instanceof String) {
 					if (object.equals("Global_Values")) return null;
-					GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object).build();
+					GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders("",object).build();
 
 					return CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),

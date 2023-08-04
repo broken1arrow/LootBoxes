@@ -10,12 +10,12 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.logging.Level;
 
-public final class CommandRegister {
+public final class CommandRegisters {
 
 	private static CommandGroupUtility commandGroupUtility;
 	private static Plugin PLUGIN;
 
-	public CommandRegister(@NotNull Plugin plugin, @NotNull String command) {
+	public CommandRegisters(@NotNull Plugin plugin, @NotNull String command) {
 		PLUGIN = plugin;
 		commandGroupUtility = new CommandGroupUtility(command, Collections.singletonList(command));
 	}

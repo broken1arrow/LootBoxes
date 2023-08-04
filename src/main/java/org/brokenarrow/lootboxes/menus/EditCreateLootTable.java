@@ -106,7 +106,7 @@ public class EditCreateLootTable extends MenuHolder {
 
 				if (object instanceof String) {
 					if (object.equals("Global_Values")) return null;
-					final GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders(object).build();
+					final GuiTempletsYaml gui = guiTemplets.menuKey("Loot_Tables").placeholders("",object).build();
 
 					final ItemStack itemStack = CreateItemUtily.of(gui.getIcon(),
 							gui.getDisplayName(),

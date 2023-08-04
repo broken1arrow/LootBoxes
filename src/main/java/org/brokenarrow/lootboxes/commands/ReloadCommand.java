@@ -1,24 +1,24 @@
 package org.brokenarrow.lootboxes.commands;
 
+import org.broken.arrow.command.library.command.CommandHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
-import org.brokenarrow.lootboxes.untlity.command.SubCommandsUtility;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Level;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.RELOAD;
 
-public class ReloadCommand extends SubCommandsUtility {
+public class ReloadCommand extends CommandHolder {
 
 	public ReloadCommand() {
 		super("reload");
-		setPermission("lootboxes.command.reload");
-		setPermissionMessage("you don´t have lootboxes.admin.* or the children permission");
 	}
 
 	@Override
-	protected void onCommand() {
+	public boolean onCommand(@NotNull final CommandSender sender, @NotNull final String commandLabel, @NotNull final String @NotNull [] cmdArgs)  {
 		Lootboxes plugin = Lootboxes.getInstance();
 		try {
 			GuiTempletSettings.getInstance().reload();
@@ -33,6 +33,7 @@ public class ReloadCommand extends SubCommandsUtility {
 			else
 				Lootboxes.getInstance().getLogger().log(Level.INFO, "You have successful reload the config files");
 		}
-
+		return true;
 	}
+
 }

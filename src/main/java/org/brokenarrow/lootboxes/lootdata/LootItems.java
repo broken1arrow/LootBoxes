@@ -235,7 +235,7 @@ public class LootItems extends YamlFileManager {
 
 	@Override
 	protected void loadSettingsFromYaml(final File key) {
-		System.out.println("loadSettingsFromYaml ");
+
 		final Map<String, LootData> data = new HashMap<>();
 		FileConfiguration customConfig = this.getCustomConfig();
 		final ConfigurationSection configs = customConfig.getConfigurationSection(ITEMS.getKey());

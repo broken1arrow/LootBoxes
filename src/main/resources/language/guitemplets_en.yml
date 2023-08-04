@@ -50,7 +50,7 @@ Gui_Templets:
     Menu_Title: "&1Add and remove items. Page: {0}"
     FillSpace: 0-26
     Item_List:
-      Display_name: "&6Item {0}"
+      Display_name: "&6Item {1}"
       Enchant: false
       Slot: 0
       Icon: ""
@@ -58,10 +58,10 @@ Gui_Templets:
         - ""
         - "&2Left-click to edit this item"
         - "&2Right-Click to get the item"
-        - "&aChance:&6 {1}"
-        - "&aMinimum:&6 {2}"
-        - "&aMaximum:&6 {3}"
-        - "&aHaveMetadata:&6 {4}"
+        - "&aChance:&6 {2}"
+        - "&aMinimum:&6 {3}"
+        - "&aMaximum:&6 {4}"
+        - "&aHaveMetadata:&6 {5}"
     Save_Items:
       Display_name: "&6Save items"
       Enchant: true
@@ -169,7 +169,7 @@ Gui_Templets:
     # max amount of item on the page (if you not fill all slots and wants more pages).
     Max_Amount_Of_Items: 13
     Loot_Tables:
-      Display_name: "&6{0}"
+      Display_name: "&6{1}"
       Enchant: false
       Icon: PAPER
       Slot: 0

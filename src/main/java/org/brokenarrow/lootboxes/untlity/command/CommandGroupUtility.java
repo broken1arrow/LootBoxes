@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-import static org.brokenarrow.lootboxes.untlity.command.CommandRegister.getPLUGIN;
+import static org.brokenarrow.lootboxes.untlity.command.CommandRegisters.getPLUGIN;
 
 
 public class CommandGroupUtility {
@@ -33,7 +33,7 @@ public class CommandGroupUtility {
 
 		if (aliases != null)
 			mainCommand.setAliases(aliases);
-		CommandRegister.register(plugin.getName(), mainCommand);
+		CommandRegisters.register(plugin.getName(), mainCommand);
 		//mainCommand.register(label);
 
 		// Sort A-Z
