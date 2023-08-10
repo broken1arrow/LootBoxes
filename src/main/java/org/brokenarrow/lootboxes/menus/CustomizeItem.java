@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
+
 public class CustomizeItem extends MenuHolder {
 
 	private final LootItems lootItems = LootItems.getInstance();
@@ -27,15 +29,14 @@ public class CustomizeItem extends MenuHolder {
 	private final MenuTemplate guiTemplate;
 	private final String lootTable;
 	private final String itemToEdit;
-
+	private LootData data;
 	public CustomizeItem(final String lootTable, final String itemToEdit) {
 		this.lootTable = lootTable;
 		this.itemToEdit = itemToEdit;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Customize_item");
 		if (guiTemplate != null) {
-			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Customize_item"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(()->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);
@@ -58,10 +59,20 @@ public class CustomizeItem extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				Object[] placeholders = new Object[0];
+				if (button.isActionTypeEqual("Change_chance"))
+					placeholders = getPlaceholders(data.getChance(),data.getChance());
+
+				if (button.isActionTypeEqual("Change_minimum"))
+					placeholders = getPlaceholders(data.getMinimum(),data.getMinimum());
+
+				if (button.isActionTypeEqual("Change_maximum"))
+					placeholders = getPlaceholders(data.getMinimum(),data.getMaximum());
+
 
 				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),placeholders),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders))
 						.makeItemStack();
 			}
 		};
@@ -143,7 +154,7 @@ public class CustomizeItem extends MenuHolder {
 			lootItems.saveTask(lootTable);
 			new EditCreateItems(lootTable).menuOpen(player);
 		}
-
+		this.data = lootItems.getLootData(lootTable, itemToEdit);
 		if (button.isActionTypeEqual("Forward_button")) {}
 		if (button.isActionTypeEqual("Previous_button")) {}
 

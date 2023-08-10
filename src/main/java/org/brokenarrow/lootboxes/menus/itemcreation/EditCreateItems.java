@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class EditCreateItems extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
@@ -78,18 +79,19 @@ public class EditCreateItems extends MenuHolder {
 						if (itemStack == null) return null;
 						final ItemStack clonedItem = itemStack.clone();
 						//final GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
-						String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "",
+						Object[] placeholders = getPlaceholders(
 								data.isHaveMetadata() && clonedItem.hasItemMeta() && clonedItem.getItemMeta().hasDisplayName() ? clonedItem.getItemMeta().getDisplayName() : bountifyCapitalized(clonedItem.getType()),
 								data.getChance(),
 								data.getMinimum(),
 								data.getMaximum(),
 								data.isHaveMetadata());
+						String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders);
 						final ItemMeta itemMeta = clonedItem.getItemMeta();
 						clonedItem.setItemMeta(itemMeta);
 
 						final ItemStack guiItem = CreateItemUtily.of(clonedItem,
 										displayName,
-										TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+										TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders ))
 								.setShowEnchantments(true).makeItemStack();
 						cacheItemData.put(guiItem, new ItemData(itemStack, (String) object));
 						return guiItem;

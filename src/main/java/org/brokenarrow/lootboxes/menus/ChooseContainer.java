@@ -6,7 +6,6 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.settings.Settings;
@@ -26,7 +25,7 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINER
 import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 
 public class ChooseContainer extends MenuHolder {
-	private final GuiTempletsYaml.Builder guiTemplets = null;
+
 	private final MenuTemplate guiTemplate;
 	private  MenuButton listOfItems;
 	private  MenuButton previous;

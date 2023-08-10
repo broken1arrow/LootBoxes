@@ -8,9 +8,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TeleportPlayer;
@@ -29,14 +27,6 @@ import java.util.Map;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class ContainersLinkedList extends MenuHolder {
-
-	private  MenuButton backButton;
-	private  MenuButton seachButton;
-	private  MenuButton forward;
-	private  MenuButton previous;
-	private MenuButton itemList;
-	private GuiTempletsYaml.Builder guiTemplets;
-	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final MenuTemplate guiTemplate;
 	private final String containerName;

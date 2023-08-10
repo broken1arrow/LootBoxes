@@ -157,6 +157,9 @@ public class GuiTempletSettings extends YamlFileManager {
 			if (menuName.equalsIgnoreCase("Settings_container_data")) {
 				name = "Settings_container_data";
 			}
+			if (menuName.equalsIgnoreCase("SaveItems")) {
+				name = "Save_items";
+			}
 			config.set("Menus." + name + ".menu_settings.name", mainButton.getMenuTitle());
 			if (mainButton.getMenuFillSpace() != null)
 				config.set("Menus." + name + ".menu_settings.fill-space", mainButton.getMenuFillSpace());

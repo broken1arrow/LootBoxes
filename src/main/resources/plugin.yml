@@ -8,7 +8,6 @@ softdepend:
   - WorldGuard
 
 permissions:
-  
   lootboxes.admin.*:
     description: to open the menus to edit tables and containers.
     default: false

@@ -5,7 +5,6 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.menus.containerdata.ModifyContainerData;
 import org.brokenarrow.lootboxes.menus.loottable.EditCreateLootTable;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -17,12 +16,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class MainMenu extends MenuHolder {
-
-	private final GuiTempletsYaml.Builder guiTemplets;
 	private final MenuTemplate guiTemplate;
 
 	public MainMenu() {
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Main_menu");
+		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Main_menu");
 
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Main_menu");
 		if (guiTemplate != null) {

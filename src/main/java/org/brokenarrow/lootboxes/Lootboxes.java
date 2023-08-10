@@ -149,11 +149,11 @@ public class Lootboxes extends JavaPlugin {
 		this.settings.reload();
 		this.menusCache.reload();
 		ContainerDataCache.getInstance().reload();
-		File file = new File(plugin.getDataFolder() + "language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
-		System.out.println("file.exists() " + file.exists());
+		File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
+
 		if (file.exists()) {
 			GuiTempletSettings.getInstance().reload();
-			File newFile = new File(plugin.getDataFolder() + "language/old/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
+			File newFile = new File(plugin.getDataFolder() + "/language/guitemplets_old_" + this.settings.getSettingsData().getLanguage() + ".yml");
 			file.renameTo(newFile);
 		}
 		LootItems.getInstance().reload();

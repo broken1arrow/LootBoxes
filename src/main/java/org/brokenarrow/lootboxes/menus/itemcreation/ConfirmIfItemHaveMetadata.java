@@ -5,7 +5,6 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -22,7 +21,6 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 
 	private  MenuButton confirmSave;
 	private MenuButton backButton;
-	private GuiTempletsYaml.Builder guiTemplets;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
 	private final MenuTemplate guiTemplate;
@@ -44,7 +42,7 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 			setTitle(() -> "could not load menu 'Confirm_If_Item_Have_Metadata'.");
 		}
 
-		confirmSave = new MenuButton() {
+/*		confirmSave = new MenuButton() {
 			@Override
 			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
 				for (final ItemStack item : items.values()) {
@@ -110,6 +108,30 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
 						.makeItemStack();
 			}
+		};*/
+	}
+
+
+	@Override
+	public MenuButton getButtonAt(int slot) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+		if (button == null) return null;
+		return new MenuButton() {
+			@Override
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+				if (run(button, click))
+					updateButton(this);
+			}
+
+			@Override
+			public ItemStack getItem() {
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+
+				return CreateItemUtily.of(menuButton.getMaterial(),
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+						.makeItemStack();
+			}
 		};
 	}
 
@@ -138,13 +160,4 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 		return false;
 	}
 
-	public MenuButton getButtonAts(final int slot) {
-
-		if (guiTemplets.menuKey("Confirm_Save").build().getSlot().contains(slot))
-			return confirmSave;
-
-		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return this.backButton;
-		return null;
-	}
 }

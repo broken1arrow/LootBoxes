@@ -3,7 +3,6 @@ package org.brokenarrow.lootboxes.commands;
 import org.broken.arrow.command.library.command.CommandHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.settings.ChatMessages;
-import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +20,7 @@ public class ReloadCommand extends CommandHolder {
 	public boolean onCommand(@NotNull final CommandSender sender, @NotNull final String commandLabel, @NotNull final String @NotNull [] cmdArgs)  {
 		Lootboxes plugin = Lootboxes.getInstance();
 		try {
-			GuiTempletSettings.getInstance().reload();
-			plugin.getSettings().reload();
+			plugin.reloadFiles();
 			ChatMessages.messagesReload(plugin);
 			plugin.getSpawnLootContainer().setRandomSpawnedContainer();
 		} catch (Exception e) {

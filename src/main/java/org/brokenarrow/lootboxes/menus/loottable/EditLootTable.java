@@ -5,7 +5,6 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -20,12 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
 
 public final class EditLootTable extends MenuHolder {
-
-	private  MenuButton removeLootTable;
-	private  MenuButton maxAmount;
-	private  MenuButton minAmount;
-	private  MenuButton backButton;
-	private  GuiTempletsYaml.Builder guiTemplets;
 	private final String lootTableName;
 	private final LootItems lootTable = LootItems.getInstance();
 	private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettingsData();
