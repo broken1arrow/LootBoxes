@@ -7,7 +7,7 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.menus.ModifyContinerData;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
 import org.bukkit.GameMode;
@@ -112,7 +112,7 @@ public class PlayerClick implements Listener {
 			String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
 
-			RunTimedTask.runtaskLater(5, () -> new ModifyContinerData.AlterContainerDataMenu(metadata).menuOpen(player), false);
+			RunTimedTask.runtaskLater(5, () -> new AlterContainerDataMenu(metadata).menuOpen(player), false);
 			ADD_CONTINERS_TURN_OFF_ADD_CONTAINERS.sendMessage(player);
 		}
 		if (block == null) return;

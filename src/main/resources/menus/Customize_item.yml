@@ -1,0 +1,81 @@
+######################################################
+# Customize the item you added to your loot table.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Edit this item"
+      sound: null
+      size: 45
+    buttons:
+      "10":
+        action_type: Change_item
+        material: FIREWORK_STAR
+        name: "&bChange the item {0}"
+        glow: true
+        lore:
+        - "&aChange the item type"
+      "13":
+        action_type: Enchant_item
+        material: ENCHANTED_BOOK
+        name: "&bEnchant the item"
+        glow: true
+        lore:
+        - "&aClick to enchant the item"
+      "28":
+        action_type: Remove
+        material: BARRIER
+        name: "&bRemove item"
+        glow: true
+        lore:
+        - "&aRemove this item"
+      "30":
+        action_type: Change_chance
+        material: GREEN_DYE
+        name: "&bCurrent Chance {0}"
+        glow: true
+        lore:
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-click to decrease  with&6 1"
+        - "&aRight-click and shift to decrease  with&6 {2}"
+      "32":
+        action_type: Change_minimum
+        material: GOLDEN_CARROT
+        name: "&bChange minimum amount {0}"
+        glow: true
+        lore:
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-click to decrease  with&6 1"
+        - "&aRight-click and shift to decrease with&6 {2}"
+      "34":
+        action_type: Change_maximum
+        material: TROPICAL_FISH
+        name: "&bChange maximum amount {0}"
+        glow: true
+        lore:
+        - "&aLeft-click to increase with&6 1"
+        - "&aLeft-click and shift to increase with&6 {1}"
+        - "&aRight-click to decrease with&6 1"
+        - "&aRight-click and shift to decrease with&6 {2}"
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

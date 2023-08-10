@@ -4,11 +4,15 @@ import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class GuiTempletSettings extends YamlFileManager {
 
@@ -16,37 +20,14 @@ public class GuiTempletSettings extends YamlFileManager {
 	private final Map<String, Map<String, Guidata>> chacheGuiSettings = new HashMap<>();
 
 	public GuiTempletSettings() {
-		super(Lootboxes.getInstance(),"language/guitemplets_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml");
+		super(Lootboxes.getInstance(), "language/guitemplets_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml");
 
 	}
 
-/*	@Override
-	public void reload() {
-		if (customConfigFile == null) {
-			customConfigFile = new File(Lootboxes.getInstance().getDataFolder() + "/language", fileName);
-			if (!this.customConfigFile.exists()) {
-				customConfigFile = new File(Lootboxes.getInstance().getDataFolder(), "guitemplets.yml");
-			}
-			customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-		}
-		if (!this.customConfigFile.exists() && resourcePath != null) {
-			this.customConfigFile.getParentFile().mkdirs();
-			Lootboxes.getInstance().saveResource(resourcePath, false);
-
-		}
-
-		try {
-			this.customConfig = new YamlConfiguration();
-			this.customConfig.load(this.customConfigFile);
-			loadSettingsFromYaml();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}*/
 	@Override
-	protected void loadSettingsFromYaml(final File file)  {
+	protected void loadSettingsFromYaml(final File file, FileConfiguration configuration) {
 		Map<String, Guidata> yamlData = new HashMap<>();
-		FileConfiguration customConfig = this.getCustomConfig();
+		FileConfiguration customConfig = configuration;
 		ConfigurationSection MainConfigKeys = customConfig.getConfigurationSection("Gui_Templets");
 
 		if (MainConfigKeys != null) {
@@ -88,9 +69,149 @@ public class GuiTempletSettings extends YamlFileManager {
 				}
 			}
 		}
-
+		if (chacheGuiSettings.isEmpty()) return;
+		convertMenu();
 	}
 
+	public void convertMenu() {
+		File file = new File(plugin.getDataFolder() + "/language", "menus_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+		for (Entry<String, Map<String, Guidata>> entry : chacheGuiSettings.entrySet()) {
+			String menuName = entry.getKey();
+			Map<String, Guidata> buttons = entry.getValue();
+			Guidata mainButton = buttons.get(menuName);
+			String name = menuName;
+			if (menuName.equals("Choose_Container")) {
+				name = "Choose_container";
+			}
+			if (menuName.equals("Random_loot_container_menu")) {
+				name = "Random_loot_container";
+			}
+			if (menuName.equals("Container_Linked_List")) {
+				name = "Container_linked_list";
+			}
+			if (menuName.equals("CustomizeItem")) {
+				name = "Customize_item";
+			}
+			if (menuName.equalsIgnoreCase("Enchantments")) {
+				name = "Enchantments_list";
+			}
+			if (menuName.equalsIgnoreCase("EntityType_List_Menu")) {
+				name = "EntityType_list";
+			}
+			if (menuName.equalsIgnoreCase("List_of_loottables")) {
+				name = "List_of_loot_tables";
+			}
+			if (menuName.equalsIgnoreCase("Main_menu")) {
+				name = "Main_menu";
+			}
+			if (menuName.equalsIgnoreCase("Matrial_List")) {
+				name = "Material_list";
+			}
+			if (menuName.equalsIgnoreCase("Particle_Animantion")) {
+				name = "Particle_animation";
+			}
+			if (menuName.equalsIgnoreCase("Particle_Settings")) {
+				name = "Particle_settings";
+			}
+			if (menuName.equalsIgnoreCase("Alter_ContainerData_Menu")) {
+				name = "Alter_container_data";
+			}
+			if (menuName.equalsIgnoreCase("Container_data")) {
+				name = "Containers_list";
+			}
+			if (menuName.equalsIgnoreCase("Confirm_if_item_have_metadata")) {
+				name = "Confirm_if_item_have_metadata";
+			}
+			if (menuName.equalsIgnoreCase("Edit_Items_For_LootTable")) {
+				name = "Edit_items_for_loot_table";
+			}
+			if (menuName.equalsIgnoreCase("Save_items")) {
+				name = "Save_items";
+			}
+			if (menuName.equalsIgnoreCase("Edit_key")) {
+				name = "Edit_key";
+			}
+			if (menuName.equalsIgnoreCase("Edit_keys_to_open")) {
+				name = "Edit_keys_to_open";
+			}
+			if (menuName.equalsIgnoreCase("Key_Settings_MobDrop")) {
+				name = "Key_settings_mob_drop";
+			}
+			if (menuName.equalsIgnoreCase("Save_new_keys")) {
+				name = "Save_new_keys";
+			}
+			if (menuName.equalsIgnoreCase("LootTables")) {
+				name = "Loot_tables";
+			}
+			if (menuName.equalsIgnoreCase("Edit_loot_table")) {
+				name = "Edit_loot_table";
+			}
+			if (menuName.equalsIgnoreCase("Settings_container_data")) {
+				name = "Settings_container_data";
+			}
+			config.set("Menus." + name + ".menu_settings.name", mainButton.getMenuTitle());
+			if (mainButton.getMenuFillSpace() != null)
+				config.set("Menus." + name + ".menu_settings.fill-space", mainButton.getMenuFillSpace());
+			config.set("Menus." + name + ".menu_settings.size", mainButton.getMenuSize());
+			config.set("Menus." + name + ".menu_settings.size", mainButton.getMenuSize());
+			sortMap(config, name, menuName, buttons);
+		}
+		try {
+			config.save(file);
+		} catch (IOException exception) {
+			exception.printStackTrace();
+		}
+	}
+
+	public void sortMap(FileConfiguration config, String name, String menuName, Map<String, Guidata> buttons) {
+
+		for (Entry<String, Guidata> buttonsEntry : buttons.entrySet()) {
+			if (!buttonsEntry.getKey().contains(menuName)) continue;
+			Guidata guidata = buttonsEntry.getValue();
+			String slot = guidata.getSlot();
+			if (slot == null) {
+				continue;
+			}
+			if (slot.equals("0"))
+				slot = "-1";
+			List<String> loreList = new ArrayList<>();
+			guidata.getLore().forEach(lore -> loreList.add(lore == null || lore.isEmpty() ? "&6" : lore));
+			String path = "Menus." + name + ".buttons." + slot;
+			boolean containsPath = false;
+			if (config.contains(path + ".passive") && buttonsEntry.getKey().contains("not")) {
+				List<String> passiveLoreList = new ArrayList<>();
+				guidata.getLore().forEach(lore -> passiveLoreList.add(lore == null || lore.isEmpty() ? "&6" : lore));
+				config.set(path + ".passive.material", guidata.getIcon());
+				config.set(path + ".passive.name", guidata.getDisplayname());
+				config.set(path + ".passive.glow", guidata.isGlow());
+				config.set(path + ".passive.lore", passiveLoreList);
+				containsPath = true;
+			}
+			if (config.contains(path + ".active")&& !buttonsEntry.getKey().contains("not")) {
+				List<String> activeLoreList = new ArrayList<>();
+				guidata.getLore().forEach(lore -> activeLoreList.add(lore == null || lore.isEmpty() ? "&6" : lore));
+				config.set(path + ".active.material", guidata.getIcon());
+				config.set(path + ".active.name", guidata.getDisplayname());
+				config.set(path + ".active.glow", guidata.isGlow());
+				config.set(path + ".active.lore", activeLoreList );
+				containsPath = true;
+			}
+			if(!containsPath) {
+				config.set(path + ".material", guidata.getIcon());
+				config.set(path + ".name", guidata.getDisplayname());
+				config.set(path + ".glow", guidata.isGlow());
+				config.set(path + ".lore", loreList);
+			}
+		}
+	}
 
 	public void setDataYamlfile(String mainkey, Map<String, Guidata> values) {
 		this.chacheGuiSettings.put(mainkey, values);
@@ -110,102 +231,4 @@ public class GuiTempletSettings extends YamlFileManager {
 
 	}
 
-	/*
-	public static class Guidata {
-		private int menuSize;
-		private String menuTitle = "";
-		private String menuFillSpace;
-		private int menuMaxAmountOfItems;
-		private boolean glow;
-		private String displayname = "";
-		private String slot;
-		private String icon = "";
-		private List<String> lore;
-
-
-		public Guidata() {
-		}
-
-		public Guidata(int menuSize, String menuTitle, String MenufillSpace, int menuMaxAmountOfItems, String displayname, String slot, String icon, List<String> lore, boolean glow) {
-			this.menuSize = menuSize;
-			this.menuTitle = menuTitle;
-			this.menuFillSpace = MenufillSpace;
-			this.menuMaxAmountOfItems = menuMaxAmountOfItems;
-			this.displayname = displayname;
-			this.slot = slot;
-			this.icon = icon;
-			this.lore = lore;
-			this.glow = glow;
-		}
-
-
-		public static Guidata of(String menuTitle, int menuSize, String displayname, String slot, String icon, List<String> lore, String fillSpace, int menuMaxAmountOfItems) {
-			final Guidata data = new Guidata();
-
-			data.menuTitle = menuTitle;
-			data.menuSize = menuSize;
-			data.menuFillSpace = fillSpace;
-			data.menuMaxAmountOfItems = menuMaxAmountOfItems;
-			data.displayname = displayname;
-			data.slot = slot;
-			data.icon = icon;
-			data.lore = lore;
-
-
-			return data;
-		}
-
-		public static Guidata of(boolean glow, String displayname, String slot, String icon, List<String> lore) {
-			final Guidata data = new Guidata();
-
-			data.displayname = displayname;
-			data.slot = slot;
-			data.icon = icon;
-			data.lore = lore;
-			data.glow = glow;
-
-			return data;
-		}
-
-
-		public int getMenuSize() {
-			return menuSize;
-		}
-
-		public String getMenuTitle() {
-			return menuTitle;
-		}
-
-		public boolean isGlow() {
-			return glow;
-		}
-
-		public String getDisplayname() {
-			return displayname;
-		}
-
-		public String getSlot() {
-			return slot;
-		}
-
-		public String getIcon() {
-			return icon;
-		}
-
-		public int getMenuMaxAmountOfItems() {
-			return menuMaxAmountOfItems;
-		}
-
-		public String getMenuFillSpace() {
-			return menuFillSpace;
-		}
-
-		public List<String> getLore() {
-			return lore;
-		}
-	}
-
-	public static GuiTempletSettings getInstance() {
-		return instance;
-	}*/
 }

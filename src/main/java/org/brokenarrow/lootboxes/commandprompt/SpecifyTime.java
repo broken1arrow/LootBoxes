@@ -5,7 +5,7 @@ import org.broken.arrow.prompt.library.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.menus.ModifyContinerData;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +51,7 @@ public class SpecifyTime extends SimpleConversation {
 				containerDataCache.setContainerData(container, builder.build());
 				SPECIFY_TIME_CONFIRM.sendMessage(getPlayer(context), input);
 			}
-			new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(getPlayer(context));
+			new AlterContainerDataMenu(container).menuOpen(getPlayer(context));
 			return null;
 		}
 	}

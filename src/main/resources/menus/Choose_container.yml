@@ -1,0 +1,51 @@
+######################################################
+# The menu you choose the loot container.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Choose Container you want."
+      # slots you want to use to add fill items inside.
+      fill-space: 0-18
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: BRICK
+        name: "&bChoose this {0}"
+        glow: false
+        lore:
+          - "&aThis container will be used as loot chest"
+          - "&aif click on this button and place it."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+      "36-37,39-41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+        - ""

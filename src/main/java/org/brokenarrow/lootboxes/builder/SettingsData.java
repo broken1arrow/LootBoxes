@@ -20,6 +20,7 @@ public final class SettingsData {
 	private final boolean randomContainerSpawn;
 	private final boolean removeContainerWhenPlayerClose;
 	private final boolean debug;
+	private boolean singleMenuFile;
 	private final Builder builder;
 
 	private SettingsData(Builder builder) {
@@ -40,6 +41,7 @@ public final class SettingsData {
 		this.increase = builder.increase;
 		this.decrease = builder.decrease;
 		this.debug = builder.debug;
+		this.singleMenuFile = builder.singleMenuFile;
 		this.builder = builder;
 	}
 
@@ -121,6 +123,10 @@ public final class SettingsData {
 		return debug;
 	}
 
+	public boolean isSingleMenuFile() {
+		return singleMenuFile;
+	}
+
 	public Builder getBuilder() {
 		return builder;
 	}
@@ -145,6 +151,7 @@ public final class SettingsData {
 		private boolean randomContainerSpawn;
 		private boolean removeContainerWhenPlayerClose;
 		public boolean debug;
+		private boolean singleMenuFile;
 
 		public Builder setLanguage(String language) {
 			this.language = language;
@@ -252,6 +259,11 @@ public final class SettingsData {
 
 		public Builder setDebug(boolean debug) {
 			this.debug = debug;
+			return this;
+		}
+
+		public Builder setSingleMenuFile(final boolean singleMenuFile) {
+			this.singleMenuFile = singleMenuFile;
 			return this;
 		}
 

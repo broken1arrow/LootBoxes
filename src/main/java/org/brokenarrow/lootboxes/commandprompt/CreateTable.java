@@ -4,7 +4,7 @@ import org.broken.arrow.prompt.library.SimpleConversation;
 import org.broken.arrow.prompt.library.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
-import org.brokenarrow.lootboxes.menus.EditCreateLootTable;
+import org.brokenarrow.lootboxes.menus.loottable.EditCreateLootTable;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;

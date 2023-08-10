@@ -4,6 +4,9 @@ package org.brokenarrow.lootboxes;
 import org.broken.arrow.command.library.CommandRegister;
 import org.broken.arrow.command.library.command.builders.CommandBuilder;
 import org.broken.arrow.itemcreator.library.ItemCreator;
+import org.broken.arrow.menu.button.manager.library.MenusSettingsHandler;
+import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
+import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.RegisterMenuAPI;
 import org.broken.arrow.nbt.library.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.builder.ContainerData;
@@ -45,6 +48,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
+import java.io.File;
 import java.util.logging.Level;
 
 
@@ -71,6 +76,7 @@ public class Lootboxes extends JavaPlugin {
 	private ServerVersion serverVersion;
 	private ItemCreator itemCreator;
 	private RegisterMenuAPI menuApi;
+	private MenusSettingsHandler menusCache;
 
 	@Override
 	public void onLoad() {
@@ -102,6 +108,11 @@ public class Lootboxes extends JavaPlugin {
 		this.checkChunkLoadUnload = new CheckChunkLoadUnload(this);
 		this.heavyTasks = new HeavyTasks();
 		this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
+		this.settings.reload();
+		if (settings.getSettingsData().isSingleMenuFile())
+			this.menusCache = new MenusSettingsHandler(this, "language/menus_" + this.settings.getSettingsData().getLanguage() + ".yml", true);
+		else
+			this.menusCache = new MenusSettingsHandler(this, "menus", false);
 		reloadFiles();
 		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
@@ -125,7 +136,8 @@ public class Lootboxes extends JavaPlugin {
 		} else {
 			placeholderAPIMissing = true;
 		}
-		this.getLogger().log(Level.INFO, "Has start Lootboxes");
+		this.getLogger().log(Level.INFO, "Has started Lootboxes");
+
 	}
 
 	@Override
@@ -135,14 +147,19 @@ public class Lootboxes extends JavaPlugin {
 
 	public void reloadFiles() {
 		this.settings.reload();
-
+		this.menusCache.reload();
 		ContainerDataCache.getInstance().reload();
-		GuiTempletSettings.getInstance().reload();
+		File file = new File(plugin.getDataFolder() + "language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
+		System.out.println("file.exists() " + file.exists());
+		if (file.exists()) {
+			GuiTempletSettings.getInstance().reload();
+			File newFile = new File(plugin.getDataFolder() + "language/old/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
+			file.renameTo(newFile);
+		}
 		LootItems.getInstance().reload();
 		ItemData.getInstance().reload();
 		KeyDropData.getInstance().reload();
 		ChatMessages.messagesReload(this);
-
 	}
 
 	public void saveFiles() {
@@ -248,6 +265,20 @@ public class Lootboxes extends JavaPlugin {
 
 	public ParticleEffectList getParticleEffectList() {
 		return particleEffectList;
+	}
+
+	public MenusSettingsHandler getMenusCache() {
+		return menusCache;
+	}
+
+	@Nullable
+	public MenuTemplate getMenu(String menuName) {
+		return menusCache.getTemplate(menuName);
+	}
+
+	@Nullable
+	public MenuButtonData getMenuButton(String menuName, int slot) {
+		return menusCache.getMenuButton(menuName, slot);
 	}
 
 	public boolean isPlaceholderAPIMissing() {

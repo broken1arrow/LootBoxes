@@ -1,0 +1,75 @@
+######################################################
+# Edit the key you have added.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Change key data."
+      sound: null
+      size: 45
+    buttons:
+      "12":
+        action_type: Change_amount
+        material: CARROT
+        name: "&bChange amount needed"
+        glow: true
+        lore:
+          - "&aCurrent amount needed:&6 {0}"
+          - ""
+          - "&aLeft-click for add more items needed"
+          - "&aRight-Click for remove items needed"
+      "14":
+        action_type: Alter_display_name
+        material: COCOA_BEANS
+        name: "&bChange display name"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change display name"
+          - "&2on the item. You have '{'0'}' '{'1'}' and"
+          - "&2'{'2'}' placeholders to use (remove ')."
+          - "&2"
+          - "&2Current display name:"
+          - "&6{1}"
+      "16":
+        action_type: Alter_lore
+        material: DARK_OAK_SIGN
+        name: "&bChange Lore"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change display name"
+          - "&2on the item. You have '{'0'}' '{'1'}' and"
+          - "&2'{'2'}' placeholders to use (remove ')."
+          - "&2"
+          - "&2Current display name:"
+          - "&6{1}"
+      "28":
+        action_type: Mob_drop_key
+        material: BAT_SPAWN_EGG
+        name: "&bSettings for drop key"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change with mob drops"
+          - "&2this key,amount and chance it drop the key."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

@@ -1,16 +1,20 @@
 package org.brokenarrow.lootboxes.menus;
 
 import org.apache.commons.lang.WordUtils;
+import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
+import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
+import org.brokenarrow.lootboxes.builder.KeyMobDropData.Builder;
 import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
+import org.brokenarrow.lootboxes.menus.keys.EditKey;
+import org.brokenarrow.lootboxes.menus.keys.KeySettingsMobDrop;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -23,58 +27,49 @@ import java.util.List;
 
 public class EntityTypeListMenu extends MenuHolder {
 
-	private final MenuButton backButton;
-	private final MenuButton seachButton;
-	private final MenuButton forward;
-	private final MenuButton previous;
-	private final MenuButton entityTypeList;
-	private final GuiTempletsYaml.Builder guiTemplets;
-	private final LootItems lootItems = LootItems.getInstance();
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final Lootboxes plugin = Lootboxes.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
+	private final String container;
+	private final String value;
+	private final MenuTemplate guiTemplate;
+	private final MenuKeys menuKey;
 
 	public EntityTypeListMenu(final MenuKeys menuKey, final String container, final String value, final String itemsToSearchFor) {
 		super(Lootboxes.getInstance().getMobList().getEntityTypeList(itemsToSearchFor));
-		this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "EntityType_List_Menu").placeholders("");
-		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(()-> guiTemplets.build().getGuiTitle());
-		setFillSpace(guiTemplets.build().getFillSpace());
+		this.menuKey = menuKey;
+		this.container = container;
+		this.value = value;
+		this.guiTemplate = Lootboxes.getInstance().getMenu("EntityType_list");
+		if (guiTemplate != null) {
+			setFillSpace(guiTemplate.getFillSlots());
+			setMenuSize(guiTemplate.getinvSize("EntityType_list"));
+			setTitle(guiTemplate::getMenuTitle);
+		} else {
+			setMenuSize(36);
+			setTitle(() -> "could not load menu 'EntityType_list'.");
 
-		seachButton = new MenuButton() {
+		}
+	}
+
+	@Override
+	public MenuButton getFillButtonAt(@NotNull Object object) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+		return new MenuButton() {
+
 			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
-
-				if (clickType.isLeftClick())
-					new SeachInMenu(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
-				else
-					new EntityTypeListMenu(menuKey, container, value, "").menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		entityTypeList = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
-
-				if (o instanceof EntityType) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+				if (object instanceof EntityType) {
 					if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
 						final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
-						final KeyMobDropData.Builder builder = data.getBuilder();
+						final Builder builder = data.getBuilder();
 						final List<EntityType> entityTypes = data.getEntityTypes();
 
-						if (clickType == ClickType.LEFT) {
-							entityTypes.add((EntityType) o);
+						if (click == ClickType.LEFT) {
+							entityTypes.add((EntityType) object);
 						}
-						if (clickType == ClickType.RIGHT) {
-							entityTypes.remove((EntityType) o);
+						if (click == ClickType.RIGHT) {
+							entityTypes.remove((EntityType) object);
 						}
 						builder.setEntityTypes(entityTypes);
 						keyDropData.putCachedKeyData(container, value, builder.build());
@@ -85,101 +80,79 @@ public class EntityTypeListMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				return null;
-			}
-
-			@Override
-			public ItemStack getItem(final @NotNull Object object) {
-
 				if (object instanceof EntityType) {
 					final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
 					final Material material = plugin.getMobList().makeSpawnEggs((EntityType) object);
 
-					final GuiTempletsYaml gui = guiTemplets.menuKey("EntityType_list").placeholders(WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), material).build();
-					return CreateItemUtily.of(material, gui.getDisplayName(),
-							gui.getLore()).setGlow(data != null && data.getEntityTypes().contains(object)).makeItemStack();
+					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), material);
+
+					return CreateItemUtily.of(menuButton.getMaterial(),
+									displayName,
+									TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+							.setGlow(data != null && data.getEntityTypes().contains(object))
+							.makeItemStack();
 				}
 				return null;
 			}
 		};
-		previous = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-
-				if (click.isLeftClick()) {
-					previousPage();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		forward = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				if (click.isLeftClick()) {
-					nextPage();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		backButton = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory inventory, final @NotNull ClickType clickType, final @NotNull ItemStack itemStack, final Object o) {
-				if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
-					new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
-				if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
-					new EditKeysToOpen.EditKey(container, value).menuOpen(player);
-				if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
-					new CustomizeItem(container, value).menuOpen(player);
-				}
-				if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
-					new KeySettingsMobDrop(container, value).menuOpen(player);
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-
-	}
-
-
-	@Override
-	public MenuButton getFillButtonAt(final @NotNull Object o) {
-		return entityTypeList;
 	}
 
 	@Override
-	public MenuButton getButtonAt(final int slot) {
+	public MenuButton getButtonAt(int slot) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+		if (button == null) return null;
+		return new MenuButton() {
+			@Override
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+				if (run(button, click))
+					updateButton(this);
+			}
 
-		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return seachButton;
-		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward;
-		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous;
-		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton;
+			@Override
+			public ItemStack getItem() {
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-		return null;
+				return CreateItemUtily.of(menuButton.getMaterial(),
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+						.setGlow(menuButton.isGlow())
+						.makeItemStack();
+			}
+		};
 	}
+
+	public boolean run(MenuButtonData button, ClickType click) {
+
+		if (button.isActionTypeEqual("Forward_button")) {
+			if (click.isLeftClick()) {
+				nextPage();
+			}
+		}
+		if (button.isActionTypeEqual("Previous_button")) {
+			if (click.isLeftClick()) {
+				previousPage();
+			}
+		}
+		if (button.isActionTypeEqual("Search")) {
+			if (click.isLeftClick())
+				new SeachInMenu(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
+			else
+				new EntityTypeListMenu(menuKey, container, value, "").menuOpen(player);
+		}
+		if (button.isActionTypeEqual("Back_button")) {
+			if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
+				new AlterContainerDataMenu(container).menuOpen(player);
+			if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
+				new EditKey(container, value).menuOpen(player);
+			if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
+				new CustomizeItem(container, value).menuOpen(player);
+			}
+			if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
+				new KeySettingsMobDrop(container, value).menuOpen(player);
+			}
+		}
+		return false;
+	}
+
 }

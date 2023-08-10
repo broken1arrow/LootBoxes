@@ -1,16 +1,17 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
+import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SetNumbers;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -27,132 +28,34 @@ import static org.brokenarrow.lootboxes.menus.ParticleSettings.Type.*;
 import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.isParticleThisClazz;
 
 public class ParticleSettings extends MenuHolder {
-
-	private final MenuButton backButton;
-	private final MenuButton setParticleType;
-	private final MenuButton setMatrial;
-	private final MenuButton setData;
-	private final MenuButton setColors;
-	private final MenuButton setParticleSize;
-	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-	private final GuiTempletsYaml.Builder guiTemplets;
+	private final String container;
+	private final Object particle;
+	private final ParticleEffect particleEffect;
+	private boolean canSetColor = true;
+	private boolean isUsingMaterial = true;
+	private final MenuTemplate guiTemplate;
 
-	/**
-	 * Create menu instance. Without any arguments. Recommend you set al lest inventory/menu size.
-	 */
 	public ParticleSettings(String container, Object particle) {
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Settings").placeholders(particle);
+		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Settings").placeholders(particle);
+		this.container = container;
+		this.particle = particle;
 		final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(()-> guiTemplets.build().getGuiTitle());
-
-		setParticleType = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				new ParticleAnimation(container, "").menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Particle_type").build();
-				if (isParticleThisClazz(particle, Material.class, MaterialData.class, BlockData.class, ItemStack.class))
-					gui = guiTemplets.menuKey("Particle_type").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		setMatrial = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				if (isParticleThisClazz(particle, Material.class, MaterialData.class, BlockData.class, ItemStack.class))
-					new MatrialList(PARTICLE_SETTINGS, particle, container, "").menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ParticleEffect particleEffect = containerDataCache.getParticleEffect(container, particle);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Matrial_not_used").placeholders("", "").build();
-				if (isParticleThisClazz(particle, Material.class, MaterialData.class, BlockData.class, ItemStack.class))
-					gui = guiTemplets.menuKey("Matrial").placeholders("", particleEffect != null ? particleEffect.getMaterial() : "").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		setData = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				new SetNumbers(SET_DATA, container, particle).start(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ParticleEffect particleEffect = containerDataCache.getParticleEffect(container, particle);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Data").placeholders("", particleEffect != null ? particleEffect.getData() : "").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		setColors = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				if (isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
-					new SetNumbers(SET_COLORS, container, particle).start(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ParticleEffect particleEffect = containerDataCache.getParticleEffect(container, particle);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Colors_not_used").placeholders("", particleEffect != null && particleEffect.getParticleDustOptions() != null ? particleEffect.getParticleDustOptions().getFromColor() : "").build();
-				if (isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
-					gui = guiTemplets.menuKey("Colors").placeholders("", fromColor(particleEffect), toColor(particleEffect)).build();
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		setParticleSize = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				if (isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
-					new SetNumbers(SET_PARTICLE_SIZE, container, particle).start(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ParticleEffect particleEffect = containerDataCache.getParticleEffect(container, particle);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Particle_Size_not-used").placeholders("", particleEffect != null && particleEffect.getParticleDustOptions() != null ? particleEffect.getParticleDustOptions().getSize() : "").build();
-
-				if (isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
-					gui = guiTemplets.menuKey("Particle_Size").placeholders("", particleEffect != null && particleEffect.getParticleDustOptions() != null ? particleEffect.getParticleDustOptions().getSize() : "").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		backButton = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				new ParticleAnimation(container, "").menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
+		this.particleEffect = containerDataCache.getParticleEffect(container, particle);
+		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_settings");
+		if (guiTemplate != null) {
+			setFillSpace(guiTemplate.getFillSlots());
+			setMenuSize(guiTemplate.getinvSize("Particle_settings"));
+			setTitle(guiTemplate::getMenuTitle);
+			setMenuOpenSound(guiTemplate.getSound());
+		} else {
+			setMenuSize(36);
+			setTitle(() -> "could not load menu 'Particle_settings'.");
+		}
+		if (!isParticleThisClazz(particle, Material.class, MaterialData.class, BlockData.class, ItemStack.class))
+			this.isUsingMaterial = false;
+		if (!isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
+			this.canSetColor = false;
 	}
 
 	public String fromColor(ParticleEffect particleEffect) {
@@ -175,16 +78,82 @@ public class ParticleSettings extends MenuHolder {
 
 	@Override
 	public MenuButton getButtonAt(int slot) {
-		if (guiTemplets.menuKey("Matrial").build().getSlot().contains(slot))
-			return setMatrial;
-		if (guiTemplets.menuKey("Colors").build().getSlot().contains(slot))
-			return setColors;
-		if (guiTemplets.menuKey("Data").build().getSlot().contains(slot))
-			return setData;
-		if (guiTemplets.menuKey("Particle_Size").build().getSlot().contains(slot))
-			return setParticleSize;
-		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton;
+		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+		if (button == null) return null;
+		return new MenuButton() {
+			@Override
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+				if (run(button, click))
+					updateButton(this);
+			}
+
+			@Override
+			public ItemStack getItem() {
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				Object[] placeholders = new Object[0];
+				menuButton = getActiveButton(button);
+				if (menuButton == null)
+					menuButton = button.getPassiveButton();
+				if (button.isActionTypeEqual("Data")) {
+					String data = particleEffect != null ? particleEffect.getData() + "" : "";
+					placeholders = new Object[]{data, data};
+				}
+				if (button.isActionTypeEqual("Particle_material")) {
+					String material = particleEffect != null ? particleEffect.getMaterial() + "" : "";
+					placeholders = new Object[]{material, material};
+				}
+				if (button.isActionTypeEqual("Particle_size")) {
+					String size = particleEffect != null && particleEffect.getParticleDustOptions() != null ? particleEffect.getParticleDustOptions().getSize() + "" : "";
+					placeholders = new Object[]{size, size};
+				}
+				if (button.isActionTypeEqual("Particle_colors")) {
+					String toColor = toColor(particleEffect);
+					String fromColor = fromColor(particleEffect);
+					placeholders = new Object[]{fromColor,toColor.isEmpty() ? fromColor:toColor};
+				}
+
+				return CreateItemUtily.of(menuButton.getMaterial(),
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+						.setGlow(menuButton.isGlow())
+						.makeItemStack();
+			}
+		};
+	}
+
+	public boolean run(MenuButtonData button, ClickType click) {
+
+		if (isUsingMaterial) {
+			if (button.isActionTypeEqual("Particle_material")) {
+				new MaterialList(PARTICLE_SETTINGS, particle, container, "").menuOpen(player);
+			}
+		}
+		if (button.isActionTypeEqual("Data")) {
+			new SetNumbers(SET_DATA, container, particle).start(player);
+		}
+		if (canSetColor) {
+			if (button.isActionTypeEqual("Particle_colors")) {
+				new SetNumbers(SET_COLORS, container, particle).start(player);
+			}
+			if (button.isActionTypeEqual("Particle_Size")) {
+				new SetNumbers(SET_PARTICLE_SIZE, container, particle).start(player);
+			}
+		}
+
+		if (button.isActionTypeEqual("Back_button")) {
+			new ParticleAnimation(container, "").menuOpen(player);
+
+		}
+
+		return false;
+	}
+
+	public org.broken.arrow.menu.button.manager.library.utility.MenuButton getActiveButton(MenuButtonData button) {
+		if (canSetColor && (button.isActionTypeEqual("Particle_size") || button.isActionTypeEqual("Particle_colors")))
+			return button.getActiveButton();
+		if (isUsingMaterial && button.isActionTypeEqual("Material"))
+			return button.getActiveButton();
+
 		return null;
 	}
 

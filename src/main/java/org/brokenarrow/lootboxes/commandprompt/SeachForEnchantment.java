@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.prompt.library.SimpleConversation;
 import org.broken.arrow.prompt.library.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.menus.CustomizeItem;
+import org.brokenarrow.lootboxes.menus.Enchantments;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public class SeachForEnchantment extends SimpleConversation {
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 
-			new CustomizeItem.EnchantMents(lootTable, itemToEdit, input).menuOpen(getPlayer(context));
+			new Enchantments(lootTable, itemToEdit, input).menuOpen(getPlayer(context));
 			return null;
 		}
 	}

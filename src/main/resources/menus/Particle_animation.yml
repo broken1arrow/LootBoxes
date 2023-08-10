@@ -1,0 +1,88 @@
+######################################################
+# List of particles you can choose spawn around the container.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Particles: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        passive:
+          material: PAPER
+          name: "&1Particle:&6 {1}"
+          glow: false
+          lore:
+          - "&aChange particles some spawn"
+          - "&aaround the chest or use"
+          - "&aseveral different ones."
+          - "&6"
+          - "&aLeft-click to select and"
+          - "&ayou can also change some"
+          - "&adata on the item."
+          - "&aRight-Click to unselect"
+        active:
+          material: PAPER
+          name: "&4Particle:&6 {1}"
+          glow: true
+          lore:
+          - "&aYou have selected this particle"
+          - "&aRight-Click to unselect."
+          - "&6"
+          - "&aChange particles some spawn"
+          - "&aarund the chest or use"
+          - "&aseveral different ones."
+          - "&6"
+          - "&aLeft-click to select and"
+          - "&ayou can also change some"
+          - "&adata on the item."
+          - "&aRight-Click to unselect"
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for container"
+        glow: true
+        lore:
+          - "&aLeft-click for search for container"
+          - "&aRight-click for reset the search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

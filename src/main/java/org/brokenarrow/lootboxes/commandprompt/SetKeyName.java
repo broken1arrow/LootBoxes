@@ -6,7 +6,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
-import org.brokenarrow.lootboxes.menus.EditKeysToOpen;
+import org.brokenarrow.lootboxes.menus.keys.SaveNewKeys;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -123,7 +123,7 @@ public class SetKeyName extends SimpleConversation {
 				return getFirstPrompt();
 			}
 			SET_NAME_ON_KEY_CONFIRM_FINISH.sendMessage(player, item);
-			new EditKeysToOpen.SaveNewKeys(containerData).menuOpen(getPlayer(context));
+			new SaveNewKeys(containerData).menuOpen(getPlayer(context));
 			return null;
 		}
 

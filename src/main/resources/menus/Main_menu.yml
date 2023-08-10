@@ -1,0 +1,48 @@
+######################################################
+# MainMenu.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Main menu"
+      sound: null
+      size: 45
+    buttons:
+      "11":
+        action_type: Containers_data
+        material: CHEST
+        name: "&6List of containers."
+        glow: true
+        lore:
+          - ""
+          - "&2List of containers data and"
+          - "&2you can set loot tables."
+      "15":
+        action_type: Edit_loot_table
+        material: BOOK
+        name: "&6Create and edit Loot tables."
+        glow: true
+        lore:
+          - ""
+          - "&aEdit and create loot table and add"
+          - "&aor remove items inside a specific table."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

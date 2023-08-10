@@ -4,7 +4,7 @@ import org.broken.arrow.prompt.library.SimpleConversation;
 import org.broken.arrow.prompt.library.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.menus.EntityTypeListMenu;
-import org.brokenarrow.lootboxes.menus.MatrialList;
+import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
 import org.brokenarrow.lootboxes.menus.ParticleAnimation;
 import org.bukkit.conversations.ConversationContext;
@@ -54,7 +54,7 @@ public class SeachInMenu extends SimpleConversation {
 			if (menuAcces == PARTICLE_ANIMANTION)
 				new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
 			else
-				new MatrialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
+				new MaterialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
 
 			return null;
 		}

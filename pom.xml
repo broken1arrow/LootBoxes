@@ -13,7 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.42</utility-library>
+        <utility-library>0.45</utility-library>
     </properties>
     <repositories>
         <!--
@@ -185,6 +185,12 @@
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.broken1arrow.Utility-Library</groupId>
+            <artifactId>MenuConfiguration-Manager</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
 
@@ -257,6 +263,8 @@
                                     <include>com.github.broken1arrow.Utility-Library:Menu_Library</include>
                                     <include>com.github.broken1arrow.Utility-Library:NBT</include>
                                     <include>com.github.broken1arrow.Utility-Library:Title-Update</include>
+                                    <include>com.github.broken1arrow.Utility-Library:MenuConfiguration-Manager</include>
+                                    <include>com.github.broken1arrow.Utility-Library:Commands</include>
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>
                                                 <include>de.tr7zw:*</include>

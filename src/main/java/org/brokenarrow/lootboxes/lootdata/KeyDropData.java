@@ -179,7 +179,7 @@ public class KeyDropData extends YamlFileManager {
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(final File file) {
+	protected void loadSettingsFromYaml(final File file,FileConfiguration configuration) {
 
 	}
 

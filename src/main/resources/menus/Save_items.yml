@@ -1,0 +1,39 @@
+######################################################
+# Save the items to your loot table.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Confirm you want to save"
+      sound: null
+      size: 45
+      # slots you want to use to add fill items inside.
+      fill-space: 0-26
+    buttons:
+      "-1":
+        material:  ""
+        name:  ""
+        glow: false
+        lore: []
+      "40":
+        action_type: Save_items
+        material: BARRIER
+        name: "&bSave all items"
+        glow: false
+        lore:
+          - ""
+          - "&2Click to save the items."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

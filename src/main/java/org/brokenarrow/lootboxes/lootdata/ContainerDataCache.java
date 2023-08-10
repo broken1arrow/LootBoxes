@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,9 +30,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.convertStringList;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
-import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.isLocation;
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
 public class ContainerDataCache extends YamlFileManager {
@@ -429,104 +428,40 @@ public class ContainerDataCache extends YamlFileManager {
 	public void saveDataToFile(final File file) {
 		//if (!isSingleFile() && !file.getName().equals(getFileName())) return;
 		try {
-
-			this.getCustomConfig().set("Data", null);
+			FileConfiguration configuration = new YamlConfiguration();
+			//configuration.set("Data", null);
 			for (final Map.Entry<String, ContainerDataBuilder> childrenKey : cacheContainerData.entrySet())
 				if (childrenKey != null) {
-				/*	if (obj instanceof Particle)
-						obj = obj.toString();*/
-					this.getCustomConfig().set("Data" + "." + childrenKey.getKey(), childrenKey.getValue());
+					configuration.set("Data" + "." + childrenKey.getKey(), childrenKey.getValue());
 				}
-			this.saveToFile(file);
+			this.saveToFile(file, configuration);
 		} catch (final Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(final File file) {
-		final FileConfiguration customConfig = getCustomConfig();
-		final ConfigurationSection MainConfigKeys = customConfig.getConfigurationSection("Data");
+	protected void loadSettingsFromYaml(final File file, FileConfiguration configuration) {
+		final ConfigurationSection MainConfigKeys = configuration.getConfigurationSection("Data");
+
 		if (MainConfigKeys != null)
 			for (String mainKey : MainConfigKeys.getKeys(false)) {
 				if (mainKey == null) continue;
 				ContainerDataBuilder containerDataBuilder;
 				if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_13))
-					containerDataBuilder = customConfig.getObject("Data." + mainKey, ContainerDataBuilder.class);
+					containerDataBuilder = configuration.getObject("Data." + mainKey, ContainerDataBuilder.class);
 				else
-					containerDataBuilder = customConfig.getSerializable("Data." + mainKey, ContainerDataBuilder.class);
-				final ContainerDataBuilder builder;
+					containerDataBuilder = configuration.getSerializable("Data." + mainKey, ContainerDataBuilder.class);
+				if (containerDataBuilder == null) continue;
 
-				if (containerDataBuilder != null) {
-					builder = containerDataBuilder;
-				} else {
-					final Map<Location, ContainerData> containerDataMap = new HashMap<>();
-					final Map<String, KeysData> keysDataMap = new HashMap<>();
-					final String lootTableLinked = customConfig.getString("Data." + mainKey + "." + "LootTable_Linked");
-					final boolean spawningContainerWithCooldown = customConfig.getBoolean("Data." + mainKey + "." + "Spawning");
-					final long cooldown = customConfig.getLong("Data." + mainKey + "." + "Cooldown");
-					final List<String> animation = customConfig.getStringList("Data." + mainKey + "." + "Animation");
-					final boolean enchant = customConfig.getBoolean("Data." + mainKey + "." + "Enchant");
-					final Material icon = Enums.getIfPresent(Material.class, customConfig.getString("Data." + mainKey + "." + "Icon", "AIR")).orNull();
-					final String display_name = customConfig.getString("Data." + mainKey + "." + "Display_name");
-					final List<String> lore = customConfig.getStringList("Data." + mainKey + "." + "Lore");
-					final boolean randomSpawn = customConfig.getBoolean("Data." + mainKey + "." + "Random_spawn");
-
-
-					final ConfigurationSection innerConfigKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Keys");
-					if (innerConfigKeys == null) {
-						System.out.println("Keys " + mainKey + " are not valid or null");
-					} else
-						for (String innerKey : innerConfigKeys.getKeys(false)) {
-
-							final int keys = customConfig.getInt("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Amount_Of_Keys");
-							final String itemType = customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Itemtype");
-							final String displayName = customConfig.getString("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Display_name");
-							final List<String> keyLore = customConfig.getStringList("Data." + mainKey + "." + "Keys" + "." + innerKey + ".Lore");
-
-							if (innerKey.contains(" "))
-								innerKey = innerKey.trim().replace(" ", "_");
-							final KeysData keysData = new KeysData(innerKey, displayName, lootTableLinked, keys, itemType, keyLore);
-
-							keysDataMap.put(innerKey, keysData);
-						}
-
-					final ConfigurationSection containersKeys = customConfig.getConfigurationSection("Data." + mainKey + ".Containers");
-					if (containersKeys == null) {
-						System.out.println("Containers " + mainKey + " are not valid or null");
-					} else
-						for (final String innerKey : containersKeys.getKeys(false)) {
-
-							final String facing = customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Facing");
-							final String containerType = customConfig.getString("Data." + mainKey + "." + "Containers" + "." + innerKey + "." + "Container_Type");
-							final ContainerData containerData = new ContainerData(facing, containerType);
-
-							if (isLocation(innerKey) == null)
-								System.out.println("location " + innerKey + " are not valid or null");
-							containerDataMap.put(isLocation(innerKey), containerData);
-						}
-					builder = new ContainerDataBuilder.Builder()
-							.setContainerDataLinkedToLootTable(lootTableLinked)
-							.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
-							.setCooldown(cooldown)
-							.setParticleEffects(convertToParticleEffect(convertStringList(animation)))
-							.setEnchant(enchant)
-							.setIcon(icon)
-							.setDisplayname(display_name)
-							.setLore(lore)
-							.setRandomSpawn(randomSpawn)
-							.setContainerData(containerDataMap)
-							.setKeysData(keysDataMap).build();
-				}
 				if (mainKey.contains(" "))
 					mainKey = mainKey.trim().replace(" ", "_");
-				addChachedLocation(mainKey, builder.getLinkedContainerData(), builder.getKeysData());
 
+				addChachedLocation(mainKey, containerDataBuilder.getLinkedContainerData(), containerDataBuilder.getKeysData());
 
-				cacheContainerData.put(mainKey, builder);
-				if (builder.isSpawningContainerWithCooldown())
-					addContainerToSpawnTask(mainKey, builder.getCooldown());
-
+				cacheContainerData.put(mainKey, containerDataBuilder);
+				if (containerDataBuilder.isSpawningContainerWithCooldown())
+					addContainerToSpawnTask(mainKey, containerDataBuilder.getCooldown());
 			}
 	}
 

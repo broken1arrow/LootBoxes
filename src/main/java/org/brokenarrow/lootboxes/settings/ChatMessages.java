@@ -4,6 +4,7 @@ import org.broken.arrow.color.library.TextTranslator;
 import org.broken.arrow.yaml.library.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -181,6 +182,6 @@ public class ChatMessages extends YamlFileManager {
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(File file) {
+	protected void loadSettingsFromYaml(File file, FileConfiguration configuration) {
 	}
 }

@@ -1,0 +1,179 @@
+######################################################
+# menu for settings for your container data.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Settings."
+      sound: null
+      size: 45
+    buttons:
+      "10":
+        action_type: Container_type
+        material: SHULKER_BOX
+        name: "&bSet the container type"
+        glow: false
+        lore:
+          - "&3Set container type used for random spawn"
+          - "&3and also set facing of this container,"
+          - "&3you can also set random facing."
+          - "&6"
+          - "&2Currently set item: {1}"
+          - "&2Currently set face: {2}"
+      "12":
+        action_type: Show_title
+        material: PAPER
+        name: "&bIf it shall show title"
+        glow: false
+        lore:
+          - "&3Show a tittle when new loot is added to chest"
+          - "&6"
+          - "&aIs set to: {1}"
+      "14":
+        action_type: Glow
+        material: GLOWSTONE
+        name: "&bIf it container shall glow"
+        glow: false
+        lore:
+          - "&3set this to tru and the container will glow."
+          - "&6"
+          - "&aIs set to: {1}"
+      "16":
+        action_type: Random_spawn
+        passive:
+          material: Elytra
+          name: "&bRandom spawn {0}"
+          glow: false
+          lore:
+            - "&6"
+            - "&2Enable this for use this container to random spawn"
+            - "&2your loot table around all online players or from center"
+            - "&2of the world."
+            - "&6"
+            - "&2Left click to enable"
+            - "&2"
+            - "&2Right click to disabled"
+        active:
+          material: Elytra
+          name: "&bRandom spawn {0}"
+          glow: true
+          lore:
+            - "&6"
+            - "&2Enable this for use this container to random spawn"
+            - "&2your loot table around all online players or from center"
+            - "&2of the world."
+            - "&6"
+            - "&2Left click to enable"
+            - "&2"
+            - "&2Right click to disabled"
+      "19":
+        action_type: Loot_on_timer
+        material: ENDER_EYE
+        name: "&bGenerate loot on timer"
+        glow: true
+        lore:
+          - "&6"
+          - "&2Set if it shall generate loot on"
+          - "&2timer or when player clicking"
+          - "&2on the container."
+          - "&2"
+          - "&3Left-click to turn this on"
+          - "&3Right-click to turn this off"
+          - "&2"
+          - "&2Auto fill on timer:&6 {1}"
+      "21":
+        action_type: Attempts
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aHow many times it will try find valid spawn loc"
+            - "&6"
+            - "&aAttempts: &6{1}"
+        active:
+          material: SPAWNER
+          name: "&bAmount of attempts"
+          glow: true
+          lore:
+            - "&aHow many times it will try find valid spawn loc"
+            - "&6"
+            - "&aAttempts: &6{1}"
+      "23":
+        action_type: Min_radius
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: true
+          lore:
+          - "&aSet min radius it can spawn container"
+          - ""
+          - "&aMin radius: &6{0}"
+        active:
+          material: CARROT
+          name: "&bMin radius"
+          glow: false
+          lore:
+            - "&aSet min radius it can spawn container"
+            - "&6"
+            - "&aMin radius: &6{0}"
+      "25":
+        action_type: Max_radius
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+          - "&aSet max radius it can spawn container"
+          - ""
+          - "&aMax radius: &6{1}"
+        active:
+          material: GOLDEN_CARROT
+          name: "&bMax radius"
+          glow: true
+          lore:
+          - "&aSet max radius it can spawn container"
+          - ""
+          - "&aMax radius: &6{1}"
+      "28":
+        action_type: World_center
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+          - "&aSet this to true if you want to use"
+          - "&athe world spawn. If false it will"
+          - "&atry spawn one around the player."
+          - ""
+          - "&aCurrently set to: &6{0}"
+        active:
+          material: MAP
+          name: "&bUse world center"
+          glow: false
+          lore:
+          - "&aSet this to true if you want to use"
+          - "&athe world spawn. If false it will"
+          - "&atry spawn one around the player."
+          - ""
+          - "&aCurrently set to: &6{0}"
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - "&6"
+          - "&aGo back to"
+          - "&acontainer data."
+      36-43:
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      0-8:
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - "&6"

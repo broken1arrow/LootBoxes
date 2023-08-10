@@ -4,7 +4,7 @@ import org.broken.arrow.prompt.library.SimpleConversation;
 import org.broken.arrow.prompt.library.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.menus.ModifyContinerData;
+import org.brokenarrow.lootboxes.menus.containerdata.ModifyContainerData;
 import org.bukkit.Material;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -46,7 +46,7 @@ public class CreateContainerDataName extends SimpleConversation {
 			}
 			CREATE_CONTAINER_DATA_NAME_CONFIRM.sendMessage(getPlayer(context), input);
 			containerDataCache.setNewContainerData(input, material);
-			new ModifyContinerData().menuOpen(getPlayer(context));
+			new ModifyContainerData().menuOpen(getPlayer(context));
 			return null;
 		}
 	}

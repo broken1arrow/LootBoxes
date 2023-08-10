@@ -1,19 +1,19 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
+import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.ItemData;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
-import org.brokenarrow.lootboxes.settings.Settings;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
+import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -31,75 +31,45 @@ import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitali
 import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.getEffectType;
 
 public class ParticleAnimation extends MenuHolder {
-
-	private final MenuButton backButton;
-	private final MenuButton listOfItems;
-	private final MenuButton forward;
-	private final MenuButton previous;
-	private final MenuButton searchButton;
-	private final LootItems lootItems = LootItems.getInstance();
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-	private final ItemData itemData = ItemData.getInstance();
-	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final ParticleEffectList particleEffectList = Lootboxes.getInstance().getParticleEffectList();
 	private final SpawnContainerEffectsTask spawnContainerEffectsTask = Lootboxes.getInstance().getSpawnContainerEffectsTask();
-	private final GuiTempletsYaml.Builder guiTemplets;
+	private final String container;
+	private final MenuTemplate guiTemplate;
 
 	public ParticleAnimation(final String container, final String particleToSearchFor) {
 		super(Lootboxes.getInstance().getParticleEffectList().getParticleList(particleToSearchFor));
+		this.container = container;
 
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
+		//gui = new GuiTemplesYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
 
-		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(()-> guiTemplets.build().getGuiTitle());
-		setFillSpace(guiTemplets.build().getFillSpace());
+		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_animation");
+		if (guiTemplate != null) {
+			setFillSpace(guiTemplate.getFillSlots());
+			setMenuSize(guiTemplate.getinvSize("Particle_animation"));
+			setTitle(guiTemplate::getMenuTitle);
+			setMenuOpenSound(guiTemplate.getSound());
+		} else {
+			setMenuSize(36);
+			setTitle(() -> "could not load menu 'Particle_animation'.");
+		}
+	}
 
-		searchButton = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				if (click.isLeftClick())
-					new SeachInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
-				else
-					new ParticleAnimation(container, "").menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Seach_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		backButton = new MenuButton() {
+	@Override
+	public MenuButton getFillButtonAt(@NotNull Object object) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+		return new MenuButton() {
 
 			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		listOfItems = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
 				if (object instanceof Particle || object instanceof Effect) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					final ContainerDataBuilder.Builder builder = data.getBuilder();
 					if (click.isRightClick()) {
 						containerDataCache.removeParticleEffect(data, object);
 					} else {
-						builder.setParticleEffects(setParticelData(player, data, container, object));
+						builder.setParticleEffects(setParticleData(player, data, container, object));
 					}
 					containerDataCache.setContainerData(container, builder.build());
 					if (click.isLeftClick()) {
@@ -113,72 +83,80 @@ public class ParticleAnimation extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-
-				return null;
-			}
-
-			@Override
-			public ItemStack getItem(final @NotNull Object object) {
-
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 				if (object instanceof Particle || object instanceof Effect) {
-					GuiTempletsYaml gui = guiTemplets.menuKey("Particle_list").placeholders("",bountifyCapitalized(object)).build();
 
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					boolean containsEffect = containerDataCache.containsParticleEffect(data, object);
 					if (containsEffect)
-						gui = guiTemplets.menuKey("Particle_list_selected").placeholders("",bountifyCapitalized(object)).build();
+						menuButton = button.getActiveButton();
+					if (menuButton == null)
+						menuButton = button.getPassiveButton();
 
+					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(object));
 
 					return CreateItemUtily.of(particleEffectList.checkParticleList(object),
-							gui.getDisplayName(),
-							gui.getLore()).setGlow(containsEffect).makeItemStack();
+									displayName,
+									TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+							.setGlow(containsEffect).makeItemStack();
 				}
 
 				return null;
 			}
 		};
-		previous = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-
-				if (click.isLeftClick()) {
-					previousPage();
-				}
-
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		forward = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				if (click.isLeftClick()) {
-					nextPage();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
+		//return listOfItems;
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(final @NotNull Object o) {
-		return listOfItems;
+	public MenuButton getButtonAt(int slot) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+		if (button == null) return null;
+		return new MenuButton() {
+			@Override
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+				if (run(button, click))
+					updateButton(this);
+			}
 
+			@Override
+			public ItemStack getItem() {
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+
+				return CreateItemUtily.of(menuButton.getMaterial(),
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+						.setGlow(menuButton.isGlow())
+						.makeItemStack();
+			}
+		};
 	}
 
-	public Map<Object, ParticleEffect> setParticelData(Player player, ContainerDataBuilder data, String container, Object object) {
+	public boolean run(MenuButtonData button, ClickType click) {
+
+		if (button.isActionTypeEqual("Forward_button")) {
+			if (click.isLeftClick()) {
+				nextPage();
+			}
+		}
+		if (button.isActionTypeEqual("Previous_button")) {
+			if (click.isLeftClick()) {
+				previousPage();
+			}
+		}
+		if (button.isActionTypeEqual("Search")) {
+			if (click.isLeftClick())
+				new SeachInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
+			else
+				new ParticleAnimation(container, "").menuOpen(player);
+		}
+
+		if (button.isActionTypeEqual("Back_button")) {
+			new AlterContainerDataMenu(container).menuOpen(player);
+		}
+		return false;
+	}
+
+	public Map<Object, ParticleEffect> setParticleData(Player player, ContainerDataBuilder data, String container, Object object) {
 		if ((object instanceof Particle && ((Particle) object).getDataType() != Void.class) || getEffectType(String.valueOf(object)) != getEffectType("PARTICLE"))
 			new ParticleSettings(container, object).menuOpen(player);
 		Map<Object, ParticleEffect> particleEffect = data.getParticleEffects();
@@ -204,18 +182,4 @@ public class ParticleAnimation extends MenuHolder {
 		return particleEffect;
 	}
 
-	@Override
-	public MenuButton getButtonAt(final int slot) {
-
-		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward;
-		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous;
-		if (guiTemplets.menuKey("Seach_button").build().getSlot().contains(slot))
-			return searchButton;
-		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton;
-
-		return null;
-	}
 }

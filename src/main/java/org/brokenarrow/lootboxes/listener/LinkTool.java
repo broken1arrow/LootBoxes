@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.listener;
 import org.broken.arrow.nbt.library.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.menus.ModifyContinerData;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -42,7 +42,7 @@ public class LinkTool implements Listener {
 			String playerMetadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
-			RunTimedTask.runtaskLater(20, () -> new ModifyContinerData.AlterContainerDataMenu(playerMetadata).menuOpen(player), false);
+			RunTimedTask.runtaskLater(20, () -> new AlterContainerDataMenu(playerMetadata).menuOpen(player), false);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class LinkTool implements Listener {
 			String playerMetadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
-			RunTimedTask.runtaskLater(20, () -> new ModifyContinerData.AlterContainerDataMenu(playerMetadata).menuOpen(player), false);
+			RunTimedTask.runtaskLater(20, () -> new AlterContainerDataMenu(playerMetadata).menuOpen(player), false);
 		}
 	}
 }

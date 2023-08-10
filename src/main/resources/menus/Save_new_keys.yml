@@ -1,0 +1,38 @@
+######################################################
+# Add List of keys too in this menu.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Change key data."
+      sound: null
+      size: 45
+    buttons:
+      "41":
+        action_type: Save_keys
+        material: BRICK
+        name: "&bSave the items in the list"
+        glow: true
+        lore:
+          - "&aIt will use item type you add (amount of"
+          - "&athat item) and keep name and lore if you"
+          - "&2set it before."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:

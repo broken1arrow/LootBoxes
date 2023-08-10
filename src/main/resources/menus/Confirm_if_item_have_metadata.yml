@@ -1,0 +1,33 @@
+######################################################
+# Confirm If you want to save with metadata or not. You can turn this on/off in settings.yml
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Confirm you want to save"
+      sound: null
+      size: 5
+    buttons:
+      "1":
+        material: BARRIER
+        name: "&bDo you want save metadata"
+        glow: false
+        lore:
+          - ""
+          - "&2Right-Click to not save with metadata."
+          - ""
+          - "&2Left-click to save with metadata."
+      "3":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "0,2,4-5":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

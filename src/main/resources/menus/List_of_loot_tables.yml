@@ -1,0 +1,66 @@
+######################################################
+# List of loot tables in this menu. Click on one to set the table to your
+# containers shall use to spawn items.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1List of loot tables."
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6{0}"
+        glow: false
+        lore:
+          - "&aChange with loot table some are linked"
+          - "&aand get info on all linked containers."
+      "40":
+        action_type: Seach
+        material: PAPER
+        name: "&bSearch for a Loot table"
+        glow: false
+        lore:
+          - "&aLeft-click for search for a Loot table"
+          - "&aRight-click for reset the search"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

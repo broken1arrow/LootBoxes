@@ -1,0 +1,91 @@
+######################################################
+# Customize with mobs shall drop this key.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Choose Container you want."
+      sound: null
+      size: 45
+    buttons:
+      "19":
+        action_type: Mob_drop_this_key
+        material: FIREWORK_STAR
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&aChange the mobs some drop this key"
+          - "&aCurrent mobs drop this key: "
+          - "&6{0}"
+      "21":
+        action_type: Change_chance
+        material: GREEN_DYE
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "22":
+        action_type: Change_minimum
+        material: FIREWORK_STAR
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&6Set minimum of keys mob can drop."
+          - ""
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "24":
+        action_type: Change_maximum
+        material: TROPICAL_FISH
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&6Set minimum of keys mob can drop."
+          - ""
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39-41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

@@ -16,7 +16,7 @@ public class BountifyStrings {
 	}
 
 	/**
-	 * Removes _ from the enum, lowercases everything and finally capitalizes it
+	 * Removes _ from the enum, lowercase's everything and finally capitalizes it
 	 *
 	 * @param enumeration the enum you want to change.
 	 * @return string some has capitalizes first leter in every word.

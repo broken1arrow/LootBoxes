@@ -374,7 +374,7 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # MatrialList menu.
+  # MaterialList menu.
   Change_Item:
     Menu_Size: 45
     Menu_Title: "&1Change item. Page: {0}"
@@ -437,7 +437,7 @@ Gui_Templets:
       Lore:
         - ""
   ######################################################
-  # EnchantMents for items menu.
+  # Enchantments for items menu.
   EnchantMents:
     Menu_Size: 45
     Menu_Title: "&1Enchant item. Page: {0}"

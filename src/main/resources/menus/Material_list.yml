@@ -1,0 +1,65 @@
+######################################################
+# List of material you can change too in this menu.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Material list: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&bItem:&6 {1}"
+        glow: false
+        lore:
+          - "&aClick to change to this item."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a item"
+        glow: true
+        lore:
+          - ""
+          - "&aLeft-click for search for a item"
+          - "&aRight-Click for reset the search"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

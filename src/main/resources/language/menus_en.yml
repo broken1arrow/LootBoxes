@@ -1,0 +1,1762 @@
+# All menus in one file, you can change this in settings if you want every menu a separated file.
+Menus:
+  ######################################################
+  # List of containers linked in this menu.
+  Alter_container_data:
+    menu_settings:
+      name: "&1Alter this: {0}"
+      size: 45
+    buttons:
+      "10":
+        action_type: Container_linked_to_loot_table
+        passive:
+          action_type: Linked_to_loot_table
+          material: CHEST
+          name: "&bChange loot table:&6 {0}"
+          glow: true
+          lore:
+            - ""
+            - "&2Left-click to get list of existing loot tables."
+            - "&2Right-Click if you want to type manually."
+        active:
+          action_type: Random_spawn
+          material: CHEST
+          name: "&bChange loot table:&6 {0}"
+          glow: true
+          lore:
+            - "&3You have set this container to spawn"
+            - "&3random containers. So it will use the"
+            - "&3set loot table for random spawn container"
+            - "&3on every player online."
+            - ""
+            - "&2Left-click to get list of existing loot tables."
+            - ""
+            - "&2Right-click if you want to type manually."
+      "12":
+        action_type: Particle_animation
+        material: NOTE_BLOCK
+        name: "&bParticle effects"
+        glow: true
+        lore:
+          - ""
+          - "&2Left-click to get list of particles you can add."
+          - "&2Effects on the container:"
+          - "&6{1}"
+      "14":
+        action_type: Keys_to_open_container
+        material: TRIPWIRE_HOOK
+        name: "&bKeys need to open container"
+        glow: true
+        lore:
+          - ""
+          - "&2Left-click to get list of keys"
+          - "&2need to open container"
+          - "&2Keys added to the container:"
+          - "&2{1}"
+      "16":
+        action_type: Change_icon
+        material: SPIDER_EYE
+        name: "&bChange the icon"
+        glow: true
+        lore:
+          - ""
+          - "&2List of icons you can change too"
+          - "&2for this container."
+      "22":
+        action_type: Settings_container_data
+        material: PAPER
+        name: "&bSettings"
+        glow: true
+        lore:
+          - ""
+          - "&2Left-click to open settings"
+      "28":
+        action_type: Cooldown_container
+        active:
+          action_type: Generate_loot_is_on
+          material: BARRIER
+          name: "&bYou can´t set cool-down on the container"
+          glow: false
+          lore:
+            - ""
+            - "&2"
+            - "&4You can´t set cool-down, when"
+            - "&4cooldown is off."
+            - "&6"
+            - "&2Current cool-down:"
+            - "&2{1} seconds"
+        passive:
+          action_type: Generate_loot_is_off
+          material: CLOCK
+          name: "&bSet cool-down on the container"
+          glow: true
+          lore:
+            - ""
+            - "&2"
+            - "&2Current cool-down:"
+            - "&2{1} seconds"
+      "30":
+        action_type: Containers
+        active:
+          action_type: Random_spawn_off
+          material: BARRIER
+          name: "&bContainers linked"
+          glow: true
+          lore:
+            - ""
+            - "&2You can't set this when random"
+            - "&2spawn is turned on."
+            - ""
+            - "&2Get list of containers"
+            - "&2linked to {1}"
+        passive:
+          action_type: Random_spawn_on
+          material: OBSERVER
+          name: "&bContainers linked"
+          glow: true
+          lore:
+            - "&3When you set it to random spawn"
+            - "&3a container this will show what"
+            - "&3you link this container to before"
+            - "&3(if you have link containers before)."
+            - ""
+            - "&2Get list of containers"
+            - "&2linked to {1}"
+      "32":
+        action_type: Linked_containers_add_remove
+        active:
+          action_type: Add_remove_off
+          material: BARRIER
+          name: "&bRemove or add containers some are linked"
+          glow: false
+          lore:
+            - ""
+            - "&4You can´t use this setting when"
+            - "&4is set to random spawn a container."
+        passive:
+          action_type: Add_remove_on
+          material: GOLDEN_SHOVEL
+          name: "&bRemove or add containers some are linked"
+          glow: true
+          lore:
+            - ""
+            - "&2Left-click to link chest with hand"
+            - "&2"
+            - "&2Right-Click to link chest with a item"
+            - "&6"
+            - "&2Shift and Right-Click to use container"
+            - "&2some you can link with (will place it)."
+      "34":
+        action_type: Change_displayName
+        material: COCOA_BEANS
+        name: "&bChange display name"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change display name"
+          - "&2on the item. You have '{'0'}' '{'1'}' and"
+          - "&2'{'2'}' placeholders to use (remove ')."
+          - "&2"
+          - "&2Current display name:"
+          - "&6{1}"
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # choose the item.
+  Change_item:
+    menu_settings:
+      name: "&1Change item. Page: {0}"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: BRICK
+        name: "&bChange the item to {1}"
+        glow: false
+        lore:
+          - "Change the item type."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a location"
+        glow: true
+        lore:
+          - "&aLeft-click for search for a location"
+          - "&aRight-click to reset search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39-41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # The menu you choose the loot container.
+  Choose_container:
+    menu_settings:
+      name: "&1Choose Container you want."
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: GREEN_WOOL
+        name: "&bChoose this {0}"
+        glow: false
+        lore:
+          - "&aThis container will be used as loot chest"
+          - "&aif click on this button and place it."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39-41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Confirm If you want to save with metadata or not. You can turn this on/off in settings.yml
+  Confirm_if_item_have_metadata:
+    menu_settings:
+      name: "&1Confirm you want to save"
+      sound: null
+      size: 5
+    buttons:
+      "1":
+        material: BARRIER
+        name: "&bDo you want save metadata"
+        glow: false
+        lore:
+          - ""
+          - "&2Right-Click to not save with metadata."
+          - ""
+          - "&2Left-click to save with metadata."
+      "3":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "0,2,4-5":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # List of containers linked in this menu.
+  Container_linked_list:
+    menu_settings:
+      name: "&1Container List: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: COMPASS
+        name: "&bLoc:&6 {0} {1} {2} {3}"
+        glow: false
+        lore:
+          - ""
+          - "&aLeft-click to teleport to container."
+          - "&aRight-Click to remove this container."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a location"
+        glow: true
+        lore:
+          - "&aLeft-click for search for a location"
+          - "&aRight-click to reset search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,40,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # menu to pick one loot table to change the data.
+  Containers_list:
+    menu_settings:
+      name: "&1Container data. Page: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6{0}"
+        glow: false
+        lore:
+          - "&6"
+          - "&aChange with loot table some are linked"
+          - "&aand get info on all linked containers."
+          - "&aLoot table:&6 {1}"
+          - "&aCooldown:&6 {2}"
+          - "&aIcon:&6 {3}"
+      "41":
+        action_type: Create_container_data
+        material: PAPER
+        name: "&bCreate new container"
+        glow: true
+        lore:
+          - "&aClick and type in your name"
+          - "&aon the container and it need"
+          - "&unique name."
+      "39":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for container"
+        glow: true
+        lore:
+          - "&aLeft-click for search for container"
+          - "&aRight-click for reset the search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,40,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Customize the item you added to your loot table.
+  Customize_item:
+    menu_settings:
+      name: "&1Edit this item"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "10":
+        action_type: Change_item
+        material: FIREWORK_STAR
+        name: "&bChange the item {0}"
+        glow: true
+        lore:
+          - "&aChange the item type"
+      "13":
+        action_type: Enchant_item
+        material: ENCHANTED_BOOK
+        name: "&bEnchant the item"
+        glow: true
+        lore:
+          - "&aClick to enchant the item"
+      "28":
+        action_type: Remove
+        material: BARRIER
+        name: "&bRemove item"
+        glow: true
+        lore:
+          - "&aRemove this item"
+      "30":
+        action_type: Change_chance
+        material: GREEN_DYE
+        name: "&bCurrent Chance {0}"
+        glow: true
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "32":
+        action_type: Change_minimum
+        material: GOLDEN_CARROT
+        name: "&bChange minimum amount {0}"
+        glow: true
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease with&6 {2}"
+      "34":
+        action_type: Change_maximum
+        material: TROPICAL_FISH
+        name: "&bChange maximum amount {0}"
+        glow: true
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease with&6 1"
+          - "&aRight-click and shift to decrease with&6 {2}"
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # This menu list the loot tables items player can get, and you can edit, create and remove every item you added.
+  Edit_items_for_loot_table:
+    menu_settings:
+      name: "&1Add and remove items. Page: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 0-26
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6Item {1}"
+        glow: false
+        lore:
+          - ""
+          - "&2Left-click to edit this item"
+          - "&2Right-Click to get the item"
+          - "&aChance:&6 {2}"
+          - "&aMinimum:&6 {3}"
+          - "&aMaximum:&6 {4}"
+          - "&aHaveMetadata:&6 {5}"
+      "40":
+        action_type: Save_items
+        material: GOLD_INGOT
+        name: "&6Save items"
+        glow: true
+        lore:
+          - ""
+          - "&2Save items"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,40,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Edit the key you have added.
+  Edit_key:
+    menu_settings:
+      name: "&1Change key data."
+      sound: null
+      size: 45
+    buttons:
+      "12":
+        action_type: Change_amount
+        material: CARROT
+        name: "&bChange amount needed"
+        glow: true
+        lore:
+          - "&aCurrent amount needed:&6 {0}"
+          - ""
+          - "&aLeft-click for add more items needed"
+          - "&aRight-Click for remove items needed"
+      "14":
+        action_type: Alter_display_name
+        material: COCOA_BEANS
+        name: "&bChange display name"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change display name"
+          - "&2on the item. You have '{'0'}' '{'1'}' and"
+          - "&2'{'2'}' placeholders to use (remove ')."
+          - "&2"
+          - "&2Current display name:"
+          - "&6{1}"
+      "16":
+        action_type: Alter_lore
+        material: DARK_OAK_SIGN
+        name: "&bChange Lore"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change display name"
+          - "&2on the item. You have '{'0'}' '{'1'}' and"
+          - "&2'{'2'}' placeholders to use (remove ')."
+          - "&2"
+          - "&2Current display name:"
+          - "&6{1}"
+      "28":
+        action_type: Mob_drop_key
+        material: BAT_SPAWN_EGG
+        name: "&bSettings for drop key"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change with mob drops"
+          - "&2this key,amount and chance it drop the key."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # List of keys you can add, edit or remove in this menu.
+  Edit_keys_to_open:
+    menu_settings:
+      name: "&1Keys. Page: {0}"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&1Key:&6 {0}"
+        glow: false
+        lore:
+          - "&aChange key to this container."
+          - "&aLeft-click if you want change the key."
+          - "&aShift and Left-click and you get the key."
+          - "&aRight-Click if you want remove this key."
+          - ""
+          - "&aAmount of keys needed: {1}"
+          - ""
+          - "&aName and lore on the item player get:"
+          - "&a"
+          - "&6{2}"
+          - "&a"
+          - "&6{3}"
+      "41":
+        action_type: Add_key_button
+        material: TRIPWIRE_HOOK
+        name: "&bAdd a key"
+        glow: true
+        lore:
+          - "&aLeft-click for add key."
+          - "&aRight-click"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,40,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Edit the loot table or remove it.
+  Edit_loot_table:
+    menu_settings:
+      name: "&1Edit loot table: {0}"
+      sound: null
+      size: 5
+    buttons:
+      "2":
+        action_type: Change_minimum
+        material: GOLDEN_CARROT
+        name: "&bChange minimum amount {0}"
+        glow: false
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease with&6 {2}"
+      "3":
+        action_type: Change_minimum
+        material: TROPICAL_FISH
+        name: "&bChange maximum amount {0}"
+        glow: false
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease with&6 {2}"
+      "0":
+        action_type: Change_minimum
+        material: BARRIER
+        name: "&bRemove loot table."
+        glow: false
+        lore:
+          - "&aRemove this loot table."
+      "4":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "1,5":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Enchantments for items.
+  Enchantments_list:
+    menu_settings:
+      name: "&1Enchant item. Page: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        passive:
+          material: BOOK
+          name: "&bEnchant the item with {1}"
+          glow: false
+          lore:
+            - "&aEnchant the item"
+        active:
+          material: BOOK
+          name: "&bEnchant the item with {1}"
+          glow: true
+          lore:
+            - "&aThis item already have this"
+            - "&aenchantment. Click to change"
+            - "&alevel."
+            - ""
+            - "&aCurrent enchant level: {2}"
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a location"
+        glow: true
+        lore:
+          - "&aLeft-click for search for a location"
+          - "&aRight-click to reset search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # The menu you choose the loot container.
+  EntityType_list:
+    menu_settings:
+      name: "&1Container List. Page: {0}"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: COMPASS
+        name: "&bEntity:&6 {0}"
+        glow: false
+        lore:
+          - "&aLeft-click to add entity"
+          - "&aRight-click to remove this entity."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a entity"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Customize with mobs shall drop this key.
+  Key_settings_mob_drop:
+    menu_settings:
+      name: "&1Edit mob drops: {0}"
+      size: 45
+    buttons:
+      "19":
+        action_type: Mob_drop_this_key
+        material: FIREWORK_STAR
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&aChange the mobs some drop this key"
+          - "&aCurrent mobs drop this key: "
+          - "&6{0}"
+      "21":
+        action_type: Change_chance
+        material: GREEN_DYE
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "22":
+        action_type: Change_minimum
+        material: FIREWORK_STAR
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&6Set minimum of keys mob can drop."
+          - ""
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "24":
+        action_type: Change_maximum
+        material: TROPICAL_FISH
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - "&6Set minimum of keys mob can drop."
+          - ""
+          - "&aLeft-click to increase with&6 1"
+          - "&aLeft-click and shift to increase with&6 {1}"
+          - "&aRight-click to decrease  with&6 1"
+          - "&aRight-click and shift to decrease  with&6 {2}"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39-41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # List of loot tables in this menu. Click on one to set the table to your
+  # containers shall use to spawn items.
+  List_of_loot_tables:
+    menu_settings:
+      name: "&1List of loot tables"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6{0}"
+        glow: false
+        lore:
+          - "&aChange with loot table some are linked"
+          - "&aand get info on all linked containers."
+      "40":
+        action_type: Seach
+        material: PAPER
+        name: "&bSearch for a Loot table"
+        glow: false
+        lore:
+          - "&aLeft-click for search for a Loot table"
+          - "&aRight-click for reset the search"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # This menu list the loot tables, and you can both create and remove loot tables.
+  Loot_tables:
+    menu_settings:
+      name: "&1Loot tables. Page: {0}"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6{1}"
+        glow: false
+        lore:
+          - "&2Left-click&a to change items inside loot table and"
+          - "&aget info on all current items you have added."
+          - "&6"
+          - "&2Right-click&a for edit this loot table or remove it."
+      "40":
+        action_type: Create_table
+        material: PAPER
+        name: "&6{1}"
+        glow: false
+        lore:
+          - "&2Left-click&a to change items inside loot table and"
+          - "&aget info on all current items you have added."
+          - "&6"
+          - "&2Right-click&a for edit this loot table or remove it."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: false
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: false
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # MainMenu.
+  Main_menu:
+    menu_settings:
+      name: "&1Main menu"
+      size: 36
+    buttons:
+      "11":
+        action_type: Containers_data
+        material: CHEST
+        name: "&6List of containers."
+        glow: true
+        lore:
+          - ""
+          - "&2List of containers data and"
+          - "&2you can set loot tables."
+      "15":
+        action_type: Edit_loot_table
+        material: BOOK
+        name: "&6Create and edit Loot tables."
+        glow: true
+        lore:
+          - ""
+          - "&aEdit and create loot table and add"
+          - "&aor remove items inside a specific table."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # List of material you can change too in this menu.
+  Material_list:
+    menu_settings:
+      name: "&1Material list. Page: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&bItem:&6 {1}"
+        glow: false
+        lore:
+          - "&aClick to change to this item."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a item"
+        glow: true
+        lore:
+          - ""
+          - "&aLeft-click for search for a item"
+          - "&aRight-Click for reset the search"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # List of particles you can choose spawn around the container.
+  Particle_animation:
+    menu_settings:
+      name: "&1Particles. Page: {0}"
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        passive:
+          material: PAPER
+          name: "&1Particle:&6 {1}"
+          glow: false
+          lore:
+            - "&aChange particles some spawn"
+            - "&aaround the chest or use"
+            - "&aseveral different ones."
+            - "&6"
+            - "&aLeft-click to select and"
+            - "&ayou can also change some"
+            - "&adata on the item."
+            - "&aRight-Click to unselect"
+        active:
+          material: PAPER
+          name: "&4Particle:&6 {1}"
+          glow: true
+          lore:
+            - "&aYou have selected this particle"
+            - "&aRight-Click to unselect."
+            - "&6"
+            - "&aChange particles some spawn"
+            - "&aarund the chest or use"
+            - "&aseveral different ones."
+            - "&6"
+            - "&aLeft-click to select and"
+            - "&ayou can also change some"
+            - "&adata on the item."
+            - "&aRight-Click to unselect"
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for container"
+        glow: true
+        lore:
+          - "&aLeft-click for search for container"
+          - "&aRight-click for reset the search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # Settings for a particle in this menu.
+  Particle_settings:
+    menu_settings:
+      name: "&1Edit this particle {0}"
+      size: 45
+    buttons:
+      "10":
+        action_type: Particle_material
+        passive:
+          material: GOLDEN_APPLE
+          name: "&6Can't set material"
+          glow: false
+          lore:
+            - "&6"
+            - "&aCurrent material is:&6 {1} "
+        active:
+          material: GOLDEN_APPLE
+          name: "&6Change material {0}"
+          glow: true
+          lore:
+            - "&6"
+            - "&4This particle not use this"
+            - "&4setting."
+            - "&6"
+            - "&aCurrent material is:&6 {1}"
+      "12":
+        action_type: Data
+        passive:
+          material: PAPER
+          name: "&6Change data {0}"
+          glow: false
+          lore:
+            - "&6"
+            - "&aCurrent data is:&6 {1} "
+        active:
+          material: PAPER
+          name: "&6Change data {0}"
+          glow: true
+          lore:
+            - "&6"
+            - "&aCurrent data is:&6 {1} "
+      "14":
+        action_type: Particle_colors
+        passive:
+          material: RED_WOOL
+          name: "&6Can't set colors"
+          glow: false
+          lore:
+            - "&6"
+            - "&4This particle not use this"
+            - "&4setting."
+            - "&6"
+            - "&aCurrent colors set:&6 {1} "
+        active:
+          material: RED_WOOL
+          name: "&6Change color {0}"
+          glow: true
+          lore:
+            - "&6"
+            - "&aCurrent colors set:&6 {1} "
+      "16":
+        action_type: Particle_size
+        passive:
+          material: CYAN_DYE
+          name: "&6Can't set size"
+          glow: false
+          lore:
+            - "&6"
+            - "&4This particle not use this"
+            - "&4setting."
+            - "&6"
+            - "&aSize of the particle (for"
+            - "&aredstone particle)."
+            - "&6"
+            - "&aCurrent size:&6 {1} "
+        active:
+          material: CYAN_DYE
+          name: "&6Change size {0}"
+          glow: true
+          lore:
+            - "&6"
+            - "&aSize of the particle (for"
+            - "&aredstone particle)."
+            - "&6"
+            - "&aCurrent size:&6 {1} "
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # menu to set your container on random loot spawn.
+  Random_loot_container:
+    menu_settings:
+      name: "&1Set type of container."
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "-1":
+        material: GREEN_WOOL
+        name: "&bChoose this type: {0}"
+        glow: false
+        lore:
+          - "&aThis container will be used as loot chest"
+          - "&aif shift + click on this button."
+          - ""
+          - "&aRight and left click will set facing."
+          - ""
+          - "&aFacing: &6{1}"
+          - "&aCurrent set: &6{2}"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39-41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+  ######################################################
+  # menu for settings for your container data.
+  Settings_container_data:
+    menu_settings:
+      name: "&1Settings."
+      size: 45
+    buttons:
+      "10":
+        action_type: Container_type
+        material: SHULKER_BOX
+        name: "&bSet the container type"
+        glow: false
+        lore:
+          - "&3Set container type used for random spawn"
+          - "&3and also set facing of this container,"
+          - "&3you can also set random facing."
+          - "&6"
+          - "&2Currently set item: {1}"
+          - "&2Currently set face: {2}"
+      "12":
+        action_type: Show_title
+        material: PAPER
+        name: "&bIf it shall show title"
+        glow: false
+        lore:
+          - "&3Show a tittle when new loot is added to chest"
+          - "&6"
+          - "&aIs set to: {1}"
+      "14":
+        action_type: Glow
+        material: GLOWSTONE
+        name: "&bIf it container shall glow"
+        glow: false
+        lore:
+          - "&3set this to tru and the container will glow."
+          - "&6"
+          - "&aIs set to: {1}"
+      "16":
+        action_type: Random_spawn
+        passive:
+          material: Elytra
+          name: "&bRandom spawn {0}"
+          glow: false
+          lore:
+            - "&6"
+            - "&2Enable this for use this container to random spawn"
+            - "&2your loot table around all online players or from center"
+            - "&2of the world."
+            - "&6"
+            - "&2Left click to enable"
+            - "&2"
+            - "&2Right click to disabled"
+        active:
+          material: Elytra
+          name: "&bRandom spawn {0}"
+          glow: true
+          lore:
+            - "&6"
+            - "&2Enable this for use this container to random spawn"
+            - "&2your loot table around all online players or from center"
+            - "&2of the world."
+            - "&6"
+            - "&2Left click to enable"
+            - "&2"
+            - "&2Right click to disabled"
+      "19":
+        action_type: Loot_on_timer
+        material: ENDER_EYE
+        name: "&bGenerate loot on timer"
+        glow: true
+        lore:
+          - "&6"
+          - "&2Set if it shall generate loot on"
+          - "&2timer or when player clicking"
+          - "&2on the container."
+          - "&2"
+          - "&3Left-click to turn this on"
+          - "&3Right-click to turn this off"
+          - "&2"
+          - "&2Auto fill on timer:&6 {1}"
+      "21":
+        action_type: Attempts
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aHow many times it will try find valid spawn loc"
+            - "&6"
+            - "&aAttempts: &6{1}"
+        active:
+          material: SPAWNER
+          name: "&bAmount of attempts"
+          glow: true
+          lore:
+            - "&aHow many times it will try find valid spawn loc"
+            - "&6"
+            - "&aAttempts: &6{1}"
+      "23":
+        action_type: Min_radius
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: true
+          lore:
+            - "&aSet min radius it can spawn container"
+            - ""
+            - "&aMin radius: &6{0}"
+        active:
+          material: CARROT
+          name: "&bMin radius"
+          glow: false
+          lore:
+            - "&aSet min radius it can spawn container"
+            - "&6"
+            - "&aMin radius: &6{0}"
+      "25":
+        action_type: Max_radius
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aSet max radius it can spawn container"
+            - ""
+            - "&aMax radius: &6{1}"
+        active:
+          material: GOLDEN_CARROT
+          name: "&bMax radius"
+          glow: true
+          lore:
+            - "&aSet max radius it can spawn container"
+            - ""
+            - "&aMax radius: &6{1}"
+      "28":
+        action_type: World_center
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aSet this to true if you want to use"
+            - "&athe world spawn. If false it will"
+            - "&atry spawn one around the player."
+            - ""
+            - "&aCurrently set to: &6{0}"
+        active:
+          material: MAP
+          name: "&bUse world center"
+          glow: false
+          lore:
+            - "&aSet this to true if you want to use"
+            - "&athe world spawn. If false it will"
+            - "&atry spawn one around the player."
+            - ""
+            - "&aCurrently set to: &6{0}"
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - "&6"
+          - "&aGo back to"
+          - "&acontainer data."
+      36-43:
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      0-8:
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - "&6"
+  ######################################################
+  # Save the items to your loot table.
+  Save_items:
+    menu_settings:
+      name: "&1Add items inside this gui"
+      # slots you want to use to add fill items inside.
+      fill-space: 0-26
+      sound: null
+      size: 45
+    buttons:
+      38-43:
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&6"
+        glow: false
+        lore: []
+      "44":
+        material: CHORUS_FRUIT
+        name: "&bGo back to menu"
+        glow: true
+        lore:
+          - "&6"
+          - "&2Go back to previous menu"
+      "40":
+        material: GOLD_BLOCK
+        name: "&bSave all items"
+        glow: true
+        lore:
+          - "&6"
+          - "&2Do you want to"
+          - "&2remove this player."
+      "-1":
+        material: ""
+        name: ""
+        glow: false
+        lore: []
+  ######################################################
+  # Add List of keys too in this menu.
+  Save_new_keys:
+    menu_settings:
+      name: "&1Change key data."
+      fill-space: 9-35
+      size: 45
+    buttons:
+      "41":
+        action_type: Save_keys
+        material: BRICK
+        name: "&bSave the items in the list"
+        glow: true
+        lore:
+          - "&aIt will use item type you add (amount of"
+          - "&athat item) and keep name and lore if you"
+          - "&2set it before."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:

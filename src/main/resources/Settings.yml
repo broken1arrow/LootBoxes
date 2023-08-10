@@ -10,6 +10,7 @@ Warn_Before_Save_With_Metadata: true
 Save_Metadata_On_Item: true
 Remove_Container_When_player_close: true
 Debug: false
+Single_menu_file: true
 Max_and_min_amount:
   Increse_with: 10
   Decrese_with: 10
@@ -26,3 +27,5 @@ Place_container:
     - "&3When you place the container it will"
     - "&3be saved and if you remove the container"
     - "&3it will be removed."
+# don't change this
+Version: 1

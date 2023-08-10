@@ -1,0 +1,182 @@
+######################################################
+# List of containers linked in this menu.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Alter this: {0}"
+      sound: null
+      size: 45
+    buttons:
+      "10":
+        action_type: Container_linked_to_loot_table
+        passive:
+          action_type: Linked_to_loot_table
+          material: CHEST
+          name: "&bChange loot table:&6 {0}"
+          glow: true
+          lore:
+          - ""
+          - "&2Left-click to get list of existing loot tables."
+          - "&2Right-Click if you want to type manually."
+        active:
+          action_type: Random_spawn
+          material: CHEST
+          name: "&bChange loot table:&6 {0}"
+          glow: true
+          lore:
+          - "&3You have set this container to spawn"
+          - "&3random containers. So it will use the"
+          - "&3set loot table for random spawn container"
+          - "&3on every player online."
+          - ""
+          - "&2Left-click to get list of existing loot tables."
+          - ""
+          - "&2Right-click if you want to type manually."
+      "12":
+        action_type: Particle_animation
+        material: NOTE_BLOCK
+        name: "&bParticle effects"
+        glow: true
+        lore:
+          - ""
+          - "&2Left-click to get list of particles you can add."
+          - "&2Effects on the container:"
+          - "&6{1}"
+      "14":
+        action_type: Keys_to_open_container
+        material: TRIPWIRE_HOOK
+        name: "&bKeys need to open container"
+        glow: true
+        lore:
+          - ""
+          - "&2Left-click to get list of keys"
+          - "&2need to open container"
+          - "&2Keys added to the container:"
+          - "&2{1}"
+      "16":
+        action_type: Change_icon
+        material: SPIDER_EYE
+        name: "&bChange the icon"
+        glow: true
+        lore:
+          - ""
+          - "&2List of icons you can change too"
+          - "&2for this container."
+      "22":
+        action_type: Settings_container_data
+        material: PAPER
+        name: "&bSettings"
+        glow: true
+        lore:
+          - ""
+          - "&2Left-click to open settings"
+      "28":
+        action_type: Cooldown_container
+        active:
+          action_type: Generate_loot_is_on
+          material: BARRIER
+          name: "&bYou can´t set cool-down on the container"
+          glow: false
+          lore:
+          - ""
+          - "&2"
+          - "&4You can´t set cool-down, when"
+          - "&4cooldown is off."
+          - "&6"
+          - "&2Current cool-down:"
+          - "&2{1} seconds"
+        passive:
+          action_type: Generate_loot_is_off
+          material: CLOCK
+          name: "&bSet cool-down on the container"
+          glow: true
+          lore:
+          - ""
+          - "&2"
+          - "&2Current cool-down:"
+          - "&2{1} seconds"
+      "30":
+        action_type: Containers
+        active:
+          action_type: Random_spawn_off
+          material: BARRIER
+          name: "&bContainers linked"
+          glow: true
+          lore:
+          - ""
+          - "&2You can't set this when random"
+          - "&2spawn is turned on."
+          - ""
+          - "&2Get list of containers"
+          - "&2linked to {1}"
+        passive:
+          action_type: Random_spawn_on
+          material: OBSERVER
+          name: "&bContainers linked"
+          glow: true
+          lore:
+          - "&3When you set it to random spawn"
+          - "&3a container this will show what"
+          - "&3you link this container to before"
+          - "&3(if you have link containers before)."
+          - ""
+          - "&2Get list of containers"
+          - "&2linked to {1}"
+      "32":
+        action_type: Linked_containers_add_remove
+        active:
+          action_type: Add_remove_off
+          material: BARRIER
+          name: "&bRemove or add containers some are linked"
+          glow: false
+          lore:
+          - ""
+          - "&4You can´t use this setting when"
+          - "&4is set to random spawn a container."
+        passive:
+          action_type: Add_remove_on
+          material: GOLDEN_SHOVEL
+          name: "&bRemove or add containers some are linked"
+          glow: true
+          lore:
+          - ""
+          - "&2Left-click to link chest with hand"
+          - "&2"
+          - "&2Right-Click to link chest with a item"
+          - "&6"
+          - "&2Shift and Right-Click to use container"
+          - "&2some you can link with (will place it)."
+      "34":
+        action_type: Change_displayName
+        material: COCOA_BEANS
+        name: "&bChange display name"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to change display name"
+          - "&2on the item. You have '{'0'}' '{'1'}' and"
+          - "&2'{'2'}' placeholders to use (remove ')."
+          - "&2"
+          - "&2Current display name:"
+          - "&6{1}"
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

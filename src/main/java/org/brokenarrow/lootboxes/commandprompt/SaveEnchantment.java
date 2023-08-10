@@ -7,7 +7,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
-import org.brokenarrow.lootboxes.menus.CustomizeItem;
+import org.brokenarrow.lootboxes.menus.Enchantments;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -85,7 +85,7 @@ public class SaveEnchantment extends SimpleConversation {
 			SAVE_ENCHANTMENT_CONFIRM.sendMessage(getPlayer(context), input);
 
 			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-			new CustomizeItem.EnchantMents(lootTable, itemToEdit, "").menuOpen(getPlayer(context));
+			new Enchantments(lootTable, itemToEdit, "").menuOpen(getPlayer(context));
 			return null;
 		}
 	}

@@ -1,11 +1,14 @@
 package org.brokenarrow.lootboxes.menus;
 
 import org.apache.commons.lang.WordUtils;
+import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
+import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.GuiTempletsYaml;
 import org.brokenarrow.lootboxes.builder.SettingsData;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -23,27 +26,40 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINER
 import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 
 public class ChooseContainer extends MenuHolder {
-	private final GuiTempletsYaml.Builder guiTemplets;
-	private final MenuButton listOfItems;
-	private final MenuButton previous;
-	private final MenuButton forward;
-	private final MenuButton backButton;
+	private final GuiTempletsYaml.Builder guiTemplets = null;
+	private final MenuTemplate guiTemplate;
+	private  MenuButton listOfItems;
+	private  MenuButton previous;
+	private  MenuButton forward;
+	private  MenuButton backButton;
+	private final String container;
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 
 	public ChooseContainer(String container) {
 		super(containers());
-		guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Choose_Container");
+		this.container = container;
+		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Choose_Container");
+		this.guiTemplate = Lootboxes.getInstance().getMenu("Choose_container");
+		if (guiTemplate != null) {
+			setFillSpace(guiTemplate.getFillSlots());
+			setMenuSize(guiTemplate.getinvSize("Choose_container"));
+			setTitle(guiTemplate::getMenuTitle);
+			setMenuOpenSound(guiTemplate.getSound());
+		} else {
+			setMenuSize(36);
+			setTitle(() -> "could not load menu 'Choose_container'.");
+		}
+	}
 
-		setFillSpace(guiTemplets.build().getFillSpace());
-		setMenuSize(guiTemplets.build().getGuiSize());
-		setTitle(()-> guiTemplets.build().getGuiTitle());
-
-		listOfItems = new MenuButton() {
+	@Override
+	public MenuButton getFillButtonAt(@NotNull Object object) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+		return new MenuButton() {
 			private final SettingsData setting = settings.getSettingsData();
 
 			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
 				if (object instanceof Material) {
 					TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
 					player.getInventory().addItem(CreateItemUtily.of(object,
@@ -56,90 +72,58 @@ public class ChooseContainer extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-
-				return null;
-			}
-
-			@Override
-			public ItemStack getItem(@NotNull Object object) {
 				if (object instanceof Material) {
-					GuiTempletsYaml gui = guiTemplets.menuKey("List_Of_ContainerTypes").placeholders(WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase())).build();
+					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+
+					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()));
 					return CreateItemUtily.of(object,
-							gui.getDisplayName(),
-							gui.getLore()).makeItemStack();
+							displayName,
+							TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore())).makeItemStack();
 				}
-
 				return null;
 			}
 		};
-		previous = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				if (click.isLeftClick()) {
-					previousPage();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Previous_button").build();
-				if (getRequiredPages() > 1)
-					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-							gui.getLore()).makeItemStack();
-				return null;
-			}
-		};
-		forward = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				if (click.isLeftClick()) {
-					nextPage();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Forward_button").build();
-				if (getRequiredPages() > 1)
-					return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-							gui.getLore()).makeItemStack();
-				return null;
-			}
-		};
-		backButton = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-	}
-
-	@Override
-	public MenuButton getFillButtonAt(@NotNull Object object) {
-		return listOfItems;
+		//return listOfItems;
 	}
 
 	@Override
 	public MenuButton getButtonAt(int slot) {
+		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+		if (button == null) return null;
+		return new MenuButton() {
+			@Override
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+				if (run(button, click))
+					updateButton(this);
+			}
 
-		if (guiTemplets.menuKey("Forward_button").build().getSlot().contains(slot))
-			return forward;
-		if (guiTemplets.menuKey("Previous_button").build().getSlot().contains(slot))
-			return previous;
-		if (guiTemplets.menuKey("Back_button").build().getSlot().contains(slot))
-			return backButton;
+			@Override
+			public ItemStack getItem() {
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-		return null;
+				return CreateItemUtily.of(menuButton.getMaterial(),
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+						.makeItemStack();
+			}
+		};
+	}
+
+	public boolean run(MenuButtonData button, ClickType click) {
+
+		if (button.isActionTypeEqual("Forward_button")) {
+			if (click.isLeftClick()) {
+				nextPage();
+			}
+		}
+		if (button.isActionTypeEqual("Previous_button")) {
+			if (click.isLeftClick()) {
+				previousPage();
+			}
+		}
+		if (button.isActionTypeEqual("Back_button")) {
+			new AlterContainerDataMenu(container).menuOpen(player);
+		}
+		return false;
 	}
 }

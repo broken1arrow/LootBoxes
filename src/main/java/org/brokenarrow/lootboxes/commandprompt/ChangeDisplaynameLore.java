@@ -6,9 +6,9 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
-import org.brokenarrow.lootboxes.menus.EditKeysToOpen;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
-import org.brokenarrow.lootboxes.menus.ModifyContinerData;
+import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
+import org.brokenarrow.lootboxes.menus.keys.EditKey;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
@@ -72,7 +72,7 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 				containerDataCache.setContainerData(container, builder.build());
 				CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM.sendMessage(getPlayer(context), input);
 				runtaskLater(40, () ->
-						new ModifyContinerData.AlterContainerDataMenu(container).menuOpen(getPlayer(context)), false);
+						new AlterContainerDataMenu(container).menuOpen(getPlayer(context)), false);
 			}
 			return null;
 		}
@@ -110,7 +110,7 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 			} else
 				containerDataCache.setKeyData(KeysToSave.DISPLAY_NAME, input, container, keyName);
 			CHANGE_DISPLAYNAME_AND_LORE_CONFIRM.sendMessage(player);
-			new EditKeysToOpen.EditKey(container, keyName).menuOpen(player);
+			new EditKey(container, keyName).menuOpen(player);
 		}
 	}
 

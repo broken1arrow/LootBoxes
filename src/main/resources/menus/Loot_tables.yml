@@ -1,0 +1,69 @@
+######################################################
+# This menu list the loot tables, and you can both create and remove loot tables.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Loot tables. Page: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6{1}"
+        glow: false
+        lore:
+        - "&2Left-click&a to change items inside loot table and"
+        - "&aget info on all current items you have added."
+        - "&6"
+        - "&2Right-click&a for edit this loot table or remove it."
+      "40":
+        action_type: Create_table
+        material: PAPER
+        name: "&6{1}"
+        glow: false
+        lore:
+        - "&2Left-click&a to change items inside loot table and"
+        - "&aget info on all current items you have added."
+        - "&6"
+        - "&2Right-click&a for edit this loot table or remove it."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: false
+        lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: false
+        lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+      "36-37,39,41,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+        - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+        - ""

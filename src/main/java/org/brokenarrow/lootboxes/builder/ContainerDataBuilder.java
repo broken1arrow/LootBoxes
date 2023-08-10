@@ -381,7 +381,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 		final String lootTableLinked = (String) map.get("LootTable_linked");
 		final String icon = (String) map.get("Icon");
-		String displayName = (String) map.getOrDefault("Display_name", "&6Loot Chest");
+		String displayName = (String) map.getOrDefault("Display_name", "");
 		if (displayName == null)
 			displayName = "&6Loot Chest";
 		final List<String> lore = castList((List<?>) map.get("Lore"), String.class);

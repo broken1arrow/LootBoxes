@@ -1,0 +1,78 @@
+######################################################
+# menu to pick one loot table to change the data.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Container data: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&6{0}"
+        glow: false
+        lore:
+        - "&6"
+        - "&aChange with loot table some are linked"
+        - "&aand get info on all linked containers."
+        - "&aLoottable:&6 {1}"
+        - "&aCooldown:&6 {2}"
+        - "&aIcon:&6 {3}"
+      "41":
+        action_type: Create_container_data
+        material: PAPER
+        name: "&bCreate new container"
+        glow: true
+        lore:
+          - "&aClick and type in your name"
+          - "&aon the container and it need"
+          - "&unique name."
+      "39":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for container"
+        glow: true
+        lore:
+          - "&aLeft-click for search for container"
+          - "&aRight-click for reset the search."
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: CHORUS_FRUIT
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,40,43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

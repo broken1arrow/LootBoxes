@@ -145,7 +145,7 @@ public class ItemData extends YamlFileManager {
 	}
 
 	@Override
-	protected void loadSettingsFromYaml(final File file) {
+	protected void loadSettingsFromYaml(final File file,FileConfiguration configuration) {
 		try {
 			customConfig = getCustomConfig();
 			customConfig.load(file);
