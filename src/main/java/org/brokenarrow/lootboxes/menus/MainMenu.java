@@ -24,7 +24,7 @@ public class MainMenu extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Main_menu");
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Main_menu"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);

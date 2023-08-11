@@ -44,9 +44,8 @@ public class ParticleSettings extends MenuHolder {
 		this.particleEffect = containerDataCache.getParticleEffect(container, particle);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_settings");
 		if (guiTemplate != null) {
-			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Particle_settings"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);

@@ -4,7 +4,7 @@ Menus:
   # List of containers linked in this menu.
   Alter_container_data:
     menu_settings:
-      name: "&1Alter this: {0}"
+      name: "&1Settings for: {0}"
       size: 45
     buttons:
       "10":
@@ -1094,7 +1094,7 @@ Menus:
   # This menu list the loot tables, and you can both create and remove loot tables.
   Loot_tables:
     menu_settings:
-      name: "&1Loot tables. Page: {0}"
+      name: "&1Loot tables: {0}"
       fill-space: 9-35
       size: 45
     buttons:
@@ -1110,7 +1110,7 @@ Menus:
       "40":
         action_type: Create_table
         material: PAPER
-        name: "&6{1}"
+        name: "&bCreate new table"
         glow: false
         lore:
           - "&2Left-click&a to change items inside loot table and"
@@ -1206,7 +1206,7 @@ Menus:
   # List of material you can change too in this menu.
   Material_list:
     menu_settings:
-      name: "&1Material list. Page: {0}"
+      name: "&1Material list: {0}"
       # slots you want to use to add fill items inside.
       fill-space: 9-35
       sound: null
@@ -1270,7 +1270,7 @@ Menus:
   # List of particles you can choose spawn around the container.
   Particle_animation:
     menu_settings:
-      name: "&1Particles. Page: {0}"
+      name: "&1Particles: {0}"
       fill-space: 9-35
       size: 45
     buttons:

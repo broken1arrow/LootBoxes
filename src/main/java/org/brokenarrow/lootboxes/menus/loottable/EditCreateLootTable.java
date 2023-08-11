@@ -31,7 +31,7 @@ public class EditCreateLootTable extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Loot_tables"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);

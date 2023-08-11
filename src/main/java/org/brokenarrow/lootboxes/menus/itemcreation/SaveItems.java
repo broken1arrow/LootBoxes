@@ -32,7 +32,7 @@ public class SaveItems extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Save_items"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);

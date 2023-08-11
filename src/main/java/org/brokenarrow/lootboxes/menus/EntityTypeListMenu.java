@@ -43,7 +43,7 @@ public class EntityTypeListMenu extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("EntityType_list"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'EntityType_list'.");

@@ -3,7 +3,7 @@
 Menus:
   menu:
     menu_settings:
-      name: "&1Alter this: {0}"
+      name: "&1Settings for: {0}"
       sound: null
       size: 45
     buttons:

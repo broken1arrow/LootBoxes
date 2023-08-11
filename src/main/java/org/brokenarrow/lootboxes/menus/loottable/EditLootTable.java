@@ -17,21 +17,23 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.lootdata.LootItems.YamlKey.GLOBAL_VALUES;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public final class EditLootTable extends MenuHolder {
 	private final String lootTableName;
 	private final LootItems lootTable = LootItems.getInstance();
 	private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettingsData();
+	private LootData lootData ;
 	private final MenuTemplate guiTemplate;
 
 	public EditLootTable(final String lootTableName) {
 		this.lootTableName = lootTableName;
 		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_loot_table").placeholders(lootTableName);
+		this.lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_loot_table");
 		if (guiTemplate != null) {
-			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_loot_table"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);
@@ -54,18 +56,29 @@ public final class EditLootTable extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
+				Object[] placeholders = new Object[0];
+				if (button.isActionTypeEqual("Remove_loot_table"))
+					placeholders = getPlaceholders( lootTableName,lootTableName);
+				if (button.isActionTypeEqual("Change_chance"))
+					placeholders = getPlaceholders(lootData.getChance(),settings.getIncrease(),settings.getDecrease());
+
+				if (button.isActionTypeEqual("Change_minimum"))
+					placeholders = getPlaceholders(lootData.getMinimum(),settings.getIncrease(),settings.getDecrease());
+
+				if (button.isActionTypeEqual("Change_maximum"))
+					placeholders = getPlaceholders(lootData.getMaximum(),settings.getIncrease(),settings.getDecrease());
+
 				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),	placeholders),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),	placeholders))
 						.makeItemStack();
 			}
 		};
 	}
 
 	public boolean run(MenuButtonData button, ClickType click) {
-
+		final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 		if (button.isActionTypeEqual("Change_minimum")) {
-			final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 			int amount = 0;
 			if (click == ClickType.LEFT)
 				amount += 1;
@@ -86,10 +99,10 @@ public final class EditLootTable extends MenuHolder {
 
 			final LootData.Builder builder = lootData.getBuilder().setMinimum(amountCached);
 			lootTable.setCachedLoot(lootTableName, GLOBAL_VALUES.getKey(), builder.build());
+			this.lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 			return true;
 		}
 		if (button.isActionTypeEqual("Change_maximum")) {
-			final LootData lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 			int amount = 0;
 			if (click == ClickType.LEFT)
 				amount += 1;
@@ -108,6 +121,7 @@ public final class EditLootTable extends MenuHolder {
 				amountCached = 0;
 			final LootData.Builder builder = lootData.getBuilder().setMaximum(amountCached);
 			lootTable.setCachedLoot(lootTableName, GLOBAL_VALUES.getKey(), builder.build());
+			this.lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 			return true;
 		}
 		if (button.isActionTypeEqual("Remove_loot_table")) {
@@ -124,7 +138,6 @@ public final class EditLootTable extends MenuHolder {
 				previousPage();
 			}
 		}
-
 		if (button.isActionTypeEqual("Back_button")) {
 			new EditCreateLootTable().menuOpen(player);
 		}

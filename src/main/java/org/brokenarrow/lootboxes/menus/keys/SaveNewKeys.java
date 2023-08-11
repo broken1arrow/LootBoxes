@@ -27,7 +27,7 @@ public class SaveNewKeys extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Save_new_keys"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Save_new_keys'.");

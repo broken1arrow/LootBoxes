@@ -37,7 +37,7 @@ public class EditCreateItems extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_items_for_loot_table"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);
@@ -79,7 +79,7 @@ public class EditCreateItems extends MenuHolder {
 						if (itemStack == null) return null;
 						final ItemStack clonedItem = itemStack.clone();
 						//final GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
-						Object[] placeholders = getPlaceholders(
+						Object[] placeholders = getPlaceholders("",
 								data.isHaveMetadata() && clonedItem.hasItemMeta() && clonedItem.getItemMeta().hasDisplayName() ? clonedItem.getItemMeta().getDisplayName() : bountifyCapitalized(clonedItem.getType()),
 								data.getChance(),
 								data.getMinimum(),

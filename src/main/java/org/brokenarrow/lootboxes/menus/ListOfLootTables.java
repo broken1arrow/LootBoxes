@@ -32,7 +32,7 @@ public class ListOfLootTables extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("List_of_loot_tables"));
-			setTitle(guiTemplate::getMenuTitle);
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'List_of_loot_tables'.");

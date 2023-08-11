@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class CustomizeItem extends MenuHolder {
@@ -33,6 +34,7 @@ public class CustomizeItem extends MenuHolder {
 	public CustomizeItem(final String lootTable, final String itemToEdit) {
 		this.lootTable = lootTable;
 		this.itemToEdit = itemToEdit;
+		this.data = lootItems.getLootData(lootTable, itemToEdit);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Customize_item");
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Customize_item"));
@@ -60,14 +62,16 @@ public class CustomizeItem extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 				Object[] placeholders = new Object[0];
+				if (button.isActionTypeEqual("Change_item"))
+					placeholders = getPlaceholders(data.getMaterial() == null ? "": bountifyCapitalized(data.getMaterial()));
 				if (button.isActionTypeEqual("Change_chance"))
-					placeholders = getPlaceholders(data.getChance(),data.getChance());
+					placeholders = getPlaceholders(data.getChance(),settingsData.getIncrease(),settingsData.getDecrease());
 
 				if (button.isActionTypeEqual("Change_minimum"))
-					placeholders = getPlaceholders(data.getMinimum(),data.getMinimum());
+					placeholders = getPlaceholders(data.getMinimum(),settingsData.getIncrease(),settingsData.getDecrease());
 
 				if (button.isActionTypeEqual("Change_maximum"))
-					placeholders = getPlaceholders(data.getMinimum(),data.getMaximum());
+					placeholders = getPlaceholders(data.getMaximum(),settingsData.getIncrease(),settingsData.getDecrease());
 
 
 				return CreateItemUtily.of(menuButton.getMaterial(),
@@ -104,6 +108,7 @@ public class CustomizeItem extends MenuHolder {
 				chance = 0;
 			builder.setChance(chance);
 			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+			this.data = lootItems.getLootData(lootTable, itemToEdit);
 			return true;
 		}
 		if (button.isActionTypeEqual("Enchant_item")) {
@@ -126,6 +131,7 @@ public class CustomizeItem extends MenuHolder {
 				minimum = 0;
 			builder.setMinimum(minimum);
 			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+			this.data = lootItems.getLootData(lootTable, itemToEdit);
 			return true;
 		}
 		if (button.isActionTypeEqual("Change_maximum")) {
@@ -144,6 +150,7 @@ public class CustomizeItem extends MenuHolder {
 				maximum = 0;
 			builder.setMaximum(maximum);
 			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+			this.data = lootItems.getLootData(lootTable, itemToEdit);
 			return true;
 		}
 		if (button.isActionTypeEqual("Remove")) {
@@ -154,7 +161,6 @@ public class CustomizeItem extends MenuHolder {
 			lootItems.saveTask(lootTable);
 			new EditCreateItems(lootTable).menuOpen(player);
 		}
-		this.data = lootItems.getLootData(lootTable, itemToEdit);
 		if (button.isActionTypeEqual("Forward_button")) {}
 		if (button.isActionTypeEqual("Previous_button")) {}
 

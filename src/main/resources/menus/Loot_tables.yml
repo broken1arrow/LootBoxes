@@ -3,7 +3,7 @@
 Menus:
   menu:
     menu_settings:
-      name: "&1Loot tables. Page: {0}"
+      name: "&1Loot tables: {0}"
       # slots you want to use to add fill items inside.
       fill-space: 9-35
       sound: null
@@ -21,7 +21,7 @@ Menus:
       "40":
         action_type: Create_table
         material: PAPER
-        name: "&6{1}"
+        name: "&bCreate new table"
         glow: false
         lore:
         - "&2Left-click&a to change items inside loot table and"
