@@ -100,7 +100,6 @@ public class Lootboxes extends JavaPlugin {
 		this.enchantmentList = new EnchantmentList();
 		this.particleEffectList = new ParticleEffectList();
 		this.runTask = new RunTask(this);
-		this.runTask.start();
 		this.spawnedContainers = new SpawnedContainers();
 		this.makeLootTable = new MakeLootTable();
 		this.saveDataTask = new SaveDataTask(this);
@@ -126,6 +125,7 @@ public class Lootboxes extends JavaPlugin {
 		this.registerCommands();
 		this.mobList = new MobList();
 		heavyTasks.start();
+		this.runTask.start();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			/*
 			 * We register the EventListener here, when PlaceholderAPI is installed.

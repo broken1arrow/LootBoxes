@@ -27,7 +27,7 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item) {
-		return itemCreator.of(item, null, (List<String>) null);
+		return itemCreator.of(item);
 	}
 
 	/**

@@ -22,21 +22,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Enchantments extends MenuHolder {
-	private final String lootTable;
+	private final String lootTableName;
 	private final String itemToEdit;
 	private final LootItems lootItems = LootItems.getInstance();
 	private final ItemData itemData = ItemData.getInstance();
 	private final MenuTemplate guiTemplate;
-
-	public Enchantments(final String lootTable, final String itemToEdit, final String enchantmentsToSearchFor) {
+	private final Map<ItemStack, Enchantment> cachedEnchantment = new HashMap<>();
+	public Enchantments(final String lootTableName, final String itemToEdit, final String enchantmentsToSearchFor) {
 		super(Lootboxes.getInstance().getEnchantmentList().getEnchantments(enchantmentsToSearchFor));
 
-		this.lootTable = lootTable;
+		this.lootTableName = lootTableName;
 		this.itemToEdit = itemToEdit;
-
+		System.out.println("itemToEdit " + itemToEdit);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Enchantments_list");
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
@@ -54,7 +55,6 @@ public class Enchantments extends MenuHolder {
 	public MenuButton getFillButtonAt(@NotNull Object object) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
 		if (button == null) return null;
-		final Map<ItemStack, Enchantment> cachedEnchantment = new HashMap<>();
 		return new MenuButton() {
 
 			@Override
@@ -62,29 +62,31 @@ public class Enchantments extends MenuHolder {
 
 				if (click.isLeftClick()) {
 					if (object instanceof Enchantment)
-						new SaveEnchantment(lootTable, itemToEdit, (Enchantment) object).start(player);
+						new SaveEnchantment(lootTableName, itemToEdit, (Enchantment) object).start(player);
 				} else if (click.isRightClick()) {
 					if (object instanceof Enchantment) {
 						final Enchantment enchantment = (Enchantment) object;
-						final LootData data = lootItems.getLootData(lootTable, itemToEdit);
-						final ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
+						final LootData lootData = lootItems.getLootData(lootTableName, itemToEdit);
+						System.out.println("data.getItemdataFileName() " + lootData.getLootTableName());
+						System.out.println("data.getItemdataPath() " + lootData.getItemDataPath());
+						final ItemStack item = itemData.getCacheItemData(lootTableName, lootData.getItemDataPath());
 						boolean hasEnchantsLeft = false;
-						if (item.getItemMeta() != null) {
+						if (item != null && item.getItemMeta() != null) {
 							final ItemMeta metadata = item.getItemMeta();
 							metadata.removeEnchant(enchantment);
 							item.setItemMeta(metadata);
 							hasEnchantsLeft = !metadata.getEnchants().isEmpty();
 						}
 
-						CreateItemUtily.of(item).addEnchantments(enchantment);
+						//ItemStack itemStack = CreateItemUtily.of(item).addEnchantments(enchantment).makeItemStack();
 
-						itemData.updateCacheItemData(data.getItemdataFileName(), data.getItemdataPath(), item);
+						itemData.updateCacheItemData(lootTableName, lootData.getItemDataPath(), item );
 						if (!hasEnchantsLeft)
-							itemData.removeCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
-						final Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
+							itemData.removeCacheItemData(lootTableName, lootData.getItemDataPath());
+						final Builder builder = lootItems.getLootData(lootTableName, itemToEdit).getBuilder();
 						builder.setHaveMetadata(hasEnchantsLeft);
 
-						lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+						lootItems.setCachedLoot(lootTableName, itemToEdit, builder.build());
 					}
 					updateButtons();
 				}
@@ -99,8 +101,8 @@ public class Enchantments extends MenuHolder {
 				if (object instanceof ItemStack)
 					enchantment = cachedEnchantment.get(object);
 
-				final LootData data = lootItems.getLootData(lootTable, itemToEdit);
-				final ItemStack item = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
+				final LootData data = lootItems.getLootData(lootTableName, itemToEdit);
+				final ItemStack item = itemData.getCacheItemData(lootTableName, data.getItemDataPath());
 
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton;
 				final boolean haveEnchant = item != null && item.getItemMeta() != null && enchantment != null && item.getItemMeta().hasEnchant(enchantment);
@@ -113,14 +115,19 @@ public class Enchantments extends MenuHolder {
 					menuButton = button.getPassiveButton();
 
 				String displayName;
-				if (haveEnchant)
-					displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", enchantment.getKey().getKey(), item.getItemMeta().getEnchants().get(enchantment).shortValue());
-				else
-					displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), object instanceof Enchantment ? enchantment.getKey().getKey() : enchantment != null ? enchantment.getKey().getKey() : "");
+				List<String> lore;
+				String enchanted = object instanceof Enchantment ? enchantment.getName() : enchantment != null ? enchantment.getName() : "";
+				if (haveEnchant) {
+					displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", enchanted, item.getItemMeta().getEnchants().get(enchantment).shortValue());
+					lore = TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), "", enchanted, item.getItemMeta().getEnchants().get(enchantment).shortValue());
+				} else {
+					displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), enchanted, enchanted, "");
+					lore = TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), enchanted, enchanted, "not set");
+				}
 
 				ItemStack itemStack = CreateItemUtily.of(menuButton.getMaterial(),
 								displayName,
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								lore)
 						.makeItemStack();
 				cachedEnchantment.put(itemStack, enchantment);
 				return itemStack;
@@ -166,12 +173,12 @@ public class Enchantments extends MenuHolder {
 		}
 		if (button.isActionTypeEqual("Search")) {
 			if (click.isLeftClick())
-				new SeachForEnchantment(lootTable, itemToEdit).start(player);
+				new SeachForEnchantment(lootTableName, itemToEdit).start(player);
 			else
-				new Enchantments(lootTable, itemToEdit, "").menuOpen(player);
+				new Enchantments(lootTableName, itemToEdit, "").menuOpen(player);
 		}
 		if (button.isActionTypeEqual("Back_button")) {
-			new CustomizeItem(lootTable, itemToEdit).menuOpen(player);
+			new CustomizeItem(lootTableName, itemToEdit).menuOpen(player);
 		}
 		return false;
 	}

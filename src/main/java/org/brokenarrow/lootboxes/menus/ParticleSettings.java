@@ -11,6 +11,7 @@ import org.brokenarrow.lootboxes.commandprompt.SetNumbers;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_SETTINGS;
 import static org.brokenarrow.lootboxes.menus.ParticleSettings.Type.*;
-import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.isParticleThisClazz;
+import static org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity.isParticleThisClazz;
 
 public class ParticleSettings extends MenuHolder {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
@@ -51,9 +52,9 @@ public class ParticleSettings extends MenuHolder {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Particle_settings'.");
 		}
-		if (!isParticleThisClazz(particle, Material.class, MaterialData.class, BlockData.class, ItemStack.class))
+		if (!isParticleThisClazz(particle, Material.class, MaterialData.class, Lootboxes.getInstance().getServerVersion().atLeast(Version.v1_9) ?BlockData.class: null, ItemStack.class))
 			this.isUsingMaterial = false;
-		if (!isParticleThisClazz(particle, Particle.DustOptions.class, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
+		if (!isParticleThisClazz(particle, Lootboxes.getInstance().getServerVersion().atLeast(Version.v1_13) ? Particle.DustOptions.class : null, Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) ? Particle.DustTransition.class : null))
 			this.canSetColor = false;
 	}
 

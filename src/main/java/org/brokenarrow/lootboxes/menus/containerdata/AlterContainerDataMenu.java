@@ -114,7 +114,12 @@ public final class AlterContainerDataMenu extends MenuHolder {
 				}
 				break;
 			case "Particle_animation":
-				new ParticleAnimation(containerDataName, "").menuOpen(player);
+				try{
+				new ParticleAnimation(containerDataName, "")
+						.menuOpen(player);
+				}catch (Exception exception){
+					exception.printStackTrace();
+				}
 				break;
 			case "Change_displayName":
 				new ChangeDisplaynameLore(ALTER_CONTAINER_DATA_MENU, containerDataName, "", false).start(player);

@@ -8,8 +8,8 @@ public final class LootData {
 	private final int minimum;
 	private final int maximum;
 	private final Material material;
-	private final String itemdataPath;
-	private final String itemdataFileName;
+	private final String itemDataPath;
+	private final String lootTableName;
 	private final boolean haveMetadata;
 	private final Builder builder;
 
@@ -18,8 +18,8 @@ public final class LootData {
 		this.minimum = builder.minimum;
 		this.maximum = builder.maximum;
 		this.material = builder.material;
-		this.itemdataPath = builder.itemdataPath;
-		this.itemdataFileName = builder.itemdataFileName;
+		this.itemDataPath = builder.itemDataPath;
+		this.lootTableName = builder.lootTableName;
 		this.haveMetadata = builder.haveMetadata;
 		this.builder = builder;
 	}
@@ -40,12 +40,12 @@ public final class LootData {
 		return material;
 	}
 
-	public String getItemdataPath() {
-		return itemdataPath;
+	public String getItemDataPath() {
+		return itemDataPath;
 	}
 
-	public String getItemdataFileName() {
-		return itemdataFileName;
+	public String getLootTableName() {
+		return lootTableName;
 	}
 
 	public boolean isHaveMetadata() {
@@ -61,8 +61,8 @@ public final class LootData {
 		private int minimum;
 		private int maximum;
 		private Material material;
-		private String itemdataPath;
-		private String itemdataFileName;
+		private String itemDataPath;
+		private String lootTableName;
 		private boolean haveMetadata;
 
 		public Builder setChance(int chance) {
@@ -85,13 +85,13 @@ public final class LootData {
 			return this;
 		}
 
-		public Builder setItemdataPath(String itemdataPath) {
-			this.itemdataPath = itemdataPath;
+		public Builder setItemDataPath(String itemDataPath) {
+			this.itemDataPath = itemDataPath;
 			return this;
 		}
 
-		public Builder setItemdataFileName(String itemdataFileName) {
-			this.itemdataFileName = itemdataFileName;
+		public Builder setLootTableName(String lootTableName) {
+			this.lootTableName = lootTableName;
 			return this;
 		}
 

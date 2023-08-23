@@ -9,7 +9,7 @@ Menus:
     buttons:
       "10":
         action_type: Change_item
-        material: FIREWORK_STAR
+        material: GRASS_BLOCK
         name: "&bChange the item {0}"
         glow: true
         lore:
@@ -60,7 +60,7 @@ Menus:
         - "&aRight-click and shift to decrease with&6 {2}"
       "44":
         action_type: Back_button
-        material: CHORUS_FRUIT
+        material: RED_STAINED_GLASS_PANE
         name: "&bBack"
         glow: true
         lore:

@@ -27,7 +27,7 @@ public class CreateParticle {
 	}
 
 	public CreateParticle(@NotNull ParticleEffect effect, World world, double x, double y, double z) {
-		this.particle = effect.getParticle();
+		this.particle = effect.getSpigotParticle().getParticle();
 		this.effect = effect.getEffect();
 		this.material = effect.getMaterial();
 		this.data = effect.getData();

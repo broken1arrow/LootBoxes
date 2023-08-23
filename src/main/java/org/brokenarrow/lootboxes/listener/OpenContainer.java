@@ -145,7 +145,7 @@ public class OpenContainer implements Listener {
 	private boolean spawnLootWhenClicking(ContainerDataBuilder containerData, Location location, Block block) {
 		String lootTableLinked = containerData.getLootTableLinked();
 		if (lootTableLinked != null && !lootTableLinked.isEmpty()) {
-			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
 			if (stacks == null) {
 				return false;
 			}

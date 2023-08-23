@@ -1,11 +1,11 @@
 package org.brokenarrow.lootboxes.builder;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity;
+import org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.brokenarrow.lootboxes.untlity.particles.SpigotParticle;
 import org.bukkit.Effect;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public final class ParticleEffect implements ConfigurationSerializable {
 
-	private final Particle particle;
+	private final SpigotParticle spigotParticle;
 	private final Effect effect;
 	private final Material material;
 	private final int data;
@@ -25,7 +25,7 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	private final Builder builder;
 
 	private ParticleEffect(final Builder builder) {
-		this.particle = builder.particle;
+		this.spigotParticle = builder.spigotParticle;
 		this.effect = builder.effect;
 		this.material = builder.material;
 		this.data = builder.data;
@@ -34,10 +34,8 @@ public final class ParticleEffect implements ConfigurationSerializable {
 		this.builder = builder;
 	}
 
-
-	@Nullable
-	public Particle getParticle() {
-		return particle;
+	public SpigotParticle getSpigotParticle() {
+		return spigotParticle;
 	}
 
 	@Nullable
@@ -55,6 +53,8 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	}
 
 	public Class<?> getDataType() {
+		if (spigotParticle != null)
+			return spigotParticle.getDataType();
 		return dataType;
 	}
 
@@ -68,16 +68,15 @@ public final class ParticleEffect implements ConfigurationSerializable {
 
 
 	public static class Builder {
-		private Particle particle;
+		private SpigotParticle spigotParticle;
 		private Effect effect;
 		private Material material;
 		private int data;
 		private Class<?> dataType;
 		private ParticleDustOptions dustOptions;
 
-
-		public Builder setParticle(final Particle particle) {
-			this.particle = particle;
+		public Builder setSpigotParticle(final SpigotParticle spigotParticle) {
+			this.spigotParticle = spigotParticle;
 			return this;
 		}
 
@@ -115,7 +114,7 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	@Override
 	public String toString() {
 		return "ParticleEffect{" +
-				"particle=" + particle +
+				"particle=" + spigotParticle +
 				", effect=" + effect +
 				", material=" + material +
 				", data=" + data +
@@ -129,7 +128,10 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	@Override
 	public Map<String, Object> serialize() {
 		final Map<String, Object> particleData = new LinkedHashMap<>();
-		particleData.put("Particle", this.particle + "");
+		if (this.spigotParticle != null)
+			particleData.put("Particle", this.spigotParticle.getParticle() + "");
+		else
+			particleData.put("Particle", "");
 		particleData.put("Effect", this.effect + "");
 		particleData.put("Material", this.material + "");
 		particleData.put("Data", this.data);
@@ -147,8 +149,8 @@ public final class ParticleEffect implements ConfigurationSerializable {
 
 	public static ParticleEffect deserialize(final Map<String, Object> map) {
 
-		final Particle particle = ConvetParticlesUntlity.getParticle((String) map.get("Particle"));
-		final Effect effect = ConvetParticlesUntlity.getEffect((String) map.get("Effect"));
+		final String particle = (String) map.get("Particle");
+		final Effect effect = ConvertParticlesUnity.getEffect((String) map.get("Effect"));
 		String icon = (String) map.get("Material");
 		Material material = null;
 		if (icon != null) {
@@ -157,8 +159,6 @@ public final class ParticleEffect implements ConfigurationSerializable {
 		}
 		final int data = (int) map.get("Data");
 		Class<?> dataType = null;
-		if (particle != null)
-			dataType = particle.getDataType();
 		if (effect != null)
 			dataType = effect.getData();
 		ParticleDustOptions options = (ParticleDustOptions) map.get("DustOptions");
@@ -168,7 +168,7 @@ public final class ParticleEffect implements ConfigurationSerializable {
 			options = (ParticleDustOptions) map.get("Transition");
 
 		return builder
-				.setParticle(particle)
+				.setSpigotParticle(new SpigotParticle(particle))
 				.setEffect(effect)
 				.setMaterial(material)
 				.setDustOptions(options)
@@ -176,12 +176,5 @@ public final class ParticleEffect implements ConfigurationSerializable {
 				.setDataType(dataType)
 				.build();
 	}
-
-	/*   if you uncommit this you get class not found error */
-	/*public Particle.DustOptions something(ParticleDustOptions options) {
-		if (ServerVersion.newerThan(ServerVersion.v1_16))
-			return new Particle.DustTransition(Color.FUCHSIA, Color.AQUA, 1);
-		return null;
-	}*/
 
 }

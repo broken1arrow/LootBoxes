@@ -23,7 +23,7 @@ public class MakeLootTable {
 	private final RandomUntility random = Lootboxes.getInstance().getRandomUntility();
 
 	@Nullable
-	public ItemStack[] makeLottable(String table) {
+	public ItemStack[] makeLootTable(String table) {
 		List<ItemStack> itemStacks = new ArrayList<>();
 		List<ItemStack> backupItemstacks = new ArrayList<>();
 		int amountIfItemsMax = 0;
@@ -99,10 +99,10 @@ public class MakeLootTable {
 		if (lootData.getMaterial() == null) return null;
 
 		if (lootData.isHaveMetadata()) {
-			itemStack = this.itemData.getCacheItemData(lootData.getItemdataFileName(), lootData.getItemdataPath());
+			itemStack = this.itemData.getCacheItemData(lootData.getLootTableName(), lootData.getItemDataPath());
 
 		} else
 			matrial = lootData.getMaterial();
-		return CreateItemUtily.of(itemStack != null ? itemStack : matrial).setAmoutOfItems(amountOfItems).makeItemStack();
+		return CreateItemUtily.of(itemStack != null ? itemStack : matrial).setAmountOfItems(amountOfItems).makeItemStack();
 	}
 }

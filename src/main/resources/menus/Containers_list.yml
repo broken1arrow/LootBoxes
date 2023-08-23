@@ -28,7 +28,7 @@ Menus:
         lore:
           - "&aClick and type in your name"
           - "&aon the container and it need"
-          - "&unique name."
+          - "&aunique name."
       "39":
         action_type: Search
         material: PAPER
@@ -57,7 +57,7 @@ Menus:
           - "&2back."
       "44":
         action_type: Back_button
-        material: CHORUS_FRUIT
+        material: RED_STAINED_GLASS_PANE
         name: "&bBack"
         glow: true
         lore:

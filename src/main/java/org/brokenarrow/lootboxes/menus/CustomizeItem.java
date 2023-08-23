@@ -28,13 +28,13 @@ public class CustomizeItem extends MenuHolder {
 	private final LootItems lootItems = LootItems.getInstance();
 	private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettingsData();
 	private final MenuTemplate guiTemplate;
-	private final String lootTable;
+	private final String lootTableName;
 	private final String itemToEdit;
 	private LootData data;
-	public CustomizeItem(final String lootTable, final String itemToEdit) {
-		this.lootTable = lootTable;
+	public CustomizeItem(final String lootTableName, final String itemToEdit) {
+		this.lootTableName = lootTableName;
 		this.itemToEdit = itemToEdit;
-		this.data = lootItems.getLootData(lootTable, itemToEdit);
+		this.data = lootItems.getLootData(lootTableName, itemToEdit);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Customize_item");
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Customize_item"));
@@ -84,12 +84,12 @@ public class CustomizeItem extends MenuHolder {
 
 	public boolean run(MenuButtonData button, ClickType click) {
 
-		final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+		final LootData data = lootItems.getLootData(lootTableName, itemToEdit);
 		final LootData.Builder builder = data.getBuilder();
 		int amount;
 
 		if (button.isActionTypeEqual("Change_item")) {
-			new MaterialList(MenuKeys.CUSTOMIZEITEM_MENU, itemToEdit, lootTable, "").menuOpen(player);
+			new MaterialList(MenuKeys.CUSTOMIZEITEM_MENU, itemToEdit, lootTableName, "").menuOpen(player);
 		}
 		if (button.isActionTypeEqual("Change_chance")) {
 			amount = 0;
@@ -107,12 +107,12 @@ public class CustomizeItem extends MenuHolder {
 			if (chance < 0)
 				chance = 0;
 			builder.setChance(chance);
-			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-			this.data = lootItems.getLootData(lootTable, itemToEdit);
+			lootItems.setCachedLoot(lootTableName, itemToEdit, builder.build());
+			this.data = lootItems.getLootData(lootTableName, itemToEdit);
 			return true;
 		}
 		if (button.isActionTypeEqual("Enchant_item")) {
-			new Enchantments(lootTable, itemToEdit, "").menuOpen(player);
+			new Enchantments(lootTableName, itemToEdit, "").menuOpen(player);
 
 		}
 		if (button.isActionTypeEqual("Change_minimum")) {
@@ -130,8 +130,8 @@ public class CustomizeItem extends MenuHolder {
 			if (minimum < 0)
 				minimum = 0;
 			builder.setMinimum(minimum);
-			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-			this.data = lootItems.getLootData(lootTable, itemToEdit);
+			lootItems.setCachedLoot(lootTableName, itemToEdit, builder.build());
+			this.data = lootItems.getLootData(lootTableName, itemToEdit);
 			return true;
 		}
 		if (button.isActionTypeEqual("Change_maximum")) {
@@ -149,23 +149,25 @@ public class CustomizeItem extends MenuHolder {
 			if (maximum < 0)
 				maximum = 0;
 			builder.setMaximum(maximum);
-			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-			this.data = lootItems.getLootData(lootTable, itemToEdit);
+			lootItems.setCachedLoot(lootTableName, itemToEdit, builder.build());
+			this.data = lootItems.getLootData(lootTableName, itemToEdit);
 			return true;
 		}
 		if (button.isActionTypeEqual("Remove")) {
-			final Map<String, LootData> lootData = lootItems.getCachedTableContents(lootTable);
-			ItemData.getInstance().removeCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
-			if (lootData != null)
-				lootData.remove(itemToEdit);
-			lootItems.saveTask(lootTable);
-			new EditCreateItems(lootTable).menuOpen(player);
+			final Map<String, LootData> lootDataMap = lootItems.getCachedTableContents(lootTableName);
+			if (lootDataMap != null)
+					ItemData.getInstance().removeCacheItemData(lootTableName, data.getItemDataPath());
+
+			if (lootDataMap != null)
+				lootDataMap.remove(itemToEdit);
+			lootItems.saveTask(lootTableName);
+			new EditCreateItems(lootTableName).menuOpen(player);
 		}
 		if (button.isActionTypeEqual("Forward_button")) {}
 		if (button.isActionTypeEqual("Previous_button")) {}
 
 		if (button.isActionTypeEqual("Back_button")) {
-			new EditCreateItems(lootTable).menuOpen(player);
+			new EditCreateItems(lootTableName).menuOpen(player);
 		}
 		return false;
 	}

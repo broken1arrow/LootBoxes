@@ -82,7 +82,7 @@ public class SaveItems extends MenuHolder {
 						fileName = itemData.setCacheItemData(lootTable, item.getType() + "", item);
 					}
 				}
-				lootItems.addItems(lootTable, item, itemData.getFileName(), fileName, !fileName.isEmpty());
+				lootItems.addItems(lootTable, item, lootTable, fileName, !fileName.isEmpty());
 			}
 			lootItems.saveTask(lootTable);
 			new EditCreateItems(lootTable).menuOpen(player);

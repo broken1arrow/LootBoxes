@@ -15,7 +15,6 @@ import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +61,8 @@ public class LootItems extends YamlFileManager {
 					.setMinimum(0)
 					.setMaximum(1)
 					.setMaterial(Material.AIR)
-					.setItemdataPath("")
-					.setItemdataFileName("")
+					.setItemDataPath("")
+					.setLootTableName("")
 					.setHaveMetadata(false).build());
 			cachedLoot.put(table, data);
 		}
@@ -73,16 +72,15 @@ public class LootItems extends YamlFileManager {
 
 	public void setCachedLoot(final String lootTable, final String lootItem, final LootData lootData) {
 		Map<String, LootData> lootDataMap = cachedLoot.get(lootTable);
-		if (lootDataMap != null)
-			lootDataMap.put(lootItem, lootData);
-		else
-			lootDataMap = Collections.singletonMap(lootItem, lootData);
-
+		if (lootDataMap == null)
+			lootDataMap = new HashMap<>();
+		System.out.println("lootData is meta " + lootData.isHaveMetadata());
+		lootDataMap.put(lootItem, lootData);
 		cachedLoot.put(lootTable, lootDataMap);
 		saveTask(lootTable);
 	}
 
-	public String addItems(final String table, final ItemStack itemStack, final String metadatafileName, final String itemdataPath, final boolean haveMetadata) {
+	public String addItems(final String table, final ItemStack itemStack, final String lootTableName, final String itemDataPath, final boolean haveMetadata) {
 		Map<String, org.brokenarrow.lootboxes.builder.LootData> items = cachedLoot.get(table);
 
 		final String loot = getFirstAvailableName(table, itemStack.getType() + "");
@@ -94,8 +92,8 @@ public class LootItems extends YamlFileManager {
 				.setMinimum(1)
 				.setMaximum(itemStack.getAmount())
 				.setMaterial(itemStack.getType())
-				.setItemdataPath(itemdataPath)
-				.setItemdataFileName(metadatafileName)
+				.setItemDataPath(itemDataPath)
+				.setLootTableName(lootTableName)
 				.setHaveMetadata(haveMetadata).build());
 		cachedLoot.put(table, items);
 
@@ -157,10 +155,10 @@ public class LootItems extends YamlFileManager {
 				lootData.setMaterial((Material) object);
 				break;
 			case ITEM_DATA_PATH:
-				lootData.setItemdataPath((String) object);
+				lootData.setItemDataPath((String) object);
 				break;
 			case META_DATA_FILENAME:
-				lootData.setItemdataFileName((String) object);
+				lootData.setLootTableName((String) object);
 				break;
 			case HAVE_META_DATA:
 				lootData.setHaveMetadata((Boolean) object);
@@ -201,9 +199,12 @@ public class LootItems extends YamlFileManager {
 
 	@Override
 	public void saveDataToFile(final File file) {
+		System.out.println("settings file " + file);
 		final String fileName = getNameOfFile(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		final Map<String, LootData> settings = this.cachedLoot.get(fileName);
+		System.out.println("settings " + settings);
+		System.out.println("settings fileName " + fileName);
 		if (settings != null) {
 			customConfig.set("Items", null);
 			for (final String childrenKey : settings.keySet()) {
@@ -221,8 +222,8 @@ public class LootItems extends YamlFileManager {
 					customConfig.set("Items." + childrenKey + ".Minimum", data.getMinimum());
 					customConfig.set("Items." + childrenKey + ".Maximum", data.getMaximum());
 					customConfig.set("Items." + childrenKey + ".Metadata", data.isHaveMetadata());
-					customConfig.set("Items." + childrenKey + ".Itemdata", data.getItemdataPath());
-					customConfig.set("Items." + childrenKey + ".Itemdata_Filename", data.getItemdataFileName());
+					customConfig.set("Items." + childrenKey + ".Itemdata", data.getItemDataPath());
+					customConfig.set("Items." + childrenKey + ".Itemdata_Filename", data.getLootTableName());
 				}
 				try {
 					customConfig.save(file);
@@ -261,8 +262,8 @@ public class LootItems extends YamlFileManager {
 						.setMinimum(minimum)
 						.setMaximum(maximum)
 						.setMaterial(material)
-						.setItemdataPath(itemdata)
-						.setItemdataFileName(itemdataFileName)
+						.setItemDataPath(itemdata)
+						.setLootTableName(itemdataFileName)
 						.setHaveMetadata(haveMetadata).build());
 			}
 		final String path = GLOBAL_VALUES.getKey();
@@ -283,7 +284,7 @@ public class LootItems extends YamlFileManager {
 				.setMaterial(Material.AIR)
 				.setHaveMetadata(false).
 				build());
-		this.cachedLoot.put(getNameOfFile(String.valueOf(key)), data);
+		this.cachedLoot.put(getNameOfFile(key.getName()), data);
 	}
 
 	public enum YamlKey {

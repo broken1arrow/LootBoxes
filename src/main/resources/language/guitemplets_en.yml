@@ -74,7 +74,7 @@ Gui_Templets:
       Display_name: "&bBack"
       Enchant: true
       Slot: 44
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Lore:
         - ""
         - "&2Go back to"
@@ -122,7 +122,7 @@ Gui_Templets:
       Display_name: "&bGo back to menu"
       Enchant: true
       Slot: 44
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Lore:
         - ""
         - "&2Go back to previous menu"
@@ -212,7 +212,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -266,7 +266,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 4
       Lore:
         - ""
@@ -353,7 +353,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -416,7 +416,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -490,7 +490,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -568,7 +568,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -752,7 +752,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -851,7 +851,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -902,7 +902,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -989,7 +989,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1071,7 +1071,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1134,7 +1134,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1199,7 +1199,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1279,7 +1279,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1318,7 +1318,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1407,7 +1407,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1471,7 +1471,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1527,7 +1527,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1585,7 +1585,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""
@@ -1762,7 +1762,7 @@ Gui_Templets:
     Back_button:
       Display_name: "&bBack"
       Enchant: true
-      Icon: CHORUS_FRUIT
+      Icon: RED_STAINED_GLASS_PANE
       Slot: 44
       Lore:
         - ""

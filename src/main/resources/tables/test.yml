@@ -2,7 +2,7 @@ Global_Values:
   Minimum: 1
   Maximum: 15
 Items:
-  music_disc_11:
+  stone:
     Chance: 1
     Minimum: 5
     Maximum: 1

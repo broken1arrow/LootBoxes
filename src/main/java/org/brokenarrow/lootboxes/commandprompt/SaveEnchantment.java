@@ -60,27 +60,28 @@ public class SaveEnchantment extends SimpleConversation {
 
 			}
 			final LootData data = lootItems.getLootData(lootTable, itemToEdit);
-			String fileName = data.getItemdataFileName();
-			final String itemdataPath = data.getItemdataPath();
-			ItemStack item = itemData.getCacheItemData(fileName, itemdataPath);
+
+			final String itemDataPath = data.getItemDataPath();
+			ItemStack item = itemData.getCacheItemData(lootTable, itemDataPath);
 			final Map<Enchantment, Tuple<Integer, Boolean>> enchantmentMap = new HashMap<>();
 			final String itemKeyPath;
 			enchantmentMap.put(enchantment, new Tuple<>(level, false));
+			System.out.println("enchantmentMap " + enchantmentMap);
 			if (item == null) {
-				item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantmentMap, false).makeItemStack();
-				itemKeyPath = itemData.setCacheItemData(lootTable, item.getType() + "", item);
-				if (fileName == null)
-					fileName = itemData.getFileName();
+				System.out.println("data.getMaterial() " + data.getMaterial());
+				System.out.println("data.getMaterial() " + lootTable);
+				ItemStack itemStack =  item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantmentMap, false).setCopyOfItem(true).makeItemStack();
+				itemKeyPath = itemData.setCacheItemData(lootTable, item.getType() + "", itemStack);
 			} else {
 				if (item.getItemMeta() != null && !item.getItemMeta().getEnchants().isEmpty())
 					for (final Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet())
 						enchantmentMap.put(entry.getKey(), new Tuple<>(entry.getValue(), false));
 
-				item = CreateItemUtily.of(item).addEnchantments(enchantmentMap, true).makeItemStack();
-				itemKeyPath = itemData.updateCacheItemData(fileName, itemdataPath, item);
+				ItemStack itemStack = CreateItemUtily.of(item).addEnchantments(enchantmentMap, true).setCopyOfItem(true).makeItemStack();
+				itemKeyPath = itemData.updateCacheItemData(lootTable, itemDataPath, itemStack);
 			}
-			final LootData.Builder builder = lootItems.getLootData(lootTable, itemToEdit).getBuilder();
-			builder.setHaveMetadata(true).setItemdataFileName(fileName).setItemdataPath(itemKeyPath);
+			final LootData.Builder builder = data.getBuilder();
+			builder.setHaveMetadata(true).setLootTableName(lootTable).setItemDataPath(itemKeyPath);
 
 			SAVE_ENCHANTMENT_CONFIRM.sendMessage(getPlayer(context), input);
 

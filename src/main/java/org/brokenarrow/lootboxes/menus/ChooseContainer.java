@@ -60,6 +60,7 @@ public class ChooseContainer extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
 				if (object instanceof Material) {
+
 					TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
 					player.getInventory().addItem(CreateItemUtily.of(object,
 									TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), TranslatePlaceHolders.translatePlaceholdersLore(setting.getPlaceContainerLore())))

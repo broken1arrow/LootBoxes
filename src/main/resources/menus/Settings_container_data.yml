@@ -158,7 +158,7 @@ Menus:
           - "&aCurrently set to: &6{0}"
       "44":
         action_type: Back_button
-        material: CHORUS_FRUIT
+        material: RED_STAINED_GLASS_PANE
         name: "&bBack"
         glow: true
         lore:

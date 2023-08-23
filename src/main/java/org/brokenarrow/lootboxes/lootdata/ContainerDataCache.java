@@ -9,6 +9,7 @@ import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.brokenarrow.lootboxes.untlity.particles.SpigotParticle;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Effect;
@@ -115,12 +116,16 @@ public class ContainerDataCache extends YamlFileManager {
 		return null;
 	}
 
-	public List<Particle> getParticlesList(final String container) {
+	public List<?> getParticlesList(final String container) {
 		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
 		if (containerDataBuilder != null) {
 
-			Map<Object, ParticleEffect> list = containerDataBuilder.getParticleEffects();
-			return list.values().stream().map(ParticleEffect::getParticle).collect(Collectors.toList());
+			Map<Object, ParticleEffect> particleEffects = containerDataBuilder.getParticleEffects();
+			if (particleEffects != null)
+				if (org.broken.arrow.nbt.library.utility.ServerVersion.atLeast(org.broken.arrow.nbt.library.utility.ServerVersion.v1_13))
+					return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
+				else
+					return particleEffects.values().stream().map(ParticleEffect::getEffect).collect(Collectors.toList());
 		}
 		return new ArrayList<>();
 	}
@@ -142,7 +147,7 @@ public class ContainerDataCache extends YamlFileManager {
 		if (containerDataBuilder == null) return false;
 
 		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
-		if (particleEffect.isEmpty()) return false;
+		if (particleEffect == null || particleEffect.isEmpty()) return false;
 
 		return particleEffect.containsKey(particle);
 	}
@@ -151,7 +156,7 @@ public class ContainerDataCache extends YamlFileManager {
 		if (particle == null) return false;
 
 		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
-		if (particleEffect.isEmpty()) return false;
+		if (particleEffect == null || particleEffect.isEmpty()) return false;
 
 		return particleEffect.containsKey(particle);
 	}
@@ -172,7 +177,7 @@ public class ContainerDataCache extends YamlFileManager {
 		if (particle == null) return;
 
 		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
-		if (particleEffect.isEmpty()) return;
+		if (particleEffect == null || particleEffect.isEmpty()) return;
 
 		particleEffect.remove(particle);
 		addContainerToEffectList(containerDataBuilder);
@@ -181,7 +186,8 @@ public class ContainerDataCache extends YamlFileManager {
 	public void setParticleEffects(@NotNull final String containerDataName, @NotNull Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
 		ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataName);
 		final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-		final Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+		Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+		if (particleEffect == null) particleEffect = new HashMap<>();
 
 		particleEffect.put(particle, particleBuilder.build());
 		builder.setParticleEffects(particleEffect);
@@ -449,9 +455,9 @@ public class ContainerDataCache extends YamlFileManager {
 				if (mainKey == null) continue;
 				ContainerDataBuilder containerDataBuilder;
 				if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_13))
-					containerDataBuilder = configuration.getObject("Data." + mainKey, ContainerDataBuilder.class);
-				else
 					containerDataBuilder = configuration.getSerializable("Data." + mainKey, ContainerDataBuilder.class);
+				else
+					containerDataBuilder = (ContainerDataBuilder) configuration.get("Data." + mainKey, ContainerDataBuilder.class);
 				if (containerDataBuilder == null) continue;
 
 				if (mainKey.contains(" "))
@@ -474,7 +480,7 @@ public class ContainerDataCache extends YamlFileManager {
 			if (particle instanceof Particle) {
 
 				final Particle part = (Particle) particle;
-				builder.setParticle(part).setDataType(part.getDataType());
+				builder.setSpigotParticle(new SpigotParticle(part)).setDataType(part.getDataType());
 			} else if (particle instanceof Effect) {
 
 				final Effect part = (Effect) particle;

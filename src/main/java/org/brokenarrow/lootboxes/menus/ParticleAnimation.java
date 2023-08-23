@@ -14,6 +14,7 @@ import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
+import org.brokenarrow.lootboxes.untlity.particles.SpigotParticle;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -23,32 +24,33 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
 import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
-import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.getEffectType;
+import static org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity.getEffectType;
 
 public class ParticleAnimation extends MenuHolder {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-	private final ParticleEffectList particleEffectList = Lootboxes.getInstance().getParticleEffectList();
 	private final SpawnContainerEffectsTask spawnContainerEffectsTask = Lootboxes.getInstance().getSpawnContainerEffectsTask();
 	private final String container;
 	private final MenuTemplate guiTemplate;
+	private final ParticleEffectList particleEffectList;
 
 	public ParticleAnimation(final String container, final String particleToSearchFor) {
 		super(Lootboxes.getInstance().getParticleEffectList().getParticleList(particleToSearchFor));
 		this.container = container;
-
+		this.particleEffectList = Lootboxes.getInstance().getParticleEffectList();
 		//gui = new GuiTemplesYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
 
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_animation");
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Particle_animation"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
-			setMenuOpenSound(guiTemplate.getSound());
+			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
+			setMenuOpenSound(null);
+			//setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Particle_animation'.");
@@ -59,11 +61,13 @@ public class ParticleAnimation extends MenuHolder {
 	public MenuButton getFillButtonAt(@NotNull Object object) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
 		if (button == null) return null;
-		return new MenuButton() {
+		//ParticleEffectList particleEffectList = null;
+		//particleEffectList = Lootboxes.getInstance().getParticleEffectList();
 
+		return new MenuButton() {
 			@Override
 			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (object instanceof Particle || object instanceof Effect) {
+				if (particleEffectList.checkIfParticleOrEffect(object)) {
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					final ContainerDataBuilder.Builder builder = data.getBuilder();
 					if (click.isRightClick()) {
@@ -84,7 +88,7 @@ public class ParticleAnimation extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-				if (object instanceof Particle || object instanceof Effect) {
+				if (particleEffectList.checkIfParticleOrEffect(object)) {
 
 					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 					boolean containsEffect = containerDataCache.containsParticleEffect(data, object);
@@ -157,16 +161,16 @@ public class ParticleAnimation extends MenuHolder {
 	}
 
 	public Map<Object, ParticleEffect> setParticleData(Player player, ContainerDataBuilder data, String container, Object object) {
-		if ((object instanceof Particle && ((Particle) object).getDataType() != Void.class) || getEffectType(String.valueOf(object)) != getEffectType("PARTICLE"))
+		if ((particleEffectList.checkIfParticle(object) && !particleEffectList.checkParticleClass(object, Void.class)) || getEffectType(String.valueOf(object)) != getEffectType("PARTICLE"))
 			new ParticleSettings(container, object).menuOpen(player);
 		Map<Object, ParticleEffect> particleEffect = data.getParticleEffects();
 		ParticleEffect.Builder particleBuilder = new ParticleEffect.Builder();
 
-		if (!particleEffect.isEmpty())
-			player.sendMessage("Your added effects before " + particleEffect.values().stream().map(effect -> effect.getParticle() != null ? effect.getParticle() : effect.getEffect()).collect(Collectors.toList()) + " ,new effect added " + object);
+		if (particleEffect != null && !particleEffect.isEmpty())
+			player.sendMessage("Your added effects before " + particleEffectList.getListOfParticles(particleEffect.values()) + " ,new effect added " + object);
 
-		if (object instanceof Particle) {
-			particleBuilder.setParticle((Particle) object);
+		if (particleEffectList.checkIfParticle(object)) {
+			particleBuilder.setSpigotParticle(new SpigotParticle(((Particle) object)));
 			particleBuilder.setDataType(((Particle) object).getDataType());
 		}
 		if (object instanceof Effect) {
@@ -176,9 +180,11 @@ public class ParticleAnimation extends MenuHolder {
 
 		if (containerDataCache.containsParticleEffect(data, object)) {
 			player.sendMessage("You not change this " + object + " effect from the the old one in list");
-		} else
+		} else {
+			if (particleEffect == null)
+				particleEffect = new HashMap<>();
 			particleEffect.put(object, particleBuilder.build());
-
+		}
 		return particleEffect;
 	}
 

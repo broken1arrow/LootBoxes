@@ -11,19 +11,26 @@ import java.util.stream.Stream;
 public class EnchantmentList {
 
 	private List<Enchantment> enchantments = new ArrayList<>();
+	private boolean legacy;
 
 	public EnchantmentList() {
 		try {
 			this.enchantments = Stream.of(Enchantment.values())
 					.sorted(Comparator.comparing(o -> o.getKey().getKey())).collect(Collectors.toList());
 		} catch (NoSuchMethodError ignored) {
+			this.enchantments = Stream.of(Enchantment.values())
+					.sorted(Comparator.comparing(Enchantment::getName)).collect(Collectors.toList());
+			legacy = true;
 		}
 
 	}
 
 	public List<Enchantment> getEnchantments(String enchantMentsToSearchFor) {
 		if (enchantMentsToSearchFor != null && !enchantMentsToSearchFor.isEmpty())
-			return enchantments.stream().filter((enchantment) -> enchantment.getKey().getKey().contains(enchantMentsToSearchFor)).sorted(Comparator.comparing(o -> o.getKey().getKey())).collect(Collectors.toList());
+			if (legacy)
+				return enchantments.stream().filter((enchantment) -> enchantment.getName().contains(enchantMentsToSearchFor)).sorted(Comparator.comparing(Enchantment::getName)).collect(Collectors.toList());
+			else
+				return enchantments.stream().filter((enchantment) -> enchantment.getKey().getKey().contains(enchantMentsToSearchFor)).sorted(Comparator.comparing(o -> o.getKey().getKey())).collect(Collectors.toList());
 		return enchantments;
 	}
 }

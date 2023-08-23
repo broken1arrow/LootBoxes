@@ -17,7 +17,7 @@ Menus:
           lore:
           - "&aEnchant the item"
         active:
-          material: BOOK
+          material: ENCHANTED_BOOK
           name: "&bEnchant the item with {1}"
           glow: true
           lore:
@@ -54,7 +54,7 @@ Menus:
           - "&2back."
       "44":
         action_type: Back_button
-        material: CHORUS_FRUIT
+        material: RED_STAINED_GLASS_PANE
         name: "&bBack"
         glow: true
         lore:

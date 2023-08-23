@@ -4,10 +4,9 @@ import com.google.common.base.Enums;
 import org.broken.arrow.serialize.library.utility.converters.LocationSerializer;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
-import org.bukkit.Effect;
+import org.brokenarrow.lootboxes.untlity.particles.ParticlesConversion;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 import static org.broken.arrow.serialize.library.utility.converters.ObjectConverter.getBoolean;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castList;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
-import static org.brokenarrow.lootboxes.untlity.ConvetParticlesUntlity.*;
 
 
 public final class ContainerDataBuilder implements ConfigurationSerializable {
@@ -78,7 +76,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return lootTableLinked;
 	}
 
-	@NotNull
+	@Nullable
 	public Map<Object, ParticleEffect> getParticleEffects() {
 		return particleEffects;
 	}
@@ -86,9 +84,10 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	@Nullable
 	public ParticleEffect getParticleEffect(final Object o) {
 		if (o == null) return null;
-		if (this.getParticleEffects().isEmpty()) return null;
+		Map<Object, ParticleEffect> particleEffects = this.getParticleEffects();
+		if (particleEffects == null || particleEffects.isEmpty()) return null;
 
-		return this.getParticleEffects().get(o);
+		return particleEffects.get(o);
 	}
 
 	public Material getIcon() {
@@ -360,7 +359,10 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Random_loot_faceing", this.randomLootContainerFacing + "");
 		keysData.put("Display_name", this.displayname);
 		keysData.put("Lore", this.lore);
-		keysData.put("Particle_effect", this.particleEffects.entrySet().stream().collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
+		if (this.particleEffects == null)
+			keysData.put("Particle_effect", new HashMap<>());
+		else
+			keysData.put("Particle_effect", this.particleEffects.entrySet().stream().filter(effect-> effect.getKey() != null).collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
 		keysData.put("Spawn_with_cooldown", this.spawningContainerWithCooldown);
 		keysData.put("Enchant", this.enchant);
 		keysData.put("Random_spawn", this.randomSpawn);
@@ -423,13 +425,14 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		if (material == null) {
 			material = Material.CHEST;
 		}
+		ParticlesConversion particlesConversion = new ParticlesConversion();
 
 		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder()
 				.setContainerDataLinkedToLootTable(lootTableLinked)
 				.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 				.setCooldown(cooldown)
-				.setParticleEffects(particles != null ? particles.entrySet().stream().collect(Collectors.toMap(effectEntry -> getParticleOrEffect(effectEntry.getKey()), Map.Entry::getValue)) :
-						convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? convertParticleEffectList(particleEffectList) : convertStringList(particleEffect)))
+				.setParticleEffects(particles != null ? particles.entrySet().stream().collect(Collectors.toMap(effectEntry -> particlesConversion.getParticleOrEffect(effectEntry.getKey()), Map.Entry::getValue)) :
+						particlesConversion.convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? particlesConversion.convertParticleEffectList(particleEffectList) : particlesConversion.convertStringList(particleEffect)))
 				.setEnchant(enchant)
 				.setIcon(material)
 				.setRandomLootContainerItem(random_loot_container != null ? random_loot_container : Material.CHEST)
@@ -448,28 +451,6 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				.setSpawnLocation(LocationSerializer.deserializeLoc(map.get("Spawn-point")));
 
 		return builder.build();
-	}
-
-	public static Map<Object, ParticleEffect> convertToParticleEffect(List<?> objectList) {
-		Map<Object, ParticleEffect> map = new HashMap<>();
-		if (objectList == null || objectList.isEmpty()) return map;
-
-		for (final Object particle : objectList) {
-			final ParticleEffect.Builder builder = new ParticleEffect.Builder();
-			if (particle instanceof Particle) {
-
-				final Particle part = (Particle) particle;
-				builder.setParticle(part).setDataType(part.getDataType());
-			} else if (particle instanceof Effect) {
-
-				final Effect part = (Effect) particle;
-				builder.setEffect(part).setDataType(part.getData());
-			}
-			if (particle instanceof Particle || particle instanceof Effect)
-				map.put(particle, builder.build());
-		}
-
-		return map;
 	}
 
 }

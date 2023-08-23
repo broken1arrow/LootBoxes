@@ -5,6 +5,7 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -143,11 +144,11 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 				if (item == null) continue;
 
 				if (click.isLeftClick() && item.hasItemMeta()) {
-					//lootItems. getSettings().get(lootTable).get()
-					itemDataPath = itemData.setCacheItemData(lootTable, item.getType() + "", item);
+					final LootData data = lootItems.getLootData(lootTable, item.getType() + "");
+					itemDataPath = itemData.setCacheItemData(	lootTable, item.getType() + "", item);
 
 				}
-				lootItems.addItems(lootTable, item, itemData.getItemDataPath(lootTable), itemDataPath, !itemDataPath.isEmpty());
+				lootItems.addItems(lootTable, item, lootTable, itemDataPath, !itemDataPath.isEmpty());
 			}
 			itemData.saveTask(lootTable);
 			lootItems.saveTask(lootTable);

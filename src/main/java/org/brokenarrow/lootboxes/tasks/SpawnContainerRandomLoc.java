@@ -109,7 +109,7 @@ public class SpawnContainerRandomLoc {
 		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
 		if (containerData.isRandomSpawn()) {
-			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
 			if (stacks == null) {
 				return;
 			}
@@ -130,7 +130,7 @@ public class SpawnContainerRandomLoc {
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
 			ContainerData container = entry.getValue();
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
-				ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+				ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
 				if (stacks == null) {
 					return;
 				}

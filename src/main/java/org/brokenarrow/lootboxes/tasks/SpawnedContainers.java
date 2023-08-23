@@ -70,7 +70,7 @@ public class SpawnedContainers {
 			sendDebug("spawnContainer, location: " + location, this.getClass());
 			sendDebug("spawnContainer, containerData: " + containerData1, this.getClass());
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
-				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLottable(lootTableLinked);
+				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
 				if (item == null) {
 					return false;
 				}

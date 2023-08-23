@@ -55,7 +55,7 @@ public class RandomKey {
 		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
 				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
 
-		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmoutOfItems(amountOfItems).makeItemStack();
+		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();
 	}
 
 	private int randomNumber(KeyMobDropData keyMobDropData) {
@@ -64,6 +64,6 @@ public class RandomKey {
 
 	private ItemStack createItem(Material material, int amountOfItems) {
 
-		return CreateItemUtily.of(material).setAmoutOfItems(amountOfItems).makeItemStack();
+		return CreateItemUtily.of(material).setAmountOfItems(amountOfItems).makeItemStack();
 	}
 }

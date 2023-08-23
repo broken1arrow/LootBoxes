@@ -73,9 +73,11 @@ public class EditCreateItems extends MenuHolder {
 					if (data != null) {
 						final ItemStack itemStack;
 						if (data.isHaveMetadata()) {
-							itemStack = itemData.getCacheItemData(data.getItemdataFileName(), data.getItemdataPath());
-						} else
+							itemStack = itemData.getCacheItemData(lootTable, data.getItemDataPath());
+						} else {
+							if (data.getMaterial() == null) return null;
 							itemStack = new ItemStack(data.getMaterial());
+						}
 						if (itemStack == null) return null;
 						final ItemStack clonedItem = itemStack.clone();
 						//final GuiTempletsYaml gui = guiTemplets.menuKey("Item_List").placeholders(
