@@ -8,7 +8,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
-import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
+import org.brokenarrow.lootboxes.commandprompt.ChangeDisplayNameLore;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
@@ -112,10 +112,10 @@ public class EditKey extends MenuHolder {
 			return true;
 		}
 		if (button.isActionTypeEqual("Alter_display_name")) {
-			new ChangeDisplaynameLore(EDITKEY, containerData, keyName, false).start(player);
+			new ChangeDisplayNameLore(EDITKEY, containerData, keyName, false).start(player);
 		}
 		if (button.isActionTypeEqual("Alter_lore")) {
-			new ChangeDisplaynameLore(EDITKEY, containerData, keyName, true).start(player);
+			new ChangeDisplayNameLore(EDITKEY, containerData, keyName, true).start(player);
 
 		}
 		if (button.isActionTypeEqual("Mob_drop_key")) {
