@@ -56,13 +56,29 @@ public class MakeLootTable {
 	private ItemStack[] setBackupItems(List<ItemStack> backupItemstacks) {
 		if (this.minimumAmountOfItems <= 0) return new ItemStack[0];
 
-		List<ItemStack> itemstacks = new ArrayList<>();
+		List<ItemStack> itemStacks = new ArrayList<>();
 		int size = backupItemstacks.size();
 		int amount = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 1);
-		for (int i = 0; i < amount; i++) {
-			itemstacks.add(backupItemstacks.get(random.randomIntNumber(this.minimumAmountOfItems, size - 1)));
+		if (!backupItemstacks.isEmpty()) {
+			if (this.minimumAmountOfItems + 1 >= size) {
+				if (size == 1)
+					itemStacks.add(backupItemstacks.get(size));
+				else if (size > 1) {
+					int randomStack = Math.max(random.nextRandomInt(size) + 1, 1);
+					for (int i = 0; i < randomStack; i++) {
+						int randomIndex = random.nextRandomInt(size);
+						ItemStack randomItem = backupItemstacks.get(randomIndex);
+						if (randomItem != null) {
+							itemStacks.add(randomItem);
+						}
+					}
+				}
+			} else
+				for (int i = 0; i < amount; i++) {
+					itemStacks.add(backupItemstacks.get(random.randomIntNumber(this.minimumAmountOfItems, Math.max(this.minimumAmountOfItems + 1, size - 1))));
+				}
 		}
-		return itemstacks.toArray(new ItemStack[itemstacks.size() + 1]);
+		return itemStacks.toArray(new ItemStack[itemStacks.size() + 1]);
 	}
 
 	/**
@@ -74,7 +90,7 @@ public class MakeLootTable {
 	private boolean checkAir(List<ItemStack> itemStacks) {
 		if (itemStacks == null) return true;
 
-		return itemStacks.stream().allMatch(item -> item == null || item.getType().isAir());
+		return itemStacks.stream().allMatch(item -> item == null || item.getType() == Material.AIR);
 	}
 
 	private boolean setGlobalValues(String table) {
