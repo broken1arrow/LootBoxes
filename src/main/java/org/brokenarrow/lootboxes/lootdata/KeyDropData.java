@@ -182,10 +182,10 @@ public class KeyDropData extends YamlFileManager {
 
 				final Map<String, KeyMobDropData> data = new HashMap<>();
 				for (final String childrenKey : keys.getKeys(false)) {
-					final int chance = configuration.getInt("Keys_Data."+containerDataKey  + "." + childrenKey + ".Chance");
-					final int minimum = configuration.getInt("Keys_Data."+containerDataKey  + "." + "." + childrenKey + ".Minimum");
-					final int maximum = configuration.getInt("Keys_Data."+containerDataKey  + "." + "." + childrenKey + ".Maximum");
-					final List<EntityType> entityList = convertStringToEntityType(configuration.getStringList("Keys_Data."+containerDataKey  + "." + "." + childrenKey + ".Entity_list"));
+					final int chance = configuration.getInt("Keys_Data." + containerDataKey + "." + childrenKey + ".Chance");
+					final int minimum = configuration.getInt("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Minimum");
+					final int maximum = configuration.getInt("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Maximum");
+					final List<EntityType> entityList = convertStringToEntityType(configuration.getStringList("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Entity_list"));
 					if (entityList != null && !entityList.isEmpty()) {
 						for (final EntityType entityType : entityList)
 							this.entityCache.put(containerDataKey + "_" + childrenKey + "#" + entityType, new EntityKeyData(childrenKey, containerDataKey));

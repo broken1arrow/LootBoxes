@@ -123,7 +123,7 @@ Menus:
             - "&2Get list of containers"
             - "&2linked to {1}"
       "32":
-        action_type: Linked_containers_add_remove
+        action_type: Add_remove_containers
         active:
           action_type: Add_remove_off
           material: BARRIER
