@@ -30,8 +30,6 @@ public class KeyDropData extends YamlFileManager {
 	private static final KeyDropData instance = new KeyDropData();
 	private final Map<String, Map<String, KeyMobDropData>> cachedKeyData = new HashMap<>();
 	private final Map<String, EntityKeyData> entityCache = new HashMap<>();
-	private File customConfigFile;
-	private FileConfiguration configuration;
 
 	public KeyDropData() {
 		super(Lootboxes.getInstance(), "keys/keysDropData.yml");
@@ -135,8 +133,6 @@ public class KeyDropData extends YamlFileManager {
 	public void saveDataToFile(final File file) {
 		final String fileName = getNameOfFile(file.getName());
 		FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-		//final Map<String, KeyMobDropData> settings = this.cachedKeyData.get(fileName);
-		//if (settings != null) {
 		configuration.set("Keys_Data", null);
 		for (final Entry<String, Map<String, KeyMobDropData>> settings : this.cachedKeyData.entrySet()) {
 			for (final Entry<String, KeyMobDropData> mobDropDataEntry : settings.getValue().entrySet()) {

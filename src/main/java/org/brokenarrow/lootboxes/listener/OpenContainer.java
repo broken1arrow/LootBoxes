@@ -62,7 +62,7 @@ public class OpenContainer implements Listener {
 						continue;
 					String lootTable = keysData.getLootTableLinked();
 					if (lootTable == null || lootTable.isEmpty()) {
-						ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContinerData());
+						ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerData());
 						if (containerDataCache != null) {
 							lootTable = containerDataCache.getLootTableLinked();
 						}
@@ -82,7 +82,7 @@ public class OpenContainer implements Listener {
 
 			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(containerDataName);
 			if (containerData == null) {
-				containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
+				containerData = containerDataCache.getCacheContainerData(locationData.getContainerData());
 			}
 
 			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);

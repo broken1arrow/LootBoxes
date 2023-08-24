@@ -48,7 +48,7 @@ public class SpawnContainerEffects implements HeavyLoad {
 				if (this.effectType != null && !this.effectType.isEmpty())
 					effectType = this.effectType;
 				else
-					effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContinerData());
+					effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContainerData());
 				if (effectType == null)
 					plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
 				effect(containerLocation, effectType);

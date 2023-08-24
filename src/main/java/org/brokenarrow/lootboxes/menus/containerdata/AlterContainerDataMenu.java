@@ -7,7 +7,7 @@ import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.SettingsData;
-import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
+import org.brokenarrow.lootboxes.commandprompt.ChangeDisplayNameLore;
 import org.brokenarrow.lootboxes.commandprompt.ContainerDataLinkedLootTable;
 import org.brokenarrow.lootboxes.commandprompt.SpecifyTime;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -122,7 +122,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 				}
 				break;
 			case "Change_displayName":
-				new ChangeDisplaynameLore(ALTER_CONTAINER_DATA_MENU, containerDataName, "", false).start(player);
+				new ChangeDisplayNameLore(ALTER_CONTAINER_DATA_MENU, containerDataName, "", false).start(player);
 				break;
 			case "Keys_to_open_container":
 				new EditKeysToOpen(containerDataName).menuOpen(player);
@@ -189,7 +189,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 			new ParticleAnimation(containerDataName, "").menuOpen(player);
 		}
 		if (button.isActionTypeEqual("Change_displayName")) {
-			new ChangeDisplaynameLore(ALTER_CONTAINER_DATA_MENU, containerDataName, "", false).start(player);
+			new ChangeDisplayNameLore(ALTER_CONTAINER_DATA_MENU, containerDataName, "", false).start(player);
 		}
 		if (button.isActionTypeEqual("Keys_to_open_container")) {
 			new EditKeysToOpen(containerDataName).menuOpen(player);

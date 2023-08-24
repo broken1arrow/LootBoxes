@@ -26,19 +26,19 @@ import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
-public class ChangeDisplaynameLore extends SimpleConversation {
+public class ChangeDisplayNameLore extends SimpleConversation {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-	private final MenuKeys menuAcces;
+	private final MenuKeys menuAccess;
 	private final String container;
 	private final String keyName;
-	private final boolean setlore;
+	private final boolean setLore;
 
-	public ChangeDisplaynameLore(MenuKeys menuAcces, String containerData, String keyName, boolean setlore) {
+	public ChangeDisplayNameLore(MenuKeys menuAccess, String containerData, String keyName, boolean setLore) {
 		super(Lootboxes.getInstance());
-		this.menuAcces = menuAcces;
+		this.menuAccess = menuAccess;
 		this.container = containerData;
 		this.keyName = keyName;
-		this.setlore = setlore;
+		this.setLore = setLore;
 	}
 
 	@Override
@@ -50,10 +50,10 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
-			if (setlore) {
+			if (setLore) {
 				return CHANGE_DISPLAYNAME_AND_LORE_LORE.languageMessagePrefix();
 			} else {
-				if (menuAcces == ALTER_CONTAINER_DATA_MENU)
+				if (menuAccess == ALTER_CONTAINER_DATA_MENU)
 					return CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME.languageMessages();
 				return CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME.languageMessagePrefix();
 			}
@@ -62,10 +62,10 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-			if (menuAcces == EDITKEY) {
-				menuEditkey(getPlayer(context), input);
+			if (menuAccess == EDITKEY) {
+				menuEditKey(getPlayer(context), input);
 			}
-			if (menuAcces == ALTER_CONTAINER_DATA_MENU) {
+			if (menuAccess == ALTER_CONTAINER_DATA_MENU) {
 				ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 				ContainerDataBuilder.Builder builder = data.getBuilder().setDisplayname(input);
 
@@ -79,9 +79,9 @@ public class ChangeDisplaynameLore extends SimpleConversation {
 
 	}
 
-	private void menuEditkey(Player player, String input) {
-		if (menuAcces == EDITKEY) {
-			if (setlore) {
+	private void menuEditKey(Player player, String input) {
+		if (menuAccess == EDITKEY) {
+			if (setLore) {
 				org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCache.getCacheKey(container, keyName);
 				List<String> loreList = keysData.getLore();
 				if (input.contains("row-")) {

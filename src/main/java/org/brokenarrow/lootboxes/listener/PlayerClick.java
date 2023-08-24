@@ -65,7 +65,7 @@ public class PlayerClick implements Listener {
 				LocationData locationData = containerDataCache.getLocationData(location);
 
 				if (locationData != null) {
-					ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContinerData());
+					ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerData());
 					event.setCancelled(true);
 					return;
 				}
@@ -134,7 +134,7 @@ public class PlayerClick implements Listener {
 			if (itemMetadata != null) return;
 
 			if (locationData != null && action == Action.LEFT_CLICK_BLOCK) {
-				ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContinerData());
+				ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerData());
 				event.setCancelled(true);
 				return;
 			}

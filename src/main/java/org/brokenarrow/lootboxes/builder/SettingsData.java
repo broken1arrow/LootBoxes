@@ -6,8 +6,8 @@ public final class SettingsData {
 	private final String language;
 	private final String linkToolItem;
 	private final String linkToolDisplayName;
-	private final List<String> linkToolLore;
 	private final String placeContainerDisplayName;
+	private final List<String> linkToolLore;
 	private final List<String> placeContainerLore;
 	private final int amountOfBlocksBelowSurface;
 	private final int blocksAwayFromPlayer;
@@ -20,7 +20,7 @@ public final class SettingsData {
 	private final boolean randomContainerSpawn;
 	private final boolean removeContainerWhenPlayerClose;
 	private final boolean debug;
-	private boolean singleMenuFile;
+	private final boolean singleMenuFile;
 	private final Builder builder;
 
 	private SettingsData(Builder builder) {

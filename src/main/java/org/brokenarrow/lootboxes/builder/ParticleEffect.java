@@ -20,7 +20,6 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	private final Material material;
 	private final int data;
 	private final Class<?> dataType;
-
 	private final ParticleDustOptions particleDustOptions;
 	private final Builder builder;
 

@@ -44,7 +44,7 @@ public class CloseContainer implements Listener {
 		if (inventory != null) {
 			LocationData locationData = containerDataCache.getLocationData(location);
 			if (locationData == null) return;
-			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(locationData.getContinerData());
+			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(locationData.getContainerData());
 			if (containerData == null) return;
 
 			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && containerData.isSpawningContainerWithCooldown()) {
