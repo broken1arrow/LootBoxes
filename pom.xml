@@ -13,7 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.57</utility-library>
+        <utility-library>0.58</utility-library>
     </properties>
     <repositories>
         <!--
