@@ -9,8 +9,8 @@ Menus:
     buttons:
       "10":
         action_type: Change_item
-        material: GRASS_BLOCK
-        name: "&bChange the item {0}"
+        material: DIRT
+        name: "&bChange the item: {0}"
         glow: true
         lore:
         - "&aChange the item type"

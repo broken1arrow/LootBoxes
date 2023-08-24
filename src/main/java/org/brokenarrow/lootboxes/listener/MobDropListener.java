@@ -17,6 +17,7 @@ public class MobDropListener implements Listener {
 		final LivingEntity entity = event.getEntity();
 		if (entity.getKiller() != null && !(entity instanceof Player)) {
 			ItemStack[] itemStacks = new RandomKey().makeRandomAmountOfItems(entity.getType());
+
 			if (itemStacks != null)
 				for (ItemStack itemStack : itemStacks) {
 					if (itemStack == null) continue;

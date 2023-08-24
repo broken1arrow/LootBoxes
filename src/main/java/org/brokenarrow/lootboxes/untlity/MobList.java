@@ -1,6 +1,5 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import com.google.common.base.Enums;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -37,15 +36,35 @@ public class MobList {
 			else if (type == EntityType.MUSHROOM_COW)
 				name = "MOOSHROOM_SPAWN_EGG";
 
-			return Enums.getIfPresent(Material.class, name).orNull();
-
+			return CreateItemUtily.of(name).makeItemStack().getType();
 		} catch (final Throwable throwable) {
 			throwable.printStackTrace();
 			//Debugger.saveError(throwable, "Something went wrong while creating spawn egg!", "Type: " + type);
 		}
-		return Material.SHEEP_SPAWN_EGG;
+		return CreateItemUtily.of("SHEEP_SPAWN_EGG").makeItemStack().getType();
 	}
+	public String getSpawnEggType(final EntityType type) {
+		try {
 
+			String name = type.toString() + "_SPAWN_EGG";
+
+			// Special cases
+			if (type.name().equals("ZOMBIFIED_PIGLIN"))
+				if (Lootboxes.getInstance().getServerVersion().newerThan(ServerVersion.Version.v1_15))
+					name = "ZOMBIFIED_PIGLIN_SPAWN_EGG";
+				else
+					name = "ZOMBIE_PIGMAN_SPAWN_EGG";
+
+			else if (type == EntityType.MUSHROOM_COW)
+				name = "MOOSHROOM_SPAWN_EGG";
+
+			return name;
+		} catch (final Throwable throwable) {
+			throwable.printStackTrace();
+			//Debugger.saveError(throwable, "Something went wrong while creating spawn egg!", "Type: " + type);
+		}
+		return "SHEEP_SPAWN_EGG";
+	}
 
 	public List<EntityType> getEntityTypeList(String itemsToSearchFor) {
 		if (itemsToSearchFor != null && !itemsToSearchFor.isEmpty())

@@ -54,9 +54,9 @@ public final class KeyMobDropData {
 	}
 
 	public static class Builder {
-		private int chance;
-		private int minimum;
-		private int maximum;
+		private int chance = 5;
+		private int minimum = 1;
+		private int maximum = 2;
 		private String keyName;
 		private String containerDataFileName;
 		public List<EntityType> entityTypes;

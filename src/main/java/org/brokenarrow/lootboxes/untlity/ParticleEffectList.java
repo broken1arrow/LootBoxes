@@ -65,7 +65,7 @@ public class ParticleEffectList {
 			return false;
 		return !(effect.name().equals("DUST_COLOR_TRANSITION") || effect.name().equals("LEGACY_BLOCK_CRACK")
 				|| effect.name().equals("LEGACY_BLOCK_DUST") || effect.name().equals("LEGACY_FALLING_DUST")
-				|| effect.name().equals("MOB_APPEARANCE")|| effect.name().equals("RECORD_PLAY") || effect.name().equals("STEP_SOUND"));
+				|| effect.name().equals("MOB_APPEARANCE")|| effect.name().equals("RECORD_PLAY") || effect.name().equals("STEP_SOUND") || effect.name().contains("CLICK"));
 	}
 
 	private void cacheParticleWithItemStack() {

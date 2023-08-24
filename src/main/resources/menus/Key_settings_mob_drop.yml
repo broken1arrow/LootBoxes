@@ -19,9 +19,11 @@ Menus:
       "21":
         action_type: Change_chance
         material: GREEN_DYE
-        name: "&bChange the mobs"
+        name: "&bChange the chance {0}"
         glow: true
         lore:
+          - "&aCurrent chance:&6 {0}"
+          - "&6"
           - "&aLeft-click to increase with&6 1"
           - "&aLeft-click and shift to increase with&6 {1}"
           - "&aRight-click to decrease  with&6 1"
@@ -29,11 +31,13 @@ Menus:
       "22":
         action_type: Change_minimum
         material: FIREWORK_STAR
-        name: "&bChange the mobs"
+        name: "&bChange minimum {0}"
         glow: true
         lore:
           - "&6Set minimum of keys mob can drop."
-          - ""
+          - "&6"
+          - "&aCurrent set:&6 {0}"
+          - "&6"
           - "&aLeft-click to increase with&6 1"
           - "&aLeft-click and shift to increase with&6 {1}"
           - "&aRight-click to decrease  with&6 1"
@@ -41,11 +45,13 @@ Menus:
       "24":
         action_type: Change_maximum
         material: TROPICAL_FISH
-        name: "&bChange the mobs"
+        name: "&bChange maximum {0}"
         glow: true
         lore:
-          - "&6Set minimum of keys mob can drop."
-          - ""
+          - "&6Set maximum of keys mob can drop."
+          - "&6"
+          - "&aCurrent set:&6 {0}"
+          - "&6"
           - "&aLeft-click to increase with&6 1"
           - "&aLeft-click and shift to increase with&6 {1}"
           - "&aRight-click to decrease  with&6 1"

@@ -15,7 +15,6 @@ import org.brokenarrow.lootboxes.menus.keys.EditKey;
 import org.brokenarrow.lootboxes.menus.keys.KeySettingsMobDrop;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -23,6 +22,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntityTypeListMenu extends MenuHolder {
@@ -33,17 +33,20 @@ public class EntityTypeListMenu extends MenuHolder {
 	private final String value;
 	private final MenuTemplate guiTemplate;
 	private final MenuKeys menuKey;
+	private KeyMobDropData mobDropData;
 
-	public EntityTypeListMenu(final MenuKeys menuKey, final String container, final String value, final String itemsToSearchFor) {
-		super(Lootboxes.getInstance().getMobList().getEntityTypeList(itemsToSearchFor));
+	public EntityTypeListMenu(final MenuKeys menuKey, final String container, final String value, final String entitySearchFor) {
+		super(Lootboxes.getInstance().getMobList().getEntityTypeList(entitySearchFor));
 		this.menuKey = menuKey;
 		this.container = container;
 		this.value = value;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("EntityType_list");
+		this.mobDropData = keyDropData.getKeyMobDropData(container, value);
 		if (guiTemplate != null) {
+			setAutoTitleCurrentPage(false);
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("EntityType_list"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), this.value));
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'EntityType_list'.");
@@ -62,8 +65,12 @@ public class EntityTypeListMenu extends MenuHolder {
 				if (object instanceof EntityType) {
 					if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
 						final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
-						final Builder builder = data.getBuilder();
-						final List<EntityType> entityTypes = data.getEntityTypes();
+						Builder builder = data.getBuilder();
+						List<EntityType> entityTypes;
+						if (data.getEntityTypes() != null)
+							entityTypes = data.getEntityTypes();
+						else
+							entityTypes = new ArrayList<>();
 
 						if (click == ClickType.LEFT) {
 							entityTypes.add((EntityType) object);
@@ -73,6 +80,7 @@ public class EntityTypeListMenu extends MenuHolder {
 						}
 						builder.setEntityTypes(entityTypes);
 						keyDropData.putCachedKeyData(container, value, builder.build());
+						mobDropData = keyDropData.getKeyMobDropData(container, value);
 						updateButtons();
 					}
 				}
@@ -81,16 +89,15 @@ public class EntityTypeListMenu extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				if (object instanceof EntityType) {
-					final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
-					final Material material = plugin.getMobList().makeSpawnEggs((EntityType) object);
+					final String material = plugin.getMobList().getSpawnEggType((EntityType) object);
 
 					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), material);
 
-					return CreateItemUtily.of(menuButton.getMaterial(),
+					return CreateItemUtily.of(material,
 									displayName,
 									TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-							.setGlow(data != null && data.getEntityTypes().contains(object))
+							.setGlow(mobDropData != null && mobDropData.getEntityTypes() != null && !mobDropData.getEntityTypes().isEmpty() && mobDropData.getEntityTypes().contains(object))
 							.makeItemStack();
 				}
 				return null;

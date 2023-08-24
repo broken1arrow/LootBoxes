@@ -1,9 +1,9 @@
 ######################################################
-# The menu you choose the loot container.
+# The menu you choose the entity to spawn the key.
 Menus:
   menu:
     menu_settings:
-      name: "&1Choose Container you want."
+      name: "&1Entity List. {0}"
       # slots you want to use to add fill items inside.
       fill-space: 9-35
       sound: null
@@ -52,7 +52,7 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
-      "36-37,41,43":
+      "36-37,39,41,43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false

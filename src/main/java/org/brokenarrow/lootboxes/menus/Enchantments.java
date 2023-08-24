@@ -37,12 +37,11 @@ public class Enchantments extends MenuHolder {
 
 		this.lootTableName = lootTableName;
 		this.itemToEdit = itemToEdit;
-		System.out.println("itemToEdit " + itemToEdit);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Enchantments_list");
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Enchantments_list"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),itemToEdit,lootTableName));
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Enchantments_list'.");
@@ -67,8 +66,7 @@ public class Enchantments extends MenuHolder {
 					if (object instanceof Enchantment) {
 						final Enchantment enchantment = (Enchantment) object;
 						final LootData lootData = lootItems.getLootData(lootTableName, itemToEdit);
-						System.out.println("data.getItemdataFileName() " + lootData.getLootTableName());
-						System.out.println("data.getItemdataPath() " + lootData.getItemDataPath());
+
 						final ItemStack item = itemData.getCacheItemData(lootTableName, lootData.getItemDataPath());
 						boolean hasEnchantsLeft = false;
 						if (item != null && item.getItemMeta() != null) {

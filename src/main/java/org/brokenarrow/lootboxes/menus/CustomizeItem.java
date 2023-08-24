@@ -38,7 +38,7 @@ public class CustomizeItem extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Customize_item");
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Customize_item"));
-			setTitle(()->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(()->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),itemToEdit,lootTableName));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);

@@ -23,7 +23,7 @@ public class ItemData extends YamlFileManager {
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
-		super(Lootboxes.getInstance(), "itemdata.yml", true, true);
+		super(Lootboxes.getInstance(), "itemdata", true, true);
 
 	}
 
@@ -170,7 +170,6 @@ public class ItemData extends YamlFileManager {
 				cacheItemData.put(table, stack);
 			}
 		}
-		System.out.println("cacheItemData " + cacheItemData);
 	}
 
 	public static ItemData getInstance() {

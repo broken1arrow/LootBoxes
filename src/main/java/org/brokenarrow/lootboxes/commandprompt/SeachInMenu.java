@@ -53,6 +53,8 @@ public class SeachInMenu extends SimpleConversation {
 				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
 			if (menuAcces == PARTICLE_ANIMANTION)
 				new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
+			if (menuAcces == MenuKeys.ENTITY_TYPE_LISTMENU)
+				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
 			else
 				new MaterialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
 

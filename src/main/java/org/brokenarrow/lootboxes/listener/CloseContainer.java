@@ -51,7 +51,7 @@ public class CloseContainer implements Listener {
 				location.getBlock().setType(Material.AIR);
 
 			}
-			if (!inventory.isEmpty()) {
+			if (inventory.getContents().length > 0) {
 				for (ItemStack itemStack : inventory) {
 					if (itemStack == null) continue;
 					location.getWorld().dropItemNaturally(location, itemStack);

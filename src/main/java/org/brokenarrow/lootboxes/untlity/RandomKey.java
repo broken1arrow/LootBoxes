@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
@@ -49,11 +50,18 @@ public class RandomKey {
 		KeysData keysData = this.containerDataCache.getCacheKey(containerData, keyName);
 		map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
 		map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
-
+		String lootTable = keysData.getLootTableLinked();
+		if (lootTable == null || lootTable.isEmpty()) {
+			ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(containerData);
+			if (containerDataCache != null) {
+				lootTable = containerDataCache.getLootTableLinked();
+			}
+		}
+		final String lootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
 		String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
-				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+				lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
-				keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+				lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 
 		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();
 	}

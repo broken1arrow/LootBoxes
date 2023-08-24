@@ -10,10 +10,12 @@ import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
+import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +26,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.material.DirectionalContainer;
+import org.bukkit.material.MaterialData;
 
 import java.util.Map;
 
@@ -31,6 +35,7 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER;
+import static org.brokenarrow.lootboxes.untlity.ModifyBlock.getFacing;
 
 public class PlayerClick implements Listener {
 
@@ -159,6 +164,19 @@ public class PlayerClick implements Listener {
 	public boolean addData(Block block, ContainerDataBuilder data, Location location, String metadata) {
 		ContainerDataBuilder.Builder builder = data.getBuilder();
 		Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
+		if (lootboxes.getServerVersion().olderThan(Version.v1_13)){
+			BlockState blockState = block.getState();
+			if (blockState.getData() instanceof DirectionalContainer){
+				MaterialData materialData = blockState.getData();
+				containerDataMap.put(location, new ContainerData(getFacing(materialData.getData()), block.getType()));
+				builder.setContainerData(containerDataMap);
+				if (data.getIcon() == null || data.getIcon() == Material.AIR)
+					builder.setIcon(block.getType());
+				containerDataCache.setContainerData(metadata, builder.build());
+				return true;
+			}
+			return false;
+		}
 		if (block.getBlockData() instanceof Directional) {
 			Directional container = (Directional) block.getBlockData();
 			containerDataMap.put(location, new ContainerData(container.getFacing(), block.getType()));

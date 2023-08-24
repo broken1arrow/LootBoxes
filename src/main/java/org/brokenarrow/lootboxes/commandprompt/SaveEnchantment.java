@@ -66,16 +66,16 @@ public class SaveEnchantment extends SimpleConversation {
 			final Map<Enchantment, Tuple<Integer, Boolean>> enchantmentMap = new HashMap<>();
 			final String itemKeyPath;
 			enchantmentMap.put(enchantment, new Tuple<>(level, false));
-			System.out.println("enchantmentMap " + enchantmentMap);
 			if (item == null) {
-				System.out.println("data.getMaterial() " + data.getMaterial());
-				System.out.println("data.getMaterial() " + lootTable);
 				ItemStack itemStack =  item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantmentMap, false).setCopyOfItem(true).makeItemStack();
 				itemKeyPath = itemData.setCacheItemData(lootTable, item.getType() + "", itemStack);
 			} else {
 				if (item.getItemMeta() != null && !item.getItemMeta().getEnchants().isEmpty())
-					for (final Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet())
+					for (final Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
+						if (entry.getKey().equals(enchantment))
+							continue;
 						enchantmentMap.put(entry.getKey(), new Tuple<>(entry.getValue(), false));
+					}
 
 				ItemStack itemStack = CreateItemUtily.of(item).addEnchantments(enchantmentMap, true).setCopyOfItem(true).makeItemStack();
 				itemKeyPath = itemData.updateCacheItemData(lootTable, itemDataPath, itemStack);

@@ -74,7 +74,6 @@ public class LootItems extends YamlFileManager {
 		Map<String, LootData> lootDataMap = cachedLoot.get(lootTable);
 		if (lootDataMap == null)
 			lootDataMap = new HashMap<>();
-		System.out.println("lootData is meta " + lootData.isHaveMetadata());
 		lootDataMap.put(lootItem, lootData);
 		cachedLoot.put(lootTable, lootDataMap);
 		saveTask(lootTable);
@@ -199,12 +198,9 @@ public class LootItems extends YamlFileManager {
 
 	@Override
 	public void saveDataToFile(final File file) {
-		System.out.println("settings file " + file);
 		final String fileName = getNameOfFile(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		final Map<String, LootData> settings = this.cachedLoot.get(fileName);
-		System.out.println("settings " + settings);
-		System.out.println("settings fileName " + fileName);
 		if (settings != null) {
 			customConfig.set("Items", null);
 			for (final String childrenKey : settings.keySet()) {

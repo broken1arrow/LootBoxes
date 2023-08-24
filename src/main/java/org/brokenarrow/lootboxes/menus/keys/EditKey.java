@@ -5,10 +5,12 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplaynameLore;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDIT_KEYS_FOR_OPEN_MENU;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class EditKey extends MenuHolder {
 
@@ -37,8 +40,9 @@ public class EditKey extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_key"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),keyName));
 			setMenuOpenSound(guiTemplate.getSound());
+			setignoreItemCheck(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Edit_key'.");
@@ -59,10 +63,24 @@ public class EditKey extends MenuHolder {
 			@Override
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+				Object[] placeholders = new Object[0];
+				if (keysData != null) {
+					if (button.isActionTypeEqual("Change_amount"))
+						placeholders = getPlaceholders(keysData.getAmountNeeded());
+					if (button.isActionTypeEqual("Alter_display_name"))
+						placeholders = getPlaceholders("",keysData.getDisplayName());
+					if (button.isActionTypeEqual("Alter_lore"))
+						placeholders = getPlaceholders("", keysData.getLore());
+					if (button.isActionTypeEqual("Mob_drop_key")) {
+						KeyMobDropData data = KeyDropData.getInstance().getKeyMobDropData(containerData, keyName);
+						placeholders = getPlaceholders(data != null && data.getEntityTypes() != null ? data.getEntityTypes() : "");
+					}
+				}
 
 				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),placeholders),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders))
 						.makeItemStack();
 			}
 		};

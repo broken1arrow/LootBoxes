@@ -3,13 +3,13 @@
 Menus:
   menu:
     menu_settings:
-      name: "&1Change key data."
+      name: "&1Settings for key: {0}"
       sound: null
       size: 45
     buttons:
       "12":
         action_type: Change_amount
-        material: CARROT
+        material: IRON_BLOCK
         name: "&bChange amount needed"
         glow: true
         lore:
@@ -41,7 +41,7 @@ Menus:
           - "&2on the item. You have '{'0'}' '{'1'}' and"
           - "&2'{'2'}' placeholders to use (remove ')."
           - "&2"
-          - "&2Current display name:"
+          - "&2Current lore:"
           - "&6{1}"
       "28":
         action_type: Mob_drop_key
@@ -52,6 +52,9 @@ Menus:
           - ""
           - "&2Click here to change with mob drops"
           - "&2this key,amount and chance it drop the key."
+          - "&2"
+          - "&2Current mobs set:"
+          - "&6{0}"
       "44":
         action_type: Back_button
         material: RED_STAINED_GLASS_PANE

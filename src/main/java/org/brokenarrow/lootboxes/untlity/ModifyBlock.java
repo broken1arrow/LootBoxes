@@ -1,10 +1,13 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import org.broken.arrow.color.library.TextTranslator;
+import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
 import org.bukkit.Location;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Dropper;
@@ -12,6 +15,8 @@ import org.bukkit.block.Hopper;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.material.DirectionalContainer;
+import org.bukkit.material.MaterialData;
 
 public class ModifyBlock {
 
@@ -62,6 +67,17 @@ public class ModifyBlock {
 
 	public static void setRotation(Location location, BlockFace latitude) {
 		Block block = location.getBlock();
+
+		if (Lootboxes.getInstance().getServerVersion().olderThan(Version.v1_13)){
+			BlockState blockState = block.getState();
+			if (blockState.getData() instanceof DirectionalContainer){
+				MaterialData materialData = blockState.getData();
+				materialData.setData(setFacingDirection(latitude));
+				blockState.setData(materialData);
+				blockState.update(true);
+			}
+			return;
+		}
 		BlockData blockData = block.getBlockData();
 		if (blockData instanceof Directional) {
 			((Directional) blockData).setFacing(latitude);
@@ -121,6 +137,47 @@ public class ModifyBlock {
 				return true;
 			default:
 				return false;
+		}
+	}
+
+	public static byte setFacingDirection(BlockFace face) {
+		byte data;
+
+		switch (face) {
+			case NORTH:
+				data = 0x2;
+				break;
+
+			case SOUTH:
+				data = 0x3;
+				break;
+
+			case WEST:
+				data = 0x4;
+				break;
+
+			case EAST:
+			default:
+				data = 0x5;
+		}
+		return data;
+	}
+
+
+	public static BlockFace getFacing(byte data) {
+		switch (data) {
+			case 0x2:
+				return BlockFace.NORTH;
+
+			case 0x3:
+				return BlockFace.SOUTH;
+
+			case 0x4:
+				return BlockFace.WEST;
+
+			case 0x5:
+			default:
+				return BlockFace.EAST;
 		}
 	}
 

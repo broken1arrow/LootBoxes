@@ -6,6 +6,7 @@ import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
@@ -18,6 +19,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ListOfLootTables extends MenuHolder {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
@@ -32,13 +35,14 @@ public class ListOfLootTables extends MenuHolder {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("List_of_loot_tables"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'List_of_loot_tables'.");
 
 		}
 	}
+
 	@Override
 	public MenuButton getFillButtonAt(@NotNull Object object) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
@@ -48,16 +52,27 @@ public class ListOfLootTables extends MenuHolder {
 			@Override
 			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
 				if (object instanceof String) {
-					ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-					ContainerDataBuilder.Builder builder = data.getBuilder();
-					if (!data.getLootTableLinked().isEmpty())
-						player.sendMessage("You change the loottable from " + data.getLootTableLinked() + " to " + object);
+					ContainerDataBuilder cacheContainerData = containerDataCache.getCacheContainerData(container);
+					ContainerDataBuilder.Builder builder = cacheContainerData.getBuilder();
+					boolean isRightClick = click.isRightClick();
+					if (!isRightClick && cacheContainerData.getLootTableLinked() != null) {
+						if (!cacheContainerData.getLootTableLinked().isEmpty())
+							player.sendMessage("You change the loottable from " + cacheContainerData.getLootTableLinked() + " to " + object);
 
-					if (data.getLootTableLinked().equals(object))
-						player.sendMessage("Your change do not change the loottable is same as the old, old " + data.getLootTableLinked() + " new name " + object);
+						if (cacheContainerData.getLootTableLinked().equals(object))
+							player.sendMessage("You don't the loottable as it is same as the old, old " + cacheContainerData.getLootTableLinked() + " new name " + object);
+					}
 
-					builder.setContainerDataLinkedToLootTable((String) object);
+					builder.setContainerDataLinkedToLootTable(isRightClick ? "" : (String) object);
+					Map<String, KeysData> keysDataMap = cacheContainerData.getKeysData();
+					if (keysDataMap != null && !keysDataMap.isEmpty()) {
+						for (Entry<String, KeysData> map : keysDataMap.entrySet()) {
+							map.getValue().setLootTableLinked(isRightClick ? "" : (String) object);
+						}
+					}
+					builder.setKeysData(keysDataMap);
 					containerDataCache.setContainerData(container, builder.build());
+
 					new AlterContainerDataMenu(container).menuOpen(player);
 				}
 			}
@@ -74,7 +89,7 @@ public class ListOfLootTables extends MenuHolder {
 
 				return CreateItemUtily.of(menuButton.getMaterial(),
 								displayName,
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),object))
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), object))
 						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
@@ -116,7 +131,8 @@ public class ListOfLootTables extends MenuHolder {
 				previousPage();
 			}
 		}
-		if (button.isActionTypeEqual("Search")) {}
+		if (button.isActionTypeEqual("Search")) {
+		}
 		if (button.isActionTypeEqual("Back_button")) {
 			new AlterContainerDataMenu(container).menuOpen(player);
 		}

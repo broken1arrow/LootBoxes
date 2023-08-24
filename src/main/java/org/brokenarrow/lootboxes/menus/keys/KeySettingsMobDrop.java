@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.KEY_SETTINGS_MOBDROP;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class KeySettingsMobDrop extends MenuHolder {
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
@@ -25,12 +26,13 @@ public class KeySettingsMobDrop extends MenuHolder {
 	private final String containerData;
 	private final String keyName;
 	private final MenuTemplate guiTemplate;
-
+	private KeyMobDropData mobDropData;
 	public KeySettingsMobDrop(final String containerData, final String keyName) {
 		this.containerData = containerData;
 		this.keyName = keyName;
 		//this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, "");
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Key_settings_mob_drop");
+		mobDropData = keyDropData.getKeyMobDropData(containerData, keyName);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Key_settings_mob_drop"));
@@ -58,9 +60,23 @@ public class KeySettingsMobDrop extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
+				Object[] placeholders = new Object[0];
+
+					if (button.isActionTypeEqual("Mob_drop_this_key"))
+						placeholders = getPlaceholders(mobDropData != null && mobDropData.getEntityTypes() != null ? mobDropData.getEntityTypes() :"");
+					if (button.isActionTypeEqual("Change_chance"))
+						placeholders = getPlaceholders(mobDropData != null ? mobDropData.getChance(): 0, settingsData.getIncrease(), settingsData.getDecrease());
+
+					if (button.isActionTypeEqual("Change_minimum"))
+						placeholders = getPlaceholders(mobDropData != null ?mobDropData.getMinimum(): 0, settingsData.getIncrease(), settingsData.getDecrease());
+
+					if (button.isActionTypeEqual("Change_maximum"))
+						placeholders = getPlaceholders(mobDropData != null ?mobDropData.getMaximum(): 0, settingsData.getIncrease(), settingsData.getDecrease());
+
+
 				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),placeholders),
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders))
 						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
@@ -91,6 +107,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 				minimum = 0;
 			builder.setMinimum(minimum);
 			keyDropData.putCachedKeyData(containerData, keyName, builder.build());
+			this.mobDropData = keyDropData.getKeyMobDropData(containerData, keyName);
 			return true;
 		}
 		if (button.isActionTypeEqual("Change_maximum")) {
@@ -112,6 +129,8 @@ public class KeySettingsMobDrop extends MenuHolder {
 				maximum = 0;
 			builder.setMaximum(maximum);
 			keyDropData.putCachedKeyData(containerData, keyName, builder.build());
+			this.mobDropData = keyDropData.getKeyMobDropData(containerData, keyName);
+			return true;
 		}
 		if (button.isActionTypeEqual("Change_chance")) {
 			final KeyMobDropData data = keyDropData.getKeyMobDropData(containerData, keyName);
@@ -133,6 +152,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 				chance = 0;
 			builder.setChance(chance);
 			keyDropData.putCachedKeyData(containerData, keyName, builder.build());
+			this.mobDropData = keyDropData.getKeyMobDropData(containerData, keyName);
 			return true;
 		}
 		if (button.isActionTypeEqual("Forward_button")) {

@@ -5,6 +5,7 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
@@ -66,11 +67,18 @@ public class EditKeysToOpen extends MenuHolder {
 						KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, (String) object);
 						map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
 						map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
-
+						String lootTable = keysData.getLootTableLinked();
+						if (lootTable == null || lootTable.isEmpty()) {
+							ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
+							if (containerDataCache != null) {
+								lootTable = containerDataCache.getLootTableLinked();
+							}
+						}
+						final String lootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
 						String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
-								keysData.getLootTableLinked() != null && keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+								lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 						List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
-								keysData.getLootTableLinked() != null && keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+								lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 
 						player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(1).makeItemStack());
 
@@ -90,9 +98,18 @@ public class EditKeysToOpen extends MenuHolder {
 			public ItemStack getItem() {
 
 				if (object instanceof String) {
-					org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, String.valueOf(object));
-					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), object, keysData.getLootTableLinked() != null && keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
-					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), object, keysData.getLootTableLinked() != null && keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, String.valueOf(object));
+					String lootTable = keysData.getLootTableLinked();
+					if (lootTable == null || lootTable.isEmpty()) {
+						ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
+						if (containerDataCache != null) {
+							lootTable = containerDataCache.getLootTableLinked();
+						}
+					}
+					final String LootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
+
+					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), object, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), object, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
 					String displayName = translatePlaceholders(player,menuButton.getDisplayName(),object, keysData.getAmountNeeded(), placeholderDisplayName,

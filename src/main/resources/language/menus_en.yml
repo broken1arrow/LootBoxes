@@ -184,7 +184,7 @@ Menus:
   # choose the item.
   Change_item:
     menu_settings:
-      name: "&1Change item. Page: {0}"
+      name: "&1Change item: {0}"
       fill-space: 9-35
       size: 45
     buttons:
@@ -389,7 +389,7 @@ Menus:
   # menu to pick one loot table to change the data.
   Containers_list:
     menu_settings:
-      name: "&1Container data. Page: {0}"
+      name: "&1Container data: {0}"
       # slots you want to use to add fill items inside.
       fill-space: 9-35
       sound: null
@@ -466,13 +466,12 @@ Menus:
   # Customize the item you added to your loot table.
   Customize_item:
     menu_settings:
-      name: "&1Edit this item {0}"
-      fill-space: 9-35
+      name: "&1Edit this item: {0}"
       size: 45
     buttons:
       "10":
         action_type: Change_item
-        material: GRASS_BLOCK
+        material: DIRT
         name: "&bChange the item {0}"
         glow: true
         lore:
@@ -546,7 +545,7 @@ Menus:
   # This menu list the loot tables items player can get, and you can edit, create and remove every item you added.
   Edit_items_for_loot_table:
     menu_settings:
-      name: "&1Add and remove items. Page: {0}"
+      name: "&1Add and remove items: {0}"
       # slots you want to use to add fill items inside.
       fill-space: 0-26
       sound: null
@@ -609,13 +608,13 @@ Menus:
   # Edit the key you have added.
   Edit_key:
     menu_settings:
-      name: "&1Change key data."
+      name: "&1Settings for key: {0}"
       sound: null
       size: 45
     buttons:
       "12":
         action_type: Change_amount
-        material: CARROT
+        material: IRON_BLOCK
         name: "&bChange amount needed"
         glow: true
         lore:
@@ -643,11 +642,11 @@ Menus:
         glow: true
         lore:
           - ""
-          - "&2Click here to change display name"
+          - "&2Click here to change lore"
           - "&2on the item. You have '{'0'}' '{'1'}' and"
           - "&2'{'2'}' placeholders to use (remove ')."
           - "&2"
-          - "&2Current display name:"
+          - "&2Current lore:"
           - "&6{1}"
       "28":
         action_type: Mob_drop_key
@@ -658,6 +657,9 @@ Menus:
           - ""
           - "&2Click here to change with mob drops"
           - "&2this key,amount and chance it drop the key."
+          - "&2"
+          - "&2Current mobs set:"
+          - "&6{0}"
       "44":
         action_type: Back_button
         material: RED_STAINED_GLASS_PANE
@@ -683,7 +685,7 @@ Menus:
   # List of keys you can add, edit or remove in this menu.
   Edit_keys_to_open:
     menu_settings:
-      name: "&1Keys. Page: {0}"
+      name: "&1Keys: {0}"
       fill-space: 9-35
       size: 45
     buttons:
@@ -837,10 +839,10 @@ Menus:
       "40":
         action_type: Search
         material: PAPER
-        name: "&bSearch for a location"
+        name: "&bSearch for a enchantment"
         glow: true
         lore:
-          - "&aLeft-click for search for a location"
+          - "&aLeft-click for search for a enchantment"
           - "&aRight-click to reset search."
       "42":
         action_type: Forward_button
@@ -882,10 +884,10 @@ Menus:
         lore:
           - ""
   ######################################################
-  # The menu you choose the loot container.
+  # The menu you choose the entity to spawn the key.
   EntityType_list:
     menu_settings:
-      name: "&1Container List. Page: {0}"
+      name: "&1Entity List. {0}"
       fill-space: 9-35
       size: 45
     buttons:
@@ -932,7 +934,7 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
-      "36-37,41,43":
+      "36-37,39,41,43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false
@@ -963,9 +965,11 @@ Menus:
       "21":
         action_type: Change_chance
         material: GREEN_DYE
-        name: "&bChange the mobs"
+        name: "&bChange the chance {0}"
         glow: true
         lore:
+          - "&aCurrent chance:&6 {0}"
+          - "&6"
           - "&aLeft-click to increase with&6 1"
           - "&aLeft-click and shift to increase with&6 {1}"
           - "&aRight-click to decrease  with&6 1"
@@ -973,11 +977,13 @@ Menus:
       "22":
         action_type: Change_minimum
         material: FIREWORK_STAR
-        name: "&bChange the mobs"
+        name: "&bChange minimum {0}"
         glow: true
         lore:
           - "&6Set minimum of keys mob can drop."
-          - ""
+          - "&6"
+          - "&aCurrent set:&6 {0}"
+          - "&6"
           - "&aLeft-click to increase with&6 1"
           - "&aLeft-click and shift to increase with&6 {1}"
           - "&aRight-click to decrease  with&6 1"
@@ -985,11 +991,13 @@ Menus:
       "24":
         action_type: Change_maximum
         material: TROPICAL_FISH
-        name: "&bChange the mobs"
+        name: "&bChange maximum {0}"
         glow: true
         lore:
-          - "&6Set minimum of keys mob can drop."
-          - ""
+          - "&6Set maximum of keys mob can drop."
+          - "&6"
+          - "&aCurrent set:&6 {0}"
+          - "&6"
           - "&aLeft-click to increase with&6 1"
           - "&aLeft-click and shift to increase with&6 {1}"
           - "&aRight-click to decrease  with&6 1"
@@ -1001,8 +1009,8 @@ Menus:
         glow: true
         lore:
           - ""
-          - "&2Go one page"
-          - "&2forward."
+          - "&aLeft-click for search for a entity"
+          - "&aRight-click for reset the search"
       "38":
         action_type: Previous_button
         material: ARROW

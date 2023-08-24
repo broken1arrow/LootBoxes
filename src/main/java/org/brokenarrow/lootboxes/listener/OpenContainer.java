@@ -52,15 +52,24 @@ public class OpenContainer implements Listener {
 				key = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_KEY_NAME.name());
 				containerDataName = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
 			}
-			LocationData locationData = containerDataCache.getLocationData(location);
+			LocationData locationData = this.containerDataCache.getLocationData(location);
 			if (locationData == null) return;
 
 			if (key == null || containerDataName == null) {
 				List<String> list = new ArrayList<>();
-				for (KeysData values : locationData.getKeys().values()) {
-					if (values.getItemType() == null || values.getItemType().isAir())
+				for (KeysData keysData : locationData.getKeys().values()) {
+					if (keysData.getItemType() == null || keysData.getItemType() == Material.AIR)
 						continue;
-					list.add(translatePlaceholders(values.getDisplayName(), values.getKeyName(), values.getLootTableLinked(), values.getAmountNeeded(), values.getItemType()));
+					String lootTable = keysData.getLootTableLinked();
+					if (lootTable == null || lootTable.isEmpty()) {
+						ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContinerData());
+						if (containerDataCache != null) {
+							lootTable = containerDataCache.getLootTableLinked();
+						}
+					}
+					if (lootTable == null)
+						lootTable = "";
+					list.add(translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(), lootTable, keysData.getAmountNeeded(), keysData.getItemType()));
 				}
 				if (!list.isEmpty()) {
 					LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
@@ -127,7 +136,7 @@ public class OpenContainer implements Listener {
 		}
 		if (key != null) {
 			Material material = dataCacheCacheKey.getItemType();
-			if (material != null && !material.isAir() /*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
+			if (material != null && material != Material.AIR/*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
 				if (dataCacheCacheKey.getAmountNeeded() <= 0) return true;
 				if (itemStack.getType() != material) {
 					LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), material);

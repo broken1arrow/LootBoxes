@@ -1,0 +1,9 @@
+Keys_Data:
+  Global_Container:
+    Example_key:
+      Chance: 5
+      Minimum: 1
+      Maximum: 8
+      Entity_list:
+        - CAVE_SPIDER
+        - ZOMBIE

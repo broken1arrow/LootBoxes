@@ -13,7 +13,7 @@ import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 public final class KeysData implements ConfigurationSerializable {
 	private final String keyName;
 	private final String displayName;
-	private final String lootTableLinked;
+	private  String lootTableLinked;
 	private final int amountNeeded;
 	private final Material itemType;
 	private final List<String> lore;
@@ -90,6 +90,15 @@ public final class KeysData implements ConfigurationSerializable {
 	 */
 	public List<String> getLore() {
 		return lore;
+	}
+
+	/**
+	 * Set the loottable.
+	 *
+	 * @param lootTableLinked the loottable linked to this key.
+	 */
+	public void setLootTableLinked(final String lootTableLinked) {
+		this.lootTableLinked = lootTableLinked;
 	}
 
 	/**

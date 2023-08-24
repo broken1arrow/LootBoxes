@@ -29,10 +29,10 @@ Menus:
       "40":
         action_type: Search
         material: PAPER
-        name: "&bSearch for a location"
+        name: "&bSearch for a enchantment"
         glow: true
         lore:
-          - "&aLeft-click for search for a location"
+          - "&aLeft-click for search for a enchantment"
           - "&aRight-click to reset search."
       "42":
         action_type: Forward_button

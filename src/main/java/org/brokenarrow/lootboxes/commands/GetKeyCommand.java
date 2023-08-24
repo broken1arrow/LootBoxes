@@ -23,7 +23,7 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
-public class GetKeyCommand  extends CommandHolder {
+public class GetKeyCommand extends CommandHolder {
 
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 
@@ -48,11 +48,20 @@ public class GetKeyCommand  extends CommandHolder {
 			int amount = 1;
 			if (cmdArgs.length >= 4)
 				amount = Integer.parseInt(cmdArgs[3]);
+			String lootTableName = keysData.getLootTableLinked();
+			if (lootTableName == null || lootTableName.isEmpty()){
+				ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(cmdArgs[1]);
+				if (containerDataCache != null){
+					lootTableName =  containerDataCache.getLootTableLinked() != null && !containerDataCache.getLootTableLinked().isEmpty() ?  containerDataCache.getLootTableLinked(): null;
+				}
+			}
+			if (lootTableName == null)
+				lootTableName = "";
 
 			String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
-					keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+					lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 			List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
-					keysData.getLootTableLinked().length() > 0 ? keysData.getLootTableLinked() : "No table linked", keysData.getAmountNeeded(), keysData.getItemType());
+					lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 			if (player != null)
 				player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amount).makeItemStack());
 
