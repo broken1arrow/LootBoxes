@@ -19,7 +19,6 @@ import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 public class ItemData extends YamlFileManager {
 
 	public static final ItemData instance = new ItemData();
-	private FileConfiguration customConfig;
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
@@ -120,7 +119,7 @@ public class ItemData extends YamlFileManager {
 	@Override
 	public void saveDataToFile(final File file) {
 
-		customConfig = YamlConfiguration.loadConfiguration(file);
+		FileConfiguration customConfig = YamlConfiguration.loadConfiguration(file);
 		customConfig.set("Items", null);
 		final Map<String, Map<String, ItemStack>> cachedItems = this.getCacheData();
 		for (Entry<String, Map<String, ItemStack>> cachedData : cachedItems.entrySet()) {
