@@ -42,266 +42,6 @@ public class SettingsContainerData extends MenuHolder {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Settings_container_data'.");
 		}
-
-/*		int decrease = settings.getSettingsData().getDecrease();
-		int increase = settings.getSettingsData().getIncrease();
-		maxRadius = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					int maxRadius = containerDataBuilder.getMaxRadius();
-
-					if (click.isRightClick())
-						maxRadius += click.isShiftClick() ? increase : 1;
-					if (click.isLeftClick())
-						maxRadius -= click.isShiftClick() ? decrease : 1;
-					if (maxRadius < 1)
-						maxRadius = 1;
-					builder.setMaxRadius(maxRadius);
-					containerDataCache.setContainerData(containerDataName, builder.build());
-				}
-				updateButton(this);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Max_radius_off").placeholders("", containerDataBuilder.getMaxRadius()).build();
-				if (containerDataBuilder.isRandomSpawn()) {
-					gui = guiTemplets.menuKey("Max_radius").placeholders("", containerDataBuilder.getMaxRadius()).build();
-				}
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		minRadius = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					int minRadius = containerDataBuilder.getMinRadius();
-
-					if (click.isRightClick())
-						minRadius += click.isShiftClick() ? increase : 1;
-					if (click.isLeftClick())
-						minRadius -= click.isShiftClick() ? decrease : 1;
-					if (minRadius < 1)
-						minRadius = 0;
-					builder.setMinRadius(minRadius);
-					containerDataCache.setContainerData(containerDataName, builder.build());
-				}
-				updateButton(this);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Min_radius_off").placeholders(containerDataBuilder.getMinRadius()).build();
-				if (containerDataBuilder.isRandomSpawn()) {
-					gui = guiTemplets.menuKey("Min_radius").placeholders(containerDataBuilder.getMinRadius()).build();
-				}
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		useWorldCenter = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					builder.setSpawnContainerFromWorldCenter(click.isLeftClick());
-					if (player.getLocation().getWorld() != null)
-						builder.setSpawnLocation(player.getLocation().getWorld().getSpawnLocation());
-					containerDataCache.setContainerData(containerDataName, builder.build());
-				}
-				updateButton(this);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("World_center_off").placeholders(containerDataBuilder.isSpawnContainerFromWorldCenter()).build();
-				if (containerDataBuilder.isRandomSpawn()) {
-					gui = guiTemplets.menuKey("World_center").placeholders(containerDataBuilder.isSpawnContainerFromWorldCenter()).build();
-				}
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		attemptsToSpawn = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					int attempts = containerDataBuilder.getAttempts();
-					if (click.isRightClick())
-						attempts += 1;
-					if (click.isLeftClick())
-						attempts -= 1;
-
-					builder.setAttempts(attempts);
-					containerDataCache.setContainerData(containerDataName, builder.build());
-				}
-				updateButton(this);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Attempts_to_spawn_random_spawn_off").placeholders("", -1).build();
-				if (containerDataBuilder.isRandomSpawn()) {
-					gui = guiTemplets.menuKey("Attempts_to_spawn").placeholders("", containerDataBuilder.getAttempts()).build();
-				}
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-
-		generateLootWhenClicking = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-					if (containerDataBuilder.isSpawningContainerWithCooldown() == click.isLeftClick()) return;
-
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					builder.setSpawningContainerWithCooldown(click.isLeftClick());
-					containerDataCache.setContainerData(containerDataName, builder.build());
-				}
-				updateButtons();
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Generate_Loot_When_Clicking").placeholders("", containerDataBuilder.isSpawningContainerWithCooldown()).build();
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		containerShallGlow = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-					if (containerDataBuilder.isContainerShallGlow() == click.isLeftClick()) return;
-
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					builder.setContainerShallGlow(click.isLeftClick());
-					containerDataCache.setContainerData(containerDataName, builder.build());
-
-				}
-				updateButtons();
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-
-				GuiTempletsYaml gui = guiTemplets.menuKey("Show_glow").placeholders("", containerDataBuilder.isContainerShallGlow()).build();
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		showTitleSpawnChest = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(@NotNull Player player, @NotNull Inventory menu, @NotNull ClickType click, @NotNull ItemStack clickedItem, Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-					if (containerDataBuilder.isShowTitle() == click.isLeftClick()) return;
-
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					builder.setShowTitle(click.isLeftClick());
-					containerDataCache.setContainerData(containerDataName, builder.build());
-				}
-				updateButtons();
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-
-				GuiTempletsYaml gui = guiTemplets.menuKey("Show_titel").placeholders("", containerDataBuilder.isShowTitle()).build();
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		randomLootContainer = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null)
-					new ChooseRandomLootContainer(containerDataBuilder, containerDataName).menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-
-				GuiTempletsYaml gui = guiTemplets.menuKey("Random_loot_container_settings").placeholders("", containerDataBuilder.getRandomLootContainerItem(), containerDataBuilder.getRandomLootContainerFacing()).build();
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		changeIfShallUsedToRandomSpawn = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				if (containerDataBuilder != null) {
-					if (containerDataBuilder.isRandomSpawn() == click.isLeftClick()) return;
-
-					final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-					builder.setRandomSpawn(click.isLeftClick());
-					containerDataCache.setContainerData(containerDataName, builder.build());
-
-
-				}
-				updateButtons();
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-				GuiTempletsYaml gui = guiTemplets.menuKey("Set_random_spawn_disabled").placeholders(containerDataBuilder.isRandomSpawn()).build();
-
-				if (containerDataBuilder.isRandomSpawn()) {
-					gui = guiTemplets.menuKey("Set_random_spawn").placeholders(containerDataBuilder.isRandomSpawn()).build();
-				}
-				return CreateItemUtily.of(gui.getIcon(), gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-
-		backButton = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				new AlterContainerDataMenu(containerDataName).menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};*/
 	}
 
 	@Override
@@ -397,9 +137,18 @@ public class SettingsContainerData extends MenuHolder {
 					buttonMatch = true;
 					break;
 				case "World_center":
-					builder.setSpawnContainerFromWorldCenter(click.isLeftClick());
+					builder.setSpawnContainerFromCustomCenter(click.isLeftClick());
 					if (player.getLocation().getWorld() != null)
 						builder.setSpawnLocation(player.getLocation().getWorld().getSpawnLocation());
+					buttonMatch = true;
+					break;
+				case "Player_set_loc":
+					builder.setSpawnContainerFromCustomCenter(click.isLeftClick());
+					builder.setSpawnLocation(player.getLocation());
+					buttonMatch = true;
+					break;
+				case "Spawn_On_Surface":
+					builder.setSpawnOnSurface(click.isLeftClick());
 					buttonMatch = true;
 					break;
 				case "Back_button":
@@ -434,6 +183,8 @@ public class SettingsContainerData extends MenuHolder {
 				case "Min_radius":
 				case "Max_radius":
 				case "World_center":
+				case "Player_set_loc":
+				case "Spawn_On_Surface":
 					return button.getActiveButton();
 			}
 		}
@@ -468,8 +219,10 @@ public class SettingsContainerData extends MenuHolder {
 		if (button.isActionTypeEqual("Max_radius"))
 			placeholders = getPlaceholders("", containerDataBuilder.getMaxRadius());
 
-		if (button.isActionTypeEqual("World_center"))
-			placeholders = getPlaceholders( containerDataBuilder.isSpawnContainerFromWorldCenter());
+		if (button.isActionTypeEqual("World_center") || button.isActionTypeEqual("Player_set_loc"))
+			placeholders = getPlaceholders( containerDataBuilder.isSpawnContainerFromCustomCenter());
+		if (button.isActionTypeEqual("Spawn_On_Surface"))
+			placeholders = getPlaceholders( containerDataBuilder.isSpawnOnSurface());
 
 		return placeholders;
 	}

@@ -95,7 +95,7 @@ public class ContainerDataCache extends YamlFileManager {
 				.setLore(new ArrayList<>())
 				.setContainerData(new HashMap<>())
 				.setKeysData(new HashMap<>())
-				.setSpawnContainerFromWorldCenter(true)
+				.setSpawnContainerFromCustomCenter(true)
 				.build();
 
 		cacheContainerData.put(container, builder);

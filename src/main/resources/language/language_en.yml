@@ -71,7 +71,7 @@ ADD_CONTINERS:
 
 RANDOM_LOOT_MESAGE:
   TITEL: "&fNew lootchest on loc:|&6 {0}"
-
+  MESSAGE: "&fNew lootchest on loc:&6 {0}"
 
 CREATE_TABLE:
   TYPE_NAME: "&fType name on the table"

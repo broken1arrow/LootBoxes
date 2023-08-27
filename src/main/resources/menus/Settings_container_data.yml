@@ -156,6 +156,52 @@ Menus:
           - "&atry spawn one around the player."
           - ""
           - "&aCurrently set to: &6{0}"
+      "30":
+        action_type: Player_set_loc
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aSet this to true if you want to set"
+            - "&aat your location. If false it will"
+            - "&atry spawn one around the player"
+            - "&aor at world spawn if that is set."
+            - ""
+            - "&aCurrently set to: &6{0}"
+        active:
+          material: ENDER_PEARL
+          name: "&bSet at player loc"
+          glow: false
+          lore:
+            - "&aSet this to true if you want to set"
+            - "&aat your location. If false it will"
+            - "&atry spawn one around the player"
+            - "&aor at world spawn if that i set."
+            - ""
+            - "&aCurrently set to: &6{0}"
+      "32":
+        action_type: Spawn_On_Surface
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aSet this to true if you want to set"
+            - "&achest spawn on surface. If false it will"
+            - "&atry spawn under ground."
+            - ""
+            - "&aCurrently set to: &6{0}"
+        active:
+          material: IRON_BLOCK
+          name: "&bSet where container spawn"
+          glow: false
+          lore:
+            - "&aSet this to true if you want to set"
+            - "&achest spawn on surface. If false it will"
+            - "&atry spawn under ground."
+            - ""
+            - "&aCurrently set to: &6{0}"
       "44":
         action_type: Back_button
         material: RED_STAINED_GLASS_PANE

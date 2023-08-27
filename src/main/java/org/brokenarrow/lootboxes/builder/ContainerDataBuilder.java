@@ -39,7 +39,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private final boolean randomSpawn;
 	private final boolean showTitle;
 	private final boolean containerShallGlow;
-	private final boolean spawnContainerFromWorldCenter;
+	private final boolean spawnContainerFromCustomCenter;
+	private boolean spawnOnSurface;
 	private final long cooldown;
 	private final int attempts;
 	private final int minRadius;
@@ -65,7 +66,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		this.randomSpawn = builder.randomSpawn;
 		this.showTitle = builder.showTitle;
 		this.containerShallGlow = builder.containerShallGlow;
-		this.spawnContainerFromWorldCenter = builder.spawnContainerFromWorldCenter;
+		this.spawnContainerFromCustomCenter = builder.spawnContainerFromWorldCenter;
+		this.spawnOnSurface = builder.spawnOnSurface;
 		this.attempts = builder.attempts;
 		this.minRadius = builder.minRadius;
 		this.maxRadius = builder.maxRadius;
@@ -142,8 +144,12 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return randomSpawn;
 	}
 
-	public boolean isSpawnContainerFromWorldCenter() {
-		return spawnContainerFromWorldCenter;
+	public boolean isSpawnContainerFromCustomCenter() {
+		return spawnContainerFromCustomCenter;
+	}
+
+	public boolean isSpawnOnSurface() {
+		return spawnOnSurface;
 	}
 
 	public long getCooldown() {
@@ -184,17 +190,23 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		public boolean showTitle;
 		public boolean containerShallGlow;
 		private boolean spawnContainerFromWorldCenter;
+		private boolean spawnOnSurface;
 		private long cooldown;
 		public int attempts;
 
 		public int minRadius;
 		public int maxRadius;
 
-		public Builder setSpawnContainerFromWorldCenter(final boolean spawnContainerFromWorldCenter) {
+
+		public Builder setSpawnContainerFromCustomCenter(final boolean spawnContainerFromWorldCenter) {
 			this.spawnContainerFromWorldCenter = spawnContainerFromWorldCenter;
 			return this;
 		}
 
+		public Builder setSpawnOnSurface(final boolean spawnOnSurface) {
+			this.spawnOnSurface = spawnOnSurface;
+			return this;
+		}
 		public Builder setContainerDataLinkedToLootTable(final String ContainerDataLinkedToLootTable) {
 			this.containerDataLinkedToLootTable = ContainerDataLinkedToLootTable;
 			return this;
@@ -359,6 +371,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Random_loot_faceing", this.randomLootContainerFacing + "");
 		keysData.put("Display_name", this.displayname);
 		keysData.put("Lore", this.lore);
+		keysData.put("Spawn_on_surface", this.spawnOnSurface + "");
 		if (this.particleEffects == null)
 			keysData.put("Particle_effect", new HashMap<>());
 		else
@@ -371,7 +384,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Random_loot_glow", this.containerShallGlow);
 		keysData.put("Keys", this.keysData);
 		keysData.put("Attempts", this.attempts);
-		keysData.put("Spawn_world_center", this.spawnContainerFromWorldCenter);
+		keysData.put("Spawn_world_center", this.spawnContainerFromCustomCenter);
 		keysData.put("Min_radius", this.minRadius);
 		keysData.put("Max_radius", this.maxRadius);
 		keysData.put("Spawn-point", spawnLocation != null ? LocationSerializer.serializeLoc(spawnLocation) : null);
@@ -412,6 +425,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		final boolean random_loot_glow = (boolean) map.getOrDefault("Random_loot_glow", false);
 		final int attempts = (Integer) map.getOrDefault("Attempts", 1);
 		final boolean spawnContainerFromCenter = (boolean) map.getOrDefault("Spawn_world_center", false);
+		final boolean spawnOnSurface = Boolean.getBoolean((String) map.getOrDefault("Spawn_on_surface", false));
+
 		final int minRadius = (int) map.getOrDefault("Min_radius", spawnContainerFromCenter ? 100 : 10);
 		final int maxRadius = (int) map.getOrDefault("Max_radius", spawnContainerFromCenter ? 1500 : 80);
 		Facing blockFace = null;
@@ -445,7 +460,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				.setContainerData(containers)
 				.setKeysData(keys)
 				.setAttempts(attempts)
-				.setSpawnContainerFromWorldCenter(spawnContainerFromCenter)
+				.setSpawnContainerFromCustomCenter(spawnContainerFromCenter)
+				.setSpawnOnSurface(spawnOnSurface )
 				.setMinRadius(minRadius)
 				.setMaxRadius(maxRadius)
 				.setSpawnLocation(LocationSerializer.deserializeLoc(map.get("Spawn-point")));

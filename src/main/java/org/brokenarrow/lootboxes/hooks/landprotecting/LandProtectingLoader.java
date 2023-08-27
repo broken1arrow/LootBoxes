@@ -27,9 +27,9 @@ public class LandProtectingLoader {
 	}
 
 	public boolean checkIfAllProvidersAllowSpawnContainer(Location location) {
-		if (protectingProvider == null)
-			return true;
 		if (location == null)
+			return true;
+		if (protectingProvider == null || protectingProvider.length == 0)
 			return true;
 		for (ProtectingProvider provider : protectingProvider)
 			if (!provider.isAllowedToSpawnContainer(location))

@@ -73,6 +73,7 @@ public class ChatMessages extends YamlFileManager {
 	public static ChatMessages SET_PARTICLE_SIZE_START_TYPE = new ChatMessages("SET_PARTICLE_SIZE.START_TYPE");
 	public static ChatMessages SET_PARTICLE_SIZE_ZERO_OR_LESS = new ChatMessages("SET_PARTICLE_SIZE.ZERO_OR_LESS");
 	public static ChatMessages RANDOM_LOOT_MESAGE_TITEL = new ChatMessages("RANDOM_LOOT_MESAGE.TITEL");
+	public static ChatMessages RANDOM_LOOT_MESAGE = new ChatMessages("RANDOM_LOOT_MESAGE.MESSAGE");
 
 	public static ChatMessages NOT_VALID_NUMBER = new ChatMessages("NOT_VALID_NUMBER");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
@@ -128,7 +129,7 @@ public class ChatMessages extends YamlFileManager {
 
 	public void sendMessage(Player sender, Object... objects) {
 		String message = getMessages(objects);
-		if (this.messages != null && sender != null)
+		if ( message != null && sender != null)
 			if (sender.isConversing())
 				sender.sendRawMessage(translateHexCodes(prefix() + message));
 			else
@@ -138,14 +139,14 @@ public class ChatMessages extends YamlFileManager {
 
 	public String languageMessagePrefix(Object... objects) {
 		String message = getMessages(objects);
-		if (this.messages != null)
+		if (message  != null)
 			return translateHexCodes(prefix() + message);
 		return "";
 	}
 
 	public String languageMessages(Object... objects) {
 		String message = getMessages(objects);
-		if (this.messages != null)
+		if (message != null)
 			return translateHexCodes(message);
 		return "";
 	}
