@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
@@ -80,13 +81,13 @@ public class OpenContainer implements Listener {
 				}
 			}
 
-			ContainerDataBuilder containerData = containerDataCache.getCacheContainerData(containerDataName);
-			if (containerData == null) {
-				containerData = containerDataCache.getCacheContainerData(locationData.getContainerData());
+			ContainerDataBuilder cacheContainerData = containerDataCache.getCacheContainerData(containerDataName);
+			if (cacheContainerData == null) {
+				cacheContainerData = containerDataCache.getCacheContainerData(locationData.getContainerData());
 			}
 
-			KeysData dataCacheCacheKey = containerData.getKeysData().get(key);
-			if (containerData.getLootTableLinked() == null || containerData.getLootTableLinked().isEmpty()) {
+			KeysData dataCacheCacheKey = cacheContainerData.getKeysData().get(key);
+			if (cacheContainerData.getLootTableLinked() == null || cacheContainerData.getLootTableLinked().isEmpty()) {
 				LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
 				event.setCancelled(true);
 				return;
@@ -96,11 +97,16 @@ public class OpenContainer implements Listener {
 				event.setCancelled(true);
 			}
 
-			if (containerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
+			if (cacheContainerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
 				String time = "0";
 				Long cachedTime = lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName);
 				if (cachedTime != null)
 					time = toTimeFromMillis(cachedTime - System.currentTimeMillis());
+				if (time.equals("0")) {
+					Map<Location, ContainerData> containerData = cacheContainerData.getLinkedContainerData();
+					if (containerData == null || containerData.get(location) == null)
+						return;
+				}
 				HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);
 				event.setCancelled(true);
 				return;
@@ -113,7 +119,7 @@ public class OpenContainer implements Listener {
 				playSound(player, UNLOOKED_CONTAINER_SOUND.languageMessages());
 			}
 
-			if (!containerData.isSpawningContainerWithCooldown() && !spawnLootWhenClicking(containerData, location, block)) {
+			if (!cacheContainerData.isSpawningContainerWithCooldown() && !spawnLootWhenClicking(cacheContainerData, location, block)) {
 				LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
 			} else {
 				OPEN_CONTAINER.sendMessage(player);

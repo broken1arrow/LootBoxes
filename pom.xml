@@ -6,14 +6,14 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.40</version>
+    <version>0.41</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.58</utility-library>
+        <utility-library>0.59</utility-library>
     </properties>
     <repositories>
         <!--

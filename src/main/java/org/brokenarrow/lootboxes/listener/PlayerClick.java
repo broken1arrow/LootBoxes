@@ -131,7 +131,9 @@ public class PlayerClick implements Listener {
 			if (event.getItem() != null)
 				itemMetadata = nbt.getCompMetadata().getMetadata(event.getItem(), ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name());
 
-			if (itemMetadata != null) return;
+			if (itemMetadata != null) {
+				return;
+			}
 
 			if (locationData != null && action == Action.LEFT_CLICK_BLOCK) {
 				ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerData());
@@ -141,9 +143,10 @@ public class PlayerClick implements Listener {
 
 			Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
 			if (!containerDataMap.containsKey(location) && action == Action.LEFT_CLICK_BLOCK) {
-				if (addData(block, data, location, metadata))
+				if (addData(block, data, location, metadata)) {
 					ADD_CONTINERS_LEFT_CLICK_BLOCK.sendMessage(player, location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-
+					event.setCancelled(true);
+				}
 			} else if (action == Action.RIGHT_CLICK_BLOCK) {
 				event.setCancelled(true);
 				removeData(data, location, metadata);
