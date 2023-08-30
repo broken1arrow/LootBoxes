@@ -6,14 +6,14 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.41</version>
+    <version>0.43</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.59</utility-library>
+        <utility-library>0.62</utility-library>
     </properties>
     <repositories>
         <!--
@@ -276,14 +276,6 @@
 
                             </artifactSet>
                             <relocations>
-                                <!-- <relocation>
-                                   <pattern>net.kyori.adventure</pattern>
-                                   <shadedPattern>${project.groupId}.${project.artifactId}.adventure</shadedPattern>
-                               </relocation>-->
-                                <!--  <relocation>
-                                     <pattern>net.kyori</pattern>
-                                     <shadedPattern>${project.groupId}.${project.artifactId}.minimsg</shadedPattern>
-                                 </relocation>-->
                                 <relocation>
                                     <pattern>org.broken.arrow</pattern>
                                     <shadedPattern>org.brokenarrow.lootboxes.lib</shadedPattern>

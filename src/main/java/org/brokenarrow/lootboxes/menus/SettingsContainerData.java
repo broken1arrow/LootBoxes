@@ -11,6 +11,7 @@ import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.menus.containerdata.ModifyContainerData;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.LocationWrapper;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -36,7 +37,7 @@ public class SettingsContainerData extends MenuHolder {
 		this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Settings_container_data"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);
@@ -137,14 +138,16 @@ public class SettingsContainerData extends MenuHolder {
 					buttonMatch = true;
 					break;
 				case "World_center":
-					builder.setSpawnContainerFromCustomCenter(click.isLeftClick());
+					builder.setSpawnContainerFromWorldCenter(click.isLeftClick());
+					builder.setSpawnContainerFromPlayerCenter(false);
 					if (player.getLocation().getWorld() != null)
-						builder.setSpawnLocation(player.getLocation().getWorld().getSpawnLocation());
+						builder.setSpawnLocation(new LocationWrapper(player.getLocation().getWorld().getSpawnLocation(), false));
 					buttonMatch = true;
 					break;
 				case "Player_set_loc":
-					builder.setSpawnContainerFromCustomCenter(click.isLeftClick());
-					builder.setSpawnLocation(player.getLocation());
+					builder.setSpawnContainerFromPlayerCenter(click.isLeftClick());
+					builder.setSpawnContainerFromWorldCenter(false);
+					builder.setSpawnLocation(new LocationWrapper(player.getLocation(), false));
 					buttonMatch = true;
 					break;
 				case "Spawn_On_Surface":
@@ -219,10 +222,14 @@ public class SettingsContainerData extends MenuHolder {
 		if (button.isActionTypeEqual("Max_radius"))
 			placeholders = getPlaceholders("", containerDataBuilder.getMaxRadius());
 
-		if (button.isActionTypeEqual("World_center") || button.isActionTypeEqual("Player_set_loc"))
-			placeholders = getPlaceholders( containerDataBuilder.isSpawnContainerFromCustomCenter());
+		if (button.isActionTypeEqual("World_center"))
+			placeholders = getPlaceholders(containerDataBuilder.isSpawnContainerFromWorldCenter(), containerDataBuilder.getSpawnLocation() != null ? containerDataBuilder.getSpawnLocation().toString() :"");
+
+		if (button.isActionTypeEqual("Player_set_loc"))
+			placeholders = getPlaceholders(containerDataBuilder.isSpawnContainerFromPlayerCenter(), containerDataBuilder.getSpawnLocation() != null ?containerDataBuilder.getSpawnLocation().toString():"");
+
 		if (button.isActionTypeEqual("Spawn_On_Surface"))
-			placeholders = getPlaceholders( containerDataBuilder.isSpawnOnSurface());
+			placeholders = getPlaceholders(containerDataBuilder.isSpawnOnSurface());
 
 		return placeholders;
 	}

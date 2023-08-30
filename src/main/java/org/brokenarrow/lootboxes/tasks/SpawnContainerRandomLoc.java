@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.RANDOM_LOOT_MESAGE;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.RANDOM_LOOT_MESAGE_TITEL;
@@ -31,7 +33,7 @@ import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.serilazeLoc;
 import static org.brokenarrow.lootboxes.untlity.blockVisualization.BlockVisualize.visulizeBlock;
 
 public class SpawnContainerRandomLoc {
-
+	private final Logger logger = Logger.getLogger("SpawnContainerRandomLoc");
 	private final Settings settingsData = Lootboxes.getInstance().getSettings();
 	private SettingsData settings;
 	private final Map<String, Long> cachedContainers = new HashMap<>();
@@ -51,7 +53,6 @@ public class SpawnContainerRandomLoc {
 
 			Set<String> remove = new HashSet<>();
 			for (Entry<String, Long> entry : this.cachedContainers.entrySet()) {
-
 				if (System.currentTimeMillis() >= entry.getValue()) {
 					ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(entry.getKey());
 					if (!containerDataBuilder.isRandomSpawn()) {
@@ -60,9 +61,9 @@ public class SpawnContainerRandomLoc {
 						continue;
 					}
 
-					if (containerDataBuilder.isSpawnContainerFromCustomCenter()) {
+					if (containerDataBuilder.isSpawnContainerFromWorldCenter()) {
 						if (containerDataBuilder.getSpawnLocation() != null)
-							spawnBlock(containerDataBuilder, containerDataBuilder.getSpawnLocation(), null);
+							spawnBlock(containerDataBuilder, containerDataBuilder.getSpawnLocation().getLocation(), null);
 					} else
 						for (Player player : Bukkit.getOnlinePlayers()) {
 							Location location = player.getLocation();
@@ -73,7 +74,7 @@ public class SpawnContainerRandomLoc {
 					entry.setValue(time);
 				}
 			}
-			if (!remove.isEmpty()){
+			if (!remove.isEmpty()) {
 				remove.forEach(this.cachedContainers::remove);
 			}
 		}
@@ -81,7 +82,6 @@ public class SpawnContainerRandomLoc {
 	}
 
 	public void setRandomSpawnedContainer() {
-		cachedContainers.clear();
 		for (String containerKeyName : containerDataCacheInstance.getCacheContainerData().keySet()) {
 			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerKeyName);
 			if (containerDataBuilder.isRandomSpawn()) {
@@ -93,6 +93,7 @@ public class SpawnContainerRandomLoc {
 	}
 
 	public void spawnBlock(ContainerDataBuilder containerDataBuilder, Location location, Player player) {
+		if (location == null) return;
 
 		Location loc = null;
 		for (int i = 0; i < containerDataBuilder.getAttempts(); i++) {
@@ -100,7 +101,6 @@ public class SpawnContainerRandomLoc {
 			if (loc != null)
 				break;
 		}
-		System.out.println("playerMessage " + loc );
 		if (loc != null) {
 			spawnContainer(containerDataBuilder, loc);
 			String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serilazeLoc(loc));
@@ -112,7 +112,6 @@ public class SpawnContainerRandomLoc {
 					Bukkit.broadcastMessage(mes.length > 0 ? mes[0] : "");
 			}
 			String playerMessage = RANDOM_LOOT_MESAGE.languageMessagePrefix(serilazeLoc(loc));
-			System.out.println("playerMessage " + playerMessage);
 			if (containerDataBuilder.isShowTitle() && playerMessage != null && !playerMessage.isEmpty()) {
 				if (player != null)
 					player.sendMessage(playerMessage);
@@ -126,6 +125,9 @@ public class SpawnContainerRandomLoc {
 					RunTimedTask.runtaskLater(20 * 120, () -> visulizeBlock(finalLoc.getBlock(), finalLoc, false), false);
 				}, false);
 			}
+		} else {
+			if (settings.isDebug())
+				logger.log(Level.INFO, "Could not find valid location for spawn random chest for this center location " + location + ".");
 		}
 
 	}

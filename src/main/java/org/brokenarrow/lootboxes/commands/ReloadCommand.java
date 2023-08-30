@@ -20,7 +20,6 @@ public class ReloadCommand extends CommandHolder {
 		Lootboxes plugin = Lootboxes.getInstance();
 		try {
 			plugin.reloadFiles();
-			//ChatMessages.messagesReload(plugin);
 			plugin.getSpawnLootContainer().setRandomSpawnedContainer();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -17,7 +17,6 @@ import java.util.logging.Level;
 
 public class ChatMessages extends YamlFileManager {
 	private static final Map<String, ChatMessages> chatMessagesMap = new HashMap<>();
-	private String messages;
 
 	public static ChatMessages CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME = new ChatMessages("CHANGE_DISPLAYNAME_AND_LORE.DISPLAYNAME");
 	public static ChatMessages CHANGE_DISPLAYNAME_AND_LORE_LORE = new ChatMessages("CHANGE_DISPLAYNAME_AND_LORE.LORE");
@@ -89,6 +88,7 @@ public class ChatMessages extends YamlFileManager {
 	public static ChatMessages TRUE = new ChatMessages("BOOLEAN_TRUE");
 	public static ChatMessages FALSE = new ChatMessages("BOOLEAN_FALSE");
 
+	private String messages;
 	public ChatMessages(String idKey) {
 		super(Lootboxes.getInstance(),"language", true,true);
 		chatMessagesMap.put(idKey, this);
@@ -158,7 +158,6 @@ public class ChatMessages extends YamlFileManager {
 	public static void messagesReload(Plugin plugin) {
 
 		File file = new File(plugin.getDataFolder() + "/language", "language_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml");
-
 		if (!file.exists())
 			Lootboxes.getInstance().saveResource("language/language_" + Lootboxes.getInstance().getSettings().getSettingsData().getLanguage() + ".yml", false);
 

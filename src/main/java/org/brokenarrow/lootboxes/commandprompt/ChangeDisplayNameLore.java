@@ -67,7 +67,7 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 			}
 			if (menuAccess == ALTER_CONTAINER_DATA_MENU) {
 				ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-				ContainerDataBuilder.Builder builder = data.getBuilder().setDisplayname(input);
+				ContainerDataBuilder.Builder builder = data.getBuilder().setDisplayName(input);
 
 				containerDataCache.setContainerData(container, builder.build());
 				CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM.sendMessage(getPlayer(context), input);

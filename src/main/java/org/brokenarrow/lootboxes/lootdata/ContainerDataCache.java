@@ -91,11 +91,12 @@ public class ContainerDataCache extends YamlFileManager {
 				.setParticleEffects(new HashMap<>())
 				.setEnchant(false)
 				.setIcon(material)
-				.setDisplayname("")
+				.setDisplayName("")
 				.setLore(new ArrayList<>())
 				.setContainerData(new HashMap<>())
 				.setKeysData(new HashMap<>())
-				.setSpawnContainerFromCustomCenter(true)
+				.setSpawnContainerFromWorldCenter(false)
+				.setSpawnContainerFromPlayerCenter(false)
 				.build();
 
 		cacheContainerData.put(container, builder);
