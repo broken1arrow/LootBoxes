@@ -43,6 +43,7 @@ public class ChooseContainer extends MenuHolder {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Choose_container"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			this.setUseColorConversion(true);
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);

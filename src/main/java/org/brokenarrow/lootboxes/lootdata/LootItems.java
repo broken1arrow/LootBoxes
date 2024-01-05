@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
 import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.untlity.LootDataSave;
@@ -11,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,8 +198,16 @@ public class LootItems extends YamlFileManager {
 		Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, table);
 	}
 
+	/**
+	 * Subclasses must implement this method to save data to the specified file.
+	 *
+	 * @param file                 the file to which the data should be saved
+	 * @param configurationWrapper the wrapper that allows you to set the path individually
+	 *                             for every map or cached list. This capability enables you
+	 *                             to customize the save path for different data sets
+	 */
 	@Override
-	public void saveDataToFile(final File file) {
+	protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
 		final String fileName = getNameOfFile(file.getName());
 		customConfig = YamlConfiguration.loadConfiguration(file);
 		final Map<String, LootData> settings = this.cachedLoot.get(fileName);

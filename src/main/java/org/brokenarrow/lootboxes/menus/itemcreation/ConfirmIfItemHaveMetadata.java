@@ -38,6 +38,7 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Confirm_if_item_have_metadata"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Confirm_If_Item_Have_Metadata'.");

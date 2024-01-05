@@ -26,6 +26,7 @@ public class MainMenu extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Main_menu"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Main_Menu'.");

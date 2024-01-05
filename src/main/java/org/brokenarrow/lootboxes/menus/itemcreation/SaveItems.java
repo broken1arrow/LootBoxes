@@ -34,6 +34,7 @@ public class SaveItems extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Save_items"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Save_items'.");

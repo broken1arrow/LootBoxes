@@ -36,6 +36,7 @@ public class ModifyContainerData extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Containers_list"));
 			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(player, guiTemplate.getMenuTitle(), ""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Containers_list'.");

@@ -48,6 +48,7 @@ public class ParticleSettings extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Particle_settings"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Particle_settings'.");

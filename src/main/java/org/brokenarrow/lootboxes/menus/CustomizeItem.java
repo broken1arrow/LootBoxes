@@ -40,6 +40,7 @@ public class CustomizeItem extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Customize_item"));
 			setTitle(()->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),itemToEdit,lootTableName));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Customize_item'.");

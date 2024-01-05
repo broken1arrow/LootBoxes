@@ -52,6 +52,7 @@ public class MaterialList extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Material_list"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Material_list'.");

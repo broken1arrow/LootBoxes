@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.listener;
 
+import org.broken.arrow.menu.library.utility.ServerVersion;
 import org.broken.arrow.nbt.library.RegisterNbtAPI;
-import org.broken.arrow.nbt.library.utility.ServerVersion;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
@@ -71,7 +71,7 @@ public class CloseContainer implements Listener {
 
 	@Nullable
 	private Location getLocation(final InventoryCloseEvent event) {
-		if (ServerVersion.newerThan(ServerVersion.v1_9))
+		if (ServerVersion.newerThan(ServerVersion.V1_9))
 			return event.getInventory().getLocation();
 		else {
 			final org.bukkit.inventory.InventoryHolder holder = event.getInventory().getHolder();
@@ -85,7 +85,7 @@ public class CloseContainer implements Listener {
 				return ((Dropper) holder).getLocation();
 			if (holder instanceof Dispenser)
 				return ((Dispenser) holder).getLocation();
-			if (ServerVersion.newerThan(ServerVersion.v1_13))
+			if (ServerVersion.newerThan(ServerVersion.V1_13))
 				if (holder instanceof Barrel)
 					return ((Barrel) holder).getLocation();
 		}
@@ -94,7 +94,7 @@ public class CloseContainer implements Listener {
 
 	@Nullable
 	private Location getSourceLocation(final InventoryMoveItemEvent event) {
-		if (ServerVersion.newerThan(ServerVersion.v1_9))
+		if (ServerVersion.newerThan(ServerVersion.V1_9))
 			return event.getSource().getLocation();
 		else {
 			final org.bukkit.inventory.InventoryHolder holder = event.getSource().getHolder();
@@ -106,7 +106,7 @@ public class CloseContainer implements Listener {
 				return ((Dropper) holder).getLocation();
 			if (holder instanceof Dispenser)
 				return ((Dispenser) holder).getLocation();
-			if (ServerVersion.newerThan(ServerVersion.v1_13))
+			if (ServerVersion.newerThan(ServerVersion.V1_13))
 				if (holder instanceof Barrel)
 					return ((Barrel) holder).getLocation();
 		}

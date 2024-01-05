@@ -1,9 +1,11 @@
 package org.brokenarrow.lootboxes.settings;
 
 import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -17,8 +19,9 @@ public class Settings extends YamlFileManager {
 
 	private SettingsData settings;
 
+
 	@Override
-	protected void saveDataToFile(final File file) {
+	protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
 
 	}
 

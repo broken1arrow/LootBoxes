@@ -35,6 +35,7 @@ public class ChooseRandomLootContainer extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Random_loot_container"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),containerName));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Random_loot_container'.");

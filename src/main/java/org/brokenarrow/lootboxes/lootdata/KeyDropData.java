@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
 import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
@@ -9,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -128,10 +130,8 @@ public class KeyDropData extends YamlFileManager {
 		//runtaskLater(5, () -> save(containerDataFileName), true);
 	}
 
-
 	@Override
-	public void saveDataToFile(final File file) {
-		final String fileName = getNameOfFile(file.getName());
+	protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
 		FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		configuration.set("Keys_Data", null);
 		for (final Entry<String, Map<String, KeyMobDropData>> settings : this.cachedKeyData.entrySet()) {
@@ -167,7 +167,6 @@ public class KeyDropData extends YamlFileManager {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		//}
 	}
 
 	@Override

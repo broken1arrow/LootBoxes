@@ -49,6 +49,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Alter_container_data"));
 			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(player, guiTemplate.getMenuTitle(), containerDataName));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Alter_container_data'.");

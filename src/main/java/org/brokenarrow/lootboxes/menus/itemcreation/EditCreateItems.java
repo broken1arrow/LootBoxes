@@ -39,6 +39,7 @@ public class EditCreateItems extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Edit_items_for_loot_table"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Edit_items_for_loot_table'.");

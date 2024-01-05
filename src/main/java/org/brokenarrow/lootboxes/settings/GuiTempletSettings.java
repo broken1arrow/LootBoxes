@@ -1,10 +1,12 @@
 package org.brokenarrow.lootboxes.settings;
 
 import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -230,7 +232,7 @@ public class GuiTempletSettings extends YamlFileManager {
 	}
 
 	@Override
-	protected void saveDataToFile(final File file) {
+	protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
 
 	}
 

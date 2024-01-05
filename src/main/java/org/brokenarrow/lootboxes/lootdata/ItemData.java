@@ -1,12 +1,14 @@
 package org.brokenarrow.lootboxes.lootdata;
 
 import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +24,7 @@ public class ItemData extends YamlFileManager {
 	private final Map<String, Map<String, ItemStack>> cacheItemData = new HashMap<>();
 
 	public ItemData() {
-		super(Lootboxes.getInstance(), "itemdata", true, true);
+		super(Lootboxes.getInstance(), "itemdata.yml", true, true);
 
 	}
 
@@ -117,8 +119,7 @@ public class ItemData extends YamlFileManager {
 	}
 
 	@Override
-	public void saveDataToFile(final File file) {
-
+	protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
 		FileConfiguration customConfig = YamlConfiguration.loadConfiguration(file);
 		customConfig.set("Items", null);
 		final Map<String, Map<String, ItemStack>> cachedItems = this.getCacheData();

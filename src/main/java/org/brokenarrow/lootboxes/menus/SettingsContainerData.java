@@ -39,6 +39,7 @@ public class SettingsContainerData extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Settings_container_data"));
 			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
 			setMenuOpenSound(guiTemplate.getSound());
+			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Settings_container_data'.");

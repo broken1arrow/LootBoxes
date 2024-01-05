@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
 import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
@@ -123,7 +124,7 @@ public class ContainerDataCache extends YamlFileManager {
 
 			Map<Object, ParticleEffect> particleEffects = containerDataBuilder.getParticleEffects();
 			if (particleEffects != null)
-				if (org.broken.arrow.nbt.library.utility.ServerVersion.atLeast(org.broken.arrow.nbt.library.utility.ServerVersion.v1_13))
+				if (org.broken.arrow.menu.library.utility.ServerVersion.atLeast(org.broken.arrow.menu.library.utility.ServerVersion.V1_13))
 					return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
 				else
 					return particleEffects.values().stream().map(ParticleEffect::getEffect).collect(Collectors.toList());
@@ -432,8 +433,7 @@ public class ContainerDataCache extends YamlFileManager {
 	}
 
 	@Override
-	public void saveDataToFile(final File file) {
-		//if (!isSingleFile() && !file.getName().equals(getFileName())) return;
+	protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
 		try {
 			FileConfiguration configuration = new YamlConfiguration();
 			//configuration.set("Data", null);

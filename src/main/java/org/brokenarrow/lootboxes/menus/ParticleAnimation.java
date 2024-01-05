@@ -50,6 +50,7 @@ public class ParticleAnimation extends MenuHolder {
 			setMenuSize(guiTemplate.getinvSize("Particle_animation"));
 			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
 			setMenuOpenSound(null);
+			this.setUseColorConversion(true);
 			//setMenuOpenSound(guiTemplate.getSound());
 		} else {
 			setMenuSize(36);
