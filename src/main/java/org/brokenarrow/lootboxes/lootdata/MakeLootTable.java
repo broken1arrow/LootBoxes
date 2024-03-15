@@ -61,8 +61,9 @@ public class MakeLootTable {
 		int amount = Math.max(random.randomIntNumber(this.minimumAmountOfItems, this.maxAmountOfItems), 1);
 		if (!backupItemstacks.isEmpty()) {
 			if (this.minimumAmountOfItems + 1 >= size) {
-				if (size == 1)
-					itemStacks.add(backupItemstacks.get(size));
+				if (size == 1) {
+					itemStacks.add(backupItemstacks.get(0));
+				}
 				else if (size > 1) {
 					int randomStack = Math.max(random.nextRandomInt(size) + 1, 1);
 					for (int i = 0; i < randomStack; i++) {
