@@ -127,7 +127,7 @@ public final class EditLootTable extends MenuHolder {
 		}
 		if (button.isActionTypeEqual("Remove_loot_table")) {
 			lootTable.removeLootTable(lootTableName);
-			new EditLootTable(lootTableName).menuOpen(player);
+			new EditCreateLootTable().menuOpen(player);
 		}
 		if (button.isActionTypeEqual("Forward_button")) {
 			if (click.isLeftClick()) {

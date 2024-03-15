@@ -173,6 +173,7 @@ public class LootItems extends YamlFileManager {
 	}
 
 	public boolean removeLootTable(final String fileName) {
+		cachedLoot.remove(fileName);
 		runtaskLater(5, () -> removeFile(fileName), true);
 		return false;
 	}
