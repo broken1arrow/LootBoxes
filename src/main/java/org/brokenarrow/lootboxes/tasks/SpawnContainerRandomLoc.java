@@ -67,6 +67,9 @@ public class SpawnContainerRandomLoc {
 					} else
 						for (Player player : Bukkit.getOnlinePlayers()) {
 							Location location = player.getLocation();
+                            if (!containerDataBuilder.hasPermissionForRandomSpawn(player))
+                                continue;
+
 							if (lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location))
 								spawnBlock(containerDataBuilder, location, player);
 						}

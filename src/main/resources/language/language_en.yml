@@ -57,6 +57,8 @@ SET_PARTICLE_SIZE:
 
 NOT_VALID_NUMBER: "&fThis {0} is not a valid number."
 
+SET_PERMISSION: "&fSet the permission for the container; only players with permission will have containers spawn around their location when set."
+
 ADD_CONTINERS:
   TURNED_ON_ADD_CONTAINERS: "&fLeftclick to add location and rightclick to remove location,turn off while leftclicking air and sneaking."
   TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "&fLeftclick to add location and rightclick to remove location, for turn it off dropp item or switch slot."

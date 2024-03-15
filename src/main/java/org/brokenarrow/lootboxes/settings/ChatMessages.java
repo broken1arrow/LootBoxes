@@ -76,6 +76,8 @@ public class ChatMessages extends YamlFileManager {
 	public static ChatMessages RANDOM_LOOT_MESAGE_TITEL = new ChatMessages("RANDOM_LOOT_MESAGE.TITEL");
 	public static ChatMessages RANDOM_LOOT_MESAGE = new ChatMessages("RANDOM_LOOT_MESAGE.MESSAGE");
 
+	public static ChatMessages SET_PERMISSION = new ChatMessages("SET_PERMISSION");
+
 	public static ChatMessages NOT_VALID_NUMBER = new ChatMessages("NOT_VALID_NUMBER");
 	public static ChatMessages PREFIX = new ChatMessages("PREFIX");
 	public static ChatMessages RELOAD = new ChatMessages("RELOAD");

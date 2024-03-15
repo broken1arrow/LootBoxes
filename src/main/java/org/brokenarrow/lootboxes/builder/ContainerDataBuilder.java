@@ -8,6 +8,7 @@ import org.brokenarrow.lootboxes.untlity.particles.ParticlesConversion;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,7 @@ import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
 public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 	private final String lootTableLinked;
+	private String permissionForRandomSpawn;
 	private final Material icon;
 	private final Material randomLootContainerItem;
 	private final Facing randomLootContainerFacing;
@@ -51,6 +53,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 	private ContainerDataBuilder(final Builder builder) {
 		this.lootTableLinked = builder.containerDataLinkedToLootTable;
+		this.permissionForRandomSpawn = builder.permissionForRandomSpawn;
 		this.particleEffects = builder.particleEffects;
 		this.icon = builder.icon;
 		this.randomLootContainerItem = builder.randomLootContainerItem;
@@ -79,6 +82,16 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return lootTableLinked;
 	}
 
+	public String getPermissionForRandomSpawn() {
+		return permissionForRandomSpawn;
+	}
+
+	public boolean hasPermissionForRandomSpawn(Player player) {
+		String permission = this.getPermissionForRandomSpawn();
+		if (permission == null || permission.isEmpty())
+			return true;
+		return player.hasPermission(permission);
+	}
 	@Nullable
 	public Map<Object, ParticleEffect> getParticleEffects() {
 		return particleEffects;
@@ -180,6 +193,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	public static final class Builder {
 
 		private String containerDataLinkedToLootTable;
+		private String permissionForRandomSpawn;
 		private Material icon;
 		public Material randomLootContainerItem;
 		public Facing randomLootContainerFacing;
@@ -206,6 +220,11 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 		public Builder setSpawnContainerFromWorldCenter(final boolean spawnContainerFromWorldCenter) {
 			this.spawnContainerFromWorldCenter = spawnContainerFromWorldCenter;
+			return this;
+		}
+
+		public Builder setPermissionForRandomSpawn(String permissionForRandomSpawn) {
+			this.permissionForRandomSpawn = permissionForRandomSpawn;
 			return this;
 		}
 
@@ -378,6 +397,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	public Map<String, Object> serialize() {
 		final Map<String, Object> keysData = new LinkedHashMap<>();
 		keysData.put("LootTable_linked", this.lootTableLinked);
+        keysData.put("permission", this.permissionForRandomSpawn == null ? "" : this.permissionForRandomSpawn);
 		keysData.put("Icon", this.icon + "");
 		keysData.put("Random_loot_container", this.randomLootContainerItem + "");
 		keysData.put("Random_loot_faceing", this.randomLootContainerFacing + "");
@@ -456,7 +476,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		}
 		ParticlesConversion particlesConversion = new ParticlesConversion();
 
-		final ContainerDataBuilder.Builder builder = new ContainerDataBuilder.Builder()
+		final ContainerDataBuilder.Builder builder = new Builder()
 				.setContainerDataLinkedToLootTable(lootTableLinked)
 				.setSpawningContainerWithCooldown(spawningContainerWithCooldown)
 				.setCooldown(cooldown)
@@ -479,7 +499,9 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				.setSpawnOnSurface(spawnOnSurface)
 				.setMinRadius(minRadius)
 				.setMaxRadius(maxRadius)
-				.setSpawnLocation(new LocationWrapper("Spawn-point", map, false));
+				.setSpawnLocation(new LocationWrapper("Spawn-point", map, false))
+				.setPermissionForRandomSpawn(String.valueOf(map.get("permission")));
+
 
 		return builder.build();
 	}

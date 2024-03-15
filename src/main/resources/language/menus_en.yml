@@ -1729,7 +1729,22 @@ Menus:
             - "&atry spawn under ground."
             - ""
             - "&aCurrently set to: &6{0}"
-      "44":
+      "37":
+        action_type: Permission
+        material: IRON_BLOCK
+        name: "&bSet permission"
+        glow: true
+        lore:
+          - "&aSet this is permission is it set it will"
+          - "&awill only spawn around a player with"
+          - "&athe permission. If empty or null,it will"
+          - "&aspawn on all players online."
+          - "&a"
+          - "&aLeftclick to set permission and"
+          - "&arightclick to unset."
+          - "&a"
+          - "&aCurrently set: &6{0}"
+      "53":
         action_type: Back_button
         material: RED_STAINED_GLASS_PANE
         name: "&bBack"
@@ -1738,7 +1753,7 @@ Menus:
           - "&6"
           - "&aGo back to"
           - "&acontainer data."
-      36-43:
+      45-52:
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false
