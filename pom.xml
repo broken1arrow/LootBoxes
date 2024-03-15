@@ -13,7 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.72</utility-library>
+        <utility-library>0.77</utility-library>
     </properties>
     <repositories>
         <!--
@@ -79,19 +79,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <!-- Change this to the latest version to stay up to date
-            <version>1.16.5-R0.1-SNAPSHOT</version>
-            -->
             <version>1.18.2-R0.1-SNAPSHOT</version>
-
-            <!--
-               The scope indicates if this library should be packaged together with our plugin
-               when we want to publish it.
-
-               Set this to "compile" if you want all classes from this library to be copied
-               to your plugin's jar, otherwise set this to "provided".
-               <scope>provided</scope>
-           -->
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -116,7 +104,7 @@
             <groupId>CMILib</groupId>
             <artifactId>CMILib</artifactId>
             <scope>system</scope>
-            <systemPath>H:/PluginsJarUseForAPI/CMILib-0.0.20.jar</systemPath>
+            <systemPath>D:/PluginsJarUseForAPI/CMILib-0.0.20.jar</systemPath>
             <version>3.3.1</version>
         </dependency>
         <dependency>
