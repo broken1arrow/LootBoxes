@@ -39,6 +39,7 @@ public class LootItems extends YamlFileManager {
 
 	public LootItems() {
 		super(Lootboxes.getInstance(),"tables",false,true);
+		setExtension("yml");
 	}
 
 	public Map<String, Map<String, LootData>> getCachedLoot() {
@@ -174,7 +175,10 @@ public class LootItems extends YamlFileManager {
 
 	public boolean removeLootTable(final String fileName) {
 		cachedLoot.remove(fileName);
-		runtaskLater(5, () -> removeFile(fileName), true);
+		runtaskLater(5, () -> {
+			final File folder = new File(getDataFolder() +"/"+ this.getPath(), fileName + "." + getExtension());
+			folder.delete();
+		}, true);
 		return false;
 	}
 
