@@ -6,7 +6,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
-import org.brokenarrow.lootboxes.menus.keys.SaveNewKeys;
+import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpen;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_CONFIRM;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_CONFIRM_FINISH;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_DUPLICATE;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_TYPE_NAME;
 
 public class SetKeyName extends SimpleConversation {
 
@@ -123,7 +126,7 @@ public class SetKeyName extends SimpleConversation {
 				return getFirstPrompt();
 			}
 			SET_NAME_ON_KEY_CONFIRM_FINISH.sendMessage(player, item);
-			new SaveNewKeys(containerData).menuOpen(getPlayer(context));
+			new EditKeysToOpen(containerData).menuOpen(getPlayer(context));
 			return null;
 		}
 

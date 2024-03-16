@@ -1811,7 +1811,7 @@ Menus:
       size: 45
     buttons:
       "41":
-        action_type: Save_keys
+        action_type: Save_keys_button
         material: BRICK
         name: "&bSave the items in the list"
         glow: true

@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.menus.keys;
 
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
 import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
+import org.broken.arrow.menu.library.CheckItemsInsideMenu;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
@@ -64,7 +65,9 @@ public class SaveNewKeys extends MenuHolder {
 
 		if (button.isActionTypeEqual("Save_keys_button")) {
 			//todo change to this? getCheckItemsInsideMenu()..getItemsFromSetSlots(
-			Map<Integer, ItemStack> items = Lootboxes.getInstance().getMenuApi().getCheckItemsInsideInventory().getItemsFromSetSlots(menu, null, false);
+			CheckItemsInsideMenu checkItemsInsideMenu = getCheckItemsInsideMenu();
+			checkItemsInsideMenu.setSlotsToCheck(this.getFillSpace());
+			Map<Integer, ItemStack> items = checkItemsInsideMenu.getItemsFromSetSlots(menu, null, false);
 			if (items == null || items.isEmpty()) return false;
 
 			new SetKeyName(items.values().toArray(new ItemStack[0]), containerData).start(player);
