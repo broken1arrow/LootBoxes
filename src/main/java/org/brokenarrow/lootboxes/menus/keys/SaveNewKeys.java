@@ -64,7 +64,6 @@ public class SaveNewKeys extends MenuHolder {
 	public boolean run(MenuButtonData button, Inventory menu, ClickType click) {
 
 		if (button.isActionTypeEqual("Save_keys_button")) {
-			//todo change to this? getCheckItemsInsideMenu()..getItemsFromSetSlots(
 			CheckItemsInsideMenu checkItemsInsideMenu = getCheckItemsInsideMenu();
 			checkItemsInsideMenu.setSlotsToCheck(this.getFillSpace());
 			Map<Integer, ItemStack> items = checkItemsInsideMenu.getItemsFromSetSlots(menu, null, false);

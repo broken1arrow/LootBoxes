@@ -1812,7 +1812,7 @@ Menus:
     buttons:
       "41":
         action_type: Save_keys_button
-        material: BRICK
+        material: GOLD_BLOCK
         name: "&bSave the items in the list"
         glow: true
         lore:
@@ -1828,7 +1828,7 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
-      "36-43":
+      "36-39,41-43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false
