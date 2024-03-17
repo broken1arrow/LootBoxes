@@ -29,10 +29,11 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 	private final String lootTable;
 
 	public ConfirmIfItemHaveMetadata(final Map<Integer, ItemStack> items, final String lootTable) {
-		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Confirm_if_item_have_metadata");
 		this.items = items;
 		this.lootTable = lootTable;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Confirm_if_item_have_metadata");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Confirm_if_item_have_metadata"));

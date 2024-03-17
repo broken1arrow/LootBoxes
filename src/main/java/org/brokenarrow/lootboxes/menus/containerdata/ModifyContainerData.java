@@ -28,9 +28,9 @@ public class ModifyContainerData extends MenuHolder {
 
 	public ModifyContainerData() {
 		super(ContainerDataCache.getInstance().getContainerData());
-		//gui = new GuiTemplesYaml.Builder(getViewer(), "Container_data").placeholders(getPageNumber());
-
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Containers_list");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Containers_list"));

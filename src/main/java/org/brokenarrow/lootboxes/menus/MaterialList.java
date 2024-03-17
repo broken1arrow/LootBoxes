@@ -43,10 +43,11 @@ public class MaterialList extends MenuHolder {
 		this.menuKey = menuKey;
 		this.value = value;
 		this.container = container;
-		//this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Matrial_List").placeholders("");
 		data = containerDataCache.getCacheContainerData(container);
-
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Material_list");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Material_list"));

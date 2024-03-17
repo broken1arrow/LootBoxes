@@ -30,6 +30,9 @@ public class ChooseRandomLootContainer extends MenuHolder {
 		super(containers());
 		this.containerName = containerName;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Random_loot_container");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Random_loot_container"));

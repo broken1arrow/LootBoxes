@@ -34,10 +34,12 @@ public class Enchantments extends MenuHolder {
 	private final Map<ItemStack, Enchantment> cachedEnchantment = new HashMap<>();
 	public Enchantments(final String lootTableName, final String itemToEdit, final String enchantmentsToSearchFor) {
 		super(Lootboxes.getInstance().getEnchantmentList().getEnchantments(enchantmentsToSearchFor));
-
 		this.lootTableName = lootTableName;
 		this.itemToEdit = itemToEdit;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Enchantments_list");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Enchantments_list"));

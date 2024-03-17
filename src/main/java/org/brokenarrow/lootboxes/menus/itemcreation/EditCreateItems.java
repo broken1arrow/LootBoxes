@@ -34,6 +34,8 @@ public class EditCreateItems extends MenuHolder {
 		super(LootItems.getInstance().getItems(lootTable));
 		this.lootTable = lootTable;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_items_for_loot_table");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_items_for_loot_table"));

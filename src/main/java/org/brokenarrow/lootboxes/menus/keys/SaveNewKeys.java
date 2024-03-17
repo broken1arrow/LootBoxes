@@ -25,6 +25,8 @@ public class SaveNewKeys extends MenuHolder {
 		this.containerData = containerData;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Save_new_keys");
 
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Save_new_keys"));

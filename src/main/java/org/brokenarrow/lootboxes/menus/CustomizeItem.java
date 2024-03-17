@@ -36,6 +36,9 @@ public class CustomizeItem extends MenuHolder {
 		this.itemToEdit = itemToEdit;
 		this.data = lootItems.getLootData(lootTableName, itemToEdit);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Customize_item");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Customize_item"));
 			setTitle(()->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),itemToEdit,lootTableName));

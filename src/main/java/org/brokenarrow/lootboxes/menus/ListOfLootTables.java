@@ -30,8 +30,10 @@ public class ListOfLootTables extends MenuHolder {
 	public ListOfLootTables(String container) {
 		super(new ArrayList<>(LootItems.getInstance().getCachedLoot().keySet()));
 		this.container = container;
-		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "List_of_loottables").placeholders("");
 		this.guiTemplate = Lootboxes.getInstance().getMenu("List_of_loot_tables");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("List_of_loot_tables"));

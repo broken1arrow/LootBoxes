@@ -38,12 +38,13 @@ public class ParticleSettings extends MenuHolder {
 	private final MenuTemplate guiTemplate;
 
 	public ParticleSettings(String container, Object particle) {
-		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Particle_Settings").placeholders(particle);
 		this.container = container;
 		this.particle = particle;
 		final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
 		this.particleEffect = containerDataCache.getParticleEffect(container, particle);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_settings");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Particle_settings"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));

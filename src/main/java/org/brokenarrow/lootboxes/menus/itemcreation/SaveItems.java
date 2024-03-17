@@ -27,8 +27,9 @@ public class SaveItems extends MenuHolder {
 
 	public SaveItems(final String lootTable) {
 		this.lootTable = lootTable;
-
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Save_items");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Save_items"));

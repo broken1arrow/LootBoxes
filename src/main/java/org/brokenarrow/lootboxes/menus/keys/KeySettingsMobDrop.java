@@ -33,6 +33,8 @@ public class KeySettingsMobDrop extends MenuHolder {
 		//this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, "");
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Key_settings_mob_drop");
 		mobDropData = keyDropData.getKeyMobDropData(containerData, keyName);
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Key_settings_mob_drop"));

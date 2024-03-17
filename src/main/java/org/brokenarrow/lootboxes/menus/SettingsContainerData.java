@@ -32,10 +32,12 @@ public class SettingsContainerData extends MenuHolder {
     private ContainerDataBuilder containerDataBuilder;
 
     public SettingsContainerData(String containerDataName) {
-        //guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Settings_Container_Data").placeholders(containerDataName);
         this.guiTemplate = Lootboxes.getInstance().getMenu("Settings_container_data");
         this.containerDataName = containerDataName;
         this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
+
+        setUseColorConversion(true);
+        
         if (guiTemplate != null) {
             setMenuSize(guiTemplate.getinvSize("Settings_container_data"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));

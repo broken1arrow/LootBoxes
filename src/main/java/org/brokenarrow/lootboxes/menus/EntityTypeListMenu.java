@@ -42,6 +42,9 @@ public class EntityTypeListMenu extends MenuHolder {
 		this.value = value;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("EntityType_list");
 		this.mobDropData = keyDropData.getKeyMobDropData(container, value);
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setAutoTitleCurrentPage(false);
 			setFillSpace(guiTemplate.getFillSlots());

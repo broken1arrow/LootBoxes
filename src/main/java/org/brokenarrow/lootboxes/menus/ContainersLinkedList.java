@@ -37,6 +37,8 @@ public class ContainersLinkedList extends MenuHolder {
 		//this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(containerName);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Container_linked_list");
 
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Container_linked_list"));

@@ -42,9 +42,10 @@ public class ParticleAnimation extends MenuHolder {
 		super(Lootboxes.getInstance().getParticleEffectList().getParticleList(particleToSearchFor));
 		this.container = container;
 		this.particleEffectList = Lootboxes.getInstance().getParticleEffectList();
-		//gui = new GuiTemplesYaml.Builder(getViewer(), "Particle_Animantion").placeholders("");
-
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_animation");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Particle_animation"));

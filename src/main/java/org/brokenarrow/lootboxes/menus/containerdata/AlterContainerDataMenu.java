@@ -41,9 +41,10 @@ public final class AlterContainerDataMenu extends MenuHolder {
 	private final MenuTemplate guiTemplate;
 
 	public AlterContainerDataMenu(final String containerDataName) {
-		//gui = new GuiTemplesYaml.Builder(getViewer(), "Alter_ContainerData_Menu").placeholders(containerDataName);
 		this.containerDataName = containerDataName;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Alter_container_data");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			//setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Alter_container_data"));

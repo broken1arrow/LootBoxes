@@ -19,9 +19,10 @@ public class MainMenu extends MenuHolder {
 	private final MenuTemplate guiTemplate;
 
 	public MainMenu() {
-		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Main_menu");
-
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Main_menu");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Main_menu"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));

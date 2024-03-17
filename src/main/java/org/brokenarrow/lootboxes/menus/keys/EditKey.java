@@ -37,6 +37,8 @@ public class EditKey extends MenuHolder {
 		this.containerData = containerData;
 		this.keyName = keyName;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_key");
+
+		setUseColorConversion(true);
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_key"));

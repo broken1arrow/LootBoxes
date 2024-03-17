@@ -37,8 +37,10 @@ public class ChooseContainer extends MenuHolder {
 	public ChooseContainer(String container) {
 		super(containers());
 		this.container = container;
-		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Choose_Container");
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Choose_container");
+
+		setUseColorConversion(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Choose_container"));
