@@ -79,6 +79,7 @@ public class SpawnedContainers {
 				setRotation(location, containerData1.getFacing());
 				setCustomName(location, containerData.getDisplayname());
 
+				lootboxes.getSpawnContainerEffectsTask().addLocationInList(location);
 				this.setRefill(location, true);
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {

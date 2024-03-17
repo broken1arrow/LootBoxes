@@ -22,7 +22,7 @@ public class HeavyTasks extends BukkitRunnable {
 	private HeavyLoad firstReschudleElement;
 
 	public HeavyTasks() {
-		taskIDNumber = runTaskTimer(Lootboxes.getInstance(), 0L, 10L).getTaskId();
+		taskIDNumber = runTaskTimer(Lootboxes.getInstance(), 0L, 20L).getTaskId();
 	}
 
 	public void start() {

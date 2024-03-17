@@ -26,6 +26,7 @@ public abstract class AddOrRemoveDataFromListAPI {
 
 	public void checkLocationsList() {
 		final Map<Location, Boolean> tempLoc = this.getTempLocations();
+		System.out.println("tempLoc " + tempLoc);
 		if (tempLoc.isEmpty()) return;
 		if (task == null) {
 			loadingLocation = true;

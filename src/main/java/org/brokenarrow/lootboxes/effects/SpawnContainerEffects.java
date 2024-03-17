@@ -7,95 +7,133 @@ import org.brokenarrow.lootboxes.listener.CheckChunkLoadUnload;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateParticle;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
 public class SpawnContainerEffects implements HeavyLoad {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-	private CheckChunkLoadUnload checkChunkLoadUnload;
-	private static final Lootboxes plugin = Lootboxes.getInstance();
+    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private CheckChunkLoadUnload checkChunkLoadUnload;
+    private static final Lootboxes plugin = Lootboxes.getInstance();
 
-	private final Location[] containerLocations;
-	private final List<ParticleEffect> effectType;
-	private final long time;
-	private static int locationInlist;
-	private final double MAX_MS_PER_TICK = 4.5;
+    private final Location[] containerLocations;
+    private final List<ParticleEffect> effectType;
+    private final long time;
 
-	public SpawnContainerEffects(final List<ParticleEffect> effectType, final Integer runTime, final Location... containerLocations) {
-		this.containerLocations = containerLocations.clone();
-		this.effectType = effectType;
-		time = System.currentTimeMillis() + (1000L * (runTime != null ? runTime : 10));
-	}
+    private static int locationInlist;
+    private final double MAX_MS_PER_TICK = 4.5;
+    private ParticleRunnable particleRunnable;
 
-	private boolean spawnEffects() {
-		if (checkChunkLoadUnload == null)
-			this.checkChunkLoadUnload = plugin.getCheckChunkLoadUnload();
-		//for (Location containerLocation : containerLocations) {
+    public SpawnContainerEffects(final List<ParticleEffect> effectType, final Integer runTime, final Location... containerLocations) {
+        this.containerLocations = containerLocations.clone();
+        this.effectType = effectType;
+        time = System.currentTimeMillis() + (1000L * (runTime != null ? runTime : 20));
+    }
+
+    private boolean spawnEffects() {
+        if (checkChunkLoadUnload == null)
+            this.checkChunkLoadUnload = plugin.getCheckChunkLoadUnload();
+        //for (Location containerLocation : containerLocations) {
 		/*final long stoptime = (long) (System.nanoTime() + (1000_000 * MAX_MS_PER_TICK));
 		while (System.nanoTime() <= stoptime) {*/
-		if (locationInlist >= containerLocations.length) {
-			locationInlist = 0;
-		}
-		final Location containerLocation = containerLocations[locationInlist];
-		locationInlist++;
-		Boolean aBoolean = plugin.getSpawnedContainers().getHasRefill().get(containerLocation);
-		if (aBoolean != null && aBoolean)
-			if (containerLocation != null) {
-				if (this.checkChunkLoadUnload.getChunkData(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4) == null || !containerLocation.getWorld().isChunkLoaded(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4)) {
-					plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
-				}
-				final List<ParticleEffect> effectType;
-				if (this.effectType != null && !this.effectType.isEmpty())
-					effectType = this.effectType;
-				else
-					effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContainerData());
-				if (effectType == null)
-					plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
-				effect(containerLocation, effectType);
-				//}
-				return true;
-			}
-		return false;
-	}
+        if (locationInlist >= containerLocations.length) {
+            locationInlist = 0;
+        }
+        final Location containerLocation = containerLocations[locationInlist];
+        locationInlist++;
+        boolean refill = plugin.getSpawnedContainers().isRefill(containerLocation);
+        if (refill)
+            if (containerLocation != null) {
+                if (this.checkChunkLoadUnload.getChunkData(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4) == null || !containerLocation.getWorld().isChunkLoaded(containerLocation.getBlockX() >> 4, containerLocation.getBlockZ() >> 4)) {
+                    plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
+                }
+                final List<ParticleEffect> effectType;
+                if (this.effectType != null && !this.effectType.isEmpty())
+                    effectType = this.effectType;
+                else
+                    effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContainerData());
+                if (effectType == null)
+                    plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
+                effect(containerLocation, effectType);
+                //}
+                return false;
+            }
+        return false;
+    }
 
-	public void effect(final Location containerLocation, final List<ParticleEffect> effectType) {
-		if (containerLocation.getWorld() == null) return;
-		final double X = containerLocation.getBlockX() + Math.random();
-		final double Y = containerLocation.getBlockY() + Math.random();
-		final double Z = containerLocation.getBlockZ() + Math.random();
-		if (effectType != null && !effectType.isEmpty()) {
-			for (final ParticleEffect particleEffect : effectType) {
+    public void effect(final Location containerLocation, final List<ParticleEffect> effectType) {
+        if (containerLocation.getWorld() == null) return;
+        if (particleRunnable == null) {
+            particleRunnable = new ParticleRunnable();
+            particleRunnable.runTaskTimerAsynchronously(Lootboxes.getInstance(), 0, 15);
+        }
+        particleRunnable.setContainerLocation(containerLocation);
+        particleRunnable.setEffectType(effectType);
+ /*       if (particleRunnable.isCancelled())
+            particleRunnable.runTaskTimerAsynchronously(Lootboxes.getInstance(), 0, 20);*/
+    }
 
-				if (particleEffect == null) continue;
+    @Override
+    public boolean compute() {
+        return spawnEffects();
+    }
 
-				new CreateParticle(particleEffect, containerLocation.getWorld(), X, Y, Z).create();
-			}
-		}
-	}
+    @Override
+    public boolean reschedule() {
+        return System.currentTimeMillis() <= rescheduleMaxRunTime();
+        //return true;
+    }
 
-	@Override
-	public boolean compute() {
-		return spawnEffects();
-	}
+    @Override
+    public double getMilliPerTick() {
+        return 0.003;
+    }
 
-	@Override
-	public boolean reschedule() {
-		return System.currentTimeMillis() <= rescheduleMaxRunTime();
-		//return true;
-	}
+    @Override
+    public boolean computeWithDelay(final int conter) {
+        return true;
+    }
 
-	@Override
-	public double getMilliPerTick() {
-		return 4.5;
-	}
+    @Override
+    public long rescheduleMaxRunTime() {
+        return time;
+    }
 
-	@Override
-	public boolean computeWithDelay(final int conter) {
-		return true;
-	}
+    private class ParticleRunnable extends BukkitRunnable {
+        private  Location containerLocation;
+        private  List<ParticleEffect> effectType;
+        int amount;
 
-	@Override
-	public long rescheduleMaxRunTime() {
-		return time;
-	}
+        public ParticleRunnable() {
+            amount = 0;
+        }
+
+        public void setContainerLocation(Location containerLocation) {
+            this.containerLocation = containerLocation;
+        }
+
+        public void setEffectType(List<ParticleEffect> effectType) {
+            this.effectType = effectType;
+        }
+
+        @Override
+        public void run() {
+
+            boolean refill = plugin.getSpawnedContainers().isRefill(containerLocation);
+            if (!reschedule() || !refill ) {
+                cancel();
+                return;
+            }
+            final double X = containerLocation.getBlockX() + Math.random();
+            final double Y = containerLocation.getBlockY() + Math.random();
+            final double Z = containerLocation.getBlockZ() + Math.random();
+            if (effectType != null && !effectType.isEmpty()) {
+                for (final ParticleEffect particleEffect : effectType) {
+                    if (particleEffect == null) continue;
+                    new CreateParticle(particleEffect, containerLocation.getWorld(), X, Y, Z).create();
+                }
+                amount++;
+            }
+        }
+    }
 }

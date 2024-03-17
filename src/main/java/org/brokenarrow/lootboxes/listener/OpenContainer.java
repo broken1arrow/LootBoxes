@@ -124,7 +124,9 @@ public class OpenContainer implements Listener {
 			} else {
 				OPEN_CONTAINER.sendMessage(player);
 			}
+			System.out.println("setRefill ");
 			lootboxes.getSpawnedContainers().setRefill(location, false);
+			System.out.println("setRefill " + lootboxes.getSpawnedContainers().getHasRefill());
 			if (key != null) {
 				int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
 				player.getInventory().remove(itemStack);

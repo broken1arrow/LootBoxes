@@ -5,11 +5,12 @@ public interface HeavyLoad {
 	boolean compute();
 
 	default void computeTask() {
-		final long stoptime = (long) (System.nanoTime() + (1000_000 * this.getMilliPerTick()));
+		this.compute();
+	/*	final long stoptime = (long) (System.nanoTime() + (1000_000 * this.getMilliPerTick()));
 		while (System.nanoTime() <= stoptime) {
 			if (!this.compute())
 				break;
-		}
+		}*/
 	}
 
 	default boolean reschedule() {
