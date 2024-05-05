@@ -85,6 +85,8 @@ public final class CreateItemUtily {
 			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 			createItemStack.setGlow(true);
 		}
+		if (item != null && item.toString().equals("FIREWORK_STAR"))
+			createItemStack.setRgb("0,0,0,0");
 		return createItemStack;
 	}
 
