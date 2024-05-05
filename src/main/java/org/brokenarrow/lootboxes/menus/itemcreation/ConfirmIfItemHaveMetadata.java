@@ -5,7 +5,6 @@ import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
 import org.broken.arrow.menu.library.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -34,6 +33,8 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Confirm_if_item_have_metadata");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Confirm_if_item_have_metadata"));
@@ -45,73 +46,6 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 			setTitle(() -> "could not load menu 'Confirm_If_Item_Have_Metadata'.");
 		}
 
-/*		confirmSave = new MenuButton() {
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				for (final ItemStack item : items.values()) {
-					String itemdataPath = "";
-					if (item == null) continue;
-
-					if (click.isLeftClick() && item.hasItemMeta()) {
-						//lootItems. getSettings().get(lootTable).get()
-						itemdataPath = itemData.setCacheItemData(lootTable, item.getType() + "", item);
-
-					}
-					lootItems.addItems(lootTable, item, itemData.getItemDataPath(lootTable), itemdataPath, !itemdataPath.isEmpty());
-				}
-				itemData.saveTask(lootTable);
-				lootItems.saveTask(lootTable);
-				new EditCreateItems(lootTable).menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Confirm_Save").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-		this.backButton = new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(final @NotNull Player player, final @NotNull Inventory menu, final @NotNull ClickType click, final @NotNull ItemStack clickedItem, final Object object) {
-				new EditCreateItems(lootTable).menuOpen(player);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				final GuiTempletsYaml gui = guiTemplets.menuKey("Back_button").build();
-
-				return CreateItemUtily.of(gui.getIcon(),
-						gui.getDisplayName(),
-						gui.getLore()).makeItemStack();
-			}
-		};
-	}
-
-	@Override
-	public MenuButton getButtonAt(int slot) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
-		if (button == null) return null;
-		return new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (run(button, click))
-					updateButton(this);
-			}
-
-			@Override
-			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-
-				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.makeItemStack();
-			}
-		};*/
 	}
 
 
@@ -121,7 +55,7 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -130,7 +64,7 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
 						.makeItemStack();
@@ -146,9 +80,8 @@ public class ConfirmIfItemHaveMetadata extends MenuHolder {
 				if (item == null) continue;
 
 				if (click.isLeftClick() && item.hasItemMeta()) {
-					final LootData data = lootItems.getLootData(lootTable, item.getType() + "");
+					//final LootData data = lootItems.getLootData(lootTable, item.getType() + "");
 					itemDataPath = itemData.setCacheItemData(	lootTable, item.getType() + "", item);
-
 				}
 				lootItems.addItems(lootTable, item, lootTable, itemDataPath, !itemDataPath.isEmpty());
 			}

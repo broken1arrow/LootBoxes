@@ -45,6 +45,8 @@ public class ParticleSettings extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_settings");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Particle_settings"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
@@ -84,7 +86,7 @@ public class ParticleSettings extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -114,10 +116,9 @@ public class ParticleSettings extends MenuHolder {
 					placeholders = new Object[]{fromColor,toColor.isEmpty() ? fromColor:toColor};
 				}
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
 		};

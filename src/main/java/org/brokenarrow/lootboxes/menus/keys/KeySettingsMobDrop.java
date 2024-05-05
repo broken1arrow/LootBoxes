@@ -35,6 +35,8 @@ public class KeySettingsMobDrop extends MenuHolder {
 		mobDropData = keyDropData.getKeyMobDropData(containerData, keyName);
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Key_settings_mob_drop"));
@@ -53,7 +55,7 @@ public class KeySettingsMobDrop extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -76,10 +78,9 @@ public class KeySettingsMobDrop extends MenuHolder {
 						placeholders = getPlaceholders(mobDropData != null ?mobDropData.getMaximum(): 0, settingsData.getIncrease(), settingsData.getDecrease());
 
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),placeholders),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders))
-						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
 		};

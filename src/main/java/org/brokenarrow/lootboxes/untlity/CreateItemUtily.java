@@ -3,8 +3,10 @@ package org.brokenarrow.lootboxes.untlity;
 import org.broken.arrow.itemcreator.library.CreateItemStack;
 import org.broken.arrow.itemcreator.library.ItemCreator;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.bukkit.inventory.ItemFlag;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +29,10 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item) {
-		return itemCreator.of(item);
+		CreateItemStack createItemStack = itemCreator.of(item);
+		if (createItemStack.isGlow())
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+		return createItemStack;
 	}
 
 	/**
@@ -40,7 +45,10 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item, final String itemMetaKey, String itemMetaValue) {
-		return itemCreator.of(item).setItemMetaData(itemMetaKey, itemMetaValue);
+		CreateItemStack createItemStack = itemCreator.of(item).setItemMetaData(itemMetaKey, itemMetaValue);
+		if (createItemStack.isGlow())
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+		return createItemStack;
 	}
 
 	/**
@@ -55,7 +63,11 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static CreateItemStack of(final Object item, final String displayName, final String... lore) {
-		return itemCreator.of(item, displayName, Arrays.asList(lore));
+		CreateItemStack createItemStack = itemCreator.of(item, displayName, Arrays.asList(lore));
+		if (createItemStack.isGlow())
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+
+		return createItemStack;
 	}
 
 
@@ -67,8 +79,13 @@ public final class CreateItemUtily {
 	 * @param lore        on the item.
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
-	public static CreateItemStack of(final Object item, final String displayName, final List<String> lore) {
-		return itemCreator.of(item, displayName, lore);
+	public static CreateItemStack of(boolean glow,final Object item, final String displayName, final List<String> lore) {
+		CreateItemStack createItemStack = itemCreator.of(item, displayName, lore);
+		if (glow) {
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setGlow(true);
+		}
+		return createItemStack;
 	}
 
 	/**
@@ -83,7 +100,10 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static <T> CreateItemStack of(final Iterable<T> itemArray, final String displayName, final String... lore) {
-		return itemCreator.of(itemArray, displayName, Arrays.asList(lore));
+		CreateItemStack createItemStack = itemCreator.of(itemArray, displayName, Arrays.asList(lore));
+		if (createItemStack.isGlow())
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+		return createItemStack;
 	}
 
 	/**
@@ -95,7 +115,10 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static <T> CreateItemStack of(final Iterable<T> itemArray, final String displayName, final List<String> lore) {
-		return itemCreator.of(itemArray, displayName, lore);
+		CreateItemStack createItemStack = itemCreator.of(itemArray, displayName, lore);
+		if (createItemStack.isGlow())
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+		return createItemStack;
 	}
 
 	/**
@@ -106,7 +129,9 @@ public final class CreateItemUtily {
 	 * @return CreateItemUtily class or class with air item (if item are null).
 	 */
 	public static <T> CreateItemStack of(final Object item, final String color) {
-		return itemCreator.of(item, color);
+		CreateItemStack createItemStack = itemCreator.of(item, color);
+		if (createItemStack.isGlow())
+			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+		return createItemStack;
 	}
-
 }

@@ -3,7 +3,9 @@ package org.brokenarrow.lootboxes.menus;
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
 import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.menu.library.button.logic.ButtonUpdateAction;
+import org.broken.arrow.menu.library.button.logic.FillMenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
@@ -31,7 +33,7 @@ import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
 import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
 import static org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity.getEffectType;
 
-public class ParticleAnimation extends MenuHolder {
+public class ParticleAnimation extends MenuHolderPage<Object> {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final SpawnContainerEffectsTask spawnContainerEffectsTask = Lootboxes.getInstance().getSpawnContainerEffectsTask();
 	private final String container;
@@ -45,6 +47,7 @@ public class ParticleAnimation extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_animation");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
 
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
@@ -59,59 +62,6 @@ public class ParticleAnimation extends MenuHolder {
 		}
 	}
 
-	@Override
-	public MenuButton getFillButtonAt(@NotNull Object object) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
-		if (button == null) return null;
-		//ParticleEffectList particleEffectList = null;
-		//particleEffectList = Lootboxes.getInstance().getParticleEffectList();
-
-		return new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (particleEffectList.checkIfParticleOrEffect(object)) {
-					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-					final ContainerDataBuilder.Builder builder = data.getBuilder();
-					if (click.isRightClick()) {
-						containerDataCache.removeParticleEffect(data, object);
-					} else {
-						builder.setParticleEffects(setParticleData(player, data, container, object));
-					}
-					containerDataCache.setContainerData(container, builder.build());
-					if (click.isLeftClick()) {
-						for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
-							spawnContainerEffectsTask.addLocationInList(location);
-
-					}
-					updateButtons();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-				if (particleEffectList.checkIfParticleOrEffect(object)) {
-
-					final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-					boolean containsEffect = containerDataCache.containsParticleEffect(data, object);
-					if (containsEffect)
-						menuButton = button.getActiveButton();
-					if (menuButton == null)
-						menuButton = button.getPassiveButton();
-
-					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(object));
-
-					return CreateItemUtily.of(particleEffectList.checkParticleList(object),
-									displayName,
-									TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-							.setGlow(containsEffect).makeItemStack();
-				}
-
-				return null;
-			}
-		};
-		//return listOfItems;
-	}
 
 	@Override
 	public MenuButton getButtonAt(int slot) {
@@ -119,7 +69,7 @@ public class ParticleAnimation extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -128,10 +78,9 @@ public class ParticleAnimation extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
 		};
@@ -190,4 +139,48 @@ public class ParticleAnimation extends MenuHolder {
 		return particleEffect;
 	}
 
+	@Override
+	public FillMenuButton<Object> createFillMenuButton() {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+
+		return new FillMenuButton<>((player, menu, click, clickedItem, particle) -> {
+			if (particleEffectList.checkIfParticleOrEffect(particle)) {
+				final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
+				final ContainerDataBuilder.Builder builder = data.getBuilder();
+				if (click.isRightClick()) {
+					containerDataCache.removeParticleEffect(data, particle);
+				} else {
+					builder.setParticleEffects(setParticleData(player, data, container, particle));
+				}
+				containerDataCache.setContainerData(container, builder.build());
+				if (click.isLeftClick()) {
+					for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
+						spawnContainerEffectsTask.addLocationInList(location);
+
+				}
+				return ButtonUpdateAction.ALL;
+			}
+			return ButtonUpdateAction.NONE;
+		}, (slot, particle) -> {
+			org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+			if (particleEffectList.checkIfParticleOrEffect(particle)) {
+
+				final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
+				boolean containsEffect = containerDataCache.containsParticleEffect(data, particle);
+				if (containsEffect)
+					menuButton = button.getActiveButton();
+				if (menuButton == null)
+					menuButton = button.getPassiveButton();
+
+				String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(particle));
+
+				return CreateItemUtily.of(containsEffect,particleEffectList.checkParticleList(particle),
+								displayName,
+								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+						.makeItemStack();
+			}
+			return null;
+		});
+	}
 }

@@ -22,6 +22,7 @@ public class SpigotParticle {
 		if (particle == null) return;
 		if (Lootboxes.getInstance().getServerVersion().atLeast(Version.v1_9)){
 			this.particle = ConvertParticlesUnity.getParticle((String) particle);
+			if (this.particle != null)
 			dataType = this.particle.getDataType();
 		}
 	}

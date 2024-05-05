@@ -45,6 +45,8 @@ public final class AlterContainerDataMenu extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Alter_container_data");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			//setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Alter_container_data"));
@@ -64,7 +66,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButtons();
 			}
@@ -94,10 +96,9 @@ public final class AlterContainerDataMenu extends MenuHolder {
 					placeholders = getPlaceholders("", containerDataName);
 
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
 		};
@@ -152,7 +153,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 					player.closeInventory();
 				} else if (!click.isShiftClick() && click.isRightClick()) {
 					ADD_CONTINERS_TURNED_ON_ADD_CONTAINERS_WITH_TOOL.sendMessage(player);
-					player.getInventory().addItem(CreateItemUtily.of(setting.getLinkToolItem(),
+					player.getInventory().addItem(CreateItemUtily.of(false,setting.getLinkToolItem(),
 									setting.getLinkToolDisplayName(), setting.getLinkToolLore())
 							.setItemMetaData(ADD_AND_REMOVE_CONTAINERS.name(), containerDataName).makeItemStack());
 					player.closeInventory();

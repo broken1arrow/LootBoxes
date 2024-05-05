@@ -37,7 +37,8 @@ public class SettingsContainerData extends MenuHolder {
         this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 
         setUseColorConversion(true);
-        
+        setIgnoreItemCheck(true);
+
         if (guiTemplate != null) {
             setMenuSize(guiTemplate.getinvSize("Settings_container_data"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
@@ -56,7 +57,7 @@ public class SettingsContainerData extends MenuHolder {
         return new MenuButton() {
 
             @Override
-            public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+            public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
                 if (run(button, click))
                     updateButtons();
             }
@@ -70,10 +71,9 @@ public class SettingsContainerData extends MenuHolder {
                 if (menuButton == null)
                     menuButton = button.getPassiveButton();
 
-                return CreateItemUtily.of(menuButton.getMaterial(),
+                return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
                                 TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
                                 TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                        .setGlow(menuButton.isGlow())
                         .makeItemStack();
             }
         };

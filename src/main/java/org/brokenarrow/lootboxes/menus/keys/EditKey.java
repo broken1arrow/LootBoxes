@@ -39,12 +39,14 @@ public class EditKey extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_key");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_key"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),keyName));
 			setMenuOpenSound(guiTemplate.getSound());
-			setignoreItemCheck(true);
+			setIgnoreItemCheck(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Edit_key'.");
@@ -57,7 +59,7 @@ public class EditKey extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -80,7 +82,7 @@ public class EditKey extends MenuHolder {
 					}
 				}
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),placeholders),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders))
 						.makeItemStack();

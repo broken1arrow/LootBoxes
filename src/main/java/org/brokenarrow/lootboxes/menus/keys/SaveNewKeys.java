@@ -26,6 +26,7 @@ public class SaveNewKeys extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Save_new_keys");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
 
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
@@ -45,7 +46,7 @@ public class SaveNewKeys extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, menu, click))
 					updateButton(this);
 			}
@@ -54,10 +55,9 @@ public class SaveNewKeys extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
 		};

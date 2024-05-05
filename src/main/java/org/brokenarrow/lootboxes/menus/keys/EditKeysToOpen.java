@@ -3,7 +3,9 @@ package org.brokenarrow.lootboxes.menus.keys;
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
 import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.menu.library.button.logic.ButtonUpdateAction;
+import org.broken.arrow.menu.library.button.logic.FillMenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
@@ -27,7 +29,7 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
-public class EditKeysToOpen extends MenuHolder {
+public class EditKeysToOpen extends MenuHolderPage<String> {
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final String containerData;
@@ -39,6 +41,8 @@ public class EditKeysToOpen extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_keys_to_open");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Edit_keys_to_open"));
@@ -52,91 +56,12 @@ public class EditKeysToOpen extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(@NotNull Object object) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
-		if (button == null) return null;
-
-		return new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (object instanceof String) {
-
-					if (click.isShiftClick() && click.isLeftClick()) {
-						Map<String, Object> map = new HashMap<>();
-
-						KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, (String) object);
-						map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
-						map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
-						String lootTable = keysData.getLootTableLinked();
-						if (lootTable == null || lootTable.isEmpty()) {
-							ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
-							if (containerDataCache != null) {
-								lootTable = containerDataCache.getLootTableLinked();
-							}
-						}
-						final String lootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
-						String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
-								lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-						List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
-								lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-
-						player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(1).makeItemStack());
-
-						return;
-					}
-					if (click.isLeftClick())
-						new EditKey(containerData, (String) object).menuOpen(player);
-					if (click.isRightClick()) {
-						containerDataCacheInstance.removeCacheKey(containerData, (String) object);
-						keyDropData.removeKeyMobDropData(containerData, (String) object);
-						new EditKeysToOpen(containerData).menuOpen(player);
-					}
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-
-				if (object instanceof String) {
-					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, String.valueOf(object));
-					String lootTable = keysData.getLootTableLinked();
-					if (lootTable == null || lootTable.isEmpty()) {
-						ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
-						if (containerDataCache != null) {
-							lootTable = containerDataCache.getLootTableLinked();
-						}
-					}
-					final String LootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
-
-					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), object, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), object, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-
-					String displayName = translatePlaceholders(player,menuButton.getDisplayName(),object, keysData.getAmountNeeded(), placeholderDisplayName,
-							placeholdersLore);
-					List<String> lore = translatePlaceholdersLore(player,menuButton.getLore(),object, keysData.getAmountNeeded(), placeholderDisplayName,
-							placeholdersLore);
-
-					return CreateItemUtily.of(keysData.getItemType(),
-							displayName,
-							lore)
-							.setGlow(menuButton.isGlow())
-							.makeItemStack();
-				}
-				return null;
-			}
-		};
-		//return listOfItems;
-	}
-
-	@Override
 	public MenuButton getButtonAt(int slot) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -145,10 +70,9 @@ public class EditKeysToOpen extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.setGlow(menuButton.isGlow())
 						.makeItemStack();
 			}
 		};
@@ -177,4 +101,71 @@ public class EditKeysToOpen extends MenuHolder {
 		return false;
 	}
 
+	@Override
+	public FillMenuButton<String> createFillMenuButton() {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+
+		return new FillMenuButton<>((player1, menu, click, clickedItem, keyName) -> {
+			if (keyName != null) {
+				if (click.isShiftClick() && click.isLeftClick()) {
+					Map<String, Object> map = new HashMap<>();
+
+					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+					map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
+					map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
+					String lootTable = keysData.getLootTableLinked();
+					if (lootTable == null || lootTable.isEmpty()) {
+						ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
+						if (containerDataCache != null) {
+							lootTable = containerDataCache.getLootTableLinked();
+						}
+					}
+					final String lootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
+					String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
+							lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+					List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+							lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+
+					player.getInventory().addItem(CreateItemUtily.of(false,keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(1).makeItemStack());
+					return ButtonUpdateAction.NONE;
+				}
+				if (click.isLeftClick())
+					new EditKey(containerData, keyName).menuOpen(player);
+				if (click.isRightClick()) {
+					containerDataCacheInstance.removeCacheKey(containerData, keyName);
+					keyDropData.removeKeyMobDropData(containerData, keyName);
+					new EditKeysToOpen(containerData).menuOpen(player);
+				}
+			}
+			return ButtonUpdateAction.NONE;
+		}, (slot, keyName) -> {
+			if (keyName != null) {
+				KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+				String lootTable = keysData.getLootTableLinked();
+				if (lootTable == null || lootTable.isEmpty()) {
+					ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
+					if (containerDataCache != null) {
+						lootTable = containerDataCache.getLootTableLinked();
+					}
+				}
+				final String LootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
+
+				String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+				List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keyName, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+
+				String displayName = translatePlaceholders(player,menuButton.getDisplayName(),keyName, keysData.getAmountNeeded(), placeholderDisplayName,
+						placeholdersLore);
+				List<String> lore = translatePlaceholdersLore(player,menuButton.getLore(),keyName, keysData.getAmountNeeded(), placeholderDisplayName,
+						placeholdersLore);
+
+				return CreateItemUtily.of(menuButton.isGlow(),keysData.getItemType(),
+								displayName,
+								lore)
+						.makeItemStack();
+			}
+			return null;
+		});
+	}
 }

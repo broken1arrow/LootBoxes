@@ -31,11 +31,14 @@ public final class EditLootTable extends MenuHolder {
 		//guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Edit_loot_table").placeholders(lootTableName);
 		this.lootData = lootTable.getLootData(lootTableName, GLOBAL_VALUES.getKey());
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_loot_table");
+
+		this.setUseColorConversion(true);
+		setIgnoreItemCheck(true);
+
 		if (guiTemplate != null) {
 			setMenuSize(guiTemplate.getinvSize("Edit_loot_table"));
 			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			setMenuOpenSound(guiTemplate.getSound());
-			this.setUseColorConversion(true);
 		} else {
 			setMenuSize(36);
 			setTitle(() -> "could not load menu 'Edit_loot_table'.");
@@ -48,7 +51,7 @@ public final class EditLootTable extends MenuHolder {
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -69,7 +72,7 @@ public final class EditLootTable extends MenuHolder {
 				if (button.isActionTypeEqual("Change_maximum"))
 					placeholders = getPlaceholders(lootData.getMaximum(),settings.getIncrease(),settings.getDecrease());
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),	placeholders),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),	placeholders))
 						.makeItemStack();

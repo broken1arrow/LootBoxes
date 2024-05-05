@@ -16,60 +16,59 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class MainMenu extends MenuHolder {
-	private final MenuTemplate guiTemplate;
+    private final MenuTemplate guiTemplate;
 
-	public MainMenu() {
-		this.guiTemplate = Lootboxes.getInstance().getMenu("Main_menu");
+    public MainMenu() {
+        this.guiTemplate = Lootboxes.getInstance().getMenu("Main_menu");
 
-		setUseColorConversion(true);
+        setUseColorConversion(true);
+        setIgnoreItemCheck(true);
+        if (guiTemplate != null) {
+            setMenuSize(guiTemplate.getinvSize("Main_menu"));
+            setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
+            setMenuOpenSound(guiTemplate.getSound());
+            this.setUseColorConversion(true);
+        } else {
+            setMenuSize(36);
+            setTitle(() -> "could not load menu 'Main_Menu'.");
+        }
+    }
 
-		if (guiTemplate != null) {
-			setMenuSize(guiTemplate.getinvSize("Main_menu"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
-			setMenuOpenSound(guiTemplate.getSound());
-			this.setUseColorConversion(true);
-		} else {
-			setMenuSize(36);
-			setTitle(() -> "could not load menu 'Main_Menu'.");
-		}
-	}
+    @Override
+    public MenuButton getButtonAt(int slot) {
+        MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+        if (button == null) return null;
+        return new MenuButton() {
+            @Override
+            public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
+                if (run(button, click))
+                    updateButton(this);
+            }
 
-	@Override
-	public MenuButton getButtonAt(int slot) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
-		if (button == null) return null;
-		return new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (run(button, click))
-					updateButton(this);
-			}
+            @Override
+            public ItemStack getItem() {
+                org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-			@Override
-			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+                return CreateItemUtily.of(menuButton.isGlow() && !menuButton.getMaterial().equalsIgnoreCase("chest"), menuButton.getMaterial(),
+                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                        .makeItemStack();
+            }
+        };
+    }
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.setGlow(menuButton.isGlow())
-						.makeItemStack();
-			}
-		};
-	}
+    public boolean run(MenuButtonData button, ClickType click) {
 
-	public boolean run(MenuButtonData button, ClickType click) {
-
-		if (button.isActionTypeEqual("Edit_loot_table")) {
-			new EditCreateLootTable().menuOpen(player);
-		}
-		if (button.isActionTypeEqual("Containers_data")) {
-			new ModifyContainerData().menuOpen(player);
-		}
-		if (button.isActionTypeEqual("Back_button")) {
-			player.closeInventory();
-		}
-		return false;
-	}
+        if (button.isActionTypeEqual("Edit_loot_table")) {
+            new EditCreateLootTable().menuOpen(player);
+        }
+        if (button.isActionTypeEqual("Containers_data")) {
+            new ModifyContainerData().menuOpen(player);
+        }
+        if (button.isActionTypeEqual("Back_button")) {
+            player.closeInventory();
+        }
+        return false;
+    }
 
 }

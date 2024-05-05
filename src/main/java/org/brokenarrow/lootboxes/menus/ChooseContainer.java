@@ -4,7 +4,9 @@ import org.apache.commons.lang.WordUtils;
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
 import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.menu.library.button.logic.ButtonUpdateAction;
+import org.broken.arrow.menu.library.button.logic.FillMenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
@@ -24,7 +26,7 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINER
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER;
 import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 
-public class ChooseContainer extends MenuHolder {
+public class ChooseContainer extends MenuHolderPage<Material> {
 
 	private final MenuTemplate guiTemplate;
 	private  MenuButton listOfItems;
@@ -40,6 +42,7 @@ public class ChooseContainer extends MenuHolder {
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Choose_container");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
 
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
@@ -54,48 +57,12 @@ public class ChooseContainer extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(@NotNull Object object) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
-		if (button == null) return null;
-		return new MenuButton() {
-			private final SettingsData setting = settings.getSettingsData();
-
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (object instanceof Material) {
-
-					TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
-					player.getInventory().addItem(CreateItemUtily.of(object,
-									TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), TranslatePlaceHolders.translatePlaceholdersLore(setting.getPlaceContainerLore())))
-							.setItemMetaData(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), container).makeItemStack());
-					player.setMetadata(ADD_AND_REMOVE_CONTAINERS.name(), new FixedMetadataValue(Lootboxes.getInstance(), container));
-					player.closeInventory();
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				if (object instanceof Material) {
-					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-
-					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()));
-					return CreateItemUtily.of(object,
-							displayName,
-							TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore())).makeItemStack();
-				}
-				return null;
-			}
-		};
-		//return listOfItems;
-	}
-
-	@Override
 	public MenuButton getButtonAt(int slot) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -104,7 +71,7 @@ public class ChooseContainer extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
 						.makeItemStack();
@@ -128,5 +95,35 @@ public class ChooseContainer extends MenuHolder {
 			new AlterContainerDataMenu(container).menuOpen(player);
 		}
 		return false;
+	}
+
+	@Override
+	public FillMenuButton<Material> createFillMenuButton() {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+
+		return new FillMenuButton<>((player, menu, click, clickedItem, material) -> {
+			if (material != null) {
+				final SettingsData setting = settings.getSettingsData();
+
+				TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
+				player.getInventory().addItem(CreateItemUtily.of(material,
+								TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(), WordUtils.capitalizeFully(material.toString().replace("_", " ").toLowerCase()), TranslatePlaceHolders.translatePlaceholdersLore(setting.getPlaceContainerLore())))
+						.setItemMetaData(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), container).makeItemStack());
+				player.setMetadata(ADD_AND_REMOVE_CONTAINERS.name(), new FixedMetadataValue(Lootboxes.getInstance(), container));
+				player.closeInventory();
+			}
+			return ButtonUpdateAction.NONE;
+		}, (slot, material) -> {
+			if (material != null) {
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+
+				String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(material.toString().replace("_", " ").toLowerCase()));
+				return CreateItemUtily.of(menuButton.isGlow(), material,
+						displayName,
+						TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore())).makeItemStack();
+			}
+			return null;
+		});
 	}
 }

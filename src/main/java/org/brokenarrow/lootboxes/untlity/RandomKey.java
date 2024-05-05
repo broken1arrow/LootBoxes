@@ -63,7 +63,7 @@ public class RandomKey {
 		List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
 				lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 
-		return CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();
+		return CreateItemUtily.of(false,keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();
 	}
 
 	private int randomNumber(KeyMobDropData keyMobDropData) {

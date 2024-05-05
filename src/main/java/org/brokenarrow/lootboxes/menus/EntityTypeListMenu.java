@@ -4,7 +4,9 @@ import org.apache.commons.lang.WordUtils;
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
 import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.menu.library.button.logic.ButtonUpdateAction;
+import org.broken.arrow.menu.library.button.logic.FillMenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData.Builder;
@@ -25,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityTypeListMenu extends MenuHolder {
+public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
 
 	private final Lootboxes plugin = Lootboxes.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
@@ -44,6 +46,7 @@ public class EntityTypeListMenu extends MenuHolder {
 		this.mobDropData = keyDropData.getKeyMobDropData(container, value);
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
 
 		if (guiTemplate != null) {
 			setAutoTitleCurrentPage(false);
@@ -59,63 +62,12 @@ public class EntityTypeListMenu extends MenuHolder {
 	}
 
 	@Override
-	public MenuButton getFillButtonAt(@NotNull Object object) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
-		if (button == null) return null;
-		return new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (object instanceof EntityType) {
-					if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
-						final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
-						Builder builder = data.getBuilder();
-						List<EntityType> entityTypes;
-						if (data.getEntityTypes() != null)
-							entityTypes = data.getEntityTypes();
-						else
-							entityTypes = new ArrayList<>();
-
-						if (click == ClickType.LEFT) {
-							entityTypes.add((EntityType) object);
-						}
-						if (click == ClickType.RIGHT) {
-							entityTypes.remove((EntityType) object);
-						}
-						builder.setEntityTypes(entityTypes);
-						keyDropData.putCachedKeyData(container, value, builder.build());
-						mobDropData = keyDropData.getKeyMobDropData(container, value);
-						updateButtons();
-					}
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-				if (object instanceof EntityType) {
-					final String material = plugin.getMobList().getSpawnEggType((EntityType) object);
-
-					org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-					String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(object.toString().replace("_", " ").toLowerCase()), material);
-
-					return CreateItemUtily.of(material,
-									displayName,
-									TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-							.setGlow(mobDropData != null && mobDropData.getEntityTypes() != null && !mobDropData.getEntityTypes().isEmpty() && mobDropData.getEntityTypes().contains(object))
-							.makeItemStack();
-				}
-				return null;
-			}
-		};
-	}
-
-	@Override
 	public MenuButton getButtonAt(int slot) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -124,7 +76,7 @@ public class EntityTypeListMenu extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
 						.setGlow(menuButton.isGlow())
@@ -166,4 +118,45 @@ public class EntityTypeListMenu extends MenuHolder {
 		return false;
 	}
 
+	@Override
+	public FillMenuButton<EntityType> createFillMenuButton() {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+
+		return new FillMenuButton<>((player, menu, click, clickedItem, entityType) -> {
+			if (entityType != null) {
+				if (menuKey == MenuKeys.KEY_SETTINGS_MOBDROP) {
+					final KeyMobDropData data = keyDropData.getKeyMobDropData(container, value);
+					Builder builder = data.getBuilder();
+					List<EntityType> entityTypes;
+					if (data.getEntityTypes() != null) entityTypes = data.getEntityTypes();
+					else entityTypes = new ArrayList<>();
+
+					if (click == ClickType.LEFT) {
+						entityTypes.add((EntityType) entityType);
+					}
+					if (click == ClickType.RIGHT) {
+						entityTypes.remove((EntityType) entityType);
+					}
+					builder.setEntityTypes(entityTypes);
+					keyDropData.putCachedKeyData(container, value, builder.build());
+					mobDropData = keyDropData.getKeyMobDropData(container, value);
+					return ButtonUpdateAction.ALL;
+				}
+			}
+			return ButtonUpdateAction.NONE;
+		}, (slot, entityType) -> {
+			if (entityType != null) {
+				final String material = plugin.getMobList().getSpawnEggType(entityType);
+
+				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
+
+				return CreateItemUtily.of(false,material, displayName, TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+						.setGlow(mobDropData != null && mobDropData.getEntityTypes() != null && !mobDropData.getEntityTypes().isEmpty() && mobDropData.getEntityTypes().contains(entityType))
+						.makeItemStack();
+			}
+			return null;
+		});
+	}
 }

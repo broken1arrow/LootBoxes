@@ -19,81 +19,86 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class SaveItems extends MenuHolder {
-	private final LootItems lootItems = LootItems.getInstance();
-	private final ItemData itemData = ItemData.getInstance();
-	private final Settings settings = Lootboxes.getInstance().getSettings();
-	private final MenuTemplate guiTemplate;
-	private final String lootTable;
+    private final LootItems lootItems = LootItems.getInstance();
+    private final ItemData itemData = ItemData.getInstance();
+    private final Settings settings = Lootboxes.getInstance().getSettings();
+    private final MenuTemplate guiTemplate;
+    private final String lootTable;
 
-	public SaveItems(final String lootTable) {
-		this.lootTable = lootTable;
-		this.guiTemplate = Lootboxes.getInstance().getMenu("Save_items");
+    public SaveItems(final String lootTable) {
+        this.lootTable = lootTable;
+        this.guiTemplate = Lootboxes.getInstance().getMenu("Save_items");
 
-		setUseColorConversion(true);
-		if (guiTemplate != null) {
-			setFillSpace(guiTemplate.getFillSlots());
-			setMenuSize(guiTemplate.getinvSize("Save_items"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
-			setMenuOpenSound(guiTemplate.getSound());
-			this.setUseColorConversion(true);
-		} else {
-			setMenuSize(36);
-			setTitle(() -> "could not load menu 'Save_items'.");
-		}
-		setSlotsYouCanAddItems(true);
-	}
+        setUseColorConversion(true);
+        setIgnoreItemCheck(true);
 
-	@Override
-	public MenuButton getButtonAt(int slot) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
-		if (button == null) return null;
-		return new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (run(button,menu, click))
-					updateButton(this);
-			}
+        if (guiTemplate != null) {
+            setFillSpace(guiTemplate.getFillSlots());
+            setMenuSize(guiTemplate.getinvSize("Save_items"));
+            setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
+            setMenuOpenSound(guiTemplate.getSound());
+            this.setUseColorConversion(true);
+        } else {
+            setMenuSize(36);
+            setTitle(() -> "could not load menu 'Save_items'.");
+        }
+        setSlotsYouCanAddItems(true);
+    }
 
-			@Override
-			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+    @Override
+    public MenuButton getButtonAt(int slot) {
+        MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+        if (button == null) return null;
+        return new MenuButton() {
+            @Override
+            public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
+                if (run(button, menu, click))
+                    updateButton(this);
+            }
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.makeItemStack();
-			}
-		};
-	}
+            @Override
+            public ItemStack getItem() {
+                org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-	public boolean run(MenuButtonData button,Inventory menu, ClickType click) {
+                return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
+                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                        .makeItemStack();
+            }
+        };
+    }
 
-		if (button.isActionTypeEqual("Save_items")) {
-			//todo change to this? getCheckItemsInsideMenu()..getItemsFromSetSlots(
-			final Map<Integer, ItemStack> items = Lootboxes.getInstance().getMenuApi().getCheckItemsInsideInventory().getItemsFromSetSlots(menu, null, false);
-			if (items == null || items.isEmpty()) return false;
+    public boolean run(MenuButtonData button, Inventory menu, ClickType click) {
 
-			for (final ItemStack item : items.values()) {
-				if (item == null) continue;
-				String fileName = "";
-				if (item.hasItemMeta() && settings.getSettingsData().isSaveMetadataOnItem()) {
-					if (settings.getSettingsData().isWarnBeforeSaveWithMetadata()) {
-						new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
-						return false;
-					} else {
-						fileName = itemData.setCacheItemData(lootTable, item.getType() + "", item);
-					}
-				}
-				lootItems.addItems(lootTable, item, lootTable, fileName, !fileName.isEmpty());
-			}
-			lootItems.saveTask(lootTable);
-			new EditCreateItems(lootTable).menuOpen(player);
-		}
+        if (button.isActionTypeEqual("Save_items")) {
+            //todo change to this? getCheckItemsInsideMenu()..getItemsFromSetSlots(
+            final Map<Integer, ItemStack> items = Lootboxes.getInstance().getMenuApi().getCheckItemsInsideInventory().getItemsFromSetSlots(menu, null, false);
+            if (items == null || items.isEmpty()) return false;
+            if (settings.getSettingsData().isWarnBeforeSaveWithMetadata()) {
+                for (final ItemStack item : items.values()) {
+                    if (item == null) continue;
+                    if (item.hasItemMeta()) {
+                        new ConfirmIfItemHaveMetadata(items, lootTable).menuOpen(player);
+                        return false;
+                    }
+                }
+            }
+            for (final ItemStack item : items.values()) {
+                if (item == null) continue;
+                String fileName = "";
+                if (item.hasItemMeta() && settings.getSettingsData().isSaveMetadataOnItem()) {
+                    fileName = itemData.setCacheItemData(lootTable, item.getType() + "", item);
+                }
+                lootItems.addItems(lootTable, item, lootTable, fileName, !fileName.isEmpty());
+            }
+            lootItems.saveTask(lootTable);
+            new EditCreateItems(lootTable).menuOpen(player);
+        }
 
-		if (button.isActionTypeEqual("Back_button")) {
-			new EditCreateItems(lootTable).menuOpen(player);
-		}
-		return false;
-	}
+        if (button.isActionTypeEqual("Back_button")) {
+            new EditCreateItems(lootTable).menuOpen(player);
+        }
+        return false;
+    }
 
 }

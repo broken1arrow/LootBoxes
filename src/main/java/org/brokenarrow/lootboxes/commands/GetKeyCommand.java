@@ -63,7 +63,7 @@ public class GetKeyCommand extends CommandHolder {
 			List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
 					lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 			if (player != null)
-				player.getInventory().addItem(CreateItemUtily.of(keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amount).makeItemStack());
+				player.getInventory().addItem(CreateItemUtily.of(false,keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amount).makeItemStack());
 
 		}
 		return true;

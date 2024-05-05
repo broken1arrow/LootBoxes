@@ -72,7 +72,7 @@ public class PlayerClick implements Listener {
 				if (addData(blockPlaced, data, location, metadata)) {
 					ADD_CONTINERS_LEFT_CLICK_BLOCK.sendMessage(player, location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 					if (player.getGameMode() == GameMode.SURVIVAL) {
-						player.getInventory().setItemInMainHand(CreateItemUtily.of(Material.CHEST,
+						player.getInventory().setItemInMainHand(CreateItemUtily.of(false,Material.CHEST,
 										setting.getPlaceContainerDisplayName(), setting.getPlaceContainerLore())
 								.setItemMetaData(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), metadata).makeItemStack());
 					}

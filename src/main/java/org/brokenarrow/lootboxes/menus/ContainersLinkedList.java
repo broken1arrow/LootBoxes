@@ -3,7 +3,9 @@ package org.brokenarrow.lootboxes.menus;
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
 import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
 import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.menu.library.button.logic.ButtonUpdateAction;
+import org.broken.arrow.menu.library.button.logic.FillMenuButton;
+import org.broken.arrow.menu.library.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
@@ -20,24 +22,27 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_NOT_OBSTACLE;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_OBSTACLE_ON_ALL_SIDES;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_OBSTACLE_ON_SOME_SIDES;
 
-public class ContainersLinkedList extends MenuHolder {
+public class ContainersLinkedList extends MenuHolderPage<Location> {
 	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 	private final MenuTemplate guiTemplate;
 	private final String containerName;
 
 	public ContainersLinkedList(final ContainerDataBuilder containerdata, final String containerName, final String itemsToSearchFor) {
-		super(Arrays.asList(containerdata.getLinkedContainerData().keySet().toArray()));
+		super(new ArrayList<>(containerdata.getLinkedContainerData().keySet()));
 		this.containerName = containerName;
 		//this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(containerName);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Container_linked_list");
 
 		setUseColorConversion(true);
+		setIgnoreItemCheck(true);
 
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
@@ -52,74 +57,13 @@ public class ContainersLinkedList extends MenuHolder {
 		}
 	}
 
-
-	@Override
-	public MenuButton getFillButtonAt(@NotNull Object object) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
-		if (button == null) return null;
-		return new MenuButton() {
-
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
-				if (object instanceof Location) {
-
-					final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
-					if (containerDataBuilder != null) {
-						final Builder builder = containerDataBuilder.getBuilder();
-						Map<Location, ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
-						if (containerDataMap == null)
-							containerDataMap = new HashMap<>();
-						if (click.isRightClick()) {
-							containerDataMap.remove(object);
-
-							builder.setContainerData(containerDataMap);
-							containerDataCache.setContainerData(containerName, builder.build());
-						}
-						if (click.isLeftClick()) {
-							final TeleportPlayer teleport = new TeleportPlayer(player, (Location) object);
-							if (teleport.teleportPlayer()) {
-								final Location teleportLoc = teleport.getFinalTeleportLoc();
-
-								if (teleportLoc.getZ() - 0.5 == ((Location) object).getZ() && teleportLoc.getX() - 0.5 == ((Location) object).getX())
-									CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
-								else if (teleportLoc.equals(object))
-									CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
-								else
-									CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
-							}
-						}
-					}
-				}
-			}
-
-			@Override
-			public ItemStack getItem() {
-
-				Location location = null;
-				if (object instanceof Location)
-					location = (Location) object;
-				if (location == null) return null;
-
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
-
-				String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-
-				return CreateItemUtily.of(menuButton.getMaterial(),
-								displayName,
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.makeItemStack();
-			}
-		};
-		//return listOfItems;
-	}
-
 	@Override
 	public MenuButton getButtonAt(int slot) {
 		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
 		if (button == null) return null;
 		return new MenuButton() {
 			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem, final Object object) {
+			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
 				if (run(button, click))
 					updateButton(this);
 			}
@@ -128,7 +72,7 @@ public class ContainersLinkedList extends MenuHolder {
 			public ItemStack getItem() {
 				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.getMaterial(),
+				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
 								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
 						.makeItemStack();
@@ -158,5 +102,53 @@ public class ContainersLinkedList extends MenuHolder {
 			new AlterContainerDataMenu(containerName).menuOpen(player);
 		}
 		return false;
+	}
+
+	@Override
+	public FillMenuButton<Location> createFillMenuButton() {
+		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
+		if (button == null) return null;
+
+		return new FillMenuButton<>((player, menu, click, clickedItem, location ) -> {
+			if (location != null) {
+				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
+				if (containerDataBuilder != null) {
+					final Builder builder = containerDataBuilder.getBuilder();
+					Map<Location, ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
+					if (containerDataMap == null)
+						containerDataMap = new HashMap<>();
+					if (click.isRightClick()) {
+						containerDataMap.remove(location);
+
+						builder.setContainerData(containerDataMap);
+						containerDataCache.setContainerData(containerName, builder.build());
+					}
+					if (click.isLeftClick()) {
+						final TeleportPlayer teleport = new TeleportPlayer(player, (Location) location);
+						if (teleport.teleportPlayer()) {
+							final Location teleportLoc = teleport.getFinalTeleportLoc();
+
+							if (teleportLoc.getZ() - 0.5 == ((Location) location).getZ() && teleportLoc.getX() - 0.5 == ((Location) location).getX())
+								CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+							else if (teleportLoc.equals(location))
+								CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
+							else
+								CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+						}
+					}
+				}
+			}
+			return ButtonUpdateAction.NONE;
+		}, (slot, location) -> {
+            if (location == null) return null;
+
+			org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+			String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+
+			return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
+							displayName,
+							TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+					.makeItemStack();
+		});
 	}
 }
