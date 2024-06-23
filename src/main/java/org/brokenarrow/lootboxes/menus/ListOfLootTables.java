@@ -125,7 +125,8 @@ public class ListOfLootTables extends MenuHolderPage<String> {
         },(slot, lootTable) -> {
 			if (lootTable != null && lootTable.equals("Global_Values"))
 				return null;
-
+			if(lootTable == null)
+				return null;
 
 			org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
 			String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), lootTable);
