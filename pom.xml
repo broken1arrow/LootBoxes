@@ -244,15 +244,16 @@
                                 <includes>
                                     <include>com.github.broken1arrow:*</include>
                                     <include>com.github.broken1arrow.Item-NBT-API:item-nbt-api:*</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Conversation-Prompt</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Item_Creator</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Yaml_Utility</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Color_Conversion</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Menu_Library</include>
+                                    <include>com.github.broken1arrow.Utility-Library:conversation-prompt</include>
+                                    <include>com.github.broken1arrow.Utility-Library:item-creator</include>
+                                    <include>com.github.broken1arrow.Utility-Library:yaml-utility</include>
+                                    <include>com.github.broken1arrow.Utility-Library:color-conversion</include>
+                                    <include>com.github.broken1arrow.Utility-Library:menu-library</include>
                                     <include>com.github.broken1arrow.Utility-Library:NBT</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Title-Update</include>
-                                    <include>com.github.broken1arrow.Utility-Library:MenuConfiguration-Manager</include>
+                                    <include>com.github.broken1arrow.Utility-Library:title-update</include>
+                                    <include>com.github.broken1arrow.Utility-Library:menu-configuration-manager</include>
                                     <include>com.github.broken1arrow.Utility-Library:Commands</include>
+                                    <include>com.github.broken1arrow.Utility-Library:serialize-utility</include>
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>
                                                 <include>de.tr7zw:*</include>
