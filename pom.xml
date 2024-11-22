@@ -6,14 +6,14 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.48</version>
+    <version>0.50</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.97</utility-library>
+        <utility-library>0.112</utility-library>
     </properties>
     <repositories>
         <!--
@@ -127,31 +127,31 @@
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Menu_Library</artifactId>
+            <artifactId>menu-library</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Color_Conversion</artifactId>
+            <artifactId>color-conversion</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Yaml_Utility</artifactId>
+            <artifactId>yaml-utility</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Item_Creator</artifactId>
+            <artifactId>item-creator</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Conversation-Prompt</artifactId>
+            <artifactId>conversation-prompt</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
@@ -163,7 +163,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Title-Update</artifactId>
+            <artifactId>title-update</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
@@ -175,7 +175,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>MenuConfiguration-Manager</artifactId>
+            <artifactId>menu-configuration-manager</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>

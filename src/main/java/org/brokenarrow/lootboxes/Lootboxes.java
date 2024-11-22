@@ -2,7 +2,6 @@ package org.brokenarrow.lootboxes;
 
 
 import org.broken.arrow.command.library.CommandRegister;
-import org.broken.arrow.command.library.command.builders.CommandBuilder;
 import org.broken.arrow.itemcreator.library.ItemCreator;
 import org.broken.arrow.menu.button.manager.library.MenusSettingsHandler;
 import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
@@ -121,7 +120,7 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
 		Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
 		this.menuApi = new RegisterMenuAPI(this);
-		commandRegister = new CommandRegister();
+		commandRegister = new CommandRegister( );
 		this.registerCommands();
 		this.mobList = new MobList();
 		heavyTasks.start();
@@ -171,19 +170,19 @@ public class Lootboxes extends JavaPlugin {
 
 	public void registerCommands() {
 		commandRegister.registerMainCommand(this.getName(), "lootboxes|loot");
-		commandRegister.registerSubCommand(new CommandBuilder.Builder(
-				new GuiCommand())
-				.setPermission("lootboxes.command.menu")
-				.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
-				.build());
-		commandRegister.registerSubCommand(new CommandBuilder.Builder(new ReloadCommand())
-				.setPermission("lootboxes.command.reload")
-				.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
-				.build());
-		commandRegister.registerSubCommand(new CommandBuilder.Builder(new GetKeyCommand())
-				.setPermission("lootboxes.command.key")
-				.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
-				.build());
+		commandRegister.registerSubCommand(
+						new GuiCommand()
+										.setPermission("lootboxes.command.menu")
+										.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
+		);
+		commandRegister.registerSubCommand(new ReloadCommand()
+						.setPermission("lootboxes.command.reload")
+						.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
+		);
+		commandRegister.registerSubCommand(new GetKeyCommand()
+						.setPermission("lootboxes.command.key")
+						.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
+		);
 	}
 
 
