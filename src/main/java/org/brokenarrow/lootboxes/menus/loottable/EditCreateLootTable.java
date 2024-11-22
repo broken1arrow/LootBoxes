@@ -100,7 +100,6 @@ public class EditCreateLootTable extends MenuHolderPage<String> {
 		if (button == null) return null;
 
 		return new FillMenuButton<>((player, menu, click, clickedItem, lootTable) -> {
-			System.out.println("lootTable " + lootTable);
 			if (lootTable != null) {
 				if (click.isLeftClick())
 					new EditCreateItems(lootTable).menuOpen(player);
