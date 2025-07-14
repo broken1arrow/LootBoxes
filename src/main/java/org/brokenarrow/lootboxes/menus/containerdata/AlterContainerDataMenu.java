@@ -1,9 +1,9 @@
 package org.brokenarrow.lootboxes.menus.containerdata;
 
-import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
-import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
-import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
+import org.broken.arrow.library.menu.button.MenuButton;
+import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.SettingsData;
@@ -73,7 +73,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 				Object[] placeholders = new Object[0];
 				menuButton = getActiveButton(button, menuButton);
 
@@ -246,7 +246,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 		return false;
 	}*/
 
-	public org.broken.arrow.menu.button.manager.library.utility.MenuButton getActiveButton(MenuButtonData button, org.broken.arrow.menu.button.manager.library.utility.MenuButton passiveButton) {
+	public org.broken.arrow.library.menu.button.manager.utility.MenuButton getActiveButton(MenuButtonData button, org.broken.arrow.library.menu.button.manager.utility.MenuButton passiveButton) {
 		if (!containerDataBuilder.isSpawningContainerWithCooldown() && passiveButton.isActionTypeEqual("Generate_loot_is_off"))
 			return button.getActiveButton();
 		if (containerDataBuilder.isRandomSpawn()) {

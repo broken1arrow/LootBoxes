@@ -1,8 +1,8 @@
 package org.brokenarrow.lootboxes.lootdata;
 
 import com.google.common.base.Enums;
-import org.broken.arrow.yaml.library.YamlFileManager;
-import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
+import org.broken.arrow.library.yaml.YamlFileManager;
+import org.broken.arrow.library.yaml.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
@@ -39,7 +39,7 @@ public class ContainerDataCache extends YamlFileManager {
 
 	private static final ContainerDataCache instance = new ContainerDataCache();
 	private final Map<String, ContainerDataBuilder> cacheContainerData = new HashMap<>();
-	private final Map<Location, LocationData> chachedLocations = new HashMap<>();
+	private final Map<Location, LocationData> cachedLocations = new HashMap<>();
 	private final Map<String, List<Location>> chunkData = new HashMap<>();
 
 	public ContainerDataCache() {
@@ -51,32 +51,32 @@ public class ContainerDataCache extends YamlFileManager {
 		return this.cacheContainerData;
 	}
 
-	public Map<Location, LocationData> getchachedLocations() {
-		return this.chachedLocations;
+	public Map<Location, LocationData> getCachedLocations() {
+		return this.cachedLocations;
 	}
 
 	public LocationData getLocationData(final Location location) {
-		return this.chachedLocations.get(location);
+		return this.cachedLocations.get(location);
 	}
 
-	public void putChachedLocations(final Location location, final LocationData locationData) {
-		this.chachedLocations.put(location, locationData);
+	public void putCachedLocations(final Location location, final LocationData locationData) {
+		this.cachedLocations.put(location, locationData);
 	}
 
-	public void addChachedLocation(final String continerDataName, final Map<Location, ContainerData> map, final Map<String, KeysData> keysDataMap) {
+	public void addCachedLocation(final String containerDataName, final Map<Location, ContainerData> map, final Map<String, KeysData> keysDataMap) {
 		final Set<Location> linkedContainerData;
 		final Map<String, KeysData> cacheKeysData;
 		if (map.isEmpty()) {
-			linkedContainerData = this.getLinkedContainers(continerDataName).keySet();
+			linkedContainerData = this.getLinkedContainers(containerDataName).keySet();
 		} else
 			linkedContainerData = map.keySet();
 		if (keysDataMap.isEmpty()) {
-			cacheKeysData = this.getCacheKeysData(continerDataName);
+			cacheKeysData = this.getCacheKeysData(containerDataName);
 		} else
 			cacheKeysData = keysDataMap;
 		for (final Location location : linkedContainerData) {
 			if (location != null) {
-				putChachedLocations(location, new LocationData(continerDataName, cacheKeysData));
+				putCachedLocations(location, new LocationData(containerDataName, cacheKeysData));
 				setChunkData(location);
 			}
 		}
@@ -124,7 +124,7 @@ public class ContainerDataCache extends YamlFileManager {
 
 			Map<Object, ParticleEffect> particleEffects = containerDataBuilder.getParticleEffects();
 			if (particleEffects != null)
-				if (org.broken.arrow.menu.library.utility.ServerVersion.atLeast(org.broken.arrow.menu.library.utility.ServerVersion.V1_13))
+				if (org.broken.arrow.library.menu.utility.ServerVersion.atLeast(org.broken.arrow.library.menu.utility.ServerVersion.V1_13))
 					return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
 				else
 					return particleEffects.values().stream().map(ParticleEffect::getEffect).collect(Collectors.toList());
@@ -334,7 +334,7 @@ public class ContainerDataCache extends YamlFileManager {
 		builder.setKeysData(keysDataMap);
 
 		this.setContainerData(containerData, builder.build());
-		addChachedLocation(containerData, new HashMap<>(), keysDataMap);
+		addCachedLocation(containerData, new HashMap<>(), keysDataMap);
 		if (containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
 		saveTask();
@@ -377,7 +377,7 @@ public class ContainerDataCache extends YamlFileManager {
 		final ContainerDataBuilder containerDataBuilder = builder.setKeysData(keyDataMap).build();
 
 		this.setContainerData(container, containerDataBuilder);
-		this.addChachedLocation(container, new HashMap<>(), keyDataMap);
+		this.addCachedLocation(container, new HashMap<>(), keyDataMap);
 		if (containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(container, containerDataBuilder.getCooldown());
 	}
@@ -415,7 +415,7 @@ public class ContainerDataCache extends YamlFileManager {
 	public void setContainerData(final String containerData, final ContainerDataBuilder containerDataBuilder) {
 
 		cacheContainerData.put(containerData, containerDataBuilder);
-		addChachedLocation(containerData, new HashMap<>(), new HashMap<>());
+		addCachedLocation(containerData, new HashMap<>(), new HashMap<>());
 		if (!containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
 		final ContainerDataBuilder data = this.getCacheContainerData(containerData);
@@ -464,7 +464,7 @@ public class ContainerDataCache extends YamlFileManager {
 				if (mainKey.contains(" "))
 					mainKey = mainKey.trim().replace(" ", "_");
 
-				addChachedLocation(mainKey, containerDataBuilder.getLinkedContainerData(), containerDataBuilder.getKeysData());
+				addCachedLocation(mainKey, containerDataBuilder.getLinkedContainerData(), containerDataBuilder.getKeysData());
 
 				cacheContainerData.put(mainKey, containerDataBuilder);
 				if (containerDataBuilder.isSpawningContainerWithCooldown())

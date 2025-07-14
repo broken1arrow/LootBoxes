@@ -1,11 +1,11 @@
 package org.brokenarrow.lootboxes.menus;
 
-import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
-import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
-import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.button.logic.ButtonUpdateAction;
-import org.broken.arrow.menu.library.button.logic.FillMenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolderPage;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
+import org.broken.arrow.library.menu.button.MenuButton;
+import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
+import org.broken.arrow.library.menu.button.logic.FillMenuButton;
+import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
@@ -76,7 +76,7 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 
 			@Override
 			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
@@ -163,7 +163,7 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 			}
 			return ButtonUpdateAction.NONE;
 		}, (slot, particle) -> {
-			org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+			org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 			if (particleEffectList.checkIfParticleOrEffect(particle)) {
 
 				final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);

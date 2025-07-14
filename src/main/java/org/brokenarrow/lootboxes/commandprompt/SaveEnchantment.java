@@ -1,8 +1,8 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
-import org.broken.arrow.itemcreator.library.utility.Tuple;
-import org.broken.arrow.prompt.library.SimpleConversation;
-import org.broken.arrow.prompt.library.SimplePrompt;
+import org.broken.arrow.library.itemcreator.utility.Tuple;
+import org.broken.arrow.library.prompt.SimpleConversation;
+import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.lootdata.ItemData;

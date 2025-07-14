@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.commands;
 
-import org.broken.arrow.command.library.command.CommandHolder;
+import org.broken.arrow.library.command.command.CommandHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

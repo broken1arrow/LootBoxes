@@ -1,9 +1,9 @@
 package org.brokenarrow.lootboxes.menus;
 
-import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
-import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
-import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
+import org.broken.arrow.library.menu.button.MenuButton;
+import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
@@ -65,7 +65,7 @@ public class CustomizeItem extends MenuHolder {
 
 			@Override
 			public ItemStack getItem() {
-				org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 				Object[] placeholders = new Object[0];
 				if (button.isActionTypeEqual("Change_item"))
 					placeholders = getPlaceholders(data.getMaterial() == null ? "": bountifyCapitalized(data.getMaterial()));

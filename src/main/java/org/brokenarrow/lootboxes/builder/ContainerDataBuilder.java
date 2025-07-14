@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.broken.arrow.serialize.library.utility.converters.ObjectConverter.getBoolean;
+import static org.broken.arrow.library.serialize.utility.converters.ObjectConverter.getBoolean;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castList;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
 

@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.lootdata;
 
-import org.broken.arrow.yaml.library.YamlFileManager;
-import org.broken.arrow.yaml.library.utillity.ConfigurationWrapper;
+import org.broken.arrow.library.yaml.YamlFileManager;
+import org.broken.arrow.library.yaml.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootData;
 import org.bukkit.configuration.ConfigurationSection;

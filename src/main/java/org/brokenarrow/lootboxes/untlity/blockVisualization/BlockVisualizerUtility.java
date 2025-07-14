@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.untlity.blockVisualization;
 
 import de.tr7zw.changeme.nbtapi.NBTEntity;
-import org.broken.arrow.color.library.TextTranslator;
+import org.broken.arrow.library.color.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
 import org.bukkit.Bukkit;

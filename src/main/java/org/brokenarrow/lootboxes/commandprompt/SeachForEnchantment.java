@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
-import org.broken.arrow.prompt.library.SimpleConversation;
-import org.broken.arrow.prompt.library.SimplePrompt;
+import org.broken.arrow.library.prompt.SimpleConversation;
+import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.menus.Enchantments;
 import org.bukkit.conversations.ConversationContext;

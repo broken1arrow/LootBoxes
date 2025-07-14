@@ -1,13 +1,14 @@
 package org.brokenarrow.lootboxes;
 
 
-import org.broken.arrow.command.library.CommandRegister;
-import org.broken.arrow.itemcreator.library.ItemCreator;
-import org.broken.arrow.menu.button.manager.library.MenusSettingsHandler;
-import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
-import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
-import org.broken.arrow.menu.library.RegisterMenuAPI;
-import org.broken.arrow.nbt.library.RegisterNbtAPI;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.broken.arrow.library.command.CommandRegister;
+import org.broken.arrow.library.itemcreator.ItemCreator;
+import org.broken.arrow.library.menu.RegisterMenuAPI;
+import org.broken.arrow.library.menu.button.manager.MenusSettingsHandler;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
+import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
@@ -50,6 +51,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Lootboxes extends JavaPlugin {
@@ -120,7 +122,7 @@ public class Lootboxes extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
 		Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
 		this.menuApi = new RegisterMenuAPI(this);
-		commandRegister = new CommandRegister( );
+		commandRegister = new CommandRegister();
 		this.registerCommands();
 		this.mobList = new MobList();
 		heavyTasks.start();
@@ -137,6 +139,10 @@ public class Lootboxes extends JavaPlugin {
 		}
 		this.getLogger().log(Level.INFO, "Has started Lootboxes");
 
+		Logger logger = Logger.getLogger("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer");
+		logger.setUseParentHandlers(false);
+		logger.setLevel(Level.OFF);
+		Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
 	}
 
 	@Override

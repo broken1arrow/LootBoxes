@@ -1,9 +1,9 @@
 package org.brokenarrow.lootboxes.menus.itemcreation;
 
-import org.broken.arrow.menu.button.manager.library.utility.MenuButtonData;
-import org.broken.arrow.menu.button.manager.library.utility.MenuTemplate;
-import org.broken.arrow.menu.library.button.MenuButton;
-import org.broken.arrow.menu.library.holder.MenuHolder;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
+import org.broken.arrow.library.menu.button.MenuButton;
+import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.lootdata.ItemData;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -58,7 +58,7 @@ public class SaveItems extends MenuHolder {
 
             @Override
             public ItemStack getItem() {
-                org.broken.arrow.menu.button.manager.library.utility.MenuButton menuButton = button.getPassiveButton();
+                org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
                                 TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),

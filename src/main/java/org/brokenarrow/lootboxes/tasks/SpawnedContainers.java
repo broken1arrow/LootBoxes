@@ -39,10 +39,9 @@ public class SpawnedContainers {
 				setCachedTimeMap(key, time);
 			} else if (System.currentTimeMillis() >= time) {
 				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(key);
-				if (containerDataBuilder == null) return;
-				if (!containerDataBuilder.isSpawningContainerWithCooldown()) {
+				if (containerDataBuilder == null || !containerDataBuilder.isSpawningContainerWithCooldown()) {
 					removeKey.add(key);
-					return;
+					continue;
 				}
 				boolean failToSpawn = spawnContainer(containerDataBuilder);
 				setCachedTimeMap(key, containerDataBuilder.getCooldown());
@@ -74,7 +73,6 @@ public class SpawnedContainers {
 				if (item == null) {
 					return false;
 				}
-				location.getBlock().setType(containerData1.getContainerType());
 				location.getBlock().setType(containerData1.getContainerType());
 				setRotation(location, containerData1.getFacing());
 				setCustomName(location, containerData.getDisplayname());
@@ -117,7 +115,7 @@ public class SpawnedContainers {
 		return cachedTimeMap;
 	}
 
-	public void setCachedTimeMap(String containerdata, long seconds) {
-		this.tempCache.put(containerdata, System.currentTimeMillis() + (1000 * seconds));
+	public void setCachedTimeMap(String containerData, long seconds) {
+		this.tempCache.put(containerData, System.currentTimeMillis() + (1000 * seconds));
 	}
 }

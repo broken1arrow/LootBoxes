@@ -6,14 +6,14 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.50</version>
+    <version>0.60</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.112</utility-library>
+        <utility-library>0.125</utility-library>
     </properties>
     <repositories>
         <!--
@@ -169,7 +169,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.broken1arrow.Utility-Library</groupId>
-            <artifactId>Commands</artifactId>
+            <artifactId>commands</artifactId>
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
@@ -252,7 +252,7 @@
                                     <include>com.github.broken1arrow.Utility-Library:NBT</include>
                                     <include>com.github.broken1arrow.Utility-Library:title-update</include>
                                     <include>com.github.broken1arrow.Utility-Library:menu-configuration-manager</include>
-                                    <include>com.github.broken1arrow.Utility-Library:Commands</include>
+                                    <include>com.github.broken1arrow.Utility-Library:commands</include>
                                     <include>com.github.broken1arrow.Utility-Library:serialize-utility</include>
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>

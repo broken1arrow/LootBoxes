@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import org.broken.arrow.itemcreator.library.CreateItemStack;
-import org.broken.arrow.itemcreator.library.ItemCreator;
+import org.broken.arrow.library.itemcreator.CreateItemStack;
+import org.broken.arrow.library.itemcreator.ItemCreator;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.inventory.ItemFlag;
 
@@ -31,7 +31,7 @@ public final class CreateItemUtily {
 	public static CreateItemStack of(final Object item) {
 		CreateItemStack createItemStack = itemCreator.of(item);
 		if (createItemStack.isGlow())
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 		return createItemStack;
 	}
 
@@ -47,7 +47,7 @@ public final class CreateItemUtily {
 	public static CreateItemStack of(final Object item, final String itemMetaKey, String itemMetaValue) {
 		CreateItemStack createItemStack = itemCreator.of(item).setItemMetaData(itemMetaKey, itemMetaValue);
 		if (createItemStack.isGlow())
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 		return createItemStack;
 	}
 
@@ -65,7 +65,7 @@ public final class CreateItemUtily {
 	public static CreateItemStack of(final Object item, final String displayName, final String... lore) {
 		CreateItemStack createItemStack = itemCreator.of(item, displayName, Arrays.asList(lore));
 		if (createItemStack.isGlow())
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 
 		return createItemStack;
 	}
@@ -82,7 +82,7 @@ public final class CreateItemUtily {
 	public static CreateItemStack of(boolean glow,final Object item, final String displayName, final List<String> lore) {
 		CreateItemStack createItemStack = itemCreator.of(item, displayName, lore);
 		if (glow) {
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 			createItemStack.setGlow(true);
 		}
 		if (item != null && item.toString().equals("FIREWORK_STAR"))
@@ -104,7 +104,7 @@ public final class CreateItemUtily {
 	public static <T> CreateItemStack of(final Iterable<T> itemArray, final String displayName, final String... lore) {
 		CreateItemStack createItemStack = itemCreator.of(itemArray, displayName, Arrays.asList(lore));
 		if (createItemStack.isGlow())
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 		return createItemStack;
 	}
 
@@ -119,7 +119,7 @@ public final class CreateItemUtily {
 	public static <T> CreateItemStack of(final Iterable<T> itemArray, final String displayName, final List<String> lore) {
 		CreateItemStack createItemStack = itemCreator.of(itemArray, displayName, lore);
 		if (createItemStack.isGlow())
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 		return createItemStack;
 	}
 
@@ -133,7 +133,7 @@ public final class CreateItemUtily {
 	public static <T> CreateItemStack of(final Object item, final String color) {
 		CreateItemStack createItemStack = itemCreator.of(item, color);
 		if (createItemStack.isGlow())
-			createItemStack.setFlagsToHide(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+			createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 		return createItemStack;
 	}
 }

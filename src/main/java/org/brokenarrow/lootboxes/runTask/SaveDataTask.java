@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.runTask;
 
-import org.broken.arrow.yaml.library.YamlFileManager;
+import org.broken.arrow.library.yaml.YamlFileManager;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;

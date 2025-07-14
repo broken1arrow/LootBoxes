@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.untlity;
 
-import org.broken.arrow.color.library.TextTranslator;
+import org.broken.arrow.library.color.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
 import org.bukkit.Location;
