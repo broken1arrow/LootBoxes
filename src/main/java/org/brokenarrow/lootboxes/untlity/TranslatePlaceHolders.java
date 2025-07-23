@@ -16,9 +16,9 @@ public class TranslatePlaceHolders {
 	}
 	public static List<String> translatePlaceholdersLore(List<String> lores, Object... placeholders) {
 		if (lores == null) return new ArrayList<>();
-		List<String> clonedLores = new ArrayList<>(lores);
+		List<String> clonedLore = new ArrayList<>(lores);
 		List<String> list = new ArrayList<>();
-		for (String lore : clonedLores) {
+		for (String lore : clonedLore) {
 			if (!checkListForPlaceholdersAndTranslate(list, lore, placeholders))
 				list.add(translatePlaceholders(lore, placeholders));
 		}

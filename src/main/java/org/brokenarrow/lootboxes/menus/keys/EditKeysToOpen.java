@@ -32,12 +32,12 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 public class EditKeysToOpen extends MenuHolderPage<String> {
 	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final String containerData;
+	private final String containerKey;
 	private final MenuTemplate guiTemplate;
 
-	public EditKeysToOpen(String containerData) {
-		super(ContainerDataCache.getInstance().getListOfKeys(containerData));
-		this.containerData = containerData;
+	public EditKeysToOpen(String containerKey) {
+		super(ContainerDataCache.getInstance().getListOfKeys(containerKey));
+		this.containerKey = containerKey;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_keys_to_open");
 
 		setUseColorConversion(true);
@@ -81,7 +81,7 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
 	public boolean run(MenuButtonData button, ClickType click) {
 
 		if (button.isActionTypeEqual("Add_key_button")) {
-			new SaveNewKeys(containerData).menuOpen(player);
+			new SaveNewKeys(containerKey).menuOpen(player);
 		}
 		if (button.isActionTypeEqual("Forward_button")) {
 			if (click.isLeftClick()) {
@@ -96,7 +96,7 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
 		if (button.isActionTypeEqual("Search")) {
 		}
 		if (button.isActionTypeEqual("Back_button")) {
-			new AlterContainerDataMenu(containerData).menuOpen(player);
+			new AlterContainerDataMenu(containerKey).menuOpen(player);
 		}
 		return false;
 	}
@@ -111,12 +111,12 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
 				if (click.isShiftClick() && click.isLeftClick()) {
 					Map<String, Object> map = new HashMap<>();
 
-					KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+					KeysData keysData = containerDataCacheInstance.getCacheKey(containerKey, keyName);
 					map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
-					map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
+					map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerKey);
 					String lootTable = keysData.getLootTableLinked();
 					if (lootTable == null || lootTable.isEmpty()) {
-						ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
+						ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerKey);
 						if (containerDataCache != null) {
 							lootTable = containerDataCache.getLootTableLinked();
 						}
@@ -131,20 +131,20 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
 					return ButtonUpdateAction.NONE;
 				}
 				if (click.isLeftClick())
-					new EditKey(containerData, keyName).menuOpen(player);
+					new EditKey(containerKey, keyName).menuOpen(player);
 				if (click.isRightClick()) {
-					containerDataCacheInstance.removeCacheKey(containerData, keyName);
-					keyDropData.removeKeyMobDropData(containerData, keyName);
-					new EditKeysToOpen(containerData).menuOpen(player);
+					containerDataCacheInstance.removeCacheKey(containerKey, keyName);
+					keyDropData.removeKeyMobDropData(containerKey, keyName);
+					new EditKeysToOpen(containerKey).menuOpen(player);
 				}
 			}
 			return ButtonUpdateAction.NONE;
 		}, (slot, keyName) -> {
 			if (keyName != null) {
-				KeysData keysData = containerDataCacheInstance.getCacheKey(containerData, keyName);
+				KeysData keysData = containerDataCacheInstance.getCacheKey(containerKey, keyName);
 				String lootTable = keysData.getLootTableLinked();
 				if (lootTable == null || lootTable.isEmpty()) {
-					ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerData);
+					ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(containerKey);
 					if (containerDataCache != null) {
 						lootTable = containerDataCache.getLootTableLinked();
 					}

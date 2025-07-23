@@ -18,14 +18,14 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.SEACH_FOR_ITEM_TYP
 
 public class SeachInMenu extends SimpleConversation {
 
-	private MenuKeys menuAcces;
+	private MenuKeys menuAccess;
 	private final MenuKeys menuKey;
 	private final String lootTable;
 	private final Object itemToEdit;
 
-	public SeachInMenu(final MenuKeys menuAcces, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
+	public SeachInMenu(final MenuKeys menuAccess, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
 		super(Lootboxes.getInstance());
-		this.menuAcces = menuAcces;
+		this.menuAccess = menuAccess;
 		this.menuKey = menuKey;
 		this.lootTable = nameOfTableOrContainer;
 		this.itemToEdit = itemToEdit;
@@ -49,11 +49,11 @@ public class SeachInMenu extends SimpleConversation {
 		@Nullable
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
-			if (menuAcces == ENTITY_TYPE_LISTMENU)
+			if (menuAccess == ENTITY_TYPE_LISTMENU)
 				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
-			if (menuAcces == PARTICLE_ANIMANTION)
+			if (menuAccess == PARTICLE_ANIMANTION)
 				new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
-			if (menuAcces == MenuKeys.ENTITY_TYPE_LISTMENU)
+			if (menuAccess == MenuKeys.ENTITY_TYPE_LISTMENU)
 				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
 			else
 				new MaterialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));

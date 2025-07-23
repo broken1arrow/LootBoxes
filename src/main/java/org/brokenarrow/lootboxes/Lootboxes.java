@@ -128,12 +128,7 @@ public class Lootboxes extends JavaPlugin {
 		heavyTasks.start();
 		this.runTask.start();
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			/*
-			 * We register the EventListener here, when PlaceholderAPI is installed.
-			 * Since all events are in the main class (this class), we simply use "this"
-			 */
 			placeholderAPIMissing = false;
-			//Bukkit.getPluginManager().registerEvents(this, this);
 		} else {
 			placeholderAPIMissing = true;
 		}

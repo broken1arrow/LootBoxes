@@ -2,6 +2,7 @@ package org.brokenarrow.lootboxes.effects;
 
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.api.HeavyLoad;
+import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.listener.CheckChunkLoadUnload;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -12,16 +13,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 public class SpawnContainerEffects implements HeavyLoad {
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
-    private CheckChunkLoadUnload checkChunkLoadUnload;
     private static final Lootboxes plugin = Lootboxes.getInstance();
-
+    private static int locationInlist;
+    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
     private final Location[] containerLocations;
     private final List<ParticleEffect> effectType;
     private final long time;
-
-    private static int locationInlist;
     private final double MAX_MS_PER_TICK = 4.5;
+    private CheckChunkLoadUnload checkChunkLoadUnload;
     private ParticleRunnable particleRunnable;
 
     public SpawnContainerEffects(final List<ParticleEffect> effectType, final Integer runTime, final Location... containerLocations) {
@@ -50,8 +49,12 @@ public class SpawnContainerEffects implements HeavyLoad {
                 final List<ParticleEffect> effectType;
                 if (this.effectType != null && !this.effectType.isEmpty())
                     effectType = this.effectType;
-                else
-                    effectType = containerDataCache.getParticleEffectList(containerDataCache.getLocationData(containerLocation).getContainerData());
+                else {
+                    final LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(containerLocation);
+                    if (locationData != null)
+                        effectType = containerDataCache.getParticleEffectList(locationData.getContainerKey());
+                    else effectType = null;
+                }
                 if (effectType == null)
                     plugin.getSpawnContainerEffectsTask().removeLocationInList(containerLocation);
                 effect(containerLocation, effectType);
@@ -100,9 +103,9 @@ public class SpawnContainerEffects implements HeavyLoad {
     }
 
     private class ParticleRunnable extends BukkitRunnable {
-        private  Location containerLocation;
-        private  List<ParticleEffect> effectType;
         int amount;
+        private Location containerLocation;
+        private List<ParticleEffect> effectType;
 
         public ParticleRunnable() {
             amount = 0;
@@ -120,7 +123,7 @@ public class SpawnContainerEffects implements HeavyLoad {
         public void run() {
 
             boolean refill = plugin.getSpawnedContainers().isRefill(containerLocation);
-            if (!reschedule() || !refill ) {
+            if (!reschedule() || !refill) {
                 cancel();
                 return;
             }

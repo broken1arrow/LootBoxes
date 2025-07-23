@@ -1,10 +1,10 @@
 package org.brokenarrow.lootboxes.menus;
 
-import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
-import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
 import org.broken.arrow.library.menu.button.logic.FillMenuButton;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
@@ -12,7 +12,6 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.menus.keys.EditKey;
@@ -129,7 +128,7 @@ public class MaterialList extends MenuHolderPage<Material> {
 
         return new FillMenuButton<>((player, menu, click, clickedItem, material) -> {
             if (material != null) {
-                openMenu(player,click, material);
+                openEditMenuKey(player,click, material);
             }
             return ButtonUpdateAction.NONE;
         }, (slot, material) -> {
@@ -149,7 +148,7 @@ public class MaterialList extends MenuHolderPage<Material> {
         });
     }
 
-    private void openMenu(Player player, ClickType click, Material material) {
+    private void openEditMenuKey(Player player, ClickType click, Material material) {
         if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
             if (data != null) {
                 final Builder builder = data.getBuilder();
@@ -159,7 +158,8 @@ public class MaterialList extends MenuHolderPage<Material> {
             }
         }
         if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
-            containerDataCache.setKeyData(KeysToSave.ITEM_TYPE, material, container, (String) value);
+            containerDataCache.setKeyData( container, (String) value,keysDataWrapper -> keysDataWrapper.setItemType(material));
+            //containerDataCache.setKeyData(KeysToSave.ITEM_TYPE, material, container, (String) value);
             new EditKey(container, (String) value).menuOpen(player);
 
         }

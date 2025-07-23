@@ -149,7 +149,7 @@ public class SpawnContainerRandomLoc {
 				setRotation(location, Facing.getRandomFace(material == Material.CHEST || material == Material.TRAPPED_CHEST));
 			} else
 				setRotation(location, containerData.getRandomLootContainerFacing().getFace());
-			setCustomName(location, containerData.getDisplayname());
+			setCustomName(location, containerData.getDisplayName());
 
 			Inventory inventory = getInventory(location);
 			if (inventory != null) {
@@ -166,7 +166,7 @@ public class SpawnContainerRandomLoc {
 				}
 				location.getBlock().setType(container.getContainerType());
 				setRotation(location, container.getFacing());
-				setCustomName(location, containerData.getDisplayname());
+				setCustomName(location, containerData.getDisplayName());
 
 				Inventory inventory = getInventory(location);
 				if (inventory != null) {

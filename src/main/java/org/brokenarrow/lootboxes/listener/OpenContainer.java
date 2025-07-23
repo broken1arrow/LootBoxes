@@ -53,7 +53,7 @@ public class OpenContainer implements Listener {
 				key = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_KEY_NAME.name());
 				containerDataName = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
 			}
-			LocationData locationData = this.containerDataCache.getLocationData(location);
+			LocationData locationData = this.containerDataCache.getContainerLocationCache().getLocationData(location);
 			if (locationData == null) return;
 
 			if (key == null || containerDataName == null) {
@@ -63,7 +63,7 @@ public class OpenContainer implements Listener {
 						continue;
 					String lootTable = keysData.getLootTableLinked();
 					if (lootTable == null || lootTable.isEmpty()) {
-						ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerData());
+						ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerKey());
 						if (containerDataCache != null) {
 							lootTable = containerDataCache.getLootTableLinked();
 						}
@@ -83,7 +83,7 @@ public class OpenContainer implements Listener {
 
 			ContainerDataBuilder cacheContainerData = containerDataCache.getCacheContainerData(containerDataName);
 			if (cacheContainerData == null) {
-				cacheContainerData = containerDataCache.getCacheContainerData(locationData.getContainerData());
+				cacheContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
 			}
 
 			KeysData dataCacheCacheKey = cacheContainerData.getKeysData().get(key);
@@ -168,7 +168,7 @@ public class OpenContainer implements Listener {
 			ContainerData containerDataLinked = containerData.getLinkedContainerData().get(location);
 			block.setType(containerDataLinked.getContainerType());
 			setRotation(location, containerDataLinked.getFacing());
-			setCustomName(location, containerData.getDisplayname());
+			setCustomName(location, containerData.getDisplayName());
 			Inventory inventory = getInventory(location);
 			if (inventory != null) {
 				inventory.setContents(stacks);

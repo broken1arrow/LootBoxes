@@ -80,9 +80,9 @@ public final class AlterContainerDataMenu extends MenuHolder {
 				if (menuButton == null)
 					menuButton = button.getPassiveButton();
 				if (button.isActionTypeEqual("Change_displayName"))
-					placeholders = getPlaceholders(containerDataBuilder.getDisplayname(),
-							containerDataBuilder.getDisplayname() == null || containerDataBuilder.getDisplayname().isEmpty() ?
-									containerDataName : containerDataBuilder.getDisplayname());
+					placeholders = getPlaceholders(containerDataBuilder.getDisplayName(),
+							containerDataBuilder.getDisplayName() == null || containerDataBuilder.getDisplayName().isEmpty() ?
+									containerDataName : containerDataBuilder.getDisplayName());
 				if (button.isActionTypeEqual("Container_linked_to_loot_table"))
 					placeholders = new Object[]{containerDataBuilder.getLootTableLinked()};
 				if (button.isActionTypeEqual("Particle_animation")) {

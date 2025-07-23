@@ -5,7 +5,6 @@ import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.menus.keys.EditKey;
@@ -23,7 +22,11 @@ import java.util.Set;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.ALTER_CONTAINER_DATA_MENU;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_AND_LORE_CONFIRM;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_AND_LORE_LORE;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
 public class ChangeDisplayNameLore extends SimpleConversation {
@@ -43,10 +46,10 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 
 	@Override
 	public Prompt getFirstPrompt() {
-		return new Commandprompt();
+		return new CommandPrompt();
 	}
 
-	public class Commandprompt extends SimplePrompt {
+	public class CommandPrompt extends SimplePrompt {
 
 		@Override
 		protected String getPrompt(ConversationContext context) {
@@ -106,9 +109,11 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 					}
 				} else
 					loreList.add(input);
-				containerDataCache.setKeyData(KeysToSave.LORE, loreList, container, keyName);
+				containerDataCache.setKeyData( container, keyName,keysDataWrapper -> keysDataWrapper.setLore(loreList));
+				//containerDataCache.setKeyData(KeysToSave.LORE, loreList, container, keyName);
 			} else
-				containerDataCache.setKeyData(KeysToSave.DISPLAY_NAME, input, container, keyName);
+				containerDataCache.setKeyData( container, keyName,keysDataWrapper -> keysDataWrapper.setDisplayName(input));
+				//containerDataCache.setKeyData(KeysToSave.DISPLAY_NAME, input, container, keyName);
 			CHANGE_DISPLAYNAME_AND_LORE_CONFIRM.sendMessage(player);
 			new EditKey(container, keyName).menuOpen(player);
 		}

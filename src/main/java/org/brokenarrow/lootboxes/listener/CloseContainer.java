@@ -45,9 +45,9 @@ public class CloseContainer implements Listener {
 
 		Inventory inventory = getInventory(location);
 		if (inventory != null) {
-			LocationData locationData = containerDataCache.getLocationData(location);
+			LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
 			if (locationData == null) return;
-			ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(locationData.getContainerData());
+			ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(locationData.getContainerKey());
 			if (containerDataBuilder == null) return;
 			Map<Location, ContainerData> containerData = containerDataBuilder.getLinkedContainerData();
 			if (containerData == null || containerData.get(location) == null) {

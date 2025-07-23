@@ -26,11 +26,11 @@ import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
 public final class ContainerDataBuilder implements ConfigurationSerializable {
 
 	private final String lootTableLinked;
-	private String permissionForRandomSpawn;
+	private final String permissionForRandomSpawn;
 	private final Material icon;
 	private final Material randomLootContainerItem;
 	private final Facing randomLootContainerFacing;
-	private final String displayname;
+	private final String displayName;
 	private final List<String> lore;
 	private final Map<Object, ParticleEffect> particleEffects;
 	private final Map<Location, ContainerData> containerData;
@@ -42,8 +42,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	private final boolean showTitle;
 	private final boolean containerShallGlow;
 	private final boolean spawnContainerFromWorldCenter;
-	private boolean spawnContainerFromPlayerCenter;
-	private boolean spawnOnSurface;
+	private final boolean spawnContainerFromPlayerCenter;
+	private final boolean spawnOnSurface;
 	private final long cooldown;
 	private final int attempts;
 	private final int minRadius;
@@ -58,7 +58,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		this.icon = builder.icon;
 		this.randomLootContainerItem = builder.randomLootContainerItem;
 		this.randomLootContainerFacing = builder.randomLootContainerFacing;
-		this.displayname = builder.displayName;
+		this.displayName = builder.displayName;
 		this.lore = builder.lore;
 		this.containerData = builder.containerData;
 		this.keysData = builder.keysData;
@@ -118,8 +118,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		return randomLootContainerFacing;
 	}
 
-	public String getDisplayname() {
-		return displayname;
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	public List<String> getLore() {
@@ -368,7 +368,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 				", icon=" + icon +
 				", randonLootContainerItem=" + randomLootContainerItem +
 				", randonLootContainerFaceing=" + randomLootContainerFacing +
-				", displayname='" + displayname + '\'' +
+				", displayname='" + displayName + '\'' +
 				", lore=" + lore +
 				", particleEffects=" + particleEffects +
 				", containerData=" + containerData +
@@ -401,7 +401,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 		keysData.put("Icon", this.icon + "");
 		keysData.put("Random_loot_container", this.randomLootContainerItem + "");
 		keysData.put("Random_loot_faceing", this.randomLootContainerFacing + "");
-		keysData.put("Display_name", this.displayname);
+		keysData.put("Display_name", this.displayName);
 		keysData.put("Lore", this.lore);
 		keysData.put("Spawn_on_surface", this.spawnOnSurface + "");
 		if (this.particleEffects == null)

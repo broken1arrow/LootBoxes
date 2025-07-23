@@ -36,7 +36,7 @@ public class CheckChunkLoadUnload implements Listener {
 	public void chunkLoad(final ChunkLoadEvent event) {
 		final Chunk chunk = event.getChunk();
 
-		final List<Location> locationList = containerDataCache.getChunkData(chunk);
+		final List<Location> locationList = containerDataCache.getChunkDataCache().getChunkData(chunk);
 		if (locationList != null && !locationList.isEmpty()) {
 			this.setChachedChunks(chunk);
 			ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot(true, false, false);
@@ -46,7 +46,7 @@ public class CheckChunkLoadUnload implements Listener {
 	}
 
 	public void addToHopperCache(final ChunkSnapshot chunkSnapshot, final List<Location> locationList) {
-		final List<Location> locations = containerDataCache.getChunkData(chunkSnapshot);
+		final List<Location> locations = containerDataCache.getChunkDataCache().getChunkData(chunkSnapshot);
 		for (final Location location : locations) {
 			addToCache(location, chunkSnapshot);
 		}

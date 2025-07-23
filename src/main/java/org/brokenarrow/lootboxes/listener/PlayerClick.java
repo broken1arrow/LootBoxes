@@ -62,10 +62,10 @@ public class PlayerClick implements Listener {
 
 				String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 				ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
-				LocationData locationData = containerDataCache.getLocationData(location);
+				LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
 
 				if (locationData != null) {
-					ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerData());
+					ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerKey());
 					event.setCancelled(true);
 					return;
 				}
@@ -126,7 +126,7 @@ public class PlayerClick implements Listener {
 		if (checkBlockIsContainer(block)) {
 			String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
 			ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
-			LocationData locationData = containerDataCache.getLocationData(location);
+			LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
 			String itemMetadata = null;
 			if (event.getItem() != null)
 				itemMetadata = nbt.getCompMetadata().getMetadata(event.getItem(), ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name());
@@ -136,7 +136,7 @@ public class PlayerClick implements Listener {
 			}
 
 			if (locationData != null && action == Action.LEFT_CLICK_BLOCK) {
-				ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerData());
+				ADD_CONTINERS_THIS_CONTAINER_IS_USED_ALREDY.sendMessage(player, locationData.getContainerKey());
 				event.setCancelled(true);
 				return;
 			}

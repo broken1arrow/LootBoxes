@@ -4,16 +4,16 @@ import java.util.Map;
 
 public final class LocationData {
 
-	private final String containerData;
+	private final String containerKey;
 	private final Map<String, KeysData> keys;
 
-	public LocationData(final String containerData, final Map<String, KeysData> keys) {
-		this.containerData = containerData;
+	public LocationData(final String containerKey, final Map<String, KeysData> keys) {
+		this.containerKey = containerKey;
 		this.keys = keys;
 	}
 
-	public String getContainerData() {
-		return containerData;
+	public String getContainerKey() {
+		return containerKey;
 	}
 
 
@@ -25,7 +25,7 @@ public final class LocationData {
 	@Override
 	public String toString() {
 		return "LocationData{" +
-				"containerData='" + containerData + '\'' +
+				"containerData='" + containerKey + '\'' +
 				", keys=" + keys +
 				'}';
 	}

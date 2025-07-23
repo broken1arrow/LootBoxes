@@ -75,7 +75,7 @@ public class SpawnedContainers {
 				}
 				location.getBlock().setType(containerData1.getContainerType());
 				setRotation(location, containerData1.getFacing());
-				setCustomName(location, containerData.getDisplayname());
+				setCustomName(location, containerData.getDisplayName());
 
 				lootboxes.getSpawnContainerEffectsTask().addLocationInList(location);
 				this.setRefill(location, true);

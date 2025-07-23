@@ -1,8 +1,8 @@
 package org.brokenarrow.lootboxes.menus.keys;
 
+import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
-import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
@@ -11,7 +11,6 @@ import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplayNameLore;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
-import org.brokenarrow.lootboxes.lootdata.KeysToSave;
 import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -112,7 +111,9 @@ public class EditKey extends MenuHolder {
 				amountCached = 64;
 			if (amountCached < 0)
 				amountCached = 0;
-			containerDataCacheInstance.setKeyData(KeysToSave.AMOUNT_NEEDED, amountCached, containerData, keyName);
+			int finalAmountCached = amountCached;
+			containerDataCacheInstance.setKeyData(containerData, keyName, keysDataWrapper -> keysDataWrapper.setAmountNeeded(finalAmountCached));
+			//containerDataCacheInstance.setKeyData(KeysToSave.AMOUNT_NEEDED, amountCached, containerData, keyName);
 			return true;
 		}
 		if (button.isActionTypeEqual("Alter_display_name")) {

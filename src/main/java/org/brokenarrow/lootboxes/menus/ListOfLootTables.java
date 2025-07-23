@@ -104,10 +104,10 @@ public class ListOfLootTables extends MenuHolderPage<String> {
 			boolean isRightClick = click.isRightClick();
 			if (!isRightClick && cacheContainerData.getLootTableLinked() != null) {
 				if (!cacheContainerData.getLootTableLinked().isEmpty())
-					player.sendMessage("You change the loottable from " + cacheContainerData.getLootTableLinked() + " to " + lootTable );
+					player.sendMessage("You change the loot-table from " + cacheContainerData.getLootTableLinked() + " to " + lootTable );
 
 				if (cacheContainerData.getLootTableLinked().equals(lootTable ))
-					player.sendMessage("You don't the loottable as it is same as the old, old " + cacheContainerData.getLootTableLinked() + " new name " + lootTable );
+					player.sendMessage("You don't the loot-table as it is same as the old, old " + cacheContainerData.getLootTableLinked() + " new name " + lootTable );
 			}
 			builder.setContainerDataLinkedToLootTable(isRightClick ? "" : lootTable);
 			Map<String, KeysData> keysDataMap = cacheContainerData.getKeysData();
