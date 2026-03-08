@@ -6,7 +6,7 @@ import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Guidata;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
-import org.brokenarrow.lootboxes.untlity.SkullCreator;
+import org.brokenarrow.lootboxes.untlity.SkullUtility;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -280,13 +280,13 @@ public final class GuiTempletsYaml {
 			final boolean glow = this.guiTemplets.getGuiValues(menuName).get(menuName + "_" + menuItemKey).isGlow();
 
 			if (icon.startsWith("uuid="))
-				return SkullCreator.itemFromUuid(UUID.fromString(icon.replaceFirst("uuid=", "")));
+				return SkullUtility.itemFromUuid(UUID.fromString(icon.replaceFirst("uuid=", "")));
 			else if (icon.startsWith("base64="))
-				return SkullCreator.itemFromBase64(icon.replaceFirst("base64=", ""));
+				return SkullUtility.itemFromBase64(icon.replaceFirst("base64=", ""));
 			else if (icon.startsWith("url="))
-				return SkullCreator.itemFromUrl(icon.replaceFirst("url=", ""));
+				return SkullUtility.itemFromUrl(icon.replaceFirst("url=", ""));
 			else if (icon.equals("Player_Skull") && player != null) {
-				return SkullCreator.itemFromUuid(player);
+				return SkullUtility.itemFromUuid(player);
 			} else {
 				return CreateItemUtily.of(icon).setGlow(glow).makeItemStack();
 

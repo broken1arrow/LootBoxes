@@ -1,7 +1,6 @@
 package org.brokenarrow.lootboxes;
 
 
-import org.apache.logging.log4j.core.config.Configurator;
 import org.broken.arrow.library.command.CommandRegister;
 import org.broken.arrow.library.itemcreator.ItemCreator;
 import org.broken.arrow.library.menu.RegisterMenuAPI;
@@ -137,7 +136,7 @@ public class Lootboxes extends JavaPlugin {
 		Logger logger = Logger.getLogger("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer");
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.OFF);
-		Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
+		//Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
 	}
 
 	@Override

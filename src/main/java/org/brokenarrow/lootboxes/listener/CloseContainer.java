@@ -71,7 +71,7 @@ public class CloseContainer implements Listener {
 
 	@Nullable
 	private Location getLocation(final InventoryCloseEvent event) {
-		if (ServerVersion.newerThan(ServerVersion.V1_9))
+		if (ServerVersion.newerThan(9.0))
 			return event.getInventory().getLocation();
 		else {
 			final org.bukkit.inventory.InventoryHolder holder = event.getInventory().getHolder();
@@ -85,7 +85,7 @@ public class CloseContainer implements Listener {
 				return ((Dropper) holder).getLocation();
 			if (holder instanceof Dispenser)
 				return ((Dispenser) holder).getLocation();
-			if (ServerVersion.newerThan(ServerVersion.V1_13))
+			if (ServerVersion.newerThan(13.2))
 				if (holder instanceof Barrel)
 					return ((Barrel) holder).getLocation();
 		}
@@ -94,7 +94,7 @@ public class CloseContainer implements Listener {
 
 	@Nullable
 	private Location getSourceLocation(final InventoryMoveItemEvent event) {
-		if (ServerVersion.newerThan(ServerVersion.V1_9))
+		if (ServerVersion.newerThan(9.0))
 			return event.getSource().getLocation();
 		else {
 			final org.bukkit.inventory.InventoryHolder holder = event.getSource().getHolder();
@@ -106,7 +106,7 @@ public class CloseContainer implements Listener {
 				return ((Dropper) holder).getLocation();
 			if (holder instanceof Dispenser)
 				return ((Dispenser) holder).getLocation();
-			if (ServerVersion.newerThan(ServerVersion.V1_13))
+			if (ServerVersion.newerThan(13.2))
 				if (holder instanceof Barrel)
 					return ((Barrel) holder).getLocation();
 		}

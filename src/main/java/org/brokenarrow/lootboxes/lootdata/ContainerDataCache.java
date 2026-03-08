@@ -107,7 +107,7 @@ public class ContainerDataCache extends YamlFileManager {
 
 			Map<Object, ParticleEffect> particleEffects = containerDataBuilder.getParticleEffects();
 			if (particleEffects != null)
-				if (org.broken.arrow.library.menu.utility.ServerVersion.atLeast(org.broken.arrow.library.menu.utility.ServerVersion.V1_13))
+				if (org.broken.arrow.library.menu.utility.ServerVersion.atLeast(13.0))
 					return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
 				else
 					return particleEffects.values().stream().map(ParticleEffect::getEffect).collect(Collectors.toList());

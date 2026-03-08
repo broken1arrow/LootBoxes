@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
-import org.broken.arrow.library.itemcreator.utility.Tuple;
+import org.broken.arrow.library.itemcreator.meta.MetaHandler;
+import org.broken.arrow.library.itemcreator.meta.enhancement.EnhancementWrapper;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
@@ -16,78 +17,84 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class SaveEnchantment extends SimpleConversation {
-	private final String lootTable;
-	private final String itemToEdit;
-	private final Enchantment enchantment;
+    private final String lootTable;
+    private final String itemToEdit;
+    private final Enchantment enchantment;
 
-	public SaveEnchantment(final String lootTable, final String itemToEdit, final Enchantment enchantment) {
-		super(Lootboxes.getInstance());
-		this.lootTable = lootTable;
-		this.itemToEdit = itemToEdit;
-		this.enchantment = enchantment;
-	}
+    public SaveEnchantment(final String lootTable, final String itemToEdit, final Enchantment enchantment) {
+        super(Lootboxes.getInstance());
+        this.lootTable = lootTable;
+        this.itemToEdit = itemToEdit;
+        this.enchantment = enchantment;
+    }
 
-	@Override
-	public Prompt getFirstPrompt() {
-		return new setLevel();
-	}
+    @Override
+    public Prompt getFirstPrompt() {
+        return new setLevel();
+    }
 
-	public class setLevel extends SimplePrompt {
-		private final LootItems lootItems = LootItems.getInstance();
-		private final ItemData itemData = ItemData.getInstance();
+    public class setLevel extends SimplePrompt {
+        private final LootItems lootItems = LootItems.getInstance();
+        private final ItemData itemData = ItemData.getInstance();
 
-		@Override
-		protected String getPrompt(final ConversationContext context) {
-			return SAVE_ENCHANTMENT_SET_LEVEL.languageMessages();
-		}
+        @Override
+        protected String getPrompt(final ConversationContext context) {
+            return SAVE_ENCHANTMENT_SET_LEVEL.languageMessages();
+        }
 
-		@Nullable
-		@Override
-		protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
-			final int level;
-			try {
-				level = Integer.parseInt(input);
-			} catch (final NumberFormatException ignore) {
-				SAVE_ENCHANTMENT_NOT_A_NUMBER.sendMessage(getPlayer(context), input);
+        @Nullable
+        @Override
+        protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
+            final int level;
+            try {
+                level = Integer.parseInt(input);
+            } catch (final NumberFormatException ignore) {
+                SAVE_ENCHANTMENT_NOT_A_NUMBER.sendMessage(getPlayer(context), input);
 
-				return getFirstPrompt();
+                return getFirstPrompt();
 
-			}
-			final LootData data = lootItems.getLootData(lootTable, itemToEdit);
+            }
+            final LootData data = lootItems.getLootData(lootTable, itemToEdit);
 
-			final String itemDataPath = data.getItemDataPath();
-			ItemStack item = itemData.getCacheItemData(lootTable, itemDataPath);
-			final Map<Enchantment, Tuple<Integer, Boolean>> enchantmentMap = new HashMap<>();
-			final String itemKeyPath;
-			enchantmentMap.put(enchantment, new Tuple<>(level, false));
-			if (item == null) {
-				ItemStack itemStack =  item = CreateItemUtily.of(data.getMaterial()).addEnchantments(enchantmentMap, false).setCopyOfItem(true).makeItemStack();
-				itemKeyPath = itemData.setCacheItemData(lootTable, item.getType() + "", itemStack);
-			} else {
-				if (item.getItemMeta() != null && !item.getItemMeta().getEnchants().isEmpty())
-					for (final Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
-						if (entry.getKey().equals(enchantment))
-							continue;
-						enchantmentMap.put(entry.getKey(), new Tuple<>(entry.getValue(), false));
-					}
+            final String itemDataPath = data.getItemDataPath();
+            ItemStack item = itemData.getCacheItemData(lootTable, itemDataPath);
+            final List<EnhancementWrapper> enchantments = new ArrayList<>();
+            final String itemKeyPath;
+            enchantments.add(new EnhancementWrapper(enchantment, level, false));
+            if (item == null) {
+                ItemStack itemStack = item = CreateItemUtily.of(data.getMaterial()).setItemMeta((Consumer<MetaHandler>) metaHandler ->
+                        metaHandler.createEnhancementMeta().addEnchantments(enchantments.toArray(new EnhancementWrapper[0])))
+                        .setCopyOfItem(true).makeItemStack();
+                itemKeyPath = itemData.setCacheItemData(lootTable, item.getType() + "", itemStack);
+            } else {
+                if (item.getItemMeta() != null && !item.getItemMeta().getEnchants().isEmpty())
+                    for (final Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
+                        if (entry.getKey().equals(enchantment))
+                            continue;
+                        enchantments.add(new EnhancementWrapper(enchantment, level, false));
+                    }
 
-				ItemStack itemStack = CreateItemUtily.of(item).addEnchantments(enchantmentMap, true).setCopyOfItem(true).makeItemStack();
-				itemKeyPath = itemData.updateCacheItemData(lootTable, itemDataPath, itemStack);
-			}
-			final LootData.Builder builder = data.getBuilder();
-			builder.setHaveMetadata(true).setLootTableName(lootTable).setItemDataPath(itemKeyPath);
+                ItemStack itemStack = CreateItemUtily.of(item).setItemMeta((Consumer<MetaHandler>) metaHandler ->
+                        metaHandler.createEnhancementMeta().addEnchantments(enchantments.toArray(new EnhancementWrapper[0])))
+                        .setCopyOfItem(true).makeItemStack();
+                itemKeyPath = itemData.updateCacheItemData(lootTable, itemDataPath, itemStack);
+            }
+            final LootData.Builder builder = data.getBuilder();
+            builder.setHaveMetadata(true).setLootTableName(lootTable).setItemDataPath(itemKeyPath);
 
-			SAVE_ENCHANTMENT_CONFIRM.sendMessage(getPlayer(context), input);
+            SAVE_ENCHANTMENT_CONFIRM.sendMessage(getPlayer(context), input);
 
-			lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
-			new Enchantments(lootTable, itemToEdit, "").menuOpen(getPlayer(context));
-			return null;
-		}
-	}
+            lootItems.setCachedLoot(lootTable, itemToEdit, builder.build());
+            new Enchantments(lootTable, itemToEdit, "").menuOpen(getPlayer(context));
+            return null;
+        }
+    }
 }

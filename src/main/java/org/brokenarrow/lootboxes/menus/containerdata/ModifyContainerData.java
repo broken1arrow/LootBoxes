@@ -123,7 +123,7 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                     return CreateItemUtily.of(false,itemStack != null ? itemStack : data.getIcon(),
                                     displayName,
                                     TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon()))
-                            .setShowEnchantments(true).makeItemStack();
+                            .makeItemStack();
                 }
             }
             return null;

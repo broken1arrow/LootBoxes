@@ -154,8 +154,7 @@ public class EditCreateItems extends MenuHolderPage<String> {
 
                     final ItemStack guiItem = CreateItemUtily.of(false, clonedItem,
                                     displayName,
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                            .setShowEnchantments(true).makeItemStack();
+                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders)).makeItemStack();
                     return guiItem;
                 }
             }
@@ -206,7 +205,7 @@ public class EditCreateItems extends MenuHolderPage<String> {
                     return false;
                 if (itemMeta.getLore() != null && !itemMeta.getLore().equals(metaObject.getLore()))
                     return false;
-                if (ServerVersion.atLeast(ServerVersion.V1_14)) {
+                if (ServerVersion.atLeast(14.0)) {
                     if (itemMeta.hasCustomModelData()) {
                         if (!metaObject.hasCustomModelData())
                             return false;
