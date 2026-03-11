@@ -23,74 +23,75 @@ import org.jetbrains.annotations.NotNull;
 
 public class ModifyContainerData extends MenuHolderPage<String> {
 
-	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final KeyDropData keyDropData = KeyDropData.getInstance();
+    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
 
-	private final MenuTemplate guiTemplate;
+    private final MenuTemplate guiTemplate;
 
-	public ModifyContainerData() {
-		super(ContainerDataCache.getInstance().getContainerData());
-		this.guiTemplate = Lootboxes.getInstance().getMenu("Containers_list");
+    public ModifyContainerData() {
+        super(ContainerDataCache.getInstance().getContainerData());
+        this.guiTemplate = Lootboxes.getInstance().getMenu("Containers_list");
 
-		setUseColorConversion(true);
-		setIgnoreItemCheck(true);
+        setUseColorConversion(true);
+        setIgnoreItemCheck(true);
 
-		if (guiTemplate != null) {
-			setFillSpace(guiTemplate.getFillSlots());
-			setMenuSize(guiTemplate.getinvSize("Containers_list"));
-			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(player, guiTemplate.getMenuTitle(), ""));
-			setMenuOpenSound(guiTemplate.getSound());
-			this.setUseColorConversion(true);
-		} else {
-			setMenuSize(36);
-			setTitle(() -> "could not load menu 'Containers_list'.");
-		}
-	}
+        if (guiTemplate != null) {
+            setFillSpace(guiTemplate.getFillSlots());
+            setMenuSize(guiTemplate.getinvSize("Containers_list"));
+            setTitle(() -> TranslatePlaceHolders.translatePlaceholders(player, guiTemplate.getMenuTitle(), ""));
+            setMenuOpenSound(guiTemplate.getSound());
+            this.setUseColorConversion(true);
+        } else {
+            setMenuSize(36);
+            setTitle(() -> "could not load menu 'Containers_list'.");
+        }
+    }
 
-	@Override
-	public MenuButton getButtonAt(int slot) {
-		MenuButtonData button = this.guiTemplate.getMenuButton(slot);
-		if (button == null) return null;
-		return new MenuButton() {
-			@Override
-			public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
-				if (run(button, click))
-					updateButton(this);
-			}
+    @Override
+    public MenuButton getButtonAt(int slot) {
+        MenuButtonData button = this.guiTemplate.getMenuButton(slot);
+        if (button == null) return null;
+        return new MenuButton() {
+            @Override
+            public void onClickInsideMenu(@NotNull final Player player, @NotNull final Inventory menu, @NotNull final ClickType click, @NotNull final ItemStack clickedItem) {
+                if (run(button, click))
+                    updateButton(this);
+            }
 
-			@Override
-			public ItemStack getItem() {
-				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
+            @Override
+            public ItemStack getItem() {
+                org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
-				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-						.makeItemStack();
-			}
-		};
-	}
+                return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
+                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                        .makeItemStack();
+            }
+        };
+    }
 
-	public boolean run(MenuButtonData button, ClickType click) {
-		if (button.isActionTypeEqual("Create_container_data")) {
-			new CreateContainerDataName(Material.AIR).start(player);
-		}
-		if (button.isActionTypeEqual("Forward_button")) {
-			if (click.isLeftClick()) {
-				nextPage();
-			}
-		}
-		if (button.isActionTypeEqual("Previous_button")) {
-			if (click.isLeftClick()) {
-				previousPage();
-			}
-		}
-		if (button.isActionTypeEqual("Search")) {}
+    public boolean run(MenuButtonData button, ClickType click) {
+        if (button.isActionTypeEqual("Create_container_data")) {
+            new CreateContainerDataName(Material.AIR).start(player);
+        }
+        if (button.isActionTypeEqual("Forward_button")) {
+            if (click.isLeftClick()) {
+                nextPage();
+            }
+        }
+        if (button.isActionTypeEqual("Previous_button")) {
+            if (click.isLeftClick()) {
+                previousPage();
+            }
+        }
+        if (button.isActionTypeEqual("Search")) {
+        }
 
-		if (button.isActionTypeEqual("Back_button")) {
-			new MainMenu().menuOpen(player);
-		}
-		return false;
-	}
+        if (button.isActionTypeEqual("Back_button")) {
+            new MainMenu().menuOpen(player);
+        }
+        return false;
+    }
 
     @Override
     public FillMenuButton<String> createFillMenuButton() {
@@ -101,10 +102,11 @@ public class ModifyContainerData extends MenuHolderPage<String> {
 
             if (containerKeyName != null) {
                 if (click.isLeftClick())
-                    new AlterContainerDataMenu((String) containerKeyName).menuOpen(player);
+                    new AlterContainerDataMenu(containerKeyName).menuOpen(player);
                 if (click.isRightClick()) {
-                    containerDataCache.removeCacheContainerData((String) containerKeyName);
-                    keyDropData.removeKey((String) containerKeyName);
+                    containerDataCache.removeCacheContainerData(containerKeyName);
+                    keyDropData.removeKey(containerKeyName);
+                    return ButtonUpdateAction.ALL;
                 }
             }
             return ButtonUpdateAction.NONE;
@@ -120,9 +122,10 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                     ItemStack itemStack = null;
                     if (data.getIcon() == null || data.getIcon() == Material.AIR)
                         itemStack = CreateItemUtily.of(Material.CHEST).makeItemStack();
-                    return CreateItemUtily.of(false,itemStack != null ? itemStack : data.getIcon(),
+                    return CreateItemUtily.of(false, itemStack != null ? itemStack : data.getIcon(),
                                     displayName,
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon()))
+                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon(),
+                                            Lootboxes.getInstance().getSpawnLootContainer().haveCachedContainer(containerKeyName) ? "Active": "Disable"))
                             .makeItemStack();
                 }
             }

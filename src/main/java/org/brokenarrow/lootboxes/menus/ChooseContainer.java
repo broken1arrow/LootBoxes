@@ -29,10 +29,6 @@ import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 public class ChooseContainer extends MenuHolderPage<Material> {
 
 	private final MenuTemplate guiTemplate;
-	private  MenuButton listOfItems;
-	private  MenuButton previous;
-	private  MenuButton forward;
-	private  MenuButton backButton;
 	private final String container;
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 
@@ -47,7 +43,7 @@ public class ChooseContainer extends MenuHolderPage<Material> {
 		if (guiTemplate != null) {
 			setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Choose_container"));
-			setTitle(() ->TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
+			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(),""));
 			this.setUseColorConversion(true);
 			setMenuOpenSound(guiTemplate.getSound());
 		} else {

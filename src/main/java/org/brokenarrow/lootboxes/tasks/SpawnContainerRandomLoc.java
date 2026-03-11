@@ -84,6 +84,10 @@ public class SpawnContainerRandomLoc {
 
 	}
 
+	public boolean haveCachedContainer(String containerKey) {
+		return cachedContainers.containsKey(containerKey);
+	}
+
 	public void setRandomSpawnedContainer() {
 		for (String containerKeyName : containerDataCacheInstance.getCacheContainerData().keySet()) {
 			ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerKeyName);

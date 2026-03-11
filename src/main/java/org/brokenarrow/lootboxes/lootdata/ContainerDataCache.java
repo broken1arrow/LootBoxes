@@ -232,6 +232,7 @@ public class ContainerDataCache extends YamlFileManager {
 
 	public void removeCacheContainerData(final String container) {
 		cacheContainerData.remove(container);
+		saveTask();
 	}
 
 	public KeysData removeCacheKey(final String containerDataCacheName, final String keyName) {
