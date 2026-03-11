@@ -121,12 +121,15 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
 				itemstack = new ItemStack(material);
 			if (itemstack == null)
 				return null;
-			String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(itemstack.getType()));
+			final String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(itemstack.getType()));
+			final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
 
 			return CreateItemUtily.of(menuButton.isGlow(),itemstack,
 							displayName,
-							TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-					.makeItemStack();
+							TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),
+									containerDataBuilder.getRandomLootContainerItem(),
+									containerDataBuilder.getRandomLootContainerFacing()
+							)).makeItemStack();
 		});
 	}
 

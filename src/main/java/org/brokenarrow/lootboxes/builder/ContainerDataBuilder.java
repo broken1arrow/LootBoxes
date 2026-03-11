@@ -115,6 +115,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 	}
 
 	public Facing getRandomLootContainerFacing() {
+		if(randomLootContainerFacing == null)
+			return Facing.RANDOM;
 		return randomLootContainerFacing;
 	}
 
