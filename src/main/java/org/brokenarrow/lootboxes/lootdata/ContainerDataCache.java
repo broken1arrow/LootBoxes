@@ -220,21 +220,7 @@ public class ContainerDataCache extends YamlFileManager {
 		return null;
 	}
 
-/*	public Map<String, KeysData> getCacheKeys(final String containerKey) {
-		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerKey);
-		if (containerDataBuilder != null)
-			return containerDataBuilder.getKeysData();
 
-		return new HashMap<>();
-	}
-
-	public ContainerData getLinkedContainerData(final String containerKey, final Location location) {
-		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerKey);
-		if (containerDataBuilder != null)
-			return containerDataBuilder.getLinkedContainerData().get(location);
-
-		return null;
-	}*/
 
 	public Map<Location, ContainerData> getLinkedContainers(final String containerDataCacheName) {
 		final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
@@ -304,43 +290,6 @@ public class ContainerDataCache extends YamlFileManager {
 			this.addContainerToSpawnTask(containerKey, containerDataBuilder.getCooldown());
 	}
 
-/*
-	public void setKeyData(final KeysToSave keysToSave, final Object objectToSave, final String container, final String keyName) {
-		Map<String, KeysData> keyDataMap = getCacheKeys(container);
-
-		Material material = null;
-		if (keysToSave == KeysToSave.ITEM_TYPE) {
-			if (objectToSave instanceof String)
-				material = Enums.getIfPresent(Material.class, (String) objectToSave).orNull();
-			else
-				material = (Material) objectToSave;
-
-		}
-		if (keyDataMap == null)
-			keyDataMap = new HashMap<>();
-		final KeysData oldData = keyDataMap.get(keyName);
-		final KeysData data = new org.brokenarrow.lootboxes.builder.KeysData(
-				keysToSave == KeysToSave.KEY_NAME ? (String) objectToSave : oldData.getKeyName(),
-				keysToSave == KeysToSave.DISPLAY_NAME ? (String) objectToSave : oldData.getDisplayName(),
-				keysToSave == KeysToSave.LOOT_TABLE_LINKED ? (String) objectToSave : oldData.getLootTableLinked(),
-				keysToSave == KeysToSave.AMOUNT_NEEDED ? (int) objectToSave : oldData.getAmountNeeded(),
-				keysToSave == KeysToSave.ITEM_TYPE ? material : oldData.getItemType(),
-				keysToSave == KeysToSave.LORE ? (List<String>) objectToSave : oldData.getLore());
-
-
-		keyDataMap.put(keyName, data);
-
-		final ContainerDataBuilder.Builder builder = getCacheContainerBuilder(container);
-		checkNotNull(builder, "Some reason are ContainerDataBuilder for this containerData " + container + " is null.");
-		final ContainerDataBuilder containerDataBuilder = builder.setKeysData(keyDataMap).build();
-
-		this.setContainerData(container, containerDataBuilder);
-		this.addCachedLocation(container, new HashMap<>(), keyDataMap);
-		if (containerDataBuilder.isSpawningContainerWithCooldown())
-			addContainerToSpawnTask(container, containerDataBuilder.getCooldown());
-	}
-*/
-
 	public List<String> getListOfKeys(final String containerDataCacheName) {
 		final List<String> keyNameList = new ArrayList<>();
 
@@ -378,11 +327,12 @@ public class ContainerDataCache extends YamlFileManager {
 		if (!containerDataBuilder.isSpawningContainerWithCooldown())
 			addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
 		final ContainerDataBuilder data = this.getCacheContainerData(containerData);
-		if (data != null)
-        for (final Location location : data.getLinkedContainerData().keySet()) {
-            this.getChunkDataCache().setChunkData(location);
-            Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
-        }
+		if (data != null) {
+			for (final Location location : data.getLinkedContainerData().keySet()) {
+				this.getChunkDataCache().setChunkData(location);
+				Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+			}
+		}
 		saveTask();
 	}
 
