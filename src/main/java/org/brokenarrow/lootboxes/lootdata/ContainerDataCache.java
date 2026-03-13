@@ -9,6 +9,7 @@ import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.KeysDataWrapper;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
+import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -71,6 +72,8 @@ public class ContainerDataCache extends YamlFileManager {
 		final ContainerDataBuilder builder = new ContainerDataBuilder.Builder()
 				.setContainerDataLinkedToLootTable("")
 				.setSpawningContainerWithCooldown(true)
+				.setRandomLootContainerFacing(Facing.RANDOM)
+				.setRandomLootContainerItem(Material.CHEST)
 				.setCooldown(1800)
 				.setParticleEffects(new HashMap<>())
 				.setEnchant(false)

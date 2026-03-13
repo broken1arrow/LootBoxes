@@ -1688,10 +1688,12 @@ Menus:
           name: "&cNot work when random spawn is off"
           glow: false
           lore:
-            - "&aSet this to true if you want to set"
-            - "&aat your location. If false it will"
-            - "&atry spawn one around the player"
-            - "&aor at world spawn if that is set."
+            - "&aSet this to true to use your current"
+            - "&alocation as the spawn point."
+            - "&a"
+            - "&aIf set to false, the container will"
+            - "&aspawn randomly around the player"
+            - "&aor at the world spawn if enabled."
             - ""
             - "&aCurrently set to: &6{0}"
             - "&aLocation: &6{1}"
@@ -1700,10 +1702,12 @@ Menus:
           name: "&bSet at player loc"
           glow: false
           lore:
-            - "&aSet this to true if you want to set"
-            - "&aat your location. If false it will"
-            - "&atry spawn one around the player"
-            - "&aor at world spawn if that i set."
+            - "&aSet this to true to use your current"
+            - "&alocation as the spawn point."
+            - "&a"
+            - "&aIf set to false, the container will"
+            - "&aspawn randomly around the player"
+            - "&aor at the world spawn if enabled."
             - ""
             - "&aCurrently set to: &6{0}"
             - "&aLocation: &6{1}"
@@ -1744,6 +1748,32 @@ Menus:
           - "&arightclick to unset."
           - "&a"
           - "&aCurrently set: &6{0}"
+      "39":
+        action_type: Select_worlds
+        passive:
+          material: BARRIER
+          name: "&cNot work when random spawn is off"
+          glow: false
+          lore:
+            - "&aSet allowed worlds instead of using"
+            - "&alands or world guard to block spawn."
+            - ""
+            - "&aYou still will have the option to combo"
+            - "&athis options with the supported plugins."
+            - ""
+            - "&aCurrently set to: &6{0}"
+        active:
+          material: SPAWNER
+          name: "&bSet world where container spawn"
+          glow: false
+          lore:
+            - "&aSet allowed worlds instead of using"
+            - "&alands or world guard to block spawn."
+            - ""
+            - "&aYou still will have the option to combo"
+            - "&athis options with the supported plugins."
+            - ""
+            - "&aCurrently set to: &6{0}"
       "53":
         action_type: Back_button
         material: RED_STAINED_GLASS_PANE

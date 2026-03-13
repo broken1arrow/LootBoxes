@@ -1,4 +1,4 @@
-package org.brokenarrow.lootboxes.menus;
+package org.brokenarrow.lootboxes.menus.containerdata;
 
 import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;

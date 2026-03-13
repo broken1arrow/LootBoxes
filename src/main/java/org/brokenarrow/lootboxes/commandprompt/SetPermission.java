@@ -5,7 +5,7 @@ import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.menus.SettingsContainerData;
+import org.brokenarrow.lootboxes.menus.containerdata.SettingsContainerData;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;

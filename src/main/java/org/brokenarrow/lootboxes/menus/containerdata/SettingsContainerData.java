@@ -1,15 +1,13 @@
-package org.brokenarrow.lootboxes.menus;
+package org.brokenarrow.lootboxes.menus.containerdata;
 
+import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
-import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.commandprompt.SetPermission;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
-import org.brokenarrow.lootboxes.menus.containerdata.ModifyContainerData;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.LocationWrapper;
@@ -38,7 +36,6 @@ public class SettingsContainerData extends MenuHolder {
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
-
         if (guiTemplate != null) {
             setMenuSize(guiTemplate.getinvSize("Settings_container_data"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
@@ -166,6 +163,9 @@ public class SettingsContainerData extends MenuHolder {
                     buttonMatch = true;
                     builder.setPermissionForRandomSpawn("");
                     break;
+                case "Select_worlds":
+
+                    break;
                 case "Back_button":
                     new ModifyContainerData().menuOpen(player);
                     break;
@@ -204,6 +204,7 @@ public class SettingsContainerData extends MenuHolder {
                 case "World_center":
                 case "Player_set_loc":
                 case "Spawn_On_Surface":
+                case "Select_worlds":
                     return button.getActiveButton();
             }
         }
@@ -249,6 +250,9 @@ public class SettingsContainerData extends MenuHolder {
 
         if (button.isActionTypeEqual("Permission"))
             placeholders = getPlaceholders(containerDataBuilder.getPermissionForRandomSpawn() != null ? containerDataBuilder.getPermissionForRandomSpawn() : "");
+
+        if (button.isActionTypeEqual("Select_worlds"))
+            placeholders = getPlaceholders(containerDataBuilder.isSpawnOnSurface());
 
         return placeholders;
     }

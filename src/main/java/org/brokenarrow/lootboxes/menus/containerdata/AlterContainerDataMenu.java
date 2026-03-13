@@ -16,7 +16,6 @@ import org.brokenarrow.lootboxes.menus.ContainersLinkedList;
 import org.brokenarrow.lootboxes.menus.ListOfLootTables;
 import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.menus.ParticleAnimation;
-import org.brokenarrow.lootboxes.menus.SettingsContainerData;
 import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpen;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;

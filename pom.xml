@@ -6,11 +6,12 @@
 
     <groupId>org.brokenarrow.lootboxes</groupId>
     <artifactId>Lootboxes</artifactId>
-    <version>0.60</version>
+    <version>0.65-beta</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+  <!--      <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>-->
+        <release>17</release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
         <utility-library>0.130</utility-library>
@@ -72,14 +73,6 @@
 
     </repositories>
     <dependencies>
-
-        <!--
-           Import the Spigot API since it's necessary for our plugin
-
-           Make sure you change the version to the latest version you want to use for your plugin.
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-       -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -186,39 +179,17 @@
         </dependency>
     </dependencies>
     <build>
-
-        <!--
-           When we are building your plugins, what plugins should we use during this process?
-
-           The plugins here extend the functionality of Maven, just like your plugin enhances Minecraft
-           These are not Minecraft plugins, but only Maven plugins!
-        -->
         <plugins>
-
-            <!--
-               The first and the most essential plugin is the compiler, that translates your
-               human readable code into bytecode.
-           -->
-            <plugin>
+           <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-
-                <!--
-                   You want to check and update the latest version periodically from
-                   https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin
-               -->
-                <version>3.11.0</version>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                </configuration>
+                <version>3.14.0</version>
+               <configuration>
+                   <source>8</source>
+                   <target>8</target>
+                   <forceJavacCompilerUse>true</forceJavacCompilerUse>
+               </configuration>
             </plugin>
-
-            <!--
-               The second plugin is the shade plugin, packaging every library with
-               the "compile" scope (see dependencies)
-           -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -234,13 +205,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <!--
-                            By default we configure the Foundation to include itself and all classes when
-                            we set the scope to compile (see above).
-
-                            There are many libraries from Foundation we will not need to use, and here
-                            can you specify which ones to exclude. Please leave the default ones as they are.
-                       -->
                         <configuration>
 
                             <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -250,6 +214,7 @@
                                     <include>com.github.broken1arrow:*</include>
                                     <include>org.broken.arrow.library.Item-NBT-API:item-nbt-api:*</include>
                                     <include>org.broken.arrow.library:conversation-prompt</include>
+                                    <include>org.broken.arrow.library:log-and-validate</include>
                                     <include>org.broken.arrow.library:item-creator</include>
                                     <include>org.broken.arrow.library:yaml-utility</include>
                                     <include>org.broken.arrow.library:color-conversion</include>
