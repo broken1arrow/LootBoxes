@@ -9,7 +9,7 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
-import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
+import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
@@ -100,7 +100,7 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 		}
 		if (button.isActionTypeEqual("Search")) {
 			if (click.isLeftClick())
-				new SeachInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
+				new SearchInMenu(PARTICLE_ANIMANTION, PARTICLE_ANIMANTION, container, "").start(player);
 			else
 				new ParticleAnimation(container, "").menuOpen(player);
 		}

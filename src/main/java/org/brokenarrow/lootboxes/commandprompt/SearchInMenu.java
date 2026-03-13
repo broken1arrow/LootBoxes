@@ -16,14 +16,14 @@ import static org.brokenarrow.lootboxes.menus.MenuKeys.ENTITY_TYPE_LISTMENU;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SEACH_FOR_ITEM_TYPE_NAME;
 
-public class SeachInMenu extends SimpleConversation {
+public class SearchInMenu extends SimpleConversation {
 
 	private MenuKeys menuAccess;
 	private final MenuKeys menuKey;
 	private final String lootTable;
 	private final Object itemToEdit;
 
-	public SeachInMenu(final MenuKeys menuAccess, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
+	public SearchInMenu(final MenuKeys menuAccess, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
 		super(Lootboxes.getInstance());
 		this.menuAccess = menuAccess;
 		this.menuKey = menuKey;
@@ -33,11 +33,11 @@ public class SeachInMenu extends SimpleConversation {
 
 	@Override
 	public Prompt getFirstPrompt() {
-		return new itemSeach();
+		return new ItemSearch();
 	}
 
-	public class itemSeach extends SimplePrompt {
-		public itemSeach() {
+	public class ItemSearch extends SimplePrompt {
+		public ItemSearch() {
 
 		}
 

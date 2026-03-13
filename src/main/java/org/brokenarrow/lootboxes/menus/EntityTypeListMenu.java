@@ -10,7 +10,7 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData.Builder;
-import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
+import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.menus.keys.EditKey;
@@ -99,7 +99,7 @@ public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
 		}
 		if (button.isActionTypeEqual("Search")) {
 			if (click.isLeftClick())
-				new SeachInMenu(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
+				new SearchInMenu(MenuKeys.ENTITY_TYPE_LISTMENU, menuKey, container, value).start(player);
 			else
 				new EntityTypeListMenu(menuKey, container, value, "").menuOpen(player);
 		}

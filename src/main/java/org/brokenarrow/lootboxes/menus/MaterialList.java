@@ -10,7 +10,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
-import org.brokenarrow.lootboxes.commandprompt.SeachInMenu;
+import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
@@ -92,7 +92,7 @@ public class MaterialList extends MenuHolderPage<Material> {
 
         if (button.isActionTypeEqual("Search")) {
             if (click.isLeftClick())
-                new SeachInMenu(MenuKeys.MATRIALLIST_MENU, menuKey, container, value).start(player);
+                new SearchInMenu(MenuKeys.MATRIALLIST_MENU, menuKey, container, value).start(player);
             else
                 new MaterialList(menuKey, value, container, "").menuOpen(player);
         }

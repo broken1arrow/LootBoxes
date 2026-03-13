@@ -96,6 +96,9 @@ TELEPORT:
   CONTINER_IS_OBSTACLE_ON_ALL_SIDES: "&fYou get teleported to container pos, becuse the container is obstacle on all sides. Pos you get teleported to: &6 {0} {1} {2} {3}"
   CONTINER_IS_OBSTACLE_ON_SOME_SIDES: "&fYou get teleported to diffrent location, becuse container was obstacle some of the side´s of the container. Pos you get teleported to: &6 {0} {1} {2} {3}"
 
+SELECT_WORLD_PROMPT: "&fType the world name you want top add, it must be valid world as it does not verify if the world exist."
+SELECT_WORLD_EXIST_PROMPT: "&fThe world is already added, to remove you click on the world and right-click."
+
 RELOAD: "&fYou have successful reload the config files"
 
 BOOLEAN_TRUE: "yes"
