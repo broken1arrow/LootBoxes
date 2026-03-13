@@ -30,19 +30,19 @@ public class SelectWorld extends MenuHolderPage<World> {
     public SelectWorld(String containerDataName) {
         super(Bukkit.getWorlds());
         this.containerDataName = containerDataName;
-        this.guiTemplate = Lootboxes.getInstance().getMenu("Worlds_Allowed");
+        this.guiTemplate = Lootboxes.getInstance().getMenu("Select_World");
         this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
         if (guiTemplate != null) {
-            setMenuSize(guiTemplate.getinvSize("Worlds_Allowed"));
+            setMenuSize(guiTemplate.getinvSize("Select_World"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
             setMenuOpenSound(guiTemplate.getSound());
             this.setUseColorConversion(true);
         } else {
             setMenuSize(36);
-            setTitle(() -> "could not load menu 'Worlds_Allowed'.");
+            setTitle(() -> "could not load menu 'Select_World'.");
         }
     }
 

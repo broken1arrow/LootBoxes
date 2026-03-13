@@ -1869,3 +1869,135 @@ Menus:
         name: "&b"
         glow: false
         lore:
+  # List of worlds you're allowing the chest to spawn, it will only work when you set it to spawn around player, as using
+  # world spawn or fixed center you choose automatically lock to that world.
+  Worlds_Allowed:
+    menu_settings:
+      name: "&1Worlds set"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&bWorld:&6 {0}"
+        glow: false
+        lore:
+          - "&aRight-click to remove this world."
+      "39":
+        action_type: Select_world
+        material: COMPASS
+        name: "&bSelect worlds"
+        glow: true
+        lore:
+          - ""
+          - "&aShows a list of currently loaded worlds."
+          - "&aIf the world you want is not listed,"
+          - "&ause the other button to type its name."
+          - ""
+          - "&aClick to open the menu."
+      "41":
+        action_type: Type_world_name
+        material: BOOK
+        name: "&bType world name"
+        glow: true
+        lore:
+          - ""
+          - "&aEnter the world name manually."
+          - "&aThe plugin will not verify if"
+          - "&athe world exists."
+          - ""
+          - "&aType the name in chat, or type"
+          - "&aexit, quit, or q to cancel."
+          - ""
+          - "&aClick to open the prompt."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a world"
+        glow: true
+        lore:
+          - ""
+          - "&aLeft-click for search for a world"
+          - "&aRight-Click for reset the search"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: RED_STAINED_GLASS_PANE
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go back"
+  # List of worlds that is currently loaded you can choose.
+  Select_World:
+    menu_settings:
+      name: "&1Worlds"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        material: PAPER
+        name: "&bWorld:&6 {0}"
+        glow: false
+        lore:
+          - " "
+          - "&aSelect this world to allow loot chests to spawn."
+          - " "
+          - "&aLeft-click to add this world."
+          - "&aRight-click to remove this world."
+      "40":
+        action_type: Search
+        material: PAPER
+        name: "&bSearch for a world"
+        glow: true
+        lore:
+          - ""
+          - "&aLeft-click for search for a world"
+          - "&aRight-Click for reset the search"
+      "42":
+        action_type: Forward_button
+        material: ARROW
+        name: "&bForward"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        action_type: Previous_button
+        material: ARROW
+        name: "&bPrevious"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        action_type: Back_button
+        material: RED_STAINED_GLASS_PANE
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go back"

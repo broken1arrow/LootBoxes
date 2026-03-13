@@ -94,7 +94,7 @@ public class WorldsAllowed extends MenuHolderPage<String> {
         return new FillMenuButton<>((player1, menu, click, clickedItem, worldName) -> {
             final ContainerDataBuilder.Builder builder = this.containerDataBuilder.getBuilder();
             if (worldName == null) return ButtonUpdateAction.NONE;
-            
+
             if (click.isLeftClick()) {
 
             } else {

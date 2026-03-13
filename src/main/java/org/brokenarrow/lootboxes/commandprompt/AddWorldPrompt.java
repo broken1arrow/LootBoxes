@@ -46,6 +46,12 @@ public class AddWorldPrompt extends SimpleConversation {
         @Override
         protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
             Player player = getPlayer();
+            if (input.equals("exit") || input.equals("quit") || input.equals("q")) {
+                if (player != null)
+                    new WorldsAllowed(containerDataName).menuOpen(player);
+                return null;
+            }
+
             if (!input.isEmpty() && !containerDataBuilder.contains(input)) {
                 containerDataBuilder.getBuilder().addWorld(input);
                 containerDataCache.setContainerData(containerDataName, containerDataBuilder.getBuilder().addWorld(input).build());
@@ -53,6 +59,7 @@ public class AddWorldPrompt extends SimpleConversation {
                 SELECT_WORLD_EXIST_PROMPT.sendMessage(player);
                 return new PromptAddWorld();
             }
+
             if (player != null)
                 new WorldsAllowed(containerDataName).menuOpen(player);
             return null;
