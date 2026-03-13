@@ -68,7 +68,7 @@ public class SettingsContainerData extends MenuHolder {
                 if (menuButton == null)
                     menuButton = button.getPassiveButton();
 
-                return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
+                return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
                                 TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
                                 TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
                         .makeItemStack();
@@ -164,8 +164,8 @@ public class SettingsContainerData extends MenuHolder {
                     builder.setPermissionForRandomSpawn("");
                     break;
                 case "Select_worlds":
-
-                    break;
+                    new WorldsAllowed(containerDataName).menuOpen(player);
+                    return false;
                 case "Back_button":
                     new ModifyContainerData().menuOpen(player);
                     break;
@@ -173,7 +173,7 @@ public class SettingsContainerData extends MenuHolder {
             if (buttonMatch) {
                 ContainerDataBuilder build = builder.build();
                 containerDataCache.setContainerData(containerDataName, build);
-                if(build.isSpawningContainerWithCooldown()) {
+                if (build.isSpawningContainerWithCooldown()) {
                     containerDataCache.addContainerToSpawnTask(this.containerDataName, build.getCooldown());
                 }
                 this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
