@@ -9,14 +9,16 @@ import java.util.List;
 
 public class TranslatePlaceHolders {
 
-	public static List<String> translatePlaceholdersLore(Player player, List<String> lores, Object... placeholders) {
+	public static List<String> translatePlaceholdersLore(Player player, List<String> lore, Object... placeholders) {
+		if(lore == null)
+			return new ArrayList<>();
 		if (!Lootboxes.getInstance().isPlaceholderAPIMissing())
-			return translatePlaceholdersLore(PlaceholderAPI.setPlaceholders(player, lores), placeholders);
-		return translatePlaceholdersLore(lores, placeholders);
+			return translatePlaceholdersLore(PlaceholderAPI.setPlaceholders(player, lore), placeholders);
+		return translatePlaceholdersLore(lore, placeholders);
 	}
-	public static List<String> translatePlaceholdersLore(List<String> lores, Object... placeholders) {
-		if (lores == null) return new ArrayList<>();
-		List<String> clonedLore = new ArrayList<>(lores);
+	public static List<String> translatePlaceholdersLore(List<String> loreList, Object... placeholders) {
+		if (loreList == null) return new ArrayList<>();
+		List<String> clonedLore = new ArrayList<>(loreList);
 		List<String> list = new ArrayList<>();
 		for (String lore : clonedLore) {
 			if (!checkListForPlaceholdersAndTranslate(list, lore, placeholders))
@@ -49,12 +51,16 @@ public class TranslatePlaceHolders {
 	}
 
 	public static String translatePlaceholders(Player player, String rawText, Object... placeholders) {
+		if(rawText == null)
+			return "";
 		if (!Lootboxes.getInstance().isPlaceholderAPIMissing())
 			return translatePlaceholders(PlaceholderAPI.setPlaceholders(player, rawText), placeholders);
 		return translatePlaceholders(rawText, placeholders);
 	}
 
 	public static String translatePlaceholders(String rawText, Object... placeholders) {
+		if(rawText == null)
+			return "";
 		if (placeholders != null)
 			for (int i = 0; i < placeholders.length; i++) {
 				if (placeholders[i] instanceof List)
