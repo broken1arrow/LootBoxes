@@ -1752,26 +1752,36 @@ Menus:
         action_type: Select_worlds
         passive:
           material: BARRIER
-          name: "&cNot work when random spawn is off"
+          name: "&cRequires random spawn"
           glow: false
           lore:
-            - "&aSet allowed worlds instead of using"
-            - "&alands or world guard to block spawn."
+            - "&4This option only works when"
+            - "&4random container spawning"
+            - "&4is enabled."
             - ""
-            - "&aYou still will have the option to combo"
-            - "&athis options with the supported plugins."
+            - "&4It is disabled when containers"
+            - "&4spawn at a fixed center location"
+            - "&4(such as world spawn)."
+            - ""
+            - "&aLimit container spawning to"
+            - "&aspecific worlds."
+            - ""
+            - "&aYou can still combine this"
+            - "&awith supported plugins like"
+            - "&aLands or WorldGuard."
             - ""
             - "&aCurrently set to: &6{0}"
         active:
           material: SPAWNER
-          name: "&bSet world where container spawn"
+          name: "&bAllowed worlds for container spawn"
           glow: false
           lore:
-            - "&aSet allowed worlds instead of using"
-            - "&alands or world guard to block spawn."
+            - "&aLimit container spawning to"
+            - "&aspecific worlds."
             - ""
-            - "&aYou still will have the option to combo"
-            - "&athis options with the supported plugins."
+            - "&aYou can still combine this"
+            - "&awith supported plugins like"
+            - "&aLands or WorldGuard."
             - ""
             - "&aCurrently set to: &6{0}"
       "53":
