@@ -64,15 +64,16 @@ public class SpawnContainerRandomLoc {
 					if (containerDataBuilder.isSpawnContainerFromWorldCenter()) {
 						if (containerDataBuilder.getSpawnLocation() != null)
 							spawnBlock(containerDataBuilder, containerDataBuilder.getSpawnLocation().getLocation(), null);
-					} else
+					} else {
 						for (Player player : Bukkit.getOnlinePlayers()) {
 							Location location = player.getLocation();
-                            if (!containerDataBuilder.hasPermissionForRandomSpawn(player))
-                                continue;
+							if (!containerDataBuilder.hasPermissionForRandomSpawn(player))
+								continue;
 
-							if (lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location))
+							if (lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location) && containerDataBuilder.allowedWorldToSpawn(location))
 								spawnBlock(containerDataBuilder, location, player);
 						}
+					}
 					long time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
 					entry.setValue(time);
 				}

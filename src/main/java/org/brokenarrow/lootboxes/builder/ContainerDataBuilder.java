@@ -204,9 +204,17 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
         return worlds;
     }
 
+    public boolean allowedWorldToSpawn(final Location location) {
+        if(worlds.isEmpty()) return true;
+
+        return contains(location.getWorld());
+    }
+
     public Builder getBuilder() {
         return builder;
     }
+
+
 
     public static final class Builder {
 

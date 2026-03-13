@@ -206,7 +206,7 @@ public class SettingsContainerData extends MenuHolder {
                 case "Spawn_On_Surface":
                     return button.getActiveButton();
                 case "Select_worlds":
-                    if (!containerDataBuilder.isSpawnContainerFromWorldCenter() || !containerDataBuilder.isSpawnContainerFromPlayerCenter())
+                    if (!containerDataBuilder.isSpawnContainerFromWorldCenter() && !containerDataBuilder.isSpawnContainerFromPlayerCenter())
                         return button.getActiveButton();
             }
         }
