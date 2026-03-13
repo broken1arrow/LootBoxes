@@ -10,6 +10,8 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class ContainerDataLinkedLootTable extends SimpleConversation {
@@ -48,7 +50,7 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 			if (containerData.getLootTableLinked().equals(input))
 				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_NAME_IS_SAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
 
-			container.write(containerKey, builder -> builder.setContainerDataLinkedToLootTable(input));
+			container.write(containerKey, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setContainerDataLinkedToLootTable(input));
 			return null;
 		}
 	}

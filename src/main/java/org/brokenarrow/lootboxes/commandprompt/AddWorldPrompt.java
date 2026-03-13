@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SELECT_WORLD_EXIST_PROMPT;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SELECT_WORLD_PROMPT;
 
@@ -53,7 +55,7 @@ public class AddWorldPrompt extends SimpleConversation {
             }
 
             if (!input.isEmpty() && !containerDataBuilder.contains(input)) {
-                containerDataCache.write(containerDataName,builder -> builder.addWorld(input));
+                containerDataCache.write(containerDataName,  builder -> {builder.addWorld(input);});
             } else {
                 SELECT_WORLD_EXIST_PROMPT.sendMessage(player);
                 return new PromptAddWorld();

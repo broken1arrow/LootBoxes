@@ -140,6 +140,11 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
         return keysData;
     }
 
+    @Nullable
+    public KeysData getKeysData(@NotNull final String keyName) {
+       return keysData.get(keyName);
+    }
+
     public LocationWrapper getSpawnLocation() {
         return spawnLocation;
     }
@@ -215,7 +220,6 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
         return builder;
     }
 
-
     public static final class Builder {
 
 
@@ -280,8 +284,8 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
             return this;
         }
 
-        public Builder setContainerDataLinkedToLootTable(final String ContainerDataLinkedToLootTable) {
-            this.containerDataLinkedToLootTable = ContainerDataLinkedToLootTable;
+        public Builder setContainerDataLinkedToLootTable(final String containerDataLinkedToLootTable) {
+            this.containerDataLinkedToLootTable = containerDataLinkedToLootTable;
             return this;
         }
 

@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 import static org.brokenarrow.lootboxes.builder.ParticleDustOptions.convertToColor;
 import static org.brokenarrow.lootboxes.menus.ParticleSettings.Type.*;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
@@ -81,14 +83,14 @@ public class ParticlePropertiesPrompt extends SimpleConversation {
 				}
 				final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
 				particleBuilder.setData(Integer.parseInt(input));
-				containerDataCache.write(containerKey, builder -> builder.setParticleEffect(particle, particleBuilder));
+				containerDataCache.write(containerKey, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setParticleEffect(particle, particleBuilder));
 			}
 			if (dataType == SET_COLORS) {
 				final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
 				final ParticleDustOptions dustOptions = particleEffect.getParticleDustOptions();
 
 				particleBuilder.setDustOptions(new ParticleDustOptions(convertToColor(input), dustOptions == null || dustOptions.getSize() <= 0 ? (float) 0.5 : dustOptions.getSize()));
-				containerDataCache.write(containerKey, builder -> builder.setParticleEffect(particle, particleBuilder));
+				containerDataCache.write(containerKey, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setParticleEffect(particle, particleBuilder));
 				if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_17) && particle.toString().startsWith("DUST_COLOR_TRANS"))
 					return new SecondNumberValue();
 			}
@@ -102,7 +104,7 @@ public class ParticlePropertiesPrompt extends SimpleConversation {
 				final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
 				particleBuilder.setDustOptions(buildParticleEffect(particleEffect.getParticleDustOptions(), number));
 
-				containerDataCache.write(containerKey, builder -> builder.setParticleEffect(particle, particleBuilder));
+				containerDataCache.write(containerKey,(Consumer<ContainerDataBuilder.Builder>)  builder -> builder.setParticleEffect(particle, particleBuilder));
 			}
 			new ParticleSettings(containerKey, particle).menuOpen(getPlayer(context));
 			return null;
@@ -125,7 +127,7 @@ public class ParticlePropertiesPrompt extends SimpleConversation {
 			final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
 
 			particleBuilder.setDustOptions(new ParticleDustOptions(dustOptions.getFromColor(), convertToColor(input), dustOptions.getSize() <= 0 ? (float) 0.5 : dustOptions.getSize()));
-			containerDataCache.write(containerKey, builder -> builder.setParticleEffect(particle, particleBuilder));
+			containerDataCache.write(containerKey, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setParticleEffect(particle, particleBuilder));
 			return null;
 		}
 	}

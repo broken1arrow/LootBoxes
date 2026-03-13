@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.listener;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
@@ -19,12 +19,13 @@ import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
 public class CheckChunkLoadUnload implements Listener {
 
-	private final Map<Object, Chunk> chachedChunks = new ConcurrentHashMap<>();
+	private final Map<Object, Chunk> cachedChunks = new ConcurrentHashMap<>();
 	private final Lootboxes plugin;
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+	private final ContainerDataCache containerDataCache;
 
 	public CheckChunkLoadUnload(final Lootboxes plugin) {
 		this.plugin = plugin;
+		this.containerDataCache = plugin.getContainerDataCache();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -38,7 +39,7 @@ public class CheckChunkLoadUnload implements Listener {
 
 		final List<Location> locationList = containerDataCache.getChunkDataCache().getChunkData(chunk);
 		if (locationList != null && !locationList.isEmpty()) {
-			this.setChachedChunks(chunk);
+			this.setCachedChunks(chunk);
 			ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot(true, false, false);
 			runtaskLater(5, () -> addToHopperCache(chunkSnapshot, locationList), true);
 		}
@@ -57,16 +58,16 @@ public class CheckChunkLoadUnload implements Listener {
 	}
 
 
-	public Map<Object, Chunk> getChachedKeys() {
-		return this.chachedChunks;
+	public Map<Object, Chunk> getCachedKeys() {
+		return this.cachedChunks;
 	}
 
-	public boolean chachedChunksContainsKey(final Location location) {
-		return this.chachedChunks.containsKey((location.getBlockX() >> 4) + "=" + (location.getBlockZ() >> 4));
+	public boolean cachedChunksContainsKey(final Location location) {
+		return this.cachedChunks.containsKey((location.getBlockX() >> 4) + "=" + (location.getBlockZ() >> 4));
 	}
 
 	public Chunk getChunkData(final int chunkX, final int chunkZ) {
-		return this.chachedChunks.get(chunkX + "=" + chunkZ);
+		return this.cachedChunks.get(chunkX + "=" + chunkZ);
 	}
 
 	/**
@@ -75,12 +76,12 @@ public class CheckChunkLoadUnload implements Listener {
 	 * @param location location of object.
 	 */
 
-	public void setChachedChunks(final Location location) {
-		this.chachedChunks.put((location.getBlockX() >> 4) + "=" + (location.getBlockZ() >> 4), location.getChunk());
+	public void setCachedChunks(final Location location) {
+		this.cachedChunks.put((location.getBlockX() >> 4) + "=" + (location.getBlockZ() >> 4), location.getChunk());
 	}
 
-	public void setChachedChunks(final Chunk chunk) {
-		this.chachedChunks.put(chunk.getX() + "=" + chunk.getZ(), chunk);
+	public void setCachedChunks(final Chunk chunk) {
+		this.cachedChunks.put(chunk.getX() + "=" + chunk.getZ(), chunk);
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class CheckChunkLoadUnload implements Listener {
 	 * @param chunkZ chunk location z
 	 */
 
-	public void removeChunkDataIfNoContainerRegisted(final int chunkX, final int chunkZ) {
+	public void removeChunkDataIfNoContainerRegister(final int chunkX, final int chunkZ) {
 		final Chunk chunkData = getChunkData(chunkX, chunkZ);
 		if (chunkData == null) {
 			removeChunk(chunkX, chunkZ);
@@ -99,14 +100,14 @@ public class CheckChunkLoadUnload implements Listener {
 	}
 
 	public void removeChunk(Chunk chunk) {
-		this.chachedChunks.remove(chunk.getX() + "=" + chunk.getZ());
+		this.cachedChunks.remove(chunk.getX() + "=" + chunk.getZ());
 	}
 
 	public void removeChunk(final int chunkX, final int chunkZ) {
-		this.chachedChunks.remove(chunkX + "=" + chunkZ);
+		this.cachedChunks.remove(chunkX + "=" + chunkZ);
 	}
 
-	public void clearChachedChunks() {
-		this.chachedChunks.clear();
+	public void clearCachedChunks() {
+		this.cachedChunks.clear();
 	}
 }

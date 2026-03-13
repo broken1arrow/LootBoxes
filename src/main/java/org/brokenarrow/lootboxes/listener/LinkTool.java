@@ -2,7 +2,6 @@ package org.brokenarrow.lootboxes.listener;
 
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
 import org.bukkit.Material;
@@ -20,13 +19,11 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINER
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER;
 
 public class LinkTool implements Listener {
-
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 
 	@EventHandler
-	public void swichSlot(PlayerItemHeldEvent event) {
+	public void switchSlot(PlayerItemHeldEvent event) {
 		Player player = event.getPlayer();
 		if (!player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 		ItemStack itemStack = event.getPlayer().getInventory().getItem(event.getPreviousSlot());
@@ -47,7 +44,7 @@ public class LinkTool implements Listener {
 	}
 
 	@EventHandler
-	public void swichSlot(PlayerDropItemEvent event) {
+	public void switchSlot(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		if (!player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 		ItemStack itemStack = event.getItemDrop().getItemStack();

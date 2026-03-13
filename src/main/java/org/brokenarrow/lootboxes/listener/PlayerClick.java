@@ -6,7 +6,7 @@ import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
@@ -30,6 +30,7 @@ import org.bukkit.material.DirectionalContainer;
 import org.bukkit.material.MaterialData;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
@@ -40,7 +41,7 @@ import static org.brokenarrow.lootboxes.untlity.ModifyBlock.getFacing;
 public class PlayerClick implements Listener {
 
 
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 	private final SettingsData setting = Lootboxes.getInstance().getSettings().getSettingsData();
@@ -156,40 +157,37 @@ public class PlayerClick implements Listener {
 	}
 
 	public void removeData(ContainerDataBuilder data, Location location, String metadata) {
-		ContainerDataBuilder.Builder builder = data.getBuilder();
 		Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
-
 		containerDataMap.remove(location);
-		builder.setContainerData(containerDataMap);
-		containerDataCache.setContainerData(metadata, builder.build());
+
+		containerDataCache.write(metadata, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setContainerData(containerDataMap));
 	}
 
 	public boolean addData(Block block, ContainerDataBuilder data, Location location, String metadata) {
-		ContainerDataBuilder.Builder builder = data.getBuilder();
-		Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
-		if (lootboxes.getServerVersion().olderThan(Version.v1_13)){
-			BlockState blockState = block.getState();
-			if (blockState.getData() instanceof DirectionalContainer){
-				MaterialData materialData = blockState.getData();
-				containerDataMap.put(location, new ContainerData(getFacing(materialData.getData()), block.getType()));
+		return containerDataCache.write(metadata, builder -> {
+			Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
+			if (lootboxes.getServerVersion().olderThan(Version.v1_13)) {
+				BlockState blockState = block.getState();
+				if (blockState.getData() instanceof DirectionalContainer) {
+					MaterialData materialData = blockState.getData();
+					containerDataMap.put(location, new ContainerData(getFacing(materialData.getData()), block.getType()));
+					builder.setContainerData(containerDataMap);
+					if (data.getIcon() == null || data.getIcon() == Material.AIR)
+						builder.setIcon(block.getType());
+					return true;
+				}
+				return false;
+			}
+			if (block.getBlockData() instanceof Directional) {
+				Directional container = (Directional) block.getBlockData();
+				containerDataMap.put(location, new ContainerData(container.getFacing(), block.getType()));
 				builder.setContainerData(containerDataMap);
 				if (data.getIcon() == null || data.getIcon() == Material.AIR)
 					builder.setIcon(block.getType());
-				containerDataCache.setContainerData(metadata, builder.build());
 				return true;
 			}
 			return false;
-		}
-		if (block.getBlockData() instanceof Directional) {
-			Directional container = (Directional) block.getBlockData();
-			containerDataMap.put(location, new ContainerData(container.getFacing(), block.getType()));
-			builder.setContainerData(containerDataMap);
-			if (data.getIcon() == null || data.getIcon() == Material.AIR)
-				builder.setIcon(block.getType());
-			containerDataCache.setContainerData(metadata, builder.build());
-			return true;
-		}
-		return false;
+		});
 	}
 
 	@EventHandler

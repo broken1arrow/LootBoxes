@@ -1,17 +1,17 @@
 package org.brokenarrow.lootboxes.menus;
 
-import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
-import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
 import org.broken.arrow.library.menu.button.logic.FillMenuButton;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
@@ -34,7 +34,7 @@ import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitali
 import static org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity.getEffectType;
 
 public class ParticleAnimation extends MenuHolderPage<Object> {
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final SpawnContainerEffectsTask spawnContainerEffectsTask = Lootboxes.getInstance().getSpawnContainerEffectsTask();
 	private final String container;
 	private final MenuTemplate guiTemplate;
@@ -147,18 +147,17 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 		return new FillMenuButton<>((player, menu, click, clickedItem, particle) -> {
 			if (particleEffectList.checkIfParticleOrEffect(particle)) {
 				final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-				final ContainerDataBuilder.Builder builder = data.getBuilder();
-				if (click.isRightClick()) {
-					containerDataCache.removeParticleEffect(data, particle);
-				} else {
-					builder.setParticleEffects(setParticleData(player, data, container, particle));
-				}
-				containerDataCache.setContainerData(container, builder.build());
-				if (click.isLeftClick()) {
-					for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
-						spawnContainerEffectsTask.addLocationInList(location);
-
-				}
+				containerDataCache.write(container, builder -> {
+					if (click.isRightClick()) {
+						containerDataCache.removeParticleEffect(data, particle);
+					} else {
+						builder.setParticleEffects(setParticleData(player, data, container, particle));
+					}
+					if (click.isLeftClick()) {
+						for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
+							spawnContainerEffectsTask.addLocationInList(location);
+					}
+				});
 				return ButtonUpdateAction.ALL;
 			}
 			return ButtonUpdateAction.NONE;

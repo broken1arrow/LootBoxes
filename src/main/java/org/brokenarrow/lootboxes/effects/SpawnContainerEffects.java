@@ -5,7 +5,7 @@ import org.brokenarrow.lootboxes.api.HeavyLoad;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.listener.CheckChunkLoadUnload;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateParticle;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,7 +15,7 @@ import java.util.List;
 public class SpawnContainerEffects implements HeavyLoad {
     private static final Lootboxes plugin = Lootboxes.getInstance();
     private static int locationInlist;
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = plugin.getContainerDataCache();
     private final Location[] containerLocations;
     private final List<ParticleEffect> effectType;
     private final long time;

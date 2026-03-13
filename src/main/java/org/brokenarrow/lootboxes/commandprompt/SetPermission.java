@@ -3,6 +3,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.SettingsContainerData;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -11,6 +12,8 @@ import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_PERMISSION;
 
@@ -51,7 +54,7 @@ public class SetPermission extends SimpleConversation {
                 new SettingsContainerData(container).menuOpen(getPlayer(context));
                 return null;
             }
-            containerDataCache.write(container,builder -> builder.setPermissionForRandomSpawn(input));
+            containerDataCache.write(container,(Consumer<ContainerDataBuilder.Builder>) builder -> builder.setPermissionForRandomSpawn(input));
             new SettingsContainerData(container).menuOpen(getPlayer(context));
             return null;
         }

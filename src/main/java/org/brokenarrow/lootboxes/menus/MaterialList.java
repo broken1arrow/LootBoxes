@@ -8,10 +8,9 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.menus.keys.EditKey;
@@ -32,20 +31,20 @@ import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitali
 
 public class MaterialList extends MenuHolderPage<Material> {
     private final LootItems lootItems = LootItems.getInstance();
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 
     private final Object value;
     private final MenuKeys menuKey;
-    private final String container;
+    private final String containerKey;
     private final MenuTemplate guiTemplate;
     private final ContainerDataBuilder data;
 
-    public MaterialList(final MenuKeys menuKey, final Object value, final String container, final String itemsToSearchFor) {
+    public MaterialList(final MenuKeys menuKey, final Object value, final String containerKey, final String itemsToSearchFor) {
         super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));
         this.menuKey = menuKey;
         this.value = value;
-        this.container = container;
-        data = containerDataCache.getCacheContainerData(container);
+        this.containerKey = containerKey;
+        data = containerDataCache.getCacheContainerData(containerKey);
         this.guiTemplate = Lootboxes.getInstance().getMenu("Material_list");
 
         setUseColorConversion(true);
@@ -92,9 +91,9 @@ public class MaterialList extends MenuHolderPage<Material> {
 
         if (button.isActionTypeEqual("Search")) {
             if (click.isLeftClick())
-                new SearchInMenu(MenuKeys.MATRIALLIST_MENU, menuKey, container, value).start(player);
+                new SearchInMenu(MenuKeys.MATRIALLIST_MENU, menuKey, containerKey, value).start(player);
             else
-                new MaterialList(menuKey, value, container, "").menuOpen(player);
+                new MaterialList(menuKey, value, containerKey, "").menuOpen(player);
         }
         if (button.isActionTypeEqual("Forward_button")) {
             if (click.isLeftClick()) {
@@ -108,14 +107,14 @@ public class MaterialList extends MenuHolderPage<Material> {
         }
         if (button.isActionTypeEqual("Back_button")) {
             if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU)
-                new AlterContainerDataMenu(container).menuOpen(player);
+                new AlterContainerDataMenu(containerKey).menuOpen(player);
             if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU)
-                new EditKey(container, (String) value).menuOpen(player);
+                new EditKey(containerKey, (String) value).menuOpen(player);
             if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
-                new CustomizeItem(container, (String) value).menuOpen(player);
+                new CustomizeItem(containerKey, (String) value).menuOpen(player);
             }
             if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
-                new ParticleSettings(container, value).menuOpen(player);
+                new ParticleSettings(containerKey, value).menuOpen(player);
             }
         }
         return false;
@@ -149,44 +148,39 @@ public class MaterialList extends MenuHolderPage<Material> {
     }
 
     private void openEditMenuKey(Player player, ClickType click, Material material) {
-        if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
-            if (data != null) {
-                final Builder builder = data.getBuilder();
-                builder.setIcon((Material) material);
-                containerDataCache.setContainerData(container, builder.build());
-                new AlterContainerDataMenu(container).menuOpen(player);
+        containerDataCache.write(containerKey, builder -> {
+            if (menuKey == MenuKeys.ALTER_CONTAINER_DATA_MENU) {
+                builder.setIcon(material);
+                new AlterContainerDataMenu(containerKey).menuOpen(player);
             }
-        }
-        if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
-            containerDataCache.setKeyData( container, (String) value,keysDataWrapper -> keysDataWrapper.setItemType(material));
-            //containerDataCache.setKeyData(KeysToSave.ITEM_TYPE, material, container, (String) value);
-            new EditKey(container, (String) value).menuOpen(player);
+            if (menuKey == MenuKeys.EDIT_KEYS_FOR_OPEN_MENU) {
+                builder.writeKeysData((String) value, keysDataWrapper -> keysDataWrapper.setItemType(material));
+                new EditKey(containerKey, (String) value).menuOpen(player);
 
-        }
-        if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
-            lootItems.setLootData(LootDataSave.ITEM, container, (String) value, material);
-            new CustomizeItem(container, (String) value).menuOpen(player);
-        }
-
-        if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
-            final Builder builder = data.getBuilder();
-            final ParticleEffect particleEffect = data.getParticleEffect(value);
-            Map<Object, ParticleEffect> particleEffectList = data.getParticleEffects();
-            if (particleEffectList == null)
-                particleEffectList = new HashMap<>();
-
-            if (particleEffect != null) {
-                final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
-                if (click.isLeftClick())
-                    particleBuilder.setMaterial((Material) material);
-                if (click.isRightClick())
-                    particleBuilder.setMaterial(null);
-
-                particleEffectList.put(value, particleBuilder.build());
-                builder.setParticleEffects(particleEffectList);
-                containerDataCache.setContainerData(container, builder.build());
             }
-            new ParticleSettings(container, value).menuOpen(player);
-        }
+            if (menuKey == MenuKeys.CUSTOMIZEITEM_MENU) {
+                lootItems.setLootData(LootDataSave.ITEM, containerKey, (String) value, material);
+                new CustomizeItem(containerKey, (String) value).menuOpen(player);
+            }
+
+            if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
+                final ParticleEffect particleEffect = data.getParticleEffect(value);
+                Map<Object, ParticleEffect> particleEffectList = data.getParticleEffects();
+                if (particleEffectList == null)
+                    particleEffectList = new HashMap<>();
+
+                if (particleEffect != null) {
+                    final ParticleEffect.Builder particleBuilder = particleEffect.getBuilder();
+                    if (click.isLeftClick())
+                        particleBuilder.setMaterial(material);
+                    if (click.isRightClick())
+                        particleBuilder.setMaterial(null);
+
+                    particleEffectList.put(value, particleBuilder.build());
+                    builder.setParticleEffects(particleEffectList);
+                }
+                new ParticleSettings(containerKey, value).menuOpen(player);
+            }
+        });
     }
 }

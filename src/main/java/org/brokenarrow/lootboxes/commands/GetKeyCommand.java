@@ -1,9 +1,10 @@
 package org.brokenarrow.lootboxes.commands;
 
 import org.broken.arrow.library.command.command.CommandHolder;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.command.TabUtil;
 import org.bukkit.Bukkit;
@@ -11,11 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
@@ -24,8 +21,7 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
 public class GetKeyCommand extends CommandHolder {
-
-	private final ContainerDataCacheLegacy containerDataCacheInstance = ContainerDataCacheLegacy.getInstance();
+	private final ContainerDataCache containerDataCacheInstance = Lootboxes.getInstance().getContainerDataCache();
 
 	public GetKeyCommand() {
 		super("key");
@@ -37,34 +33,43 @@ public class GetKeyCommand extends CommandHolder {
 	public boolean onCommand(@NotNull final CommandSender sender, @NotNull final String commandLabel, @NotNull final String @NotNull [] cmdArgs) {
 
 		if (cmdArgs.length >= 3) {
-			Player player = Bukkit.getPlayer(cmdArgs[0]);
-			if (player == null)
-				player = Bukkit.getOfflinePlayer(cmdArgs[0]).getPlayer();
-
 			Map<String, Object> map = new HashMap<>();
-			KeysData keysData = containerDataCacheInstance.getCacheKey(cmdArgs[1], cmdArgs[2]);
-			map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
-			map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), cmdArgs[1]);
-			int amount = 1;
-			if (cmdArgs.length >= 4)
-				amount = Integer.parseInt(cmdArgs[3]);
-			String lootTableName = keysData.getLootTableLinked();
-			if (lootTableName == null || lootTableName.isEmpty()){
-				ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(cmdArgs[1]);
-				if (containerDataCache != null){
-					lootTableName =  containerDataCache.getLootTableLinked() != null && !containerDataCache.getLootTableLinked().isEmpty() ?  containerDataCache.getLootTableLinked(): null;
+			//KeysData keysData = containerDataCacheInstance.getCacheKey(cmdArgs[1], cmdArgs[2]);
+			containerDataCacheInstance.read(cmdArgs[1], callBack -> {
+				Player player = Bukkit.getPlayer(cmdArgs[0]);
+				if (player == null)
+					player = Bukkit.getOfflinePlayer(cmdArgs[0]).getPlayer();
+
+				String keyName = cmdArgs[2];
+				KeysData keysData = callBack.getKeysData(keyName);
+				if (keysData == null) {
+					sender.sendMessage("The key with name " + keyName + " could not be found, check the spelling.");
+					return null;
 				}
-			}
-			if (lootTableName == null)
-				lootTableName = "";
 
-			String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
-					lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-			List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
-					lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-			if (player != null)
-				player.getInventory().addItem(CreateItemUtily.of(false,keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amount).makeItemStack());
+				map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
+				map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), cmdArgs[1]);
+				int amount = 1;
+				if (cmdArgs.length >= 4)
+					amount = Integer.parseInt(cmdArgs[3]);
+				String lootTableName = keysData.getLootTableLinked();
+				if (lootTableName == null || lootTableName.isEmpty()){
+					ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(cmdArgs[1]);
+					if (containerDataCache != null){
+						lootTableName =  containerDataCache.getLootTableLinked() != null && !containerDataCache.getLootTableLinked().isEmpty() ?  containerDataCache.getLootTableLinked(): null;
+					}
+				}
+				if (lootTableName == null)
+					lootTableName = "";
 
+				String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
+						lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+				List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+						lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+				if (player != null)
+					player.getInventory().addItem(CreateItemUtily.of(false,keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amount).makeItemStack());
+                return null;
+            });
 		}
 		return true;
 	}

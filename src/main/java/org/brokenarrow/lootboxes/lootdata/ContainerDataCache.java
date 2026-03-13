@@ -58,29 +58,16 @@ public class ContainerDataCache extends YamlFileManager {
         return data;
     }
 
-
-
-    public void write(final String containerKey, final Consumer<ContainerDataBuilder.Builder> containerDataBuilder) {
+    public void write(final String containerKey, final Consumer<ContainerDataBuilder.Builder> callback) {
         ContainerDataBuilder builder = getOrCreateCacheContainerData(containerKey);
         ContainerDataBuilder.Builder containerBuilder = builder.getBuilder();
-        containerDataBuilder.accept(containerBuilder);
+        callback.accept(containerBuilder);
         cacheContainer(containerKey, containerBuilder);
     }
 
-    private void cacheContainer(String containerKey, ContainerDataBuilder.Builder containerBuilder) {
-        ContainerDataBuilder built = containerBuilder.build();
-        this.cacheContainerData.put(containerKey, built);
-
-        if (!built.isSpawningContainerWithCooldown())
-            addContainerToSpawnTask(containerKey, built.getCooldown());
-        for (final Location location : built.getLinkedContainerData().keySet()) {
-            this.getChunkDataCache().setChunkData(location);
-            this.getContainerLocationCache().put(location, new LocationData(containerKey, built.getKeysData()));
-            final Map<Object, ParticleEffect> particleEffects = built.getParticleEffects();
-            if (particleEffects != null && particleEffects.isEmpty())
-                Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
-        }
-        saveTask();
+    public <T> T read(final String containerKey, final Function<ContainerDataBuilder, T> callBack) {
+        ContainerDataBuilder builder = getOrCreateCacheContainerData(containerKey);
+        return callBack.apply(builder);
     }
 
     public List<String> getContainerData() {
@@ -257,8 +244,8 @@ public class ContainerDataCache extends YamlFileManager {
         return null;
     }
 
-    public KeysData getCacheKey(final String container, final String keyName) {
-        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
+    public KeysData getCacheKey(final String containerKey, final String keyName) {
+        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerKey);
         if (containerDataBuilder != null) {
             if (keyName.startsWith("Keys_"))
                 return containerDataBuilder.getKeysData().get(keyName);
@@ -362,6 +349,22 @@ public class ContainerDataCache extends YamlFileManager {
         cacheContainerData.put(containerName, containerDataBuilder);
         if (containerDataBuilder.isSpawningContainerWithCooldown())
             addContainerToSpawnTask(containerName, containerDataBuilder.getCooldown());
+    }
+
+    private void cacheContainer(@NotNull final String containerKey,@NotNull  final ContainerDataBuilder.Builder containerBuilder) {
+        ContainerDataBuilder built = containerBuilder.build();
+        this.cacheContainerData.put(containerKey, built);
+
+        if (!built.isSpawningContainerWithCooldown())
+            addContainerToSpawnTask(containerKey, built.getCooldown());
+        for (final Location location : built.getLinkedContainerData().keySet()) {
+            this.getChunkDataCache().setChunkData(location);
+            this.getContainerLocationCache().put(location, new LocationData(containerKey, built.getKeysData()));
+            final Map<Object, ParticleEffect> particleEffects = built.getParticleEffects();
+            if (particleEffects != null && particleEffects.isEmpty())
+                Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+        }
+        saveTask();
     }
 
 }

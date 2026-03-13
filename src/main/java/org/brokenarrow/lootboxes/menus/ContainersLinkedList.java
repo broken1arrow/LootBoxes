@@ -1,16 +1,15 @@
 package org.brokenarrow.lootboxes.menus;
 
-import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
-import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
 import org.broken.arrow.library.menu.button.logic.FillMenuButton;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TeleportPlayer;
@@ -26,12 +25,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_NOT_OBSTACLE;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_OBSTACLE_ON_ALL_SIDES;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_OBSTACLE_ON_SOME_SIDES;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class ContainersLinkedList extends MenuHolderPage<Location> {
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final MenuTemplate guiTemplate;
 	private final String containerName;
 
@@ -111,30 +108,30 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 
 		return new FillMenuButton<>((player, menu, click, clickedItem, location ) -> {
 			if (location != null) {
-				final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
-				if (containerDataBuilder != null) {
-					final Builder builder = containerDataBuilder.getBuilder();
-					Map<Location, ContainerData> containerDataMap = containerDataBuilder.getLinkedContainerData();
-					if (containerDataMap == null)
-						containerDataMap = new HashMap<>();
-					if (click.isRightClick()) {
-						containerDataMap.remove(location);
-
-						builder.setContainerData(containerDataMap);
-						containerDataCache.setContainerData(containerName, builder.build());
-					}
-					if (click.isLeftClick()) {
-						final TeleportPlayer teleport = new TeleportPlayer(player, (Location) location);
-						if (teleport.teleportPlayer()) {
-							final Location teleportLoc = teleport.getFinalTeleportLoc();
-
-							if (teleportLoc.getZ() - 0.5 == ((Location) location).getZ() && teleportLoc.getX() - 0.5 == ((Location) location).getX())
-								CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
-							else if (teleportLoc.equals(location))
-								CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
-							else
-								CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+				if (click.isRightClick()) {
+					containerDataCache.write(containerName, builder -> {
+						final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
+						Map<Location, ContainerData> containerDataMap = containerDataBuilder != null ? containerDataBuilder.getLinkedContainerData() : null;
+						if (containerDataMap == null)
+							containerDataMap = new HashMap<>();
+						if (click.isRightClick()) {
+							containerDataMap.remove(location);
+							builder.setContainerData(containerDataMap);
 						}
+					});
+					return ButtonUpdateAction.ALL;
+				}
+				if (click.isLeftClick()) {
+					final TeleportPlayer teleport = new TeleportPlayer(player, location);
+					if (teleport.teleportPlayer()) {
+						final Location teleportLoc = teleport.getFinalTeleportLoc();
+
+						if (teleportLoc.getZ() - 0.5 == location.getZ() && teleportLoc.getX() - 0.5 == location.getX())
+							CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+						else if (teleportLoc.equals(location))
+							CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
+						else
+							CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
 					}
 				}
 			}
