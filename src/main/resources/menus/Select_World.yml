@@ -10,15 +10,25 @@ Menus:
       size: 45
     buttons:
       "-1":
-        material: PAPER
-        name: "&bWorld:&6 {0}"
-        glow: false
-        lore:
-          - " "
-          - "&aSelect this world to allow loot chests to spawn."
-          - " "
-          - "&aLeft-click to add this world."
-          - "&aRight-click to remove this world."
+        passive:
+          material: PAPER
+          name: "&bWorld:&6 {0}"
+          glow: false
+          lore:
+            - " "
+            - "&aSelect this world to allow loot chests to spawn."
+            - " "
+            - "&aLeft-click to add this world."
+            - "&aRight-click to remove this world."
+        active:
+          material: BARRIER
+          name: "&bWorld:&6 {0}"
+          glow: true
+          lore:
+            - " "
+            - "&aAlredy selected this world."
+            - " "
+            - "&aRight-click to remove this world."
       "40":
         action_type: Search
         material: PAPER
@@ -54,3 +64,14 @@ Menus:
         lore:
           - ""
           - "&2Go back"
+      "36-39,41-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:

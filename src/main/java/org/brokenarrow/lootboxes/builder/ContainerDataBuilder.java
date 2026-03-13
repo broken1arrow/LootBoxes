@@ -436,7 +436,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
         keysData.put("Icon", this.icon + "");
         keysData.put("Random_loot_container", this.randomLootContainerItem + "");
         keysData.put("Random_loot_faceing", this.randomLootContainerFacing + "");
-        keysData.put("Worlds_allow_spawn", this.worlds);
+        keysData.put("Worlds_allow_spawn", new ArrayList<>(this.worlds));
         keysData.put("Display_name", this.displayName);
         keysData.put("Lore", this.lore);
         keysData.put("Spawn_on_surface", this.spawnOnSurface + "");

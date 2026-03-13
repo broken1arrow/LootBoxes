@@ -41,6 +41,7 @@ public class WorldsAllowed extends MenuHolderPage<String> {
             setMenuSize(guiTemplate.getinvSize("Worlds_Allowed"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
             setMenuOpenSound(guiTemplate.getSound());
+            setFillSpace(guiTemplate.getFillSlots());
             this.setUseColorConversion(true);
         } else {
             setMenuSize(36);
@@ -94,9 +95,7 @@ public class WorldsAllowed extends MenuHolderPage<String> {
         return new FillMenuButton<>((player1, menu, click, clickedItem, worldName) -> {
             final ContainerDataBuilder.Builder builder = this.containerDataBuilder.getBuilder();
             if (worldName == null) return ButtonUpdateAction.NONE;
-
             if (click.isLeftClick()) {
-
             } else {
                 builder.removeWorld(worldName);
             }
@@ -112,20 +111,17 @@ public class WorldsAllowed extends MenuHolderPage<String> {
         }, (slot, worldName) -> {
             final MenuButtonData button = this.guiTemplate.getMenuButton(-1);
             if (button == null) return null;
+            if (worldName == null) return null;
 
-            org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = null;
+            org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
             final Object[] placeholders = setPlaceholders(worldName, containerDataBuilder);
             final boolean hasWorldSet = containerDataBuilder.contains(worldName);
             if (hasWorldSet)
-                menuButton = button.getActiveButton();
-            if (menuButton == null)
-                menuButton = button.getPassiveButton();
-
             return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
                             TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
                             TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                    .setGlow(hasWorldSet)
                     .makeItemStack();
+            return null;
         });
     }
 

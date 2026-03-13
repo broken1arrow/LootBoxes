@@ -78,3 +78,14 @@ Menus:
         lore:
           - ""
           - "&2Go back"
+      "36-38,41-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:

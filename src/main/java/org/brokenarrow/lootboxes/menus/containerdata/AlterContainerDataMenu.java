@@ -20,6 +20,7 @@ import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpen;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -93,13 +94,13 @@ public final class AlterContainerDataMenu extends MenuHolder {
 					placeholders = getPlaceholders("", containerDataBuilder.getCooldown());
 				if (button.isActionTypeEqual("Containers"))
 					placeholders = getPlaceholders("", containerDataName);
+                String material = menuButton.getMaterial().equals("AIR") || menuButton.getMaterial().isEmpty() ? Material.PAPER.name() : menuButton.getMaterial();
 
-
-				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-						.makeItemStack();
-			}
+                return CreateItemUtily.of(menuButton.isGlow(), material,
+                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
+                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+                        .makeItemStack();
+            }
 		};
 	}
 	public boolean run(MenuButtonData button, ClickType click) {

@@ -119,13 +119,16 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                     final String tableLink = tableLinked == null || tableLinked.isEmpty() ? "non" : tableLinked;
                     String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), containerKeyName, tableLink, data.getCooldown(), data.getIcon());
 
-                    ItemStack itemStack = null;
+                    Material itemStack = null;
                     if (data.getIcon() == null || data.getIcon() == Material.AIR)
-                        itemStack = CreateItemUtily.of(Material.CHEST).makeItemStack();
-                    return CreateItemUtily.of(false, itemStack != null ? itemStack : data.getIcon(),
+                        itemStack = Material.CHEST;
+                    else
+                        itemStack = data.getIcon();
+
+                    return CreateItemUtily.of(false, itemStack,
                                     displayName,
                                     TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon(),
-                                            Lootboxes.getInstance().getSpawnLootContainer().haveCachedContainer(containerKeyName) ? "Active": "Disable"))
+                                            Lootboxes.getInstance().getSpawnLootContainer().haveCachedContainer(containerKeyName) ? "Active" : "Disable"))
                             .makeItemStack();
                 }
             }

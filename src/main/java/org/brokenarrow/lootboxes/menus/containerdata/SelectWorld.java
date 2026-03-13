@@ -29,6 +29,7 @@ public class SelectWorld extends MenuHolderPage<World> {
 
     public SelectWorld(String containerDataName) {
         super(Bukkit.getWorlds());
+        System.out.println("Bukkit.getWorlds() " + Bukkit.getWorlds());
         this.containerDataName = containerDataName;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Select_World");
         this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
@@ -38,6 +39,7 @@ public class SelectWorld extends MenuHolderPage<World> {
         if (guiTemplate != null) {
             setMenuSize(guiTemplate.getinvSize("Select_World"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
+            setFillSpace(guiTemplate.getFillSlots());
             setMenuOpenSound(guiTemplate.getSound());
             this.setUseColorConversion(true);
         } else {
@@ -101,6 +103,7 @@ public class SelectWorld extends MenuHolderPage<World> {
         }, (slot, fillObject) -> {
             final MenuButtonData button = this.guiTemplate.getMenuButton(-1);
             if (button == null) return null;
+            if (fillObject == null) return null;
 
             org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = null;
             final Object[] placeholders = setPlaceholders(button, fillObject, containerDataBuilder);
@@ -110,10 +113,9 @@ public class SelectWorld extends MenuHolderPage<World> {
             if (menuButton == null)
                 menuButton = button.getPassiveButton();
 
-            return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
+            return CreateItemUtily.of(hasWorldSet, menuButton.getMaterial(),
                             TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
                             TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                    .setGlow(hasWorldSet)
                     .makeItemStack();
         });
     }

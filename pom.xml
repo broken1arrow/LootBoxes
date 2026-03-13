@@ -211,6 +211,7 @@
                             <finalName>${project.name}-${project.version}</finalName>
                             <artifactSet>
                                 <includes>
+                                    <include>de.tr7zw:item-nbt-api</include>
                                     <include>com.github.broken1arrow:*</include>
                                     <include>org.broken.arrow.library.Item-NBT-API:item-nbt-api:*</include>
                                     <include>org.broken.arrow.library:conversation-prompt</include>
@@ -224,6 +225,7 @@
                                     <include>org.broken.arrow.library:menu-configuration-manager</include>
                                     <include>org.broken.arrow.library:commands</include>
                                     <include>org.broken.arrow.library:serialize-utility</include>
+                                    <include>org.broken.arrow.library:version</include>
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>
                                                 <include>de.tr7zw:*</include>
