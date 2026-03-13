@@ -10,7 +10,7 @@ import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplayNameLore;
 import org.brokenarrow.lootboxes.commandprompt.ContainerDataLinkedLootTable;
 import org.brokenarrow.lootboxes.commandprompt.SpecifyTime;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.menus.ChooseContainer;
 import org.brokenarrow.lootboxes.menus.ContainersLinkedList;
 import org.brokenarrow.lootboxes.menus.ListOfLootTables;
@@ -34,7 +34,7 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.ADD_CONTINERS_TURN
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
 
 public final class AlterContainerDataMenu extends MenuHolder {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private ContainerDataBuilder containerDataBuilder;
 	private final String containerDataName;

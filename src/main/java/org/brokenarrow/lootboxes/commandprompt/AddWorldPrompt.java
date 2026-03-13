@@ -16,7 +16,7 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.SELECT_WORLD_EXIST
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SELECT_WORLD_PROMPT;
 
 public class AddWorldPrompt extends SimpleConversation {
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final String containerDataName;
     private final ContainerDataBuilder containerDataBuilder;
 
@@ -53,8 +53,7 @@ public class AddWorldPrompt extends SimpleConversation {
             }
 
             if (!input.isEmpty() && !containerDataBuilder.contains(input)) {
-                containerDataBuilder.getBuilder().addWorld(input);
-                containerDataCache.setContainerData(containerDataName, containerDataBuilder.getBuilder().addWorld(input).build());
+                containerDataCache.write(containerDataName,builder -> builder.addWorld(input));
             } else {
                 SELECT_WORLD_EXIST_PROMPT.sendMessage(player);
                 return new PromptAddWorld();

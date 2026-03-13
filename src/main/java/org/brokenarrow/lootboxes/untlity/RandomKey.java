@@ -5,7 +5,7 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -21,7 +21,7 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 public class RandomKey {
 
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final RandomUntility random = Lootboxes.getInstance().getRandomUntility();
 
 	public ItemStack[] makeRandomAmountOfItems(EntityType entety) {

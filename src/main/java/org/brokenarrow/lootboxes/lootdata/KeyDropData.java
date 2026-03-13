@@ -67,7 +67,7 @@ public class KeyDropData extends YamlFileManager {
 		final Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(containerDataFileName);
 		if (dropDataMap != null) {
 			if (dropDataMap.containsKey(keyName)) {
-				Lootboxes.getInstance().getLogger().log(Level.WARNING, "This key is dublicate " + keyName + ". chose diffrent name");
+				Lootboxes.getInstance().getLogger().log(Level.WARNING, "This key is duplicate " + keyName + ". chose different name");
 				return false;
 			} else
 				dropDataMap.put(keyName, new KeyMobDropData.Builder().build());

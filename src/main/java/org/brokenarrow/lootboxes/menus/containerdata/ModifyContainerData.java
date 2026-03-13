@@ -9,7 +9,7 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.commandprompt.CreateContainerDataName;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.MainMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 public class ModifyContainerData extends MenuHolderPage<String> {
 
     private final KeyDropData keyDropData = KeyDropData.getInstance();
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 
     private final MenuTemplate guiTemplate;
 
     public ModifyContainerData() {
-        super(ContainerDataCache.getInstance().getContainerData());
+        super(ContainerDataCacheLegacy.getInstance().getContainerData());
         this.guiTemplate = Lootboxes.getInstance().getMenu("Containers_list");
 
         setUseColorConversion(true);

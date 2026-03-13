@@ -8,7 +8,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Bukkit;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class SelectWorld extends MenuHolderPage<World> {
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
     private final MenuTemplate guiTemplate;
     private final String containerDataName;
     private ContainerDataBuilder containerDataBuilder;

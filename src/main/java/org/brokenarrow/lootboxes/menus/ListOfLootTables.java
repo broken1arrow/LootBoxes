@@ -9,7 +9,7 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class ListOfLootTables extends MenuHolderPage<String> {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final String container;
 	private final MenuTemplate guiTemplate;
 

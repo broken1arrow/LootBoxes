@@ -8,7 +8,7 @@ import org.broken.arrow.library.menu.button.logic.FillMenuButton;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -25,7 +25,7 @@ import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 
 public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
 
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
     private final MenuTemplate guiTemplate;
     private final String containerName;
 

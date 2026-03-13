@@ -7,8 +7,8 @@ import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
-import org.brokenarrow.lootboxes.commandprompt.SetNumbers;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.commandprompt.ParticlePropertiesPrompt;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
@@ -29,7 +29,7 @@ import static org.brokenarrow.lootboxes.menus.ParticleSettings.Type.*;
 import static org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity.isParticleThisClazz;
 
 public class ParticleSettings extends MenuHolder {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final String container;
 	private final Object particle;
 	private final ParticleEffect particleEffect;
@@ -132,14 +132,14 @@ public class ParticleSettings extends MenuHolder {
 			}
 		}
 		if (button.isActionTypeEqual("Data")) {
-			new SetNumbers(SET_DATA, container, particle).start(player);
+			new ParticlePropertiesPrompt(SET_DATA, container, particle).start(player);
 		}
 		if (canSetColor) {
 			if (button.isActionTypeEqual("Particle_colors")) {
-				new SetNumbers(SET_COLORS, container, particle).start(player);
+				new ParticlePropertiesPrompt(SET_COLORS, container, particle).start(player);
 			}
 			if (button.isActionTypeEqual("Particle_Size")) {
-				new SetNumbers(SET_PARTICLE_SIZE, container, particle).start(player);
+				new ParticlePropertiesPrompt(SET_PARTICLE_SIZE, container, particle).start(player);
 			}
 		}
 

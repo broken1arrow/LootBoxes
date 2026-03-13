@@ -13,15 +13,15 @@ import org.jetbrains.annotations.Nullable;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class ContainerDataLinkedLootTable extends SimpleConversation {
+	private final ContainerDataCache container = Lootboxes.getInstance().getContainerDataCache();
+	private final ContainerDataBuilder containerData;
+	private final String containerKey;
+;
 
-	private ContainerDataBuilder containerData;
-	private String key;
-	private final ContainerDataCache container = ContainerDataCache.getInstance();
-
-	public ContainerDataLinkedLootTable(ContainerDataBuilder containerData, String key) {
+	public ContainerDataLinkedLootTable(ContainerDataBuilder containerData, String containerKey) {
 		super(Lootboxes.getInstance());
 		this.containerData = containerData;
-		this.key = key;
+		this.containerKey = containerKey;
 	}
 
 	@Override
@@ -40,8 +40,6 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 		@Override
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 
-
-			ContainerDataBuilder.Builder builder = containerData.getBuilder();
 			if (!containerData.getLootTableLinked().isEmpty())
 				CONTAINER_DATA_LINKED_LOOTTABLE_CANGE_NAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
 			else {
@@ -50,9 +48,7 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 			if (containerData.getLootTableLinked().equals(input))
 				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_NAME_IS_SAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
 
-			builder.setContainerDataLinkedToLootTable(input);
-			container.setContainerData(key, builder.build());
-
+			container.write(containerKey, builder -> builder.setContainerDataLinkedToLootTable(input));
 			return null;
 		}
 	}

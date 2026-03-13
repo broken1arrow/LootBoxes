@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class CreateContainerDataName extends SimpleConversation {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final Material material;
 
 	public CreateContainerDataName(Material material) {

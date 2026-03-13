@@ -6,7 +6,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.LocationData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,7 +30,7 @@ import static org.brokenarrow.lootboxes.untlity.BlockChecks.getInventory;
 
 public class CloseContainer implements Listener {
 
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();

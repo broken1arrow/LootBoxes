@@ -16,30 +16,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_CONFIRM;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_CONFIRM_FINISH;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_DUPLICATE;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.SET_NAME_ON_KEY_TYPE_NAME;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class SetKeyName extends SimpleConversation {
 
 	private final ItemStack[] itemStacks;
-	private final String containerData;
+	private final String containerKey;
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
+	private final ContainerDataCache containerCache = Lootboxes.getInstance().getContainerDataCache();
 	private static final Map<Player, StoreData> chachedPlayer = new HashMap<>();
 
-	public SetKeyName(ItemStack[] itemStacks, String containerData) {
+	public SetKeyName(ItemStack[] itemStacks, String containerKey) {
 		super(Lootboxes.getInstance());
 		this.itemStacks = itemStacks;
-		this.containerData = containerData;
+		this.containerKey = containerKey;
 	}
 
 	@Override
@@ -80,7 +72,7 @@ public class SetKeyName extends SimpleConversation {
 		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
 			Player player = getPlayer(context);
 
-			if (containerDataCacheInstance.containsKeyName(containerData, input)) {
+			if (containerCache.containsKeyName(containerKey, input)) {
 				SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
 				return getFirstPrompt();
 			}
@@ -92,33 +84,32 @@ public class SetKeyName extends SimpleConversation {
 				if (item.hasItemMeta()) {
 					ItemMeta meta = item.getItemMeta();
 					if (meta != null) {
-						if (!keyDropData.createKeyData(containerData, input)) {
+						if (!keyDropData.createKeyData(containerKey, input)) {
 							SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
 							return getFirstPrompt();
 						}
 						KeysData data = new KeysData(
 								input,
 								meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name().toLowerCase(),
-								containerDataCacheInstance.getCacheContainerData(containerData).getLootTableLinked(),
+								containerCache.getCacheContainerData(containerKey).getLootTableLinked(),
 								item.getAmount(),
 								item.getType(),
 								meta.hasLore() ? meta.getLore() : new ArrayList<>());
-						containerDataCacheInstance.setKeyData(containerData, input, data);
-
+						containerCache.write(containerKey,builder -> builder.setKeysData(input, data));
 					}
 				} else {
-					if (!keyDropData.createKeyData(containerData, input)) {
+					if (!keyDropData.createKeyData(containerKey, input)) {
 						SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
 						return getFirstPrompt();
 					}
 					KeysData data = new KeysData(
 							input,
 							item.getType().name().toLowerCase(),
-							containerDataCacheInstance.getCacheContainerData(containerData).getLootTableLinked(),
+							containerCache.getCacheContainerData(containerKey).getLootTableLinked(),
 							item.getAmount(),
 							item.getType(),
 							new ArrayList<>());
-					containerDataCacheInstance.setKeyData(containerData, input, data);
+					containerCache.write(containerKey,builder -> builder.setKeysData(input, data));
 				}
 			}
 			if (!checkAllItems(player)) {
@@ -126,7 +117,7 @@ public class SetKeyName extends SimpleConversation {
 				return getFirstPrompt();
 			}
 			SET_NAME_ON_KEY_CONFIRM_FINISH.sendMessage(player, item);
-			new EditKeysToOpen(containerData).menuOpen(getPlayer(context));
+			new EditKeysToOpen(containerKey).menuOpen(getPlayer(context));
 			return null;
 		}
 

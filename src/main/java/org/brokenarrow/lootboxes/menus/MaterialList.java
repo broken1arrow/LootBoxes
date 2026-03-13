@@ -11,7 +11,7 @@ import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.menus.keys.EditKey;
@@ -32,7 +32,7 @@ import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitali
 
 public class MaterialList extends MenuHolderPage<Material> {
     private final LootItems lootItems = LootItems.getInstance();
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 
     private final Object value;
     private final MenuKeys menuKey;

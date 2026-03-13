@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.listener;
 
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
 import org.bukkit.Material;
@@ -21,7 +21,7 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINER
 
 public class LinkTool implements Listener {
 
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 

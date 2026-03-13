@@ -16,43 +16,46 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.SPECIFY_TIME_TYPE_
 
 public class SpecifyTime extends SimpleConversation {
 
-	private final String container;
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final String container;
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 
-	public SpecifyTime(String container) {
-		super(Lootboxes.getInstance());
-		this.container = container;
-	}
+    public SpecifyTime(String container) {
+        super(Lootboxes.getInstance());
+        this.container = container;
+    }
 
-	@Override
-	public Prompt getFirstPrompt() {
-		return new PromptInput();
-	}
+    @Override
+    public Prompt getFirstPrompt() {
+        return new PromptInput();
+    }
 
-	public class PromptInput extends SimplePrompt {
+    public class PromptInput extends SimplePrompt {
 
-		@Override
-		protected String getPrompt(ConversationContext context) {
-			return SPECIFY_TIME_TYPE_TIME.languageMessagePrefix();
-		}
+        @Override
+        protected String getPrompt(ConversationContext context) {
+            return SPECIFY_TIME_TYPE_TIME.languageMessagePrefix();
+        }
 
-		@Nullable
-		@Override
-		protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-			ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(container));
-			if (data != null) {
-				ContainerDataBuilder.Builder builder = data.getBuilder();
-				try {
-					builder.setCooldown(Long.parseLong(input));
-				} catch (NumberFormatException e) {
-					getPlayer(context).sendRawMessage("this " + input + " are not valid number");
-					return getFirstPrompt();
-				}
-				containerDataCache.setContainerData(container, builder.build());
-				SPECIFY_TIME_CONFIRM.sendMessage(getPlayer(context), input);
-			}
-			new AlterContainerDataMenu(container).menuOpen(getPlayer(context));
-			return null;
-		}
-	}
+        @Nullable
+        @Override
+        protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
+            ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(container));
+            if (data != null) {
+                return containerDataCache.write(container, builder -> {
+                    try {
+                        builder.setCooldown(Long.parseLong(input));
+                        Lootboxes.getInstance().getSpawnLootContainer().setRandomSpawnedContainer();
+                        SPECIFY_TIME_CONFIRM.sendMessage(getPlayer(context), input);
+                        new AlterContainerDataMenu(container).menuOpen(getPlayer(context));
+                    } catch (NumberFormatException e) {
+                        getPlayer(context).sendRawMessage("this " + input + " are not valid number");
+                        return getFirstPrompt();
+                    }
+                    return null;
+                });
+            }
+            new AlterContainerDataMenu(container).menuOpen(getPlayer(context));
+            return null;
+        }
+    }
 }

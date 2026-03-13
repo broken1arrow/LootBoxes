@@ -1,6 +1,6 @@
 package org.brokenarrow.lootboxes.listener;
 
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.untlity.RandomKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class MobDropListener implements Listener {
-	ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 
 	@EventHandler
 	public void MobDrops(EntityDeathEvent event) {

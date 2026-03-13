@@ -10,7 +10,7 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder.Builder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TeleportPlayer;
@@ -31,7 +31,7 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_OBSTAC
 import static org.brokenarrow.lootboxes.settings.ChatMessages.CONTINER_IS_OBSTACLE_ON_SOME_SIDES;
 
 public class ContainersLinkedList extends MenuHolderPage<Location> {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 	private final MenuTemplate guiTemplate;
 	private final String containerName;
 

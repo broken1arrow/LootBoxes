@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.commands;
 import org.broken.arrow.library.command.command.CommandHolder;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.command.TabUtil;
 import org.bukkit.Bukkit;
@@ -25,7 +25,7 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 
 public class GetKeyCommand extends CommandHolder {
 
-	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCacheInstance = ContainerDataCacheLegacy.getInstance();
 
 	public GetKeyCommand() {
 		super("key");

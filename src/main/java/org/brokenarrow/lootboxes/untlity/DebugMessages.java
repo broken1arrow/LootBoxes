@@ -11,4 +11,9 @@ public class DebugMessages {
 			System.out.println("[Lootboxes] " + clazz + " >" + message);
 		}
 	}
+	public static void sendDebug(String message) {
+		if (settings.getSettingsData().isDebug()) {
+			System.out.println("[Lootboxes] >" + message);
+		}
+	}
 }

@@ -8,27 +8,14 @@ import org.broken.arrow.library.menu.button.manager.MenusSettingsHandler;
 import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
-import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.builder.ParticleDustOptions;
-import org.brokenarrow.lootboxes.builder.ParticleEffect;
+import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
-import org.brokenarrow.lootboxes.listener.CheckChunkLoadUnload;
-import org.brokenarrow.lootboxes.listener.CloseContainer;
-import org.brokenarrow.lootboxes.listener.LinkTool;
-import org.brokenarrow.lootboxes.listener.MobDropListener;
-import org.brokenarrow.lootboxes.listener.OpenContainer;
-import org.brokenarrow.lootboxes.listener.PlayerClick;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.ItemData;
-import org.brokenarrow.lootboxes.lootdata.KeyDropData;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
-import org.brokenarrow.lootboxes.lootdata.MakeLootTable;
+import org.brokenarrow.lootboxes.listener.*;
+import org.brokenarrow.lootboxes.lootdata.*;
 import org.brokenarrow.lootboxes.runTask.HeavyTasks;
 import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.runTask.SaveDataTask;
@@ -37,12 +24,7 @@ import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
 import org.brokenarrow.lootboxes.tasks.SpawnedContainers;
-import org.brokenarrow.lootboxes.untlity.EnchantmentList;
-import org.brokenarrow.lootboxes.untlity.MatrialList;
-import org.brokenarrow.lootboxes.untlity.MobList;
-import org.brokenarrow.lootboxes.untlity.ParticleEffectList;
-import org.brokenarrow.lootboxes.untlity.RandomUntility;
-import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.brokenarrow.lootboxes.untlity.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -77,6 +59,7 @@ public class Lootboxes extends JavaPlugin {
 	private ItemCreator itemCreator;
 	private RegisterMenuAPI menuApi;
 	private MenusSettingsHandler menusCache;
+	private ContainerDataCache containerDataCache;
 
 	@Override
 	public void onLoad() {
@@ -136,6 +119,7 @@ public class Lootboxes extends JavaPlugin {
 		Logger logger = Logger.getLogger("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer");
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.OFF);
+		this.containerDataCache = new ContainerDataCache();
 		//Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
 	}
 
@@ -147,7 +131,8 @@ public class Lootboxes extends JavaPlugin {
 	public void reloadFiles() {
 		this.settings.reload();
 		this.menusCache.reload();
-		ContainerDataCache.getInstance().reload();
+		this.containerDataCache.reload();
+		ContainerDataCacheLegacy.getInstance().reload();
 		File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
 
 		if (file.exists()) {
@@ -162,7 +147,7 @@ public class Lootboxes extends JavaPlugin {
 	}
 
 	public void saveFiles() {
-		ContainerDataCache.getInstance().save();
+		ContainerDataCacheLegacy.getInstance().save();
 		LootItems.getInstance().save();
 		ItemData.getInstance().save();
 		KeyDropData.getInstance().save();
@@ -268,6 +253,10 @@ public class Lootboxes extends JavaPlugin {
 
 	public MenusSettingsHandler getMenusCache() {
 		return menusCache;
+	}
+
+	public ContainerDataCache getContainerDataCache() {
+		return containerDataCache;
 	}
 
 	@Nullable

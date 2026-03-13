@@ -7,7 +7,7 @@ import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.commandprompt.SetPermission;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.LocationWrapper;
@@ -23,7 +23,7 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceho
 
 public class SettingsContainerData extends MenuHolder {
 
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
     private final Settings settings = Lootboxes.getInstance().getSettings();
     private final MenuTemplate guiTemplate;
     private final String containerDataName;
@@ -175,6 +175,9 @@ public class SettingsContainerData extends MenuHolder {
                 containerDataCache.setContainerData(containerDataName, build);
                 if (build.isSpawningContainerWithCooldown()) {
                     containerDataCache.addContainerToSpawnTask(this.containerDataName, build.getCooldown());
+                }
+                if (build.isRandomSpawn()) {
+                    Lootboxes.getInstance().getSpawnLootContainer().setRandomSpawnedContainer();
                 }
                 this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
                 return true;

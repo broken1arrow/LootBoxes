@@ -9,7 +9,7 @@ import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplayNameLore;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -26,7 +26,7 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceho
 
 public class EditKey extends MenuHolder {
 
-	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCacheInstance = ContainerDataCacheLegacy.getInstance();
 	private final SettingsData settings = Lootboxes.getInstance().getSettings().getSettingsData();
 	private final MenuTemplate guiTemplate;
 	private final String containerData;

@@ -9,7 +9,7 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -30,13 +30,13 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
 public class EditKeysToOpen extends MenuHolderPage<String> {
-	private final ContainerDataCache containerDataCacheInstance = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCacheInstance = ContainerDataCacheLegacy.getInstance();
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
 	private final String containerKey;
 	private final MenuTemplate guiTemplate;
 
 	public EditKeysToOpen(String containerKey) {
-		super(ContainerDataCache.getInstance().getListOfKeys(containerKey));
+		super(ContainerDataCacheLegacy.getInstance().getListOfKeys(containerKey));
 		this.containerKey = containerKey;
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_keys_to_open");
 

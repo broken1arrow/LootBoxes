@@ -9,7 +9,7 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.commandprompt.AddWorldPrompt;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ import java.util.List;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class WorldsAllowed extends MenuHolderPage<String> {
-    private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
     private final MenuTemplate guiTemplate;
     private final String containerDataName;
     private ContainerDataBuilder containerDataBuilder;
@@ -33,7 +33,7 @@ public class WorldsAllowed extends MenuHolderPage<String> {
         super(getWorlds(containerDataName));
         this.containerDataName = containerDataName;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Worlds_Allowed");
-        this.containerDataBuilder = ContainerDataCache.getInstance().getCacheContainerData(containerDataName);
+        this.containerDataBuilder = ContainerDataCacheLegacy.getInstance().getCacheContainerData(containerDataName);
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
@@ -126,7 +126,7 @@ public class WorldsAllowed extends MenuHolderPage<String> {
     }
 
     private static List<String> getWorlds(String containerDataName) {
-        ContainerDataBuilder cacheContainerData = ContainerDataCache.getInstance().getCacheContainerData(containerDataName);
+        ContainerDataBuilder cacheContainerData = ContainerDataCacheLegacy.getInstance().getCacheContainerData(containerDataName);
         if (cacheContainerData == null)
             return new ArrayList<>();
         return new ArrayList<>(cacheContainerData.getWorlds());

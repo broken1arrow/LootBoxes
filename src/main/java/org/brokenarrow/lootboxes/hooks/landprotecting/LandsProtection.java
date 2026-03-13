@@ -39,11 +39,11 @@ public class LandsProtection implements ProtectingProvider {
     @SuppressWarnings("ConstantConditions")
     @Override
     public boolean isAllowedToSpawnContainer(Location location) {
-        Area landsArea = lands.getArea(location);
+        /*Area landsArea = lands.getArea(location);
         if (landsArea != null) {
             //return false;//lands.getLandWorld(location.getWorld()).hasFlag(location, (LandFlag) flag);
             return landsArea.hasNaturalFlag(landsFlag);
-        } else {
+        } else*/ {
             LandWorld world = lands.getWorld(location.getWorld());
             return world != null && world.hasNaturalFlag(location, landsFlag);
         }
@@ -83,6 +83,8 @@ public class LandsProtection implements ProtectingProvider {
 
         @Override
         public boolean shouldDisplay(@Nullable final Area area, @Nullable final LandPlayer landPlayer) {
+            if(landPlayer != null && landPlayer.getPlayer().hasPermission("lands.admin.*"))
+                return true;
             return false;
         }
 

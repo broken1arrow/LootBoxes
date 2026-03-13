@@ -1,7 +1,7 @@
 package org.brokenarrow.lootboxes.listener;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
@@ -21,7 +21,7 @@ public class CheckChunkLoadUnload implements Listener {
 
 	private final Map<Object, Chunk> chachedChunks = new ConcurrentHashMap<>();
 	private final Lootboxes plugin;
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
 
 	public CheckChunkLoadUnload(final Lootboxes plugin) {
 		this.plugin = plugin;

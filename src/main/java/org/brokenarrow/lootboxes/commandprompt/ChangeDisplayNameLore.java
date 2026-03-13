@@ -3,7 +3,6 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
@@ -14,32 +13,24 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.brokenarrow.lootboxes.menus.MenuKeys.ALTER_CONTAINER_DATA_MENU;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_AND_LORE_CONFIRM;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_AND_LORE_DISPLAYNAME;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_AND_LORE_LORE;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM;
-import static org.brokenarrow.lootboxes.settings.ChatMessages.CHANGE_DISPLAYNAME_CONTINEDATA_DISPLAYNAME;
+import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
 public class ChangeDisplayNameLore extends SimpleConversation {
-	private final ContainerDataCache containerDataCache = ContainerDataCache.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final MenuKeys menuAccess;
-	private final String container;
+	private final String containerKey;
 	private final String keyName;
 	private final boolean setLore;
 
-	public ChangeDisplayNameLore(MenuKeys menuAccess, String containerData, String keyName, boolean setLore) {
+	public ChangeDisplayNameLore(MenuKeys menuAccess, String containerKey, String keyName, boolean setLore) {
 		super(Lootboxes.getInstance());
 		this.menuAccess = menuAccess;
-		this.container = containerData;
+		this.containerKey = containerKey;
 		this.keyName = keyName;
 		this.setLore = setLore;
 	}
@@ -69,13 +60,10 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 				menuEditKey(getPlayer(context), input);
 			}
 			if (menuAccess == ALTER_CONTAINER_DATA_MENU) {
-				ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-				ContainerDataBuilder.Builder builder = data.getBuilder().setDisplayName(input);
-
-				containerDataCache.setContainerData(container, builder.build());
+				containerDataCache.write(containerKey,builder -> builder.setDisplayName(input));
 				CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM.sendMessage(getPlayer(context), input);
 				runtaskLater(40, () ->
-						new AlterContainerDataMenu(container).menuOpen(getPlayer(context)), false);
+						new AlterContainerDataMenu(containerKey).menuOpen(getPlayer(context)), false);
 			}
 			return null;
 		}
@@ -85,7 +73,7 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 	private void menuEditKey(Player player, String input) {
 		if (menuAccess == EDITKEY) {
 			if (setLore) {
-				org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCache.getCacheKey(container, keyName);
+				org.brokenarrow.lootboxes.builder.KeysData keysData = containerDataCache.getCacheKey(containerKey, keyName);
 				List<String> loreList = keysData.getLore();
 				if (input.contains("row-")) {
 					for (Map.Entry<Integer, String> entry : formatInput(input).entrySet()) {
@@ -109,13 +97,13 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 					}
 				} else
 					loreList.add(input);
-				containerDataCache.setKeyData( container, keyName,keysDataWrapper -> keysDataWrapper.setLore(loreList));
-				//containerDataCache.setKeyData(KeysToSave.LORE, loreList, container, keyName);
+				containerDataCache.write(containerKey,builder -> builder.writeKeysData(keyName, keysDataWrapper ->
+						keysDataWrapper.setLore(loreList)));
 			} else
-				containerDataCache.setKeyData( container, keyName,keysDataWrapper -> keysDataWrapper.setDisplayName(input));
-				//containerDataCache.setKeyData(KeysToSave.DISPLAY_NAME, input, container, keyName);
+				containerDataCache.write(containerKey,builder -> builder.writeKeysData(keyName, keysDataWrapper ->
+						keysDataWrapper.setDisplayName(input)));
 			CHANGE_DISPLAYNAME_AND_LORE_CONFIRM.sendMessage(player);
-			new EditKey(container, keyName).menuOpen(player);
+			new EditKey(containerKey, keyName).menuOpen(player);
 		}
 	}
 

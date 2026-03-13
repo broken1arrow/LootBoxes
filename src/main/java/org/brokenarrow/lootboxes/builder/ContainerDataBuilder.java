@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.broken.arrow.library.serialize.utility.converters.ObjectConverter.getBoolean;
@@ -205,7 +206,7 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
     }
 
     public boolean allowedWorldToSpawn(final Location location) {
-        if(worlds.isEmpty()) return true;
+        if (worlds.isEmpty()) return true;
 
         return contains(location.getWorld());
     }
@@ -213,7 +214,6 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
     public Builder getBuilder() {
         return builder;
     }
-
 
 
     public static final class Builder {
@@ -287,7 +287,14 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
 
         public Builder setParticleEffects(final Map<Object, ParticleEffect> particleEffects) {
             this.particleEffects = particleEffects;
+            return this;
+        }
 
+        public Builder setParticleEffect(@NotNull final Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
+            if (this.particleEffects == null)
+                this.particleEffects = new HashMap<>();
+
+            this.particleEffects.put(particle, particleBuilder.build());
             return this;
         }
 
@@ -324,6 +331,21 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
         public Builder setKeysData(final Map<String, KeysData> keysData) {
             this.keysData = keysData;
             return this;
+        }
+
+        public Builder setKeysData(final String keyName, final KeysData data) {
+            if (this.keysData == null)
+                this.keysData = new HashMap<>();
+            this.keysData.put(keyName, data);
+            return this;
+        }
+
+        public Builder writeKeysData(final String keyName, final Consumer<KeysDataWrapper> callBack) {
+            if (this.keysData == null)
+                this.keysData = new HashMap<>();
+            final KeysData keysData = this.keysData.getOrDefault(keyName, new KeysData(keyName, "", "", 1, Material.TRIPWIRE_HOOK, new ArrayList<>()));
+            keysData.updateKeyData(callBack);
+            return this.setKeysData(keyName, keysData);
         }
 
         public Builder setSpawnLocation(final LocationWrapper spawnLocation) {
@@ -491,7 +513,9 @@ public final class ContainerDataBuilder implements ConfigurationSerializable {
             particles = castMap((Map<?, ?>) particleEffects, Object.class, ParticleEffect.class);
 
         final Object worldsObject = map.get("Worlds_allow_spawn");
-        List<String> worlds = castList((List<?>) worldsObject, String.class);
+        List<String> worlds = new ArrayList<>();
+        if (worldsObject != null)
+            worlds = castList((List<?>) worldsObject, String.class);
 
         final Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
         final Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
