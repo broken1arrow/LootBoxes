@@ -58,12 +58,12 @@ public class LandsProtection implements ProtectingProvider {
 
         @Override
         public boolean getDefaultState() {
-            return false;
+            return true;
         }
 
         @Override
         public @NotNull DefaultStateFlag<NaturalFlag> setDefaultState(final boolean state) {
-            return null;
+            return this;
         }
 
         @Override
@@ -150,7 +150,7 @@ public class LandsProtection implements ProtectingProvider {
 
         @Override
         public @NotNull String getDisplayName() {
-            return "";
+            return " ";
         }
 
         @Override
@@ -160,7 +160,7 @@ public class LandsProtection implements ProtectingProvider {
 
         @Override
         public @NotNull String getName() {
-            return "";
+            return "LootBoxes";
         }
 
         @Override

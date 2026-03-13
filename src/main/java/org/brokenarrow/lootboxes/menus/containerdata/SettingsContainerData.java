@@ -254,7 +254,7 @@ public class SettingsContainerData extends MenuHolder {
             placeholders = getPlaceholders(containerDataBuilder.getPermissionForRandomSpawn() != null ? containerDataBuilder.getPermissionForRandomSpawn() : "");
 
         if (button.isActionTypeEqual("Select_worlds"))
-            placeholders = getPlaceholders(containerDataBuilder.isSpawnOnSurface());
+            placeholders = getPlaceholders(containerDataBuilder.getWorlds());
 
         return placeholders;
     }

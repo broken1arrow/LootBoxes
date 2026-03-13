@@ -1771,7 +1771,8 @@ Menus:
             - "&awith supported plugins like"
             - "&aLands or WorldGuard."
             - ""
-            - "&aCurrently set to: &6{0}"
+            - "&aWorlds set:"
+            - "&6{0}"
         active:
           material: SPAWNER
           name: "&bAllowed worlds for container spawn"
@@ -1784,7 +1785,8 @@ Menus:
             - "&awith supported plugins like"
             - "&aLands or WorldGuard."
             - ""
-            - "&aCurrently set to: &6{0}"
+            - "&aWorlds set:"
+            - "&6{0}"
       "53":
         action_type: Back_button
         material: RED_STAINED_GLASS_PANE
