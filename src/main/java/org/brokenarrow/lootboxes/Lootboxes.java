@@ -282,7 +282,6 @@ public class Lootboxes extends JavaPlugin {
 
     private void transferToNewCache() {
         Map<String, ContainerDataBuilder> map = ContainerDataCacheLegacy.getInstance().getCacheContainerData();
-        System.out.println("map " + map);
         if (map != null && !map.isEmpty()) {
             map.forEach((containerKey, containerData) -> {
                 this.containerDataCache.setContainerData(containerKey, containerData.convertToLootContainer());

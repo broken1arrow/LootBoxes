@@ -3,8 +3,8 @@ package org.brokenarrow.lootboxes.listener;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.LocationData;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
@@ -160,7 +160,7 @@ public class PlayerClick implements Listener {
 		Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
 		containerDataMap.remove(location);
 
-		containerDataCache.write(metadata, (Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setContainerData(containerDataMap));
+		containerDataCache.write(metadata, (Consumer<LootContainerData>) builder -> builder.setContainerData(containerDataMap));
 	}
 
 	public boolean addData(Block block, LootContainerData data, Location location, String metadata) {

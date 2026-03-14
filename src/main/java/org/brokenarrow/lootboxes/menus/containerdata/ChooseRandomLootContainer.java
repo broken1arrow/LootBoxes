@@ -101,11 +101,9 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
                 containerDataCache.write(containerName, containerBuilder -> {
                     if (click == ClickType.SHIFT_LEFT) {
                         containerBuilder.setRandomLootContainerItem(material);
-                        containerDataCache.setContainerData(containerName, containerBuilder.build());
                         return ButtonUpdateAction.ALL;
                     }
                     Facing type = getContainerFacing(click, material, containerBuilder);
-
                     containerBuilder.setRandomLootContainerFacing(type);
                     return ButtonUpdateAction.ALL;
                 });

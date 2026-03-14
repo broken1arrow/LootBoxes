@@ -50,7 +50,7 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 			if (containerData.getLootTableLinked().equals(input))
 				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_NAME_IS_SAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
 
-			container.write(containerKey, (Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setContainerDataLinkedToLootTable(input));
+			container.write(containerKey, (Consumer<LootContainerData>) builder -> builder.setContainerDataLinkedToLootTable(input));
 			return null;
 		}
 	}

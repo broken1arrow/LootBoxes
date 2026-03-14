@@ -54,7 +54,7 @@ public class SetPermission extends SimpleConversation {
                 new SettingsContainerData(container).menuOpen(getPlayer(context));
                 return null;
             }
-            containerDataCache.write(container,(Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setPermissionForRandomSpawn(input));
+            containerDataCache.write(container,(Consumer<LootContainerData>) builder -> builder.setPermissionForRandomSpawn(input));
             new SettingsContainerData(container).menuOpen(getPlayer(context));
             return null;
         }

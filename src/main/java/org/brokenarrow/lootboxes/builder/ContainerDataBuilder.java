@@ -188,7 +188,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
     }
 
     public LootContainerData convertToLootContainer() {
-        LootContainerData.LootContainerBuilder lootContainerData = new LootContainerData.LootContainerBuilder();
+        LootContainerData lootContainerData = new LootContainerData();
         lootContainerData
                 .setContainerData(this.containerData)
                 .setContainerDataLinkedToLootTable(lootTableLinked)

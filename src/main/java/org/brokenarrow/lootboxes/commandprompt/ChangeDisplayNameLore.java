@@ -62,7 +62,7 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 				menuEditKey(getPlayer(context), input);
 			}
 			if (menuAccess == ALTER_CONTAINER_DATA_MENU) {
-				containerDataCache.write(containerKey,(Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setDisplayName(input));
+				containerDataCache.write(containerKey,(Consumer<LootContainerData>) builder -> builder.setDisplayName(input));
 				CHANGE_DISPLAYNAME_CONTINEDATA_CONFIRM.sendMessage(getPlayer(context), input);
 				runtaskLater(40, () ->
 						new AlterContainerDataMenu(containerKey).menuOpen(getPlayer(context)), false);
@@ -99,10 +99,10 @@ public class ChangeDisplayNameLore extends SimpleConversation {
 					}
 				} else
 					loreList.add(input);
-				containerDataCache.write(containerKey, (Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.writeKeysData(keyName, keysDataWrapper ->
+				containerDataCache.write(containerKey, (Consumer<LootContainerData>) builder -> builder.writeKeysData(keyName, keysDataWrapper ->
 						keysDataWrapper.setLore(loreList)));
 			} else
-				containerDataCache.write(containerKey,(Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.writeKeysData(keyName, keysDataWrapper ->
+				containerDataCache.write(containerKey,(Consumer<LootContainerData>) builder -> builder.writeKeysData(keyName, keysDataWrapper ->
 						keysDataWrapper.setDisplayName(input)));
 			CHANGE_DISPLAYNAME_AND_LORE_CONFIRM.sendMessage(player);
 			new EditKey(containerKey, keyName).menuOpen(player);

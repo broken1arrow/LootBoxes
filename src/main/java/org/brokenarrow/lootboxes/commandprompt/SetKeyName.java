@@ -3,8 +3,8 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.KeysData;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpen;
@@ -97,7 +97,7 @@ public class SetKeyName extends SimpleConversation {
 								item.getAmount(),
 								item.getType(),
 								meta.hasLore() ? meta.getLore() : new ArrayList<>());
-						containerCache.write(containerKey,(Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setKeysData(input, data));
+						containerCache.write(containerKey,(Consumer<LootContainerData>) builder -> builder.setKeysData(input, data));
 					}
 				} else {
 					if (!keyDropData.createKeyData(containerKey, input)) {
@@ -111,7 +111,7 @@ public class SetKeyName extends SimpleConversation {
 							item.getAmount(),
 							item.getType(),
 							new ArrayList<>());
-					containerCache.write(containerKey,(Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setKeysData(input, data));
+					containerCache.write(containerKey,(Consumer<LootContainerData>) builder -> builder.setKeysData(input, data));
 				}
 			}
 			if (!checkAllItems(player)) {

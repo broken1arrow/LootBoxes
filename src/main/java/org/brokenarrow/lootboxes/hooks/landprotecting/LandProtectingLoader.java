@@ -19,7 +19,7 @@ public class LandProtectingLoader {
 			}
 		}
 		if (Bukkit.getServer().getPluginManager().getPlugin("Lands") != null) {
-			providers.add(new LandsProtection(plugin));
+			//providers.add(new LandsProtection(plugin));
 		}
 		this.protectingProvider = providers.toArray(new ProtectingProvider[0]);
 	}
