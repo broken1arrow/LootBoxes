@@ -61,6 +61,7 @@ public class Lootboxes extends JavaPlugin {
     private RegisterMenuAPI menuApi;
     private MenusSettingsHandler menusCache;
     private ContainerDataCache containerDataCache;
+    private LootContainerRandomCache lootContainerRandomCache;
 
     @Override
     public void onLoad() {
@@ -78,7 +79,9 @@ public class Lootboxes extends JavaPlugin {
         ConfigurationSerialization.registerClass(ContainerDataBuilder.class);
         ConfigurationSerialization.registerClass(ParticleEffect.class);
         ConfigurationSerialization.registerClass(ParticleDustOptions.class);
+        ConfigurationSerialization.registerClass(BlockKey.class);
 
+        this.lootContainerRandomCache = new LootContainerRandomCache();
         this.containerDataCache = new ContainerDataCache();
         this.nbtAPI = new RegisterNbtAPI(this, false);
         this.settings = new Settings();
@@ -137,6 +140,7 @@ public class Lootboxes extends JavaPlugin {
         this.settings.reload();
         this.menusCache.reload();
         this.containerDataCache.reload();
+        this.lootContainerRandomCache.reload();
         ContainerDataCacheLegacy.getInstance().reload();
         File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
 
@@ -153,10 +157,11 @@ public class Lootboxes extends JavaPlugin {
 
 
     public void saveFiles() {
-        ContainerDataCacheLegacy.getInstance().save();
+        this.getContainerDataCache().save();
         LootItems.getInstance().save();
         ItemData.getInstance().save();
         KeyDropData.getInstance().save();
+        this.lootContainerRandomCache.save();
     }
 
     public void registerCommands() {
@@ -263,6 +268,10 @@ public class Lootboxes extends JavaPlugin {
 
     public ContainerDataCache getContainerDataCache() {
         return containerDataCache;
+    }
+
+    public LootContainerRandomCache getLootContainerRandomCache() {
+        return lootContainerRandomCache;
     }
 
     @Nullable

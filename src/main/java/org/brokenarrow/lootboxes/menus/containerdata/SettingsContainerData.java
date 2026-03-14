@@ -112,7 +112,8 @@ public class SettingsContainerData extends MenuHolder {
                             attempts += 1;
                         if (click.isLeftClick())
                             attempts -= 1;
-
+                        if (attempts < 1)
+                            attempts = 1;
                         containerBuilder.setAttempts(attempts);
                         buttonMatch = true;
                         break;

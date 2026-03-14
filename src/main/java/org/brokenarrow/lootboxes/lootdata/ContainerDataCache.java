@@ -120,7 +120,7 @@ public class ContainerDataCache extends YamlFileManager {
                 .build();
 
         cacheContainerData.put(container, builder);
-        saveTask();
+        save(container);
         addContainerToEffectList(builder);
         this.addContainerToSpawnTask(container, 1800);
     }
@@ -270,7 +270,7 @@ public class ContainerDataCache extends YamlFileManager {
 
     public void removeCacheContainerData(final String container) {
         cacheContainerData.remove(container);
-        saveTask();
+        this.removeFile(container);
     }
 
     public KeysData removeCacheKey(final String containerDataCacheName, final String keyName) {
@@ -297,7 +297,7 @@ public class ContainerDataCache extends YamlFileManager {
         final List<String> keyNameList = new ArrayList<>();
 
         Map<String, KeysData> cacheKeysData = this.getCacheKeysData(containerDataCacheName);
-        if(cacheKeysData != null) {
+        if (cacheKeysData != null) {
             for (final String keyName : cacheKeysData.keySet())
                 if (keyName != null) {
                     keyNameList.add(keyName);
@@ -329,12 +329,11 @@ public class ContainerDataCache extends YamlFileManager {
     @Override
     protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
         try {
-            for (final Map.Entry<String, LootContainerData> childrenKey : cacheContainerData.entrySet()) {
-                final FileConfiguration configuration = new YamlConfiguration();
-                if (childrenKey != null) {
-                    configuration.set("Data", childrenKey.getValue());
-                    this.saveToFile(new File(this.getDataFolder(), "lootContainers/" + childrenKey.getKey() + ".db"), configuration);
-                }
+            LootContainerData containerData = cacheContainerData.get(this.getNameOfFile(file.toString()));
+            final FileConfiguration configuration = new YamlConfiguration();
+            if (containerData != null) {
+                configuration.set("Data", containerData);
+                this.saveToFile(file, configuration);
             }
         } catch (final Exception ex) {
             ex.printStackTrace();
@@ -372,7 +371,8 @@ public class ContainerDataCache extends YamlFileManager {
             if (particleEffects != null && particleEffects.isEmpty())
                 Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
         }
-        saveTask();
+        save(containerKey);
+        //saveTask();
     }
 
 }

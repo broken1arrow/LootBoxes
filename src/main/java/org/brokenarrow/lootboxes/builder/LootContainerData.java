@@ -23,30 +23,30 @@ import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
 
 
 public class LootContainerData implements ConfigurationSerializable {
-    String lootTableLinked;
-    String permissionForRandomSpawn;
-    Material icon;
-    Material randomLootContainerItem;
-    Facing randomLootContainerFacing;
-    String displayName;
-    List<String> lore;
-    Set<String> worlds;
-    Map<Object, ParticleEffect> particleEffects;
-    Map<Location, ContainerData> containerData;
-    Map<String, KeysData> keysData;
-    LocationWrapper spawnLocation;
-    boolean spawningContainerWithCooldown;
-    boolean enchant;
-    boolean randomSpawn;
-    boolean showTitle;
-    boolean containerShallGlow;
-    boolean spawnContainerFromWorldCenter;
-    boolean spawnContainerFromPlayerCenter;
-    boolean spawnOnSurface;
-    long cooldown;
-    int attempts;
-    int minRadius;
-    int maxRadius;
+    private String lootTableLinked;
+    private String permissionForRandomSpawn;
+    private Material icon;
+    private Material randomLootContainerItem;
+    private Facing randomLootContainerFacing;
+    private String displayName;
+    private List<String> lore;
+    private Set<String> worlds = new HashSet<>();
+    private Map<Object, ParticleEffect> particleEffects;
+    private Map<Location, ContainerData> containerData;
+    private Map<String, KeysData> keysData;
+    private LocationWrapper spawnLocation;
+    private boolean spawningContainerWithCooldown;
+    private boolean enchant;
+    private boolean randomSpawn;
+    private boolean showTitle;
+    private boolean containerShallGlow;
+    private boolean spawnContainerFromWorldCenter;
+    private boolean spawnContainerFromPlayerCenter;
+    private boolean spawnOnSurface;
+    private long cooldown;
+    private int attempts;
+    private int minRadius;
+    private int maxRadius;
     LootContainerData lootContainerData;
 
     public String getLootTableLinked() {
@@ -110,7 +110,7 @@ public class LootContainerData implements ConfigurationSerializable {
 
     @Nullable
     public KeysData getKeysData(@NotNull final String keyName) {
-       return keysData.get(keyName);
+        return keysData.get(keyName);
     }
 
     public LocationWrapper getSpawnLocation() {
@@ -185,162 +185,162 @@ public class LootContainerData implements ConfigurationSerializable {
     }
 
 
-        public LootContainerData setRandomLootWorlds(List<String> worlds) {
-            this.worlds = new HashSet<>(worlds);
-            return this;
-        }
+    public LootContainerData setRandomLootWorlds(List<String> worlds) {
+        this.worlds = new HashSet<>(worlds);
+        return this;
+    }
 
-        public LootContainerData addWorld(String name) {
-            this.worlds.add(name);
-            return this;
-        }
+    public LootContainerData addWorld(String name) {
+        this.worlds.add(name);
+        return this;
+    }
 
-        public LootContainerData removeWorld(String name) {
-            this.worlds.remove(name);
-            return this;
-        }
+    public LootContainerData removeWorld(String name) {
+        this.worlds.remove(name);
+        return this;
+    }
 
-        public LootContainerData setSpawnContainerFromWorldCenter(final boolean spawnContainerFromWorldCenter) {
-            this.spawnContainerFromWorldCenter = spawnContainerFromWorldCenter;
-            return this;
-        }
+    public LootContainerData setSpawnContainerFromWorldCenter(final boolean spawnContainerFromWorldCenter) {
+        this.spawnContainerFromWorldCenter = spawnContainerFromWorldCenter;
+        return this;
+    }
 
-        public LootContainerData setPermissionForRandomSpawn(String permissionForRandomSpawn) {
-            this.permissionForRandomSpawn = permissionForRandomSpawn;
-            return this;
-        }
+    public LootContainerData setPermissionForRandomSpawn(String permissionForRandomSpawn) {
+        this.permissionForRandomSpawn = permissionForRandomSpawn;
+        return this;
+    }
 
-        public LootContainerData setSpawnContainerFromPlayerCenter(final boolean spawnContainerFromPlayerCenter) {
-            this.spawnContainerFromPlayerCenter = spawnContainerFromPlayerCenter;
-            return this;
-        }
+    public LootContainerData setSpawnContainerFromPlayerCenter(final boolean spawnContainerFromPlayerCenter) {
+        this.spawnContainerFromPlayerCenter = spawnContainerFromPlayerCenter;
+        return this;
+    }
 
-        public LootContainerData setSpawnOnSurface(final boolean spawnOnSurface) {
-            this.spawnOnSurface = spawnOnSurface;
-            return this;
-        }
+    public LootContainerData setSpawnOnSurface(final boolean spawnOnSurface) {
+        this.spawnOnSurface = spawnOnSurface;
+        return this;
+    }
 
-        public LootContainerData setContainerDataLinkedToLootTable(final String containerDataLinkedToLootTable) {
-            this.lootTableLinked = containerDataLinkedToLootTable;
-            return this;
-        }
+    public LootContainerData setContainerDataLinkedToLootTable(final String containerDataLinkedToLootTable) {
+        this.lootTableLinked = containerDataLinkedToLootTable;
+        return this;
+    }
 
-        public LootContainerData setParticleEffects(final Map<Object, ParticleEffect> particleEffects) {
-            this.particleEffects = particleEffects;
-            return this;
-        }
+    public LootContainerData setParticleEffects(final Map<Object, ParticleEffect> particleEffects) {
+        this.particleEffects = particleEffects;
+        return this;
+    }
 
-        public LootContainerData setParticleEffect(@NotNull final Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
-            if (this.particleEffects == null)
-                this.particleEffects = new HashMap<>();
+    public LootContainerData setParticleEffect(@NotNull final Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
+        if (this.particleEffects == null)
+            this.particleEffects = new HashMap<>();
 
-            this.particleEffects.put(particle, particleBuilder.build());
-            return this;
-        }
+        this.particleEffects.put(particle, particleBuilder.build());
+        return this;
+    }
 
-        public LootContainerData setIcon(final Material icon) {
-            this.icon = icon;
-            return this;
-        }
+    public LootContainerData setIcon(final Material icon) {
+        this.icon = icon;
+        return this;
+    }
 
-        public LootContainerData setRandomLootContainerItem(Material randomLootContainerItem) {
-            this.randomLootContainerItem = randomLootContainerItem;
-            return this;
-        }
+    public LootContainerData setRandomLootContainerItem(Material randomLootContainerItem) {
+        this.randomLootContainerItem = randomLootContainerItem;
+        return this;
+    }
 
-        public LootContainerData setRandomLootContainerFacing(Facing randomLootContainerFacing) {
-            this.randomLootContainerFacing = randomLootContainerFacing;
-            return this;
-        }
+    public LootContainerData setRandomLootContainerFacing(Facing randomLootContainerFacing) {
+        this.randomLootContainerFacing = randomLootContainerFacing;
+        return this;
+    }
 
-        public LootContainerData setDisplayName(final String displayName) {
-            this.displayName = displayName;
-            return this;
-        }
+    public LootContainerData setDisplayName(final String displayName) {
+        this.displayName = displayName;
+        return this;
+    }
 
-        public LootContainerData setLore(final List<String> lore) {
-            this.lore = lore;
-            return this;
-        }
+    public LootContainerData setLore(final List<String> lore) {
+        this.lore = lore;
+        return this;
+    }
 
-        public LootContainerData setContainerData(final Map<Location, ContainerData> containerData) {
-            this.containerData = containerData;
-            return this;
-        }
+    public LootContainerData setContainerData(final Map<Location, ContainerData> containerData) {
+        this.containerData = containerData;
+        return this;
+    }
 
-        public LootContainerData setKeysData(final Map<String, KeysData> keysData) {
-            this.keysData = keysData;
-            return this;
-        }
+    public LootContainerData setKeysData(final Map<String, KeysData> keysData) {
+        this.keysData = keysData;
+        return this;
+    }
 
-        public LootContainerData setKeysData(final String keyName, final KeysData data) {
-            if (this.keysData == null)
-                this.keysData = new HashMap<>();
-            this.keysData.put(keyName, data);
-            return this;
-        }
+    public LootContainerData setKeysData(final String keyName, final KeysData data) {
+        if (this.keysData == null)
+            this.keysData = new HashMap<>();
+        this.keysData.put(keyName, data);
+        return this;
+    }
 
-        public LootContainerData writeKeysData(final String keyName, final Consumer<KeysDataWrapper> callBack) {
-            if (this.keysData == null)
-                this.keysData = new HashMap<>();
-            final KeysData keysData = this.keysData.getOrDefault(keyName, new KeysData(keyName, "", "", 1, Material.TRIPWIRE_HOOK, new ArrayList<>()));
-            keysData.updateKeyData(callBack);
-            return this.setKeysData(keyName, keysData);
-        }
+    public LootContainerData writeKeysData(final String keyName, final Consumer<KeysDataWrapper> callBack) {
+        if (this.keysData == null)
+            this.keysData = new HashMap<>();
+        final KeysData keysData = this.keysData.getOrDefault(keyName, new KeysData(keyName, "", "", 1, Material.TRIPWIRE_HOOK, new ArrayList<>()));
+        keysData.updateKeyData(callBack);
+        return this.setKeysData(keyName, keysData);
+    }
 
-        public LootContainerData setSpawnLocation(final LocationWrapper spawnLocation) {
-            this.spawnLocation = spawnLocation;
-            return this;
-        }
+    public LootContainerData setSpawnLocation(final LocationWrapper spawnLocation) {
+        this.spawnLocation = spawnLocation;
+        return this;
+    }
 
-        public LootContainerData setSpawningContainerWithCooldown(final boolean spawningContainerWithCooldown) {
-            this.spawningContainerWithCooldown = spawningContainerWithCooldown;
-            return this;
-        }
+    public LootContainerData setSpawningContainerWithCooldown(final boolean spawningContainerWithCooldown) {
+        this.spawningContainerWithCooldown = spawningContainerWithCooldown;
+        return this;
+    }
 
-        public LootContainerData setEnchant(final boolean enchant) {
-            this.enchant = enchant;
-            return this;
-        }
+    public LootContainerData setEnchant(final boolean enchant) {
+        this.enchant = enchant;
+        return this;
+    }
 
-        public LootContainerData setRandomSpawn(final boolean randomSpawn) {
-            this.randomSpawn = randomSpawn;
-            return this;
-        }
+    public LootContainerData setRandomSpawn(final boolean randomSpawn) {
+        this.randomSpawn = randomSpawn;
+        return this;
+    }
 
-        public LootContainerData setShowTitle(boolean showTitle) {
-            this.showTitle = showTitle;
-            return this;
-        }
+    public LootContainerData setShowTitle(boolean showTitle) {
+        this.showTitle = showTitle;
+        return this;
+    }
 
-        public LootContainerData setContainerShallGlow(boolean containerShallGlow) {
-            this.containerShallGlow = containerShallGlow;
-            return this;
-        }
+    public LootContainerData setContainerShallGlow(boolean containerShallGlow) {
+        this.containerShallGlow = containerShallGlow;
+        return this;
+    }
 
-        public LootContainerData setCooldown(final long cooldown) {
-            this.cooldown = cooldown;
-            return this;
-        }
+    public LootContainerData setCooldown(final long cooldown) {
+        this.cooldown = cooldown;
+        return this;
+    }
 
-        public LootContainerData setAttempts(int attempts) {
-            this.attempts = attempts;
-            return this;
-        }
+    public LootContainerData setAttempts(int attempts) {
+        this.attempts = attempts;
+        return this;
+    }
 
-        public LootContainerData setMinRadius(final int minRadius) {
-            this.minRadius = minRadius;
-            return this;
-        }
+    public LootContainerData setMinRadius(final int minRadius) {
+        this.minRadius = minRadius;
+        return this;
+    }
 
-        public LootContainerData setMaxRadius(final int maxRadius) {
-            this.maxRadius = maxRadius;
-            return this;
-        }
+    public LootContainerData setMaxRadius(final int maxRadius) {
+        this.maxRadius = maxRadius;
+        return this;
+    }
 
-        public LootContainerData build() {
-            return this;
-        }
+    public LootContainerData build() {
+        return this;
+    }
 
 
     @Override
@@ -405,6 +405,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Max_radius", this.maxRadius);
         keysData.put("Spawn-point", this.spawnLocation != null ? this.spawnLocation.serialize() : new HashMap<>());
         keysData.put("Containers", this.containerData);
+        keysData.put("Random_spawn_containers", this.containerData);
         return keysData;
     }
 

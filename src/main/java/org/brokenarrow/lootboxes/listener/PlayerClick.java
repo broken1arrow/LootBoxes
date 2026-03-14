@@ -8,6 +8,7 @@ import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
+import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.RunTimedTask;
 import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
@@ -26,6 +27,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.DirectionalContainer;
 import org.bukkit.material.MaterialData;
 
@@ -34,13 +37,13 @@ import java.util.function.Consumer;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
+import static org.brokenarrow.lootboxes.untlity.BlockChecks.getInventory;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER;
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.getFacing;
 
 public class PlayerClick implements Listener {
-
-
+	private final Settings settings = Lootboxes.getInstance().getSettings();
 	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final Lootboxes lootboxes = Lootboxes.getInstance();
 	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
@@ -88,6 +91,8 @@ public class PlayerClick implements Listener {
 		Block blockPlaced = event.getBlock();
 		if (blockPlaced.getType() != Material.AIR) {
 			Player player = event.getPlayer();
+			clearRandomSawedContainers(event.getBlock());
+
 			if (!player.hasPermission("lootboxes.link.containers")) return;
 			if (checkBlockIsContainer(blockPlaced)) {
 				Location location = blockPlaced.getLocation();
@@ -207,5 +212,25 @@ public class PlayerClick implements Listener {
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS.name(), Lootboxes.getInstance());
 		if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name()))
 			player.removeMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), Lootboxes.getInstance());
+	}
+
+	private void clearRandomSawedContainers(Block block) {
+		final Location location = block.getLocation();
+		String randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
+		if(randomLootContainer != null){
+			final Inventory inventory = getInventory(location);
+			if(inventory == null) return;
+			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose()) {
+				location.getBlock().setType(Material.AIR);
+			}
+			if (inventory.getContents().length > 0) {
+				for (ItemStack itemStack : inventory) {
+					if (itemStack == null) continue;
+					location.getWorld().dropItemNaturally(location, itemStack);
+				}
+			}
+			inventory.clear();
+			Lootboxes.getInstance().getLootContainerRandomCache().removeCachedLootContainerLocation(location);
+		}
 	}
 }

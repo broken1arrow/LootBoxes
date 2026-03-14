@@ -41,18 +41,17 @@ public class CloseContainer implements Listener {
 
 		Inventory inventory = getInventory(location);
 		if (inventory != null) {
-			LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
-			if (locationData == null) return;
-			LootContainerData lootContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
-			if (lootContainerData == null) return;
-			Map<Location, ContainerData> containerData = lootContainerData.getLinkedContainerData();
-			if (containerData == null || containerData.get(location) == null) {
-				return;
-			}
+			clearRandomSawedContainers(location, inventory);
+			clearFixedContainer(location, inventory);
 
-			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && lootContainerData.isSpawningContainerWithCooldown()) {
+		}
+	}
+
+	private void clearRandomSawedContainers(Location location, Inventory inventory) {
+		String randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
+		if(randomLootContainer != null){
+			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose()) {
 				location.getBlock().setType(Material.AIR);
-
 			}
 			if (inventory.getContents().length > 0) {
 				for (ItemStack itemStack : inventory) {
@@ -61,8 +60,31 @@ public class CloseContainer implements Listener {
 				}
 			}
 			inventory.clear();
+			Lootboxes.getInstance().getLootContainerRandomCache().removeCachedLootContainerLocation(location);
+		}
+	}
+
+	private void clearFixedContainer(Location location, Inventory inventory) {
+		LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
+		if (locationData == null) return;
+		LootContainerData lootContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
+		if (lootContainerData == null) return;
+		Map<Location, ContainerData> containerData = lootContainerData.getLinkedContainerData();
+		if (containerData == null || containerData.get(location) == null) {
+			return;
+		}
+
+		if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && lootContainerData.isSpawningContainerWithCooldown()) {
+			location.getBlock().setType(Material.AIR);
 
 		}
+		if (inventory.getContents().length > 0) {
+			for (ItemStack itemStack : inventory) {
+				if (itemStack == null) continue;
+				location.getWorld().dropItemNaturally(location, itemStack);
+			}
+		}
+		inventory.clear();
 	}
 
 	@Nullable

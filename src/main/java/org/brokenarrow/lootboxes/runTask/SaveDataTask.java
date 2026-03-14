@@ -21,6 +21,7 @@ public class SaveDataTask extends BukkitRunnable {
 	private final Map<YamlFileManager, String> cacheSave = new LinkedHashMap<>();
 	private final Map<YamlFileManager, String> tempcache = new ConcurrentHashMap<>();
 	private int amount;
+	private int time;
 	private final Lootboxes lootboxes;
 	private BukkitTask task;
 
@@ -35,6 +36,11 @@ public class SaveDataTask extends BukkitRunnable {
 		if (amount >= 20)
 			task();
 		amount++;
+		if(time >= 60) {
+			this.lootboxes.getLootContainerRandomCache().tickTask();
+			time = 0;
+		}
+		time++;
 	}
 
 	public void task() {
@@ -49,6 +55,7 @@ public class SaveDataTask extends BukkitRunnable {
 				cacheSave.keySet().forEach(tempcache::remove);
 			}, true);
 		}
+
 	}
 
 	public Map<YamlFileManager, String> getCacheSave() {

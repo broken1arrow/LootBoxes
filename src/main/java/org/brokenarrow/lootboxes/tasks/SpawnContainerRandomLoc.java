@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.BlockKey;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
@@ -55,27 +56,28 @@ public class SpawnContainerRandomLoc {
             Set<String> remove = new HashSet<>();
             for (Entry<String, Long> entry : this.cachedContainers.entrySet()) {
                 if (System.currentTimeMillis() >= entry.getValue()) {
-                    LootContainerData lootContainerData = containerDataCacheInstance.getCacheContainerData(entry.getKey());
+                    String key = entry.getKey();
+                    LootContainerData lootContainerData = containerDataCacheInstance.getCacheContainerData(key);
                     if (!lootContainerData.isRandomSpawn()) {
                         setRandomSpawnedContainer();
-                        remove.add(entry.getKey());
+                        remove.add(key);
                         continue;
                     }
 
                     if (lootContainerData.isSpawnContainerFromWorldCenter()) {
                         if (lootContainerData.getSpawnLocation() != null)
-                            spawnBlock(lootContainerData, lootContainerData.getSpawnLocation().getLocation(), null);
+                            spawnBlock(key, lootContainerData, lootContainerData.getSpawnLocation().getLocation(), null);
                     } else {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             Location location = player.getLocation();
                             DebugMessages.sendDebug("[SpawnContainerRandom] Trying spawn the chest");
                             if (!lootContainerData.hasPermissionForRandomSpawn(player)) {
-                                DebugMessages.sendDebug("[SpawnContainerRandom] Player '"+ player.getDisplayName()+"' don't have the permission, moving to next player.");
+                                DebugMessages.sendDebug("[SpawnContainerRandom] Player '" + player.getDisplayName() + "' don't have the permission, moving to next player.");
                                 continue;
                             }
                             boolean container = lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location);
                             if (container && lootContainerData.allowedWorldToSpawn(location))
-                                spawnBlock(lootContainerData, location, player);
+                                spawnBlock(key, lootContainerData, location, player);
                             else {
                                 if (!container)
                                     DebugMessages.sendDebug("[SpawnContainerRandom] Could not spawn the chest, protection did not allowed it.");
@@ -110,7 +112,7 @@ public class SpawnContainerRandomLoc {
         }
     }
 
-    public void spawnBlock(LootContainerData lootContainerData, Location location, Player player) {
+    public void spawnBlock(String key, LootContainerData lootContainerData, Location location, Player player) {
         if (location == null) return;
 
         Location loc = null;
@@ -120,8 +122,15 @@ public class SpawnContainerRandomLoc {
                 break;
         }
         if (loc != null) {
+            String lootTableLinked = lootContainerData.getLootTableLinked();
+            if (lootTableLinked == null || lootTableLinked.isEmpty()) {
+                DebugMessages.sendDebug("[SpawnContainerRandom] Loot table not set for container: " + key);
+                return;
+            }
+
             spawnContainer(lootContainerData, loc);
-            String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serilazeLoc(loc));
+            String serializeLoc = serilazeLoc(loc);
+            String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serializeLoc);
             if (lootContainerData.isShowTitle() && message != null && !message.isEmpty()) {
                 String[] mes = message.split("\\|");
                 if (player != null)
@@ -129,7 +138,7 @@ public class SpawnContainerRandomLoc {
                 else
                     Bukkit.broadcastMessage(mes.length > 0 ? mes[0] : "");
             }
-            String playerMessage = RANDOM_LOOT_MESAGE.languageMessagePrefix(serilazeLoc(loc));
+            String playerMessage = RANDOM_LOOT_MESAGE.languageMessagePrefix(serializeLoc);
             if (lootContainerData.isShowTitle() && playerMessage != null && !playerMessage.isEmpty()) {
                 if (player != null)
                     player.sendMessage(playerMessage);
@@ -143,6 +152,10 @@ public class SpawnContainerRandomLoc {
                     RunTimedTask.runtaskLater(20 * 120, () -> visulizeBlock(finalLoc.getBlock(), finalLoc, false), false);
                 }, false);
             }
+            DebugMessages.sendDebug("[SpawnContainerRandom] Spawned loot container at location: " + serializeLoc);
+            final Location finalLoc = loc;
+            Lootboxes.getInstance().getLootContainerRandomCache().putLootCachedLocation(BlockKey.of(loc), key);
+            Lootboxes.getInstance().getLootContainerRandomCache().save();
         } else {
             if (settings.isDebug())
                 logger.log(Level.INFO, "Could not find valid location for spawn random chest for this center location " + location + ".");

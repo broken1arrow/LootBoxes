@@ -126,7 +126,7 @@ public class WorldsAllowed extends MenuHolderPage<String> {
 
     private static List<String> getWorlds(String containerDataName) {
         LootContainerData cacheContainerData = Lootboxes.getInstance().getContainerDataCache().getCacheContainerData(containerDataName);
-        if (cacheContainerData == null)
+        if (cacheContainerData == null || cacheContainerData.getWorlds() == null)
             return new ArrayList<>();
         return new ArrayList<>(cacheContainerData.getWorlds());
     }
