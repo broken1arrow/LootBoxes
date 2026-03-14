@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.listener;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -62,7 +62,7 @@ public class PlayerClick implements Listener {
 				Location location = blockPlaced.getLocation();
 
 				String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
-				ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
+				LootContainerData data = containerDataCache.getCacheContainerData(metadata);
 				LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
 
 				if (locationData != null) {
@@ -94,7 +94,7 @@ public class PlayerClick implements Listener {
 				if (!player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
 
 				String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
-				ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
+				LootContainerData data = containerDataCache.getCacheContainerData(metadata);
 				if (data == null) return;
 				removeData(data, location, metadata);
 				ADD_CONTINERS_RIGHT_CLICK_BLOCK.sendMessage(player, location);
@@ -126,7 +126,7 @@ public class PlayerClick implements Listener {
 		Location location = block.getLocation();
 		if (checkBlockIsContainer(block)) {
 			String metadata = (String) player.getMetadata(ADD_AND_REMOVE_CONTAINERS.name()).get(0).value();
-			ContainerDataBuilder data = containerDataCache.getCacheContainerData(metadata);
+			LootContainerData data = containerDataCache.getCacheContainerData(metadata);
 			LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
 			String itemMetadata = null;
 			if (event.getItem() != null)
@@ -156,14 +156,14 @@ public class PlayerClick implements Listener {
 		}
 	}
 
-	public void removeData(ContainerDataBuilder data, Location location, String metadata) {
+	public void removeData(LootContainerData data, Location location, String metadata) {
 		Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
 		containerDataMap.remove(location);
 
-		containerDataCache.write(metadata, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setContainerData(containerDataMap));
+		containerDataCache.write(metadata, (Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setContainerData(containerDataMap));
 	}
 
-	public boolean addData(Block block, ContainerDataBuilder data, Location location, String metadata) {
+	public boolean addData(Block block, LootContainerData data, Location location, String metadata) {
 		return containerDataCache.write(metadata, builder -> {
 			Map<Location, ContainerData> containerDataMap = data.getLinkedContainerData();
 			if (lootboxes.getServerVersion().olderThan(Version.v1_13)) {

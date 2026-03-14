@@ -2,7 +2,7 @@ package org.brokenarrow.lootboxes.commands;
 
 import org.broken.arrow.library.command.command.CommandHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -54,7 +54,7 @@ public class GetKeyCommand extends CommandHolder {
 					amount = Integer.parseInt(cmdArgs[3]);
 				String lootTableName = keysData.getLootTableLinked();
 				if (lootTableName == null || lootTableName.isEmpty()){
-					ContainerDataBuilder containerDataCache = containerDataCacheInstance.getCacheContainerData(cmdArgs[1]);
+					LootContainerData containerDataCache = containerDataCacheInstance.getCacheContainerData(cmdArgs[1]);
 					if (containerDataCache != null){
 						lootTableName =  containerDataCache.getLootTableLinked() != null && !containerDataCache.getLootTableLinked().isEmpty() ?  containerDataCache.getLootTableLinked(): null;
 					}
@@ -80,9 +80,9 @@ public class GetKeyCommand extends CommandHolder {
 		String containerData = joinRange(1);
 		String key = joinRange(2);
 		Set<String> keySet = containerDataCacheInstance.getCacheContainerData().keySet();
-		ContainerDataBuilder containerDataBuilder = null;
+		LootContainerData lootContainerData = null;
 		if (cmdArgs.length >= 2) {
-			containerDataBuilder = containerDataCacheInstance.getCacheContainerData(containerData.trim());
+			lootContainerData = containerDataCacheInstance.getCacheContainerData(containerData.trim());
 		}
 		if (cmdArgs.length == 1) {
 			return TabUtil.complete(players, Bukkit.getOnlinePlayers().stream().map(Player::getDisplayName).collect(Collectors.toList()));
@@ -90,8 +90,8 @@ public class GetKeyCommand extends CommandHolder {
 		if (cmdArgs.length == 2)
 			return TabUtil.complete(containerData, keySet);
 		if (cmdArgs.length >= 3) {
-			if (containerDataBuilder != null) {
-				return TabUtil.complete(key, containerDataBuilder.getKeysData().keySet());
+			if (lootContainerData != null) {
+				return TabUtil.complete(key, lootContainerData.getKeysData().keySet());
 			}
 		}
 		if (cmdArgs.length == 4) {

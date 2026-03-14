@@ -2,9 +2,9 @@ package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.DebugMessages;
 import org.brokenarrow.lootboxes.untlity.Facing;
@@ -38,7 +38,7 @@ public class SpawnContainerRandomLoc {
     private final Settings settingsData = Lootboxes.getInstance().getSettings();
     private SettingsData settings;
     private final Map<String, Long> cachedContainers = new HashMap<>();
-    private final ContainerDataCacheLegacy containerDataCacheInstance = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCacheInstance = Lootboxes.getInstance().getContainerDataCache();
     private final Lootboxes lootboxes = Lootboxes.getInstance();
     private final RandomUntility randomUntility = lootboxes.getRandomUntility();
 
@@ -55,36 +55,36 @@ public class SpawnContainerRandomLoc {
             Set<String> remove = new HashSet<>();
             for (Entry<String, Long> entry : this.cachedContainers.entrySet()) {
                 if (System.currentTimeMillis() >= entry.getValue()) {
-                    ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(entry.getKey());
-                    if (!containerDataBuilder.isRandomSpawn()) {
+                    LootContainerData lootContainerData = containerDataCacheInstance.getCacheContainerData(entry.getKey());
+                    if (!lootContainerData.isRandomSpawn()) {
                         setRandomSpawnedContainer();
                         remove.add(entry.getKey());
                         continue;
                     }
 
-                    if (containerDataBuilder.isSpawnContainerFromWorldCenter()) {
-                        if (containerDataBuilder.getSpawnLocation() != null)
-                            spawnBlock(containerDataBuilder, containerDataBuilder.getSpawnLocation().getLocation(), null);
+                    if (lootContainerData.isSpawnContainerFromWorldCenter()) {
+                        if (lootContainerData.getSpawnLocation() != null)
+                            spawnBlock(lootContainerData, lootContainerData.getSpawnLocation().getLocation(), null);
                     } else {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             Location location = player.getLocation();
                             DebugMessages.sendDebug("[SpawnContainerRandom] Trying spawn the chest");
-                            if (!containerDataBuilder.hasPermissionForRandomSpawn(player)) {
+                            if (!lootContainerData.hasPermissionForRandomSpawn(player)) {
                                 DebugMessages.sendDebug("[SpawnContainerRandom] Player '"+ player.getDisplayName()+"' don't have the permission, moving to next player.");
                                 continue;
                             }
                             boolean container = lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(location);
-                            if (container && containerDataBuilder.allowedWorldToSpawn(location))
-                                spawnBlock(containerDataBuilder, location, player);
+                            if (container && lootContainerData.allowedWorldToSpawn(location))
+                                spawnBlock(lootContainerData, location, player);
                             else {
                                 if (!container)
                                     DebugMessages.sendDebug("[SpawnContainerRandom] Could not spawn the chest, protection did not allowed it.");
-                                if (!containerDataBuilder.allowedWorldToSpawn(location))
+                                if (!lootContainerData.allowedWorldToSpawn(location))
                                     DebugMessages.sendDebug("[SpawnContainerRandom] Could not spawn the chest, the world is blacklisted: " + location.getWorld());
                             }
                         }
                     }
-                    long time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
+                    long time = System.currentTimeMillis() + (1000 * lootContainerData.getCooldown());
                     entry.setValue(time);
                 }
             }
@@ -100,29 +100,29 @@ public class SpawnContainerRandomLoc {
     }
 
     public void setRandomSpawnedContainer() {
-        for (Entry<String, ContainerDataBuilder> builderEntry : containerDataCacheInstance.getCacheContainerData().entrySet()) {
-            ContainerDataBuilder containerDataBuilder = builderEntry.getValue();
-            if (containerDataBuilder.isRandomSpawn()) {
-                long time = System.currentTimeMillis() + (1000 * containerDataBuilder.getCooldown());
+        for (Entry<String, LootContainerData> builderEntry : containerDataCacheInstance.getCacheContainerData().entrySet()) {
+            LootContainerData lootContainerData = builderEntry.getValue();
+            if (lootContainerData.isRandomSpawn()) {
+                long time = System.currentTimeMillis() + (1000 * lootContainerData.getCooldown());
                 cachedContainers.put(builderEntry.getKey(), time);
                 return;
             }
         }
     }
 
-    public void spawnBlock(ContainerDataBuilder containerDataBuilder, Location location, Player player) {
+    public void spawnBlock(LootContainerData lootContainerData, Location location, Player player) {
         if (location == null) return;
 
         Location loc = null;
-        for (int i = 0; i < containerDataBuilder.getAttempts(); i++) {
-            loc = checkLocation(location.clone(), player, containerDataBuilder);
+        for (int i = 0; i < lootContainerData.getAttempts(); i++) {
+            loc = checkLocation(location.clone(), player, lootContainerData);
             if (loc != null)
                 break;
         }
         if (loc != null) {
-            spawnContainer(containerDataBuilder, loc);
+            spawnContainer(lootContainerData, loc);
             String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serilazeLoc(loc));
-            if (containerDataBuilder.isShowTitle() && message != null && !message.isEmpty()) {
+            if (lootContainerData.isShowTitle() && message != null && !message.isEmpty()) {
                 String[] mes = message.split("\\|");
                 if (player != null)
                     player.sendTitle(mes.length > 0 ? mes[0] : "", mes.length > 1 ? mes[1] : "", 1, 20 * 20, 1);
@@ -130,13 +130,13 @@ public class SpawnContainerRandomLoc {
                     Bukkit.broadcastMessage(mes.length > 0 ? mes[0] : "");
             }
             String playerMessage = RANDOM_LOOT_MESAGE.languageMessagePrefix(serilazeLoc(loc));
-            if (containerDataBuilder.isShowTitle() && playerMessage != null && !playerMessage.isEmpty()) {
+            if (lootContainerData.isShowTitle() && playerMessage != null && !playerMessage.isEmpty()) {
                 if (player != null)
                     player.sendMessage(playerMessage);
                 else
                     Bukkit.broadcastMessage(playerMessage);
             }
-            if (containerDataBuilder.isContainerShallGlow()) {
+            if (lootContainerData.isContainerShallGlow()) {
                 final Location finalLoc = loc;
                 RunTimedTask.runtaskLater(20 * 5, () -> {
                     visulizeBlock(finalLoc.getBlock(), finalLoc, true);
@@ -150,7 +150,7 @@ public class SpawnContainerRandomLoc {
 
     }
 
-    public void spawnContainer(ContainerDataBuilder containerData, Location location) {
+    public void spawnContainer(LootContainerData containerData, Location location) {
         Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
         String lootTableLinked = containerData.getLootTableLinked();
         if (containerData.isRandomSpawn()) {
@@ -191,14 +191,14 @@ public class SpawnContainerRandomLoc {
         }
     }
 
-    private Location checkLocation(Location location, Player player, ContainerDataBuilder containerDataBuilder) {
-        int minRadius = containerDataBuilder.getMinRadius();
-        int maxRadius = containerDataBuilder.getMaxRadius();
+    private Location checkLocation(Location location, Player player, LootContainerData lootContainerData) {
+        int minRadius = lootContainerData.getMinRadius();
+        int maxRadius = lootContainerData.getMaxRadius();
 
         Location locationSubtracted = randomUntility.nextLocation(location.clone(), minRadius, maxRadius, true, true);
         if (!lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(locationSubtracted))
             return null;
-        if (containerDataBuilder.isSpawnOnSurface()) {
+        if (lootContainerData.isSpawnOnSurface()) {
             World world = location.getWorld();
             int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
             return new Location(location.getWorld(), locationSubtracted.getBlockX(), highestBlock + 1, locationSubtracted.getBlockZ());

@@ -7,9 +7,9 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.commandprompt.AddWorldPrompt;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.entity.Player;
@@ -20,20 +20,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class WorldsAllowed extends MenuHolderPage<String> {
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final MenuTemplate guiTemplate;
     private final String containerDataName;
-    private ContainerDataBuilder containerDataBuilder;
+
 
     public WorldsAllowed(String containerDataName) {
         super(getWorlds(containerDataName));
         this.containerDataName = containerDataName;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Worlds_Allowed");
-        this.containerDataBuilder = ContainerDataCacheLegacy.getInstance().getCacheContainerData(containerDataName);
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
@@ -80,7 +80,8 @@ public class WorldsAllowed extends MenuHolderPage<String> {
         }
 
         if (button.isActionTypeEqual("Type_world_name")) {
-            new AddWorldPrompt(containerDataName, this.containerDataBuilder).start(player);
+            this.containerDataCache.read(containerDataName, (Consumer<LootContainerData>) containerBuilder ->
+            new AddWorldPrompt(containerDataName, containerBuilder).start(player));
         }
 
         if (button.isActionTypeEqual("Back_button")) {
@@ -93,46 +94,44 @@ public class WorldsAllowed extends MenuHolderPage<String> {
     @Override
     public FillMenuButton<String> createFillMenuButton() {
         return new FillMenuButton<>((player1, menu, click, clickedItem, worldName) -> {
-            final ContainerDataBuilder.Builder builder = this.containerDataBuilder.getBuilder();
-            if (worldName == null) return ButtonUpdateAction.NONE;
-            if (click.isLeftClick()) {
-            } else {
-                builder.removeWorld(worldName);
-            }
-
-            ContainerDataBuilder build = builder.build();
-            containerDataCache.setContainerData(containerDataName, build);
-            if (build.isSpawningContainerWithCooldown()) {
-                containerDataCache.addContainerToSpawnTask(this.containerDataName, build.getCooldown());
-            }
-            this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-
-            return ButtonUpdateAction.ALL;
+            return this.containerDataCache.write(containerDataName, containerBuilder -> {
+                if (worldName == null) return ButtonUpdateAction.NONE;
+                if (click.isLeftClick()) {
+                } else {
+                    containerBuilder.removeWorld(worldName);
+                }
+                if (containerBuilder.isSpawningContainerWithCooldown()) {
+                    containerDataCache.addContainerToSpawnTask(this.containerDataName, containerBuilder.getCooldown());
+                }
+                return ButtonUpdateAction.ALL;
+            });
         }, (slot, worldName) -> {
             final MenuButtonData button = this.guiTemplate.getMenuButton(-1);
             if (button == null) return null;
             if (worldName == null) return null;
 
-            org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-            final Object[] placeholders = setPlaceholders(worldName, containerDataBuilder);
-            final boolean hasWorldSet = containerDataBuilder.contains(worldName);
-            if (hasWorldSet)
-            return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                            TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-                            TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                    .makeItemStack();
-            return null;
+            return this.containerDataCache.read(containerDataName, containerBuilder -> {
+                org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
+                final Object[] placeholders = setPlaceholders(worldName, containerBuilder);
+                final boolean hasWorldSet = containerBuilder.contains(worldName);
+                if (hasWorldSet)
+                    return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
+                                    TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
+                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+                            .makeItemStack();
+                return null;
+            });
         });
     }
 
     private static List<String> getWorlds(String containerDataName) {
-        ContainerDataBuilder cacheContainerData = ContainerDataCacheLegacy.getInstance().getCacheContainerData(containerDataName);
+        LootContainerData cacheContainerData = Lootboxes.getInstance().getContainerDataCache().getCacheContainerData(containerDataName);
         if (cacheContainerData == null)
             return new ArrayList<>();
         return new ArrayList<>(cacheContainerData.getWorlds());
     }
 
-    public Object[] setPlaceholders(String worldName, ContainerDataBuilder containerDataBuilder) {
+    public Object[] setPlaceholders(String worldName, LootContainerData lootContainerData) {
         Object[] placeholders = getPlaceholders(worldName != null ? worldName : "not exist or not loaded");
         return placeholders;
     }

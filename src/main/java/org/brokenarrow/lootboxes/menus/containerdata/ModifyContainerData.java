@@ -1,15 +1,15 @@
 package org.brokenarrow.lootboxes.menus.containerdata;
 
-import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
-import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
 import org.broken.arrow.library.menu.button.logic.FillMenuButton;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.commandprompt.CreateContainerDataName;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.MainMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -22,14 +22,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class ModifyContainerData extends MenuHolderPage<String> {
-
     private final KeyDropData keyDropData = KeyDropData.getInstance();
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 
     private final MenuTemplate guiTemplate;
 
     public ModifyContainerData() {
-        super(ContainerDataCacheLegacy.getInstance().getContainerData());
+        super(Lootboxes.getInstance().getContainerDataCache().getContainerData());
         this.guiTemplate = Lootboxes.getInstance().getMenu("Containers_list");
 
         setUseColorConversion(true);
@@ -113,7 +112,7 @@ public class ModifyContainerData extends MenuHolderPage<String> {
         }, (slot, containerKeyName) -> {
             org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
             if (containerKeyName != null) {
-                final ContainerDataBuilder data = containerDataCache.getCacheContainerData(containerKeyName);
+                final LootContainerData data = containerDataCache.getCacheContainerData(containerKeyName);
                 if (data != null) {
                     String tableLinked = data.getLootTableLinked();
                     final String tableLink = tableLinked == null || tableLinked.isEmpty() ? "non" : tableLinked;

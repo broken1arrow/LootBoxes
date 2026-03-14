@@ -4,7 +4,7 @@ import org.broken.arrow.library.menu.utility.ServerVersion;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
@@ -43,14 +43,14 @@ public class CloseContainer implements Listener {
 		if (inventory != null) {
 			LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
 			if (locationData == null) return;
-			ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(locationData.getContainerKey());
-			if (containerDataBuilder == null) return;
-			Map<Location, ContainerData> containerData = containerDataBuilder.getLinkedContainerData();
+			LootContainerData lootContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
+			if (lootContainerData == null) return;
+			Map<Location, ContainerData> containerData = lootContainerData.getLinkedContainerData();
 			if (containerData == null || containerData.get(location) == null) {
 				return;
 			}
 
-			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && containerDataBuilder.isSpawningContainerWithCooldown()) {
+			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && lootContainerData.isSpawningContainerWithCooldown()) {
 				location.getBlock().setType(Material.AIR);
 
 			}

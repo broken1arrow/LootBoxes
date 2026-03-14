@@ -22,25 +22,25 @@ import java.util.stream.Collectors;
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
 public class ContainerDataCache extends YamlFileManager {
-    private final Map<String, ContainerDataBuilder> cacheContainerData = new HashMap<>();
+    private final Map<String, LootContainerData> cacheContainerData = new HashMap<>();
     private final ContainerLocationCache containerLocationCache = new ContainerLocationCache();
     private final ChunkDataCache chunkDataCache = new ChunkDataCache();
 
     public ContainerDataCache() {
-        super(Lootboxes.getInstance(), "containers", false, true);
+        super(Lootboxes.getInstance(), "lootContainers", false, true);
         this.setExtension("db");
     }
 
-    public Map<String, ContainerDataBuilder> getCacheContainerData() {
+    public Map<String, LootContainerData> getCacheContainerData() {
         return this.cacheContainerData;
     }
 
-    public void setContainerData(final String containerData, final ContainerDataBuilder containerDataBuilder) {
-        this.cacheContainerData.put(containerData, containerDataBuilder);
+    public void setContainerData(final String containerData, final LootContainerData lootContainerData) {
+        this.cacheContainerData.put(containerData, lootContainerData);
         this.addCachedLocation(containerData, new HashMap<>(), new HashMap<>());
-        if (!containerDataBuilder.isSpawningContainerWithCooldown())
-            addContainerToSpawnTask(containerData, containerDataBuilder.getCooldown());
-        final ContainerDataBuilder data = this.getCacheContainerData(containerData);
+        if (!lootContainerData.isSpawningContainerWithCooldown())
+            addContainerToSpawnTask(containerData, lootContainerData.getCooldown());
+        final LootContainerData data = this.getCacheContainerData(containerData);
         if (data != null) {
             for (final Location location : data.getLinkedContainerData().keySet()) {
                 this.getChunkDataCache().setChunkData(location);
@@ -50,24 +50,32 @@ public class ContainerDataCache extends YamlFileManager {
         saveTask();
     }
 
-    public <T> T write(final String containerKey, final Function<ContainerDataBuilder.Builder, T> containerDataBuilder) {
-        ContainerDataBuilder builder = getOrCreateCacheContainerData(containerKey);
-        ContainerDataBuilder.Builder containerBuilder = builder.getBuilder();
-        T data = containerDataBuilder.apply(containerBuilder);
-        cacheContainer(containerKey, containerBuilder);
+    public <T> T write(final String containerKey, final Function<LootContainerData.LootContainerBuilder, T> containerDataBuilder) {
+        LootContainerData builder = getOrCreateCacheContainerData(containerKey);
+        LootContainerData.LootContainerBuilder containerLootContainerBuilder = builder.getBuilder();
+        T data = containerDataBuilder.apply(containerLootContainerBuilder);
+        cacheContainer(containerKey, containerLootContainerBuilder);
         return data;
     }
 
-    public void write(final String containerKey, final Consumer<ContainerDataBuilder.Builder> callback) {
-        ContainerDataBuilder builder = getOrCreateCacheContainerData(containerKey);
-        ContainerDataBuilder.Builder containerBuilder = builder.getBuilder();
-        callback.accept(containerBuilder);
-        cacheContainer(containerKey, containerBuilder);
+    public void write(final String containerKey, final Consumer<LootContainerData.LootContainerBuilder> callback) {
+        LootContainerData builder = getOrCreateCacheContainerData(containerKey);
+        LootContainerData.LootContainerBuilder containerLootContainerBuilder = builder.getBuilder();
+        callback.accept(containerLootContainerBuilder);
+        cacheContainer(containerKey, containerLootContainerBuilder);
     }
 
-    public <T> T read(final String containerKey, final Function<ContainerDataBuilder, T> callBack) {
-        ContainerDataBuilder builder = getOrCreateCacheContainerData(containerKey);
+    @Nullable
+    public <T> T read(final String containerKey, final Function<LootContainerData, T> callBack) {
+        LootContainerData builder = getCacheContainerData(containerKey);
+        if (builder == null) return null;
         return callBack.apply(builder);
+    }
+
+    public void read(final String containerKey, final Consumer<LootContainerData> callBack) {
+        LootContainerData builder = getCacheContainerData(containerKey);
+        if (builder == null) return;
+        callBack.accept(builder);
     }
 
     public List<String> getContainerData() {
@@ -77,11 +85,11 @@ public class ContainerDataCache extends YamlFileManager {
     public void addCachedLocation(final String containerDataName, final Map<Location, ContainerData> map, final Map<String, KeysData> keysDataMap) {
         final Set<Location> linkedContainerData;
         final Map<String, KeysData> cacheKeysData;
-        if (map.isEmpty()) {
+        if (map == null || map.isEmpty()) {
             linkedContainerData = this.getLinkedContainers(containerDataName).keySet();
         } else
             linkedContainerData = map.keySet();
-        if (keysDataMap.isEmpty()) {
+        if (keysDataMap == null || keysDataMap.isEmpty()) {
             cacheKeysData = this.getCacheKeysData(containerDataName);
         } else
             cacheKeysData = keysDataMap;
@@ -96,7 +104,7 @@ public class ContainerDataCache extends YamlFileManager {
     public void setNewContainerData(String container, final Material material) {
         if (container.contains(" "))
             container = container.trim().replace(" ", "_");
-        final ContainerDataBuilder builder = new ContainerDataBuilder.Builder()
+        final LootContainerData builder = new LootContainerData.LootContainerBuilder()
                 .setContainerDataLinkedToLootTable("")
                 .setSpawningContainerWithCooldown(true)
                 .setRandomLootContainerFacing(Facing.RANDOM)
@@ -119,28 +127,28 @@ public class ContainerDataCache extends YamlFileManager {
         this.addContainerToSpawnTask(container, 1800);
     }
 
-    public ContainerDataBuilder getCacheContainerData(final String containerKey) {
+    public LootContainerData getCacheContainerData(final String containerKey) {
         return this.getCacheContainerData().get(containerKey);
     }
 
     @NotNull
-    public ContainerDataBuilder getOrCreateCacheContainerData(final String containerKey) {
-        return this.getCacheContainerData().getOrDefault(containerKey, new ContainerDataBuilder.Builder().build());
+    public LootContainerData getOrCreateCacheContainerData(final String containerKey) {
+        return this.getCacheContainerData().getOrDefault(containerKey, new LootContainerData.LootContainerBuilder().build());
     }
 
     @Nullable
     public ParticleEffect getParticleEffect(final String container, Object particle) {
-        ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
-        if (containerDataBuilder != null)
-            return containerDataBuilder.getParticleEffect(particle);
+        LootContainerData lootContainerData = this.getCacheContainerData(container);
+        if (lootContainerData != null)
+            return lootContainerData.getParticleEffect(particle);
         return null;
     }
 
     public List<?> getParticlesList(final String containerKey) {
-        ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerKey);
-        if (containerDataBuilder != null) {
+        LootContainerData lootContainerData = this.getCacheContainerData(containerKey);
+        if (lootContainerData != null) {
 
-            Map<Object, ParticleEffect> particleEffects = containerDataBuilder.getParticleEffects();
+            Map<Object, ParticleEffect> particleEffects = lootContainerData.getParticleEffects();
             if (particleEffects != null)
                 if (org.broken.arrow.library.menu.utility.ServerVersion.atLeast(13.0))
                     return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
@@ -151,10 +159,10 @@ public class ContainerDataCache extends YamlFileManager {
     }
 
     public List<ParticleEffect> getParticleEffectList(final String container) {
-        ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
-        if (containerDataBuilder != null) {
+        LootContainerData lootContainerData = this.getCacheContainerData(container);
+        if (lootContainerData != null) {
 
-            Map<Object, ParticleEffect> list = containerDataBuilder.getParticleEffects();
+            Map<Object, ParticleEffect> list = lootContainerData.getParticleEffects();
             if (list != null)
                 return new ArrayList<>(list.values());
         }
@@ -164,19 +172,19 @@ public class ContainerDataCache extends YamlFileManager {
     public boolean containsParticleEffect(@NotNull final String containerData, Object particle) {
         if (particle == null) return false;
 
-        ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerData);
-        if (containerDataBuilder == null) return false;
+        LootContainerData lootContainerData = this.getCacheContainerData(containerData);
+        if (lootContainerData == null) return false;
 
-        Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null || particleEffect.isEmpty()) return false;
 
         return particleEffect.containsKey(particle);
     }
 
-    public boolean containsParticleEffect(@NotNull final ContainerDataBuilder containerDataBuilder, Object particle) {
+    public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData, Object particle) {
         if (particle == null) return false;
 
-        Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null || particleEffect.isEmpty()) return false;
 
         return particleEffect.containsKey(particle);
@@ -185,34 +193,34 @@ public class ContainerDataCache extends YamlFileManager {
     public void removeParticleEffect(@NotNull final String containerData, Object particle) {
         if (particle == null) return;
 
-        ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerData);
-        if (containerDataBuilder == null) return;
+        LootContainerData lootContainerData = this.getCacheContainerData(containerData);
+        if (lootContainerData == null) return;
 
-        Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect.isEmpty()) return;
 
         particleEffect.remove(particle);
     }
 
-    public void removeParticleEffect(@NotNull final ContainerDataBuilder containerDataBuilder, Object particle) {
+    public void removeParticleEffect(@NotNull final LootContainerData lootContainerData, Object particle) {
         if (particle == null) return;
 
-        Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null || particleEffect.isEmpty()) return;
 
         particleEffect.remove(particle);
-        addContainerToEffectList(containerDataBuilder);
+        addContainerToEffectList(lootContainerData);
     }
 
     public void setParticleEffects(@NotNull final String containerDataName, @NotNull Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
-        ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataName);
-        final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-        Map<Object, ParticleEffect> particleEffect = containerDataBuilder.getParticleEffects();
+        LootContainerData lootContainerData = this.getCacheContainerData(containerDataName);
+        final LootContainerData.LootContainerBuilder lootContainerBuilder = lootContainerData.getBuilder();
+        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null) particleEffect = new HashMap<>();
 
         particleEffect.put(particle, particleBuilder.build());
-        builder.setParticleEffects(particleEffect);
-        ContainerDataBuilder containerData = builder.build();
+        lootContainerBuilder.setParticleEffects(particleEffect);
+        LootContainerData containerData = lootContainerBuilder.build();
         this.setContainerData(containerDataName, containerData);
         addContainerToEffectList(containerData);
     }
@@ -226,30 +234,30 @@ public class ContainerDataCache extends YamlFileManager {
     }
 
     public Map<Location, ContainerData> getLinkedContainerData(final String container) {
-        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
-        if (containerDataBuilder != null) {
-            if (containerDataBuilder.getLinkedContainerData() != null)
-                return containerDataBuilder.getLinkedContainerData();
+        final LootContainerData lootContainerData = this.getCacheContainerData(container);
+        if (lootContainerData != null) {
+            if (lootContainerData.getLinkedContainerData() != null)
+                return lootContainerData.getLinkedContainerData();
             else new HashMap<>();
         }
 
         return new HashMap<>();
     }
 
-    public ContainerDataBuilder.Builder getCacheContainerBuilder(final String container) {
-        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(container);
-        if (containerDataBuilder != null)
-            return containerDataBuilder.getBuilder();
+    public LootContainerData.LootContainerBuilder getCacheContainerBuilder(final String container) {
+        final LootContainerData lootContainerData = this.getCacheContainerData(container);
+        if (lootContainerData != null)
+            return lootContainerData.getBuilder();
 
         return null;
     }
 
     public KeysData getCacheKey(final String containerKey, final String keyName) {
-        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerKey);
-        if (containerDataBuilder != null) {
+        final LootContainerData lootContainerData = this.getCacheContainerData(containerKey);
+        if (lootContainerData != null) {
             if (keyName.startsWith("Keys_"))
-                return containerDataBuilder.getKeysData().get(keyName);
-            return containerDataBuilder.getKeysData().get(keyName);
+                return lootContainerData.getKeysData().get(keyName);
+            return lootContainerData.getKeysData().get(keyName);
         }
 
         return null;
@@ -257,9 +265,9 @@ public class ContainerDataCache extends YamlFileManager {
 
 
     public Map<Location, ContainerData> getLinkedContainers(final String containerDataCacheName) {
-        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
-        if (containerDataBuilder != null)
-            return containerDataBuilder.getLinkedContainerData();
+        final LootContainerData lootContainerData = this.getCacheContainerData(containerDataCacheName);
+        if (lootContainerData != null)
+            return lootContainerData.getLinkedContainerData();
 
         return new HashMap<>();
     }
@@ -275,15 +283,15 @@ public class ContainerDataCache extends YamlFileManager {
     }
 
     public Map<String, KeysData> getCacheKeysData(final String containerDataCacheName) {
-        final ContainerDataBuilder containerDataBuilder = this.getCacheContainerData(containerDataCacheName);
-        if (containerDataBuilder != null)
-            return containerDataBuilder.getKeysData();
+        final LootContainerData lootContainerData = this.getCacheContainerData(containerDataCacheName);
+        if (lootContainerData != null)
+            return lootContainerData.getKeysData();
 
         return new HashMap<>();
     }
 
     public boolean containsKeyName(final String containerData, final String keyName) {
-        final ContainerDataBuilder builder = getCacheContainerData(containerData);
+        final LootContainerData builder = getCacheContainerData(containerData);
 
         return builder != null && builder.getKeysData().get(keyName) != null;
 
@@ -292,10 +300,13 @@ public class ContainerDataCache extends YamlFileManager {
     public List<String> getListOfKeys(final String containerDataCacheName) {
         final List<String> keyNameList = new ArrayList<>();
 
-        for (final String keyName : this.getCacheKeysData(containerDataCacheName).keySet())
-            if (keyName != null) {
-                keyNameList.add(keyName);
-            }
+        Map<String, KeysData> cacheKeysData = this.getCacheKeysData(containerDataCacheName);
+        if(cacheKeysData != null) {
+            for (final String keyName : cacheKeysData.keySet())
+                if (keyName != null) {
+                    keyNameList.add(keyName);
+                }
+        }
         return keyNameList;
     }
 
@@ -307,8 +318,8 @@ public class ContainerDataCache extends YamlFileManager {
         Lootboxes.getInstance().getSpawnedContainers().setCachedTimeMap(mainKey, cooldown);
     }
 
-    public void addContainerToEffectList(final ContainerDataBuilder containerDataBuilder) {
-        Map<Location, ContainerData> linkedContainerData = containerDataBuilder.getLinkedContainerData();
+    public void addContainerToEffectList(final LootContainerData lootContainerData) {
+        Map<Location, ContainerData> linkedContainerData = lootContainerData.getLinkedContainerData();
         if (linkedContainerData == null || linkedContainerData.isEmpty()) return;
 
         for (Location location : linkedContainerData.keySet())
@@ -323,10 +334,10 @@ public class ContainerDataCache extends YamlFileManager {
     protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
         try {
             FileConfiguration configuration = new YamlConfiguration();
-            for (final Map.Entry<String, ContainerDataBuilder> childrenKey : cacheContainerData.entrySet()) {
+            for (final Map.Entry<String, LootContainerData> childrenKey : cacheContainerData.entrySet()) {
                 if (childrenKey != null) {
                     configuration.set("Data", childrenKey.getValue());
-                    this.saveToFile(new File(this.getDataFolder(), "containers/" + childrenKey.getKey() + ".db"), configuration);
+                    this.saveToFile(new File(this.getDataFolder(), "lootContainers/" + childrenKey.getKey() + ".db"), configuration);
                 }
             }
         } catch (final Exception ex) {
@@ -336,23 +347,23 @@ public class ContainerDataCache extends YamlFileManager {
 
     @Override
     protected void loadSettingsFromYaml(final File file, FileConfiguration configuration) {
-        ContainerDataBuilder containerDataBuilder;
+        LootContainerData lootContainerData;
         if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_13))
-            containerDataBuilder = configuration.getSerializable("Data", ContainerDataBuilder.class);
+            lootContainerData = configuration.getSerializable("Data", LootContainerData.class);
         else
-            containerDataBuilder = (ContainerDataBuilder) configuration.get("Data", ContainerDataBuilder.class);
-        if (containerDataBuilder == null) return;
+            lootContainerData = (LootContainerData) configuration.get("Data", LootContainerData.class);
+        if (lootContainerData == null) return;
 
         final String containerName = this.getNameOfFile(file.toString());
-        addCachedLocation(containerName, containerDataBuilder.getLinkedContainerData(), containerDataBuilder.getKeysData());
+        addCachedLocation(containerName, lootContainerData.getLinkedContainerData(), lootContainerData.getKeysData());
 
-        cacheContainerData.put(containerName, containerDataBuilder);
-        if (containerDataBuilder.isSpawningContainerWithCooldown())
-            addContainerToSpawnTask(containerName, containerDataBuilder.getCooldown());
+        cacheContainerData.put(containerName, lootContainerData);
+        if (lootContainerData.isSpawningContainerWithCooldown())
+            addContainerToSpawnTask(containerName, lootContainerData.getCooldown());
     }
 
-    private void cacheContainer(@NotNull final String containerKey,@NotNull  final ContainerDataBuilder.Builder containerBuilder) {
-        ContainerDataBuilder built = containerBuilder.build();
+    private void cacheContainer(@NotNull final String containerKey, @NotNull final LootContainerData.LootContainerBuilder containerLootContainerBuilder) {
+        LootContainerData built = containerLootContainerBuilder.build();
         this.cacheContainerData.put(containerKey, built);
 
         if (!built.isSpawningContainerWithCooldown())

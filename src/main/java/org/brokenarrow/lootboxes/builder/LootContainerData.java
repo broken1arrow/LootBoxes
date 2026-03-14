@@ -21,7 +21,8 @@ import static org.broken.arrow.library.serialize.utility.converters.ObjectConver
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castList;
 import static org.brokenarrow.lootboxes.untlity.CheckCastToClazz.castMap;
 
-public class ContainerDataBuilder implements ConfigurationSerializable {
+
+public class LootContainerData implements ConfigurationSerializable {
     String lootTableLinked;
     String permissionForRandomSpawn;
     Material icon;
@@ -109,7 +110,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
 
     @Nullable
     public KeysData getKeysData(@NotNull final String keyName) {
-        return keysData.get(keyName);
+       return keysData.get(keyName);
     }
 
     public LocationWrapper getSpawnLocation() {
@@ -187,38 +188,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
         return lootContainerBuilder;
     }
 
-    public LootContainerData convertToLootContainer() {
-        LootContainerData.LootContainerBuilder lootContainerData = new LootContainerData.LootContainerBuilder();
-        lootContainerData
-                .setContainerData(this.containerData)
-                .setContainerDataLinkedToLootTable(lootTableLinked)
-                .setSpawningContainerWithCooldown(spawningContainerWithCooldown)
-                .setCooldown(cooldown)
-                .setParticleEffects(particleEffects != null ? particleEffects : new HashMap<>())
-                .setRandomLootWorlds(worlds != null ? new ArrayList<>(worlds) : new ArrayList<>())
-                .setEnchant(enchant)
-                .setIcon(icon)
-                .setRandomLootContainerItem(randomLootContainerItem)
-                .setRandomLootContainerFacing(randomLootContainerFacing)
-                .setDisplayName(displayName)
-                .setLore(lore)
-                .setContainerShallGlow(containerShallGlow)
-                .setShowTitle(showTitle)
-                .setRandomSpawn(randomSpawn)
-                .setContainerData(containerData)
-                .setKeysData(keysData)
-                .setAttempts(attempts)
-                .setSpawnContainerFromWorldCenter(spawnContainerFromWorldCenter)
-                .setSpawnContainerFromPlayerCenter(spawnContainerFromPlayerCenter)
-                .setSpawnOnSurface(spawnOnSurface)
-                .setMinRadius(minRadius)
-                .setMaxRadius(maxRadius)
-                .setSpawnLocation(spawnLocation)
-                .setPermissionForRandomSpawn(permissionForRandomSpawn);
-        return lootContainerData;
-    }
-
-    public static final class LootContainerBuilder extends ContainerDataBuilder {
+    public static final class LootContainerBuilder extends LootContainerData {
 
         public LootContainerBuilder setRandomLootWorlds(List<String> worlds) {
             this.worlds = new HashSet<>(worlds);
@@ -373,7 +343,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
             return this;
         }
 
-        public ContainerDataBuilder build() {
+        public LootContainerData build() {
             this.lootContainerBuilder = this;
             return this.lootContainerBuilder;
         }
@@ -467,7 +437,8 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
         return keysData;
     }
 
-    public static ContainerDataBuilder deserialize(final Map<String, Object> map) {
+    public static LootContainerData deserialize(final Map<String, Object> map) {
+
         final String lootTableLinked = (String) map.get("LootTable_linked");
         final String icon = (String) map.get("Icon");
         String displayName = (String) map.getOrDefault("Display_name", "");
@@ -549,8 +520,8 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
                 .setSpawnLocation(new LocationWrapper("Spawn-point", map, false))
                 .setPermissionForRandomSpawn(String.valueOf(map.get("permission")));
 
+
         return lootContainerBuilder.build();
     }
-
 
 }

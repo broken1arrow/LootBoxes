@@ -31,245 +31,267 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class Lootboxes extends JavaPlugin {
-	private RunTask runTask;
-	private static Lootboxes plugin;
-	private Settings settings;
-	private SpawnContainerRandomLoc spawnContainerRandomLoc;
-	private MatrialList matrialList;
-	private EnchantmentList enchantmentList;
-	private ParticleEffectList particleEffectList;
-	private MobList mobList;
-	private boolean placeholderAPIMissing;
-	private CheckChunkLoadUnload checkChunkLoadUnload;
-	private CommandRegister commandRegister;
-	private SpawnContainerEffectsTask spawnContainerEffectsTask;
-	private SpawnedContainers spawnedContainers;
-	private MakeLootTable makeLootTable;
-	private HeavyTasks heavyTasks;
-	private RandomUntility randomUntility;
-	private RegisterNbtAPI nbtAPI;
-	private LandProtectingLoader landProtectingLoader;
-	private SaveDataTask saveDataTask;
-	private ServerVersion serverVersion;
-	private ItemCreator itemCreator;
-	private RegisterMenuAPI menuApi;
-	private MenusSettingsHandler menusCache;
-	private ContainerDataCache containerDataCache;
+    private RunTask runTask;
+    private static Lootboxes plugin;
+    private Settings settings;
+    private SpawnContainerRandomLoc spawnContainerRandomLoc;
+    private MatrialList matrialList;
+    private EnchantmentList enchantmentList;
+    private ParticleEffectList particleEffectList;
+    private MobList mobList;
+    private boolean placeholderAPIMissing;
+    private CheckChunkLoadUnload checkChunkLoadUnload;
+    private CommandRegister commandRegister;
+    private SpawnContainerEffectsTask spawnContainerEffectsTask;
+    private SpawnedContainers spawnedContainers;
+    private MakeLootTable makeLootTable;
+    private HeavyTasks heavyTasks;
+    private RandomUntility randomUntility;
+    private RegisterNbtAPI nbtAPI;
+    private LandProtectingLoader landProtectingLoader;
+    private SaveDataTask saveDataTask;
+    private ServerVersion serverVersion;
+    private ItemCreator itemCreator;
+    private RegisterMenuAPI menuApi;
+    private MenusSettingsHandler menusCache;
+    private ContainerDataCache containerDataCache;
 
-	@Override
-	public void onLoad() {
-		landProtectingLoader = new LandProtectingLoader(this);
-	}
+    @Override
+    public void onLoad() {
+        landProtectingLoader = new LandProtectingLoader(this);
+    }
 
-	@Override
-	public void onEnable() {
-		plugin = this;
-		this.serverVersion = new ServerVersion(this);
-		this.itemCreator = new ItemCreator(this);
-		ConfigurationSerialization.registerClass(KeysData.class);
-		ConfigurationSerialization.registerClass(ContainerData.class);
-		ConfigurationSerialization.registerClass(ContainerDataBuilder.class);
-		ConfigurationSerialization.registerClass(ParticleEffect.class);
-		ConfigurationSerialization.registerClass(ParticleDustOptions.class);
-		this.nbtAPI = new RegisterNbtAPI(this, false);
-		this.settings = new Settings();
-		this.randomUntility = new RandomUntility();
-		this.matrialList = new MatrialList();
-		this.enchantmentList = new EnchantmentList();
-		this.particleEffectList = new ParticleEffectList();
-		this.runTask = new RunTask(this);
-		this.spawnedContainers = new SpawnedContainers();
-		this.makeLootTable = new MakeLootTable();
-		this.saveDataTask = new SaveDataTask(this);
-		this.saveDataTask.start();
-		this.checkChunkLoadUnload = new CheckChunkLoadUnload(this);
-		this.heavyTasks = new HeavyTasks();
-		this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
-		this.settings.reload();
-		if (settings.getSettingsData().isSingleMenuFile())
-			this.menusCache = new MenusSettingsHandler(this, "language/menus_" + this.settings.getSettingsData().getLanguage() + ".yml", true);
-		else
-			this.menusCache = new MenusSettingsHandler(this, "menus", false);
-		reloadFiles();
-		this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
-		Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
-		Bukkit.getPluginManager().registerEvents(new MobDropListener(), this);
-		Bukkit.getPluginManager().registerEvents(new OpenContainer(), this);
-		Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
-		Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
-		Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
-		this.menuApi = new RegisterMenuAPI(this);
-		commandRegister = new CommandRegister();
-		this.registerCommands();
-		this.mobList = new MobList();
-		heavyTasks.start();
-		this.runTask.start();
-		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			placeholderAPIMissing = false;
-		} else {
-			placeholderAPIMissing = true;
-		}
-		this.getLogger().log(Level.INFO, "Has started Lootboxes");
+    @Override
+    public void onEnable() {
+        plugin = this;
+        this.serverVersion = new ServerVersion(this);
+        this.itemCreator = new ItemCreator(this);
+        ConfigurationSerialization.registerClass(KeysData.class);
+        ConfigurationSerialization.registerClass(ContainerData.class);
+        ConfigurationSerialization.registerClass(LootContainerData.class);
+        ConfigurationSerialization.registerClass(ContainerDataBuilder.class);
+        ConfigurationSerialization.registerClass(ParticleEffect.class);
+        ConfigurationSerialization.registerClass(ParticleDustOptions.class);
 
-		Logger logger = Logger.getLogger("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer");
-		logger.setUseParentHandlers(false);
-		logger.setLevel(Level.OFF);
-		this.containerDataCache = new ContainerDataCache();
-		//Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
-	}
+        this.containerDataCache = new ContainerDataCache();
+        this.nbtAPI = new RegisterNbtAPI(this, false);
+        this.settings = new Settings();
+        this.randomUntility = new RandomUntility();
+        this.matrialList = new MatrialList();
+        this.enchantmentList = new EnchantmentList();
+        this.particleEffectList = new ParticleEffectList();
+        this.runTask = new RunTask(this);
+        this.spawnedContainers = new SpawnedContainers();
+        this.makeLootTable = new MakeLootTable();
+        this.saveDataTask = new SaveDataTask(this);
+        this.saveDataTask.start();
+        this.checkChunkLoadUnload = new CheckChunkLoadUnload(this);
+        this.heavyTasks = new HeavyTasks();
+        this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
+        this.settings.reload();
+        if (settings.getSettingsData().isSingleMenuFile())
+            this.menusCache = new MenusSettingsHandler(this, "language/menus_" + this.settings.getSettingsData().getLanguage() + ".yml", true);
+        else
+            this.menusCache = new MenusSettingsHandler(this, "menus", false);
+        reloadFiles();
+        this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 
-	@Override
-	public void onDisable() {
-		saveFiles();
-	}
+        Bukkit.getPluginManager().registerEvents(new PlayerClick(), this);
+        Bukkit.getPluginManager().registerEvents(new MobDropListener(), this);
+        Bukkit.getPluginManager().registerEvents(new OpenContainer(), this);
+        Bukkit.getPluginManager().registerEvents(new LinkTool(), this);
+        Bukkit.getPluginManager().registerEvents(new CloseContainer(), this);
+        Bukkit.getPluginManager().registerEvents(checkChunkLoadUnload, this);
+        this.menuApi = new RegisterMenuAPI(this);
+        commandRegister = new CommandRegister();
+        this.registerCommands();
+        this.mobList = new MobList();
+        heavyTasks.start();
+        this.runTask.start();
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            placeholderAPIMissing = false;
+        } else {
+            placeholderAPIMissing = true;
+        }
+        this.getLogger().log(Level.INFO, "Has loaded LootBoxes, have fun now.");
 
-	public void reloadFiles() {
-		this.settings.reload();
-		this.menusCache.reload();
-		this.containerDataCache.reload();
-		ContainerDataCacheLegacy.getInstance().reload();
-		File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
+        Logger logger = Logger.getLogger("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer");
+        logger.setUseParentHandlers(false);
+        logger.setLevel(Level.OFF);
+        transferToNewCache();
+        //Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
+    }
 
-		if (file.exists()) {
-			GuiTempletSettings.getInstance().reload();
-			File newFile = new File(plugin.getDataFolder() + "/language/guitemplets_old_" + this.settings.getSettingsData().getLanguage() + ".yml");
-			file.renameTo(newFile);
-		}
-		LootItems.getInstance().reload();
-		ItemData.getInstance().reload();
-		KeyDropData.getInstance().reload();
-		ChatMessages.messagesReload(this);
-	}
+    @Override
+    public void onDisable() {
+        saveFiles();
+    }
 
-	public void saveFiles() {
-		ContainerDataCacheLegacy.getInstance().save();
-		LootItems.getInstance().save();
-		ItemData.getInstance().save();
-		KeyDropData.getInstance().save();
-	}
+    public void reloadFiles() {
+        this.settings.reload();
+        this.menusCache.reload();
+        this.containerDataCache.reload();
+        ContainerDataCacheLegacy.getInstance().reload();
+        File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
 
-	public void registerCommands() {
-		commandRegister.registerMainCommand(this.getName(), "lootboxes|loot");
-		commandRegister.registerSubCommand(
-						new GuiCommand()
-										.setPermission("lootboxes.command.menu")
-										.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
-		);
-		commandRegister.registerSubCommand(new ReloadCommand()
-						.setPermission("lootboxes.command.reload")
-						.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
-		);
-		commandRegister.registerSubCommand(new GetKeyCommand()
-						.setPermission("lootboxes.command.key")
-						.setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
-		);
-	}
+        if (file.exists()) {
+            GuiTempletSettings.getInstance().reload();
+            File newFile = new File(plugin.getDataFolder() + "/language/guitemplets_old_" + this.settings.getSettingsData().getLanguage() + ".yml");
+            file.renameTo(newFile);
+        }
+        LootItems.getInstance().reload();
+        ItemData.getInstance().reload();
+        KeyDropData.getInstance().reload();
+        ChatMessages.messagesReload(this);
+    }
 
 
-	public static Lootboxes getInstance() {
-		return plugin;
-	}
+    public void saveFiles() {
+        ContainerDataCacheLegacy.getInstance().save();
+        LootItems.getInstance().save();
+        ItemData.getInstance().save();
+        KeyDropData.getInstance().save();
+    }
 
-	public HeavyTasks getHeavyTasks() {
-		return heavyTasks;
-	}
+    public void registerCommands() {
+        commandRegister.registerMainCommand(this.getName(), "lootboxes|loot");
+        commandRegister.registerSubCommand(
+                new GuiCommand()
+                        .setPermission("lootboxes.command.menu")
+                        .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
+        );
+        commandRegister.registerSubCommand(new ReloadCommand()
+                .setPermission("lootboxes.command.reload")
+                .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
+        );
+        commandRegister.registerSubCommand(new GetKeyCommand()
+                .setPermission("lootboxes.command.key")
+                .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
+        );
+    }
 
-	public SpawnContainerEffectsTask getSpawnContainerEffectsTask() {
-		return spawnContainerEffectsTask;
-	}
 
-	public ItemCreator getItemCreator() {
-		return itemCreator;
-	}
+    public static Lootboxes getInstance() {
+        return plugin;
+    }
 
-	public ServerVersion getServerVersion() {
-		return serverVersion;
-	}
+    public HeavyTasks getHeavyTasks() {
+        return heavyTasks;
+    }
 
-	public RegisterMenuAPI getMenuApi() {
-		return menuApi;
-	}
+    public SpawnContainerEffectsTask getSpawnContainerEffectsTask() {
+        return spawnContainerEffectsTask;
+    }
 
-	public RunTask getRunTask() {
-		return this.runTask;
-	}
+    public ItemCreator getItemCreator() {
+        return itemCreator;
+    }
 
-	public CheckChunkLoadUnload getCheckChunkLoadUnload() {
-		return checkChunkLoadUnload;
-	}
+    public ServerVersion getServerVersion() {
+        return serverVersion;
+    }
 
-	public RegisterNbtAPI getNbtAPI() {
-		return nbtAPI;
-	}
+    public RegisterMenuAPI getMenuApi() {
+        return menuApi;
+    }
 
-	public Settings getSettings() {
-		return settings;
-	}
+    public RunTask getRunTask() {
+        return this.runTask;
+    }
 
-	public LandProtectingLoader getLandProtectingLoader() {
-		return landProtectingLoader;
-	}
+    public CheckChunkLoadUnload getCheckChunkLoadUnload() {
+        return checkChunkLoadUnload;
+    }
 
-	public MatrialList getMatrialList() {
-		return matrialList;
-	}
+    public RegisterNbtAPI getNbtAPI() {
+        return nbtAPI;
+    }
 
-	public MobList getMobList() {
-		return mobList;
-	}
+    public Settings getSettings() {
+        return settings;
+    }
 
-	public EnchantmentList getEnchantmentList() {
-		return enchantmentList;
-	}
+    public LandProtectingLoader getLandProtectingLoader() {
+        return landProtectingLoader;
+    }
 
-	public SpawnContainerRandomLoc getSpawnLootContainer() {
-		return spawnContainerRandomLoc;
-	}
+    public MatrialList getMatrialList() {
+        return matrialList;
+    }
 
-	public SaveDataTask getSaveDataTask() {
-		return saveDataTask;
-	}
+    public MobList getMobList() {
+        return mobList;
+    }
 
-	public RandomUntility getRandomUntility() {
-		return randomUntility;
-	}
+    public EnchantmentList getEnchantmentList() {
+        return enchantmentList;
+    }
 
-	public MakeLootTable getMakeLootTable() {
-		return makeLootTable;
-	}
+    public SpawnContainerRandomLoc getSpawnLootContainer() {
+        return spawnContainerRandomLoc;
+    }
 
-	public SpawnedContainers getSpawnedContainers() {
-		return spawnedContainers;
-	}
+    public SaveDataTask getSaveDataTask() {
+        return saveDataTask;
+    }
 
-	public ParticleEffectList getParticleEffectList() {
-		return particleEffectList;
-	}
+    public RandomUntility getRandomUntility() {
+        return randomUntility;
+    }
 
-	public MenusSettingsHandler getMenusCache() {
-		return menusCache;
-	}
+    public MakeLootTable getMakeLootTable() {
+        return makeLootTable;
+    }
 
-	public ContainerDataCache getContainerDataCache() {
-		return containerDataCache;
-	}
+    public SpawnedContainers getSpawnedContainers() {
+        return spawnedContainers;
+    }
 
-	@Nullable
-	public MenuTemplate getMenu(String menuName) {
-		return menusCache.getTemplate(menuName);
-	}
+    public ParticleEffectList getParticleEffectList() {
+        return particleEffectList;
+    }
 
-	@Nullable
-	public MenuButtonData getMenuButton(String menuName, int slot) {
-		return menusCache.getMenuButton(menuName, slot);
-	}
+    public MenusSettingsHandler getMenusCache() {
+        return menusCache;
+    }
 
-	public boolean isPlaceholderAPIMissing() {
-		return placeholderAPIMissing;
-	}
+    public ContainerDataCache getContainerDataCache() {
+        return containerDataCache;
+    }
+
+    @Nullable
+    public MenuTemplate getMenu(String menuName) {
+        return menusCache.getTemplate(menuName);
+    }
+
+    @Nullable
+    public MenuButtonData getMenuButton(String menuName, int slot) {
+        return menusCache.getMenuButton(menuName, slot);
+    }
+
+    public boolean isPlaceholderAPIMissing() {
+        return placeholderAPIMissing;
+    }
+
+
+    private void transferToNewCache() {
+        Map<String, ContainerDataBuilder> map = ContainerDataCacheLegacy.getInstance().getCacheContainerData();
+        System.out.println("map " + map);
+        if (map != null && !map.isEmpty()) {
+            map.forEach((containerKey, containerData) -> {
+                this.containerDataCache.setContainerData(containerKey, containerData.convertToLootContainer());
+            });
+            this.containerDataCache.save();
+            File file = new File(plugin.getDataFolder(), "container_data.db");
+            if (file.exists()) {
+                file.renameTo(new File(plugin.getDataFolder(), "container_data_backup.db"));
+            }
+        }
+    }
 }

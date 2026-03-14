@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.WorldsAllowed;
 import org.bukkit.conversations.ConversationContext;
@@ -12,21 +12,19 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
-
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SELECT_WORLD_EXIST_PROMPT;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SELECT_WORLD_PROMPT;
 
 public class AddWorldPrompt extends SimpleConversation {
     private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final String containerDataName;
-    private final ContainerDataBuilder containerDataBuilder;
+    private final LootContainerData lootContainerData;
 
-    public AddWorldPrompt(@NotNull final String containerDataName, @NotNull final ContainerDataBuilder containerDataBuilder) {
+    public AddWorldPrompt(@NotNull final String containerDataName, @NotNull final LootContainerData lootContainerData) {
         super(Lootboxes.getInstance());
 
         this.containerDataName = containerDataName;
-        this.containerDataBuilder = containerDataBuilder;
+        this.lootContainerData = lootContainerData;
     }
 
     @Override
@@ -54,7 +52,7 @@ public class AddWorldPrompt extends SimpleConversation {
                 return null;
             }
 
-            if (!input.isEmpty() && !containerDataBuilder.contains(input)) {
+            if (!input.isEmpty() && !lootContainerData.contains(input)) {
                 containerDataCache.write(containerDataName,  builder -> {builder.addWorld(input);});
             } else {
                 SELECT_WORLD_EXIST_PROMPT.sendMessage(player);

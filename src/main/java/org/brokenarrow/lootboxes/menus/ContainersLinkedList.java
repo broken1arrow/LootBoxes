@@ -8,7 +8,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -32,7 +32,7 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 	private final MenuTemplate guiTemplate;
 	private final String containerName;
 
-	public ContainersLinkedList(final ContainerDataBuilder containerdata, final String containerName, final String itemsToSearchFor) {
+	public ContainersLinkedList(final LootContainerData containerdata, final String containerName, final String itemsToSearchFor) {
 		super(new ArrayList<>(containerdata.getLinkedContainerData().keySet()));
 		this.containerName = containerName;
 		//this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Container_Linked_List").placeholders(containerName);
@@ -110,8 +110,8 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 			if (location != null) {
 				if (click.isRightClick()) {
 					containerDataCache.write(containerName, builder -> {
-						final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
-						Map<Location, ContainerData> containerDataMap = containerDataBuilder != null ? containerDataBuilder.getLinkedContainerData() : null;
+						final LootContainerData lootContainerData = containerDataCache.getCacheContainerData(containerName);
+						Map<Location, ContainerData> containerDataMap = lootContainerData != null ? lootContainerData.getLinkedContainerData() : null;
 						if (containerDataMap == null)
 							containerDataMap = new HashMap<>();
 						if (click.isRightClick()) {

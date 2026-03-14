@@ -1,5 +1,5 @@
 Data:
-  ==: org.brokenarrow.lootboxes.builder.ContainerDataBuilder
+  ==: org.brokenarrow.lootboxes.builder.LootContainerData
   LootTable_Linked: ""
   Spawning: true
   Cooldown: 1800

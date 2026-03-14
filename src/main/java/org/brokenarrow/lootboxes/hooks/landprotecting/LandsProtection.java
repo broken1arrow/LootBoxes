@@ -36,7 +36,6 @@ public class LandsProtection implements ProtectingProvider {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean isAllowedToSpawnContainer(Location location) {
         /*Area landsArea = lands.getArea(location);
@@ -83,8 +82,6 @@ public class LandsProtection implements ProtectingProvider {
 
         @Override
         public boolean shouldDisplay(@Nullable final Area area, @Nullable final LandPlayer landPlayer) {
-            if(landPlayer != null && landPlayer.getPlayer().hasPermission("lands.admin.*"))
-                return true;
             return false;
         }
 

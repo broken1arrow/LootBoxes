@@ -7,8 +7,8 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.bukkit.Bukkit;
@@ -22,17 +22,17 @@ import org.jetbrains.annotations.NotNull;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class SelectWorld extends MenuHolderPage<World> {
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final MenuTemplate guiTemplate;
-    private final String containerDataName;
-    private ContainerDataBuilder containerDataBuilder;
+    private final String containerKey;
+    private LootContainerData lootContainerData;
 
-    public SelectWorld(String containerDataName) {
+    public SelectWorld(String containerKey) {
         super(Bukkit.getWorlds());
         System.out.println("Bukkit.getWorlds() " + Bukkit.getWorlds());
-        this.containerDataName = containerDataName;
+        this.containerKey = containerKey;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Select_World");
-        this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
+        this.lootContainerData = containerDataCache.getCacheContainerData(containerKey);
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
@@ -74,7 +74,7 @@ public class SelectWorld extends MenuHolderPage<World> {
     public boolean run(MenuButtonData button, ClickType click) {
 
         if (button.isActionTypeEqual("Back_button")) {
-            new WorldsAllowed(containerDataName).menuOpen(player);
+            new WorldsAllowed(containerKey).menuOpen(player);
         }
 
         return false;
@@ -82,46 +82,43 @@ public class SelectWorld extends MenuHolderPage<World> {
 
     @Override
     public FillMenuButton<World> createFillMenuButton() {
-        return new FillMenuButton<>((player1, menu, click, clickedItem, fillObject) -> {
-            final ContainerDataBuilder.Builder builder = this.containerDataBuilder.getBuilder();
-            if (fillObject == null) return ButtonUpdateAction.NONE;
+        return new FillMenuButton<>((player1, menu, click, clickedItem, world) -> {
+            return containerDataCache.write(containerKey, containerBuilder -> {
+                if (world == null) return ButtonUpdateAction.NONE;
 
-            if (click.isLeftClick()) {
-                builder.addWorld(fillObject.getName());
-            } else {
-                builder.removeWorld(fillObject.getName());
-            }
-
-            ContainerDataBuilder build = builder.build();
-            containerDataCache.setContainerData(containerDataName, build);
-            if (build.isSpawningContainerWithCooldown()) {
-                containerDataCache.addContainerToSpawnTask(this.containerDataName, build.getCooldown());
-            }
-            this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-
-            return ButtonUpdateAction.ALL;
-        }, (slot, fillObject) -> {
+                if (click.isLeftClick()) {
+                    containerBuilder.addWorld(world.getName());
+                } else {
+                    containerBuilder.removeWorld(world.getName());
+                }
+                if (containerBuilder.isSpawningContainerWithCooldown()) {
+                    containerDataCache.addContainerToSpawnTask(this.containerKey, containerBuilder.getCooldown());
+                }
+                return ButtonUpdateAction.ALL;
+            });
+        }, (slot, world) -> {
             final MenuButtonData button = this.guiTemplate.getMenuButton(-1);
             if (button == null) return null;
-            if (fillObject == null) return null;
+            if (world == null) return null;
+            return containerDataCache.read(containerKey, containerBuilder -> {
+                org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = null;
+                final Object[] placeholders = setPlaceholders(button, world);
+                final boolean hasWorldSet = containerBuilder.contains(world);
+                if (hasWorldSet)
+                    menuButton = button.getActiveButton();
+                if (menuButton == null)
+                    menuButton = button.getPassiveButton();
 
-            org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = null;
-            final Object[] placeholders = setPlaceholders(button, fillObject, containerDataBuilder);
-            final boolean hasWorldSet = containerDataBuilder.contains(fillObject);
-            if (hasWorldSet)
-                menuButton = button.getActiveButton();
-            if (menuButton == null)
-                menuButton = button.getPassiveButton();
-
-            return CreateItemUtily.of(hasWorldSet, menuButton.getMaterial(),
-                            TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-                            TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                    .makeItemStack();
+                return CreateItemUtily.of(hasWorldSet, menuButton.getMaterial(),
+                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
+                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+                        .makeItemStack();
+            });
         });
     }
 
 
-    public Object[] setPlaceholders(MenuButtonData button, World world, ContainerDataBuilder containerDataBuilder) {
+    public Object[] setPlaceholders(MenuButtonData button, World world) {
         Object[] placeholders = getPlaceholders(world != null ? world.getName() : "not exist or not loaded");
         return placeholders;
     }

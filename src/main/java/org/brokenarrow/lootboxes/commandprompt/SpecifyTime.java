@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.bukkit.conversations.ConversationContext;
@@ -39,7 +39,7 @@ public class SpecifyTime extends SimpleConversation {
         @Nullable
         @Override
         protected Prompt acceptValidatedInput(@NotNull ConversationContext context, @NotNull String input) {
-            ContainerDataBuilder data = containerDataCache.getCacheContainerData(String.valueOf(container));
+            LootContainerData data = containerDataCache.getCacheContainerData(String.valueOf(container));
             if (data != null) {
                 return containerDataCache.write(container, builder -> {
                     try {

@@ -1,14 +1,14 @@
 package org.brokenarrow.lootboxes.menus.containerdata;
 
-import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
-import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
 import org.broken.arrow.library.menu.button.logic.FillMenuButton;
+import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
+import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -25,11 +25,11 @@ import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 
 public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
 
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final MenuTemplate guiTemplate;
     private final String containerName;
 
-    public ChooseRandomLootContainer(final ContainerDataBuilder containerData, String containerName) {
+    public ChooseRandomLootContainer(String containerName) {
         super(containers());
         this.containerName = containerName;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Random_loot_container");
@@ -98,22 +98,21 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
 
         return new FillMenuButton<>((player, menu, click, clickedItem, material) -> {
             if (material != null) {
+                containerDataCache.write(containerName, containerBuilder -> {
+                    if (click == ClickType.SHIFT_LEFT) {
+                        containerBuilder.setRandomLootContainerItem(material);
+                        containerDataCache.setContainerData(containerName, containerBuilder.build());
+                        return ButtonUpdateAction.ALL;
+                    }
+                    Facing type = getContainerFacing(click, material, containerBuilder);
 
-                final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
-                final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-                if (click == ClickType.SHIFT_LEFT) {
-                    builder.setRandomLootContainerItem(material);
-                    containerDataCache.setContainerData(containerName, builder.build());
+                    containerBuilder.setRandomLootContainerFacing(type);
                     return ButtonUpdateAction.ALL;
-                }
-                Facing type = getContainerFacing(click, material, containerDataBuilder);
-
-                builder.setRandomLootContainerFacing(type);
-                containerDataCache.setContainerData(containerName, builder.build());
+                });
                 return ButtonUpdateAction.ALL;
             }
             return ButtonUpdateAction.NONE;
-        }, (slot, material) -> {
+        }, (slot, material) -> containerDataCache.read(containerName, containerBuilder -> {
             org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
             ItemStack itemstack = null;
@@ -121,34 +120,24 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
                 itemstack = new ItemStack(material);
             if (itemstack == null)
                 return null;
-            final ContainerDataBuilder containerDataBuilder = containerDataCache.getCacheContainerData(containerName);
-            if (containerDataBuilder != null) {
-                final String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), bountifyCapitalized(itemstack.getType()), containerDataBuilder.getRandomLootContainerFacing());
+            final LootContainerData lootContainerData = containerDataCache.getCacheContainerData(containerName);
 
-                return CreateItemUtily.of(menuButton.isGlow(), itemstack,
-                        displayName,
-                        TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),
-                                "",
-                                containerDataBuilder.getRandomLootContainerFacing(),
-                                containerDataBuilder.getRandomLootContainerItem()
-                        )).makeItemStack();
-            }
-            final String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), bountifyCapitalized(itemstack.getType()), "");
+            final String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), bountifyCapitalized(itemstack.getType()), lootContainerData.getRandomLootContainerFacing());
 
             return CreateItemUtily.of(menuButton.isGlow(), itemstack,
                     displayName,
                     TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),
                             "",
-                            "",
-                            ""
+                            lootContainerData.getRandomLootContainerFacing(),
+                            lootContainerData.getRandomLootContainerItem()
                     )).makeItemStack();
-        });
+        }));
     }
 
     @Nullable
-    private static Facing getContainerFacing(ClickType click, Material material, ContainerDataBuilder containerDataBuilder) {
+    private static Facing getContainerFacing(ClickType click, Material material, LootContainerData lootContainerData) {
         boolean isChest = material == Material.CHEST || material == Material.TRAPPED_CHEST;
-        int ordinal = containerDataBuilder.getRandomLootContainerFacing().ordinal();
+        int ordinal = lootContainerData.getRandomLootContainerFacing().ordinal();
         if (click.isRightClick())
             ordinal = ordinal + 1;
         if (click.isLeftClick())

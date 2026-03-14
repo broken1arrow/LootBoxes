@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.containerdata.SettingsContainerData;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -54,7 +54,7 @@ public class SetPermission extends SimpleConversation {
                 new SettingsContainerData(container).menuOpen(getPlayer(context));
                 return null;
             }
-            containerDataCache.write(container,(Consumer<ContainerDataBuilder.Builder>) builder -> builder.setPermissionForRandomSpawn(input));
+            containerDataCache.write(container,(Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setPermissionForRandomSpawn(input));
             new SettingsContainerData(container).menuOpen(getPlayer(context));
             return null;
         }

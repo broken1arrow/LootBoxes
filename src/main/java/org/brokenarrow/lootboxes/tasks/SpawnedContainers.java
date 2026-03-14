@@ -2,10 +2,8 @@ package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
-import org.brokenarrow.lootboxes.lootdata.ItemData;
-import org.brokenarrow.lootboxes.lootdata.LootItems;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.bukkit.Location;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -25,9 +23,8 @@ public class SpawnedContainers {
 	private final Map<String, Long> tempCache = new HashMap<>();
 	private final Set<String> removeKey = new HashSet<>();
 	private final Map<Location, Boolean> hasRefill = new HashMap<>();
-	private final ContainerDataCacheLegacy containerDataCacheInstance = ContainerDataCacheLegacy.getInstance();
-	private final LootItems lootItems = LootItems.getInstance();
-	private final ItemData itemData = ItemData.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
+
 
 	public void task() {
 
@@ -37,13 +34,13 @@ public class SpawnedContainers {
 			if (time == 0) {
 				setCachedTimeMap(key, time);
 			} else if (System.currentTimeMillis() >= time) {
-				ContainerDataBuilder containerDataBuilder = containerDataCacheInstance.getCacheContainerData(key);
-				if (containerDataBuilder == null || !containerDataBuilder.isSpawningContainerWithCooldown()) {
+				LootContainerData lootContainerData = containerDataCache.getCacheContainerData(key);
+				if (lootContainerData == null || !lootContainerData.isSpawningContainerWithCooldown()) {
 					removeKey.add(key);
 					continue;
 				}
-				boolean failToSpawn = spawnContainer(containerDataBuilder);
-				setCachedTimeMap(key, containerDataBuilder.getCooldown());
+				boolean failToSpawn = spawnContainer(lootContainerData);
+				setCachedTimeMap(key, lootContainerData.getCooldown());
 				if (!failToSpawn) {
 					removeKey.add(key);
 				}
@@ -56,7 +53,7 @@ public class SpawnedContainers {
 		}
 	}
 
-	public boolean spawnContainer(ContainerDataBuilder containerData) {
+	public boolean spawnContainer(LootContainerData containerData) {
 		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
 		String lootTableLinked = containerData.getLootTableLinked();
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {

@@ -1,14 +1,13 @@
 package org.brokenarrow.lootboxes.menus;
 
+import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
-import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.ParticlePropertiesPrompt;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
@@ -29,8 +28,7 @@ import static org.brokenarrow.lootboxes.menus.ParticleSettings.Type.*;
 import static org.brokenarrow.lootboxes.untlity.ConvertParticlesUnity.isParticleThisClazz;
 
 public class ParticleSettings extends MenuHolder {
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
-	private final String container;
+    private final String container;
 	private final Object particle;
 	private final ParticleEffect particleEffect;
 	private boolean canSetColor = true;
@@ -38,10 +36,11 @@ public class ParticleSettings extends MenuHolder {
 	private final MenuTemplate guiTemplate;
 
 	public ParticleSettings(String container, Object particle) {
+		final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
+
 		this.container = container;
 		this.particle = particle;
-		final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-		this.particleEffect = containerDataCache.getParticleEffect(container, particle);
+        this.particleEffect = containerDataCache.getParticleEffect(container, particle);
 		this.guiTemplate = Lootboxes.getInstance().getMenu("Particle_settings");
 
 		setUseColorConversion(true);

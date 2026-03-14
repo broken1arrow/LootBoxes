@@ -7,7 +7,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
@@ -111,7 +111,7 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 		return false;
 	}
 
-	public Map<Object, ParticleEffect> setParticleData(Player player, ContainerDataBuilder data, String container, Object object) {
+	public Map<Object, ParticleEffect> setParticleData(Player player, LootContainerData data, String container, Object object) {
 		if ((particleEffectList.checkIfParticle(object) && !particleEffectList.checkParticleClass(object, Void.class)) || getEffectType(String.valueOf(object)) != getEffectType("PARTICLE"))
 			new ParticleSettings(container, object).menuOpen(player);
 		Map<Object, ParticleEffect> particleEffect = data.getParticleEffects();
@@ -146,15 +146,15 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 
 		return new FillMenuButton<>((player, menu, click, clickedItem, particle) -> {
 			if (particleEffectList.checkIfParticleOrEffect(particle)) {
-				final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-				containerDataCache.write(container, builder -> {
+				containerDataCache.write(container, containerBuilder -> {
+
 					if (click.isRightClick()) {
-						containerDataCache.removeParticleEffect(data, particle);
+						containerDataCache.removeParticleEffect(containerBuilder, particle);
 					} else {
-						builder.setParticleEffects(setParticleData(player, data, container, particle));
+						containerBuilder.setParticleEffects(setParticleData(player, containerBuilder, container, particle));
 					}
 					if (click.isLeftClick()) {
-						for (final Location location : containerDataCache.getLinkedContainerData(container).keySet())
+						for (final Location location : containerBuilder.getLinkedContainerData().keySet())
 							spawnContainerEffectsTask.addLocationInList(location);
 					}
 				});
@@ -164,9 +164,7 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
 		}, (slot, particle) -> {
 			org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 			if (particleEffectList.checkIfParticleOrEffect(particle)) {
-
-				final ContainerDataBuilder data = containerDataCache.getCacheContainerData(container);
-				boolean containsEffect = containerDataCache.containsParticleEffect(data, particle);
+				boolean containsEffect = containerDataCache.containsParticleEffect(container, particle);
 				if (containsEffect)
 					menuButton = button.getActiveButton();
 				if (menuButton == null)

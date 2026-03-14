@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.listener;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -63,7 +63,7 @@ public class OpenContainer implements Listener {
 						continue;
 					String lootTable = keysData.getLootTableLinked();
 					if (lootTable == null || lootTable.isEmpty()) {
-						ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerKey());
+						LootContainerData containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerKey());
 						if (containerDataCache != null) {
 							lootTable = containerDataCache.getLootTableLinked();
 						}
@@ -81,7 +81,7 @@ public class OpenContainer implements Listener {
 				}
 			}
 
-			ContainerDataBuilder cacheContainerData = containerDataCache.getCacheContainerData(containerDataName);
+			LootContainerData cacheContainerData = containerDataCache.getCacheContainerData(containerDataName);
 			if (cacheContainerData == null) {
 				cacheContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
 			}
@@ -158,7 +158,7 @@ public class OpenContainer implements Listener {
 		return checkVaidItems;
 	}
 
-	private boolean spawnLootWhenClicking(ContainerDataBuilder containerData, Location location, Block block) {
+	private boolean spawnLootWhenClicking(LootContainerData containerData, Location location, Block block) {
 		String lootTableLinked = containerData.getLootTableLinked();
 		if (lootTableLinked != null && !lootTableLinked.isEmpty()) {
 			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);

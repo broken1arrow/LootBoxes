@@ -1,11 +1,11 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
 import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -19,14 +19,13 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translateP
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
 public class RandomKey {
-
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
-	private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final RandomUntility random = Lootboxes.getInstance().getRandomUntility();
 
-	public ItemStack[] makeRandomAmountOfItems(EntityType entety) {
+	public ItemStack[] makeRandomAmountOfItems(EntityType entity) {
 		List<ItemStack> itemStacks = new ArrayList<>();
-		Set<EntityKeyData> entityKeyDataSet = this.keyDropData.getEntityCache(entety);
+		Set<EntityKeyData> entityKeyDataSet = this.keyDropData.getEntityCache(entity);
 		if (entityKeyDataSet != null && !entityKeyDataSet.isEmpty()) {
 			for (EntityKeyData entityKeyData : entityKeyDataSet)
 				itemStacks.add(makeRandomAmountOfItems(entityKeyData.getContainerDataFileName(), entityKeyData.getKeyName()));
@@ -39,8 +38,6 @@ public class RandomKey {
 		KeyMobDropData keyMobDropData = this.keyDropData.getKeyMobDropData(containerData, keyName);
 		if (keyMobDropData == null) return null;
 
-		//backupcounter = Math.max(randomIntNumber(keyMobDropData.getMinimum(), keyMobDropData.getMaximum()), 0);
-
 		int amountOfItems = randomNumber(keyMobDropData);
 
 		if (!random.chance(keyMobDropData.getChance()))
@@ -52,7 +49,7 @@ public class RandomKey {
 		map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
 		String lootTable = keysData.getLootTableLinked();
 		if (lootTable == null || lootTable.isEmpty()) {
-			ContainerDataBuilder containerDataCache = this.containerDataCache.getCacheContainerData(containerData);
+			LootContainerData containerDataCache = this.containerDataCache.getCacheContainerData(containerData);
 			if (containerDataCache != null) {
 				lootTable = containerDataCache.getLootTableLinked();
 			}

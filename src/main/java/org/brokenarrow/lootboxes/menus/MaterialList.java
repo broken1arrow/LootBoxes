@@ -7,7 +7,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -37,7 +37,7 @@ public class MaterialList extends MenuHolderPage<Material> {
     private final MenuKeys menuKey;
     private final String containerKey;
     private final MenuTemplate guiTemplate;
-    private final ContainerDataBuilder data;
+    private final LootContainerData data;
 
     public MaterialList(final MenuKeys menuKey, final Object value, final String containerKey, final String itemsToSearchFor) {
         super(Lootboxes.getInstance().getMatrialList().getMatrials(itemsToSearchFor));

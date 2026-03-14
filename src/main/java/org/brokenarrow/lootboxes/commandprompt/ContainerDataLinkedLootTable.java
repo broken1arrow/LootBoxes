@@ -3,7 +3,7 @@ package org.brokenarrow.lootboxes.commandprompt;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
@@ -16,11 +16,11 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
 public class ContainerDataLinkedLootTable extends SimpleConversation {
 	private final ContainerDataCache container = Lootboxes.getInstance().getContainerDataCache();
-	private final ContainerDataBuilder containerData;
+	private final LootContainerData containerData;
 	private final String containerKey;
 ;
 
-	public ContainerDataLinkedLootTable(ContainerDataBuilder containerData, String containerKey) {
+	public ContainerDataLinkedLootTable(LootContainerData containerData, String containerKey) {
 		super(Lootboxes.getInstance());
 		this.containerData = containerData;
 		this.containerKey = containerKey;
@@ -50,7 +50,7 @@ public class ContainerDataLinkedLootTable extends SimpleConversation {
 			if (containerData.getLootTableLinked().equals(input))
 				CONTAINER_DATA_LINKED_LOOTTABLE_NEW_NAME_IS_SAME.sendMessage(getPlayer(context), containerData.getLootTableLinked(), input);
 
-			container.write(containerKey, (Consumer<ContainerDataBuilder.Builder>) builder -> builder.setContainerDataLinkedToLootTable(input));
+			container.write(containerKey, (Consumer<LootContainerData.LootContainerBuilder>) builder -> builder.setContainerDataLinkedToLootTable(input));
 			return null;
 		}
 	}

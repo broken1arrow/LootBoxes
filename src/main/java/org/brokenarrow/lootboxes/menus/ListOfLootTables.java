@@ -7,7 +7,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.LootItems;
@@ -100,7 +100,7 @@ public class ListOfLootTables extends MenuHolderPage<String> {
         return new FillMenuButton<>((player1, menu, click, clickedItem, lootTable) -> {
             if (lootTable != null) {
                 containerDataCache.write(containerKey, container -> {
-                    ContainerDataBuilder cacheContainerData = containerDataCache.getCacheContainerData(containerKey);
+                    LootContainerData cacheContainerData = containerDataCache.getCacheContainerData(containerKey);
                     boolean rightClick = click.isRightClick();
                     if (!rightClick && cacheContainerData.getLootTableLinked() != null) {
                         if (!cacheContainerData.getLootTableLinked().isEmpty())

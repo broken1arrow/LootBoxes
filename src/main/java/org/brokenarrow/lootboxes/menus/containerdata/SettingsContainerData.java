@@ -5,9 +5,9 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerDataBuilder;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.commandprompt.SetPermission;
-import org.brokenarrow.lootboxes.lootdata.ContainerDataCacheLegacy;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.LocationWrapper;
@@ -23,16 +23,16 @@ import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceho
 
 public class SettingsContainerData extends MenuHolder {
 
-    private final ContainerDataCacheLegacy containerDataCache = ContainerDataCacheLegacy.getInstance();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final Settings settings = Lootboxes.getInstance().getSettings();
     private final MenuTemplate guiTemplate;
-    private final String containerDataName;
-    private ContainerDataBuilder containerDataBuilder;
+    private final String containerKey;
+    private LootContainerData lootContainerData;
 
-    public SettingsContainerData(String containerDataName) {
+    public SettingsContainerData(String containerKey) {
         this.guiTemplate = Lootboxes.getInstance().getMenu("Settings_container_data");
-        this.containerDataName = containerDataName;
-        this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
+        this.containerKey = containerKey;
+        this.lootContainerData = containerDataCache.getCacheContainerData(containerKey);
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
@@ -61,144 +61,143 @@ public class SettingsContainerData extends MenuHolder {
 
             @Override
             public ItemStack getItem() {
-                org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-                Object[] placeholders = setPlaceholders(button, containerDataBuilder);
-                menuButton = getActiveButton(button, containerDataBuilder);
+                return containerDataCache.read(containerKey, containerData -> {
+                    org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
+                    Object[] placeholders = setPlaceholders(button, containerData);
+                    menuButton = getActiveButton(button, containerData);
 
-                if (menuButton == null)
-                    menuButton = button.getPassiveButton();
+                    if (menuButton == null)
+                        menuButton = button.getPassiveButton();
 
-                return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
-                        .makeItemStack();
+                    return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
+                                    TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
+                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+                            .makeItemStack();
+                });
             }
         };
     }
 
     public boolean run(MenuButtonData button, ClickType click) {
-        ContainerDataBuilder containerDataBuilder = this.containerDataBuilder;
+        LootContainerData lootContainerData = this.lootContainerData;
         int decrease = settings.getSettingsData().getDecrease();
         int increase = settings.getSettingsData().getIncrease();
+        return this.containerDataCache.write(containerKey, containerBuilder -> {
+            if (lootContainerData != null) {
+                boolean buttonMatch = false;
+                switch (button.getActionType()) {
+                    case "Container_type":
+                        new ChooseRandomLootContainer(containerKey).menuOpen(player);
+                        break;
+                    case "Show_title":
+                        containerBuilder.setShowTitle(click.isLeftClick());
+                        buttonMatch = true;
+                        break;
+                    case "Glow":
+                        containerBuilder.setContainerShallGlow(click.isLeftClick());
+                        buttonMatch = true;
+                        break;
+                    case "Random_spawn":
+                        containerBuilder.setRandomSpawn(click.isLeftClick());
+                        buttonMatch = true;
+                        break;
+                    case "Loot_on_timer":
+                        containerBuilder.setSpawningContainerWithCooldown(click.isLeftClick());
+                        buttonMatch = true;
+                        break;
+                    case "Attempts":
+                        int attempts = lootContainerData.getAttempts();
 
-        if (containerDataBuilder != null) {
-            final ContainerDataBuilder.Builder builder = containerDataBuilder.getBuilder();
-            boolean buttonMatch = false;
-            switch (button.getActionType()) {
-                case "Container_type":
-                    new ChooseRandomLootContainer(containerDataBuilder, containerDataName).menuOpen(player);
-                    break;
-                case "Show_title":
-                    builder.setShowTitle(click.isLeftClick());
-                    buttonMatch = true;
-                    break;
-                case "Glow":
-                    builder.setContainerShallGlow(click.isLeftClick());
-                    buttonMatch = true;
-                    break;
-                case "Random_spawn":
-                    builder.setRandomSpawn(click.isLeftClick());
-                    buttonMatch = true;
-                    break;
-                case "Loot_on_timer":
-                    builder.setSpawningContainerWithCooldown(click.isLeftClick());
-                    buttonMatch = true;
-                    break;
-                case "Attempts":
-                    int attempts = containerDataBuilder.getAttempts();
+                        if (click.isRightClick())
+                            attempts += 1;
+                        if (click.isLeftClick())
+                            attempts -= 1;
 
-                    if (click.isRightClick())
-                        attempts += 1;
-                    if (click.isLeftClick())
-                        attempts -= 1;
+                        containerBuilder.setAttempts(attempts);
+                        buttonMatch = true;
+                        break;
+                    case "Min_radius":
+                        int minRadius = lootContainerData.getMinRadius();
 
-                    builder.setAttempts(attempts);
-                    buttonMatch = true;
-                    break;
-                case "Min_radius":
-                    int minRadius = containerDataBuilder.getMinRadius();
-
-                    if (click.isRightClick())
-                        minRadius += click.isShiftClick() ? increase : 1;
-                    if (click.isLeftClick())
-                        minRadius -= click.isShiftClick() ? decrease : 1;
-                    if (minRadius < 1)
-                        minRadius = 0;
-                    builder.setMinRadius(minRadius);
-                    buttonMatch = true;
-                    break;
-                case "Max_radius":
-                    int maxRadius = containerDataBuilder.getMaxRadius();
-                    if (click.isRightClick())
-                        maxRadius += click.isShiftClick() ? increase : 1;
-                    if (click.isLeftClick())
-                        maxRadius -= click.isShiftClick() ? decrease : 1;
-                    if (maxRadius < 1)
-                        maxRadius = 0;
-                    builder.setMaxRadius(maxRadius);
-                    buttonMatch = true;
-                    break;
-                case "World_center":
-                    builder.setSpawnContainerFromWorldCenter(click.isLeftClick());
-                    builder.setSpawnContainerFromPlayerCenter(false);
-                    if (player.getLocation().getWorld() != null)
-                        builder.setSpawnLocation(new LocationWrapper(player.getLocation().getWorld().getSpawnLocation(), false));
-                    buttonMatch = true;
-                    break;
-                case "Player_set_loc":
-                    builder.setSpawnContainerFromPlayerCenter(click.isLeftClick());
-                    builder.setSpawnContainerFromWorldCenter(false);
-                    builder.setSpawnLocation(new LocationWrapper(player.getLocation(), false));
-                    buttonMatch = true;
-                    break;
-                case "Spawn_On_Surface":
-                    builder.setSpawnOnSurface(click.isLeftClick());
-                    buttonMatch = true;
-                    break;
-                case "Permission":
-                    if (click.isLeftClick()) {
-                        new SetPermission(containerDataName).start(player);
-                        return true;
+                        if (click.isRightClick())
+                            minRadius += click.isShiftClick() ? increase : 1;
+                        if (click.isLeftClick())
+                            minRadius -= click.isShiftClick() ? decrease : 1;
+                        if (minRadius < 1)
+                            minRadius = 0;
+                        containerBuilder.setMinRadius(minRadius);
+                        buttonMatch = true;
+                        break;
+                    case "Max_radius":
+                        int maxRadius = lootContainerData.getMaxRadius();
+                        if (click.isRightClick())
+                            maxRadius += click.isShiftClick() ? increase : 1;
+                        if (click.isLeftClick())
+                            maxRadius -= click.isShiftClick() ? decrease : 1;
+                        if (maxRadius < 1)
+                            maxRadius = 0;
+                        containerBuilder.setMaxRadius(maxRadius);
+                        buttonMatch = true;
+                        break;
+                    case "World_center":
+                        containerBuilder.setSpawnContainerFromWorldCenter(click.isLeftClick());
+                        containerBuilder.setSpawnContainerFromPlayerCenter(false);
+                        if (player.getLocation().getWorld() != null)
+                            containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation().getWorld().getSpawnLocation(), false));
+                        buttonMatch = true;
+                        break;
+                    case "Player_set_loc":
+                        containerBuilder.setSpawnContainerFromPlayerCenter(click.isLeftClick());
+                        containerBuilder.setSpawnContainerFromWorldCenter(false);
+                        containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation(), false));
+                        buttonMatch = true;
+                        break;
+                    case "Spawn_On_Surface":
+                        containerBuilder.setSpawnOnSurface(click.isLeftClick());
+                        buttonMatch = true;
+                        break;
+                    case "Permission":
+                        if (click.isLeftClick()) {
+                            new SetPermission(containerKey).start(player);
+                            return true;
+                        }
+                        buttonMatch = true;
+                        containerBuilder.setPermissionForRandomSpawn("");
+                        break;
+                    case "Select_worlds":
+                        new WorldsAllowed(containerKey).menuOpen(player);
+                        return false;
+                    case "Back_button":
+                        new ModifyContainerData().menuOpen(player);
+                        break;
+                }
+                if (buttonMatch) {
+                    if (containerBuilder.isSpawningContainerWithCooldown()) {
+                        containerDataCache.addContainerToSpawnTask(this.containerKey, containerBuilder.getCooldown());
                     }
-                    buttonMatch = true;
-                    builder.setPermissionForRandomSpawn("");
-                    break;
-                case "Select_worlds":
-                    new WorldsAllowed(containerDataName).menuOpen(player);
-                    return false;
-                case "Back_button":
-                    new ModifyContainerData().menuOpen(player);
-                    break;
-            }
-            if (buttonMatch) {
-                ContainerDataBuilder build = builder.build();
-                containerDataCache.setContainerData(containerDataName, build);
-                if (build.isSpawningContainerWithCooldown()) {
-                    containerDataCache.addContainerToSpawnTask(this.containerDataName, build.getCooldown());
+                    if (containerBuilder.isRandomSpawn()) {
+                        Lootboxes.getInstance().getSpawnLootContainer().setRandomSpawnedContainer();
+                    }
+                    return true;
                 }
-                if (build.isRandomSpawn()) {
-                    Lootboxes.getInstance().getSpawnLootContainer().setRandomSpawnedContainer();
-                }
-                this.containerDataBuilder = containerDataCache.getCacheContainerData(containerDataName);
-                return true;
             }
-        }
-        if (button.isActionTypeEqual("Forward_button")) {
-        }
-        if (button.isActionTypeEqual("Previous_button")) {
-        }
-        if (button.isActionTypeEqual("Search")) {
-        }
+            if (button.isActionTypeEqual("Forward_button")) {
+            }
+            if (button.isActionTypeEqual("Previous_button")) {
+            }
+            if (button.isActionTypeEqual("Search")) {
+            }
 
-        if (button.isActionTypeEqual("Back_button")) {
-            new AlterContainerDataMenu(containerDataName).menuOpen(player);
-        }
-        return false;
+            if (button.isActionTypeEqual("Back_button")) {
+                new AlterContainerDataMenu(containerKey).menuOpen(player);
+            }
+            return false;
+        });
     }
 
-    public org.broken.arrow.library.menu.button.manager.utility.MenuButton getActiveButton(MenuButtonData button, ContainerDataBuilder containerDataBuilder) {
+    public org.broken.arrow.library.menu.button.manager.utility.MenuButton getActiveButton(MenuButtonData button, LootContainerData lootContainerData) {
 
-        if (containerDataBuilder.isRandomSpawn()) {
+        if (lootContainerData.isRandomSpawn()) {
             switch (button.getActionType()) {
                 case "Random_spawn":
                 case "Attempts":
@@ -209,55 +208,55 @@ public class SettingsContainerData extends MenuHolder {
                 case "Spawn_On_Surface":
                     return button.getActiveButton();
                 case "Select_worlds":
-                    if (!containerDataBuilder.isSpawnContainerFromWorldCenter() && !containerDataBuilder.isSpawnContainerFromPlayerCenter())
+                    if (!lootContainerData.isSpawnContainerFromWorldCenter() && !lootContainerData.isSpawnContainerFromPlayerCenter())
                         return button.getActiveButton();
             }
         }
         return null;
     }
 
-    public Object[] setPlaceholders(MenuButtonData button, ContainerDataBuilder containerDataBuilder) {
+    public Object[] setPlaceholders(MenuButtonData button, LootContainerData lootContainerData) {
         Object[] placeholders = getPlaceholders("");
         if (button.isActionTypeEqual("Container_type"))
             placeholders = getPlaceholders("",
-                    containerDataBuilder.getRandomLootContainerItem(),
-                    containerDataBuilder.getRandomLootContainerFacing());
+                    lootContainerData.getRandomLootContainerItem(),
+                    lootContainerData.getRandomLootContainerFacing());
 
         if (button.isActionTypeEqual("Show_title"))
-            placeholders = getPlaceholders("", containerDataBuilder.isShowTitle());
+            placeholders = getPlaceholders("", lootContainerData.isShowTitle());
 
         if (button.isActionTypeEqual("Glow"))
-            placeholders = getPlaceholders("", containerDataBuilder.isContainerShallGlow());
+            placeholders = getPlaceholders("", lootContainerData.isContainerShallGlow());
 
         if (button.isActionTypeEqual("Random_spawn"))
-            placeholders = getPlaceholders(containerDataBuilder.isRandomSpawn());
+            placeholders = getPlaceholders(lootContainerData.isRandomSpawn());
 
         if (button.isActionTypeEqual("Loot_on_timer"))
-            placeholders = getPlaceholders("", containerDataBuilder.isSpawningContainerWithCooldown());
+            placeholders = getPlaceholders("", lootContainerData.isSpawningContainerWithCooldown());
 
         if (button.isActionTypeEqual("Attempts"))
-            placeholders = getPlaceholders("", containerDataBuilder.getAttempts());
+            placeholders = getPlaceholders("", lootContainerData.getAttempts());
 
         if (button.isActionTypeEqual("Min_radius"))
-            placeholders = getPlaceholders(containerDataBuilder.getMinRadius(), containerDataBuilder.getMinRadius());
+            placeholders = getPlaceholders(lootContainerData.getMinRadius(), lootContainerData.getMinRadius());
 
         if (button.isActionTypeEqual("Max_radius"))
-            placeholders = getPlaceholders("", containerDataBuilder.getMaxRadius());
+            placeholders = getPlaceholders("", lootContainerData.getMaxRadius());
 
         if (button.isActionTypeEqual("World_center"))
-            placeholders = getPlaceholders(containerDataBuilder.isSpawnContainerFromWorldCenter(), containerDataBuilder.getSpawnLocation() != null ? containerDataBuilder.getSpawnLocation().toString() : "");
+            placeholders = getPlaceholders(lootContainerData.isSpawnContainerFromWorldCenter(), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
 
         if (button.isActionTypeEqual("Player_set_loc"))
-            placeholders = getPlaceholders(containerDataBuilder.isSpawnContainerFromPlayerCenter(), containerDataBuilder.getSpawnLocation() != null ? containerDataBuilder.getSpawnLocation().toString() : "");
+            placeholders = getPlaceholders(lootContainerData.isSpawnContainerFromPlayerCenter(), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
 
         if (button.isActionTypeEqual("Spawn_On_Surface"))
-            placeholders = getPlaceholders(containerDataBuilder.isSpawnOnSurface());
+            placeholders = getPlaceholders(lootContainerData.isSpawnOnSurface());
 
         if (button.isActionTypeEqual("Permission"))
-            placeholders = getPlaceholders(containerDataBuilder.getPermissionForRandomSpawn() != null ? containerDataBuilder.getPermissionForRandomSpawn() : "");
+            placeholders = getPlaceholders(lootContainerData.getPermissionForRandomSpawn() != null ? lootContainerData.getPermissionForRandomSpawn() : "");
 
         if (button.isActionTypeEqual("Select_worlds"))
-            placeholders = getPlaceholders(containerDataBuilder.getWorlds());
+            placeholders = getPlaceholders(lootContainerData.getWorlds());
 
         return placeholders;
     }
