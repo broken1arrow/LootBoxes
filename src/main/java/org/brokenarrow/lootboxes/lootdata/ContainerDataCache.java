@@ -210,17 +210,6 @@ public class ContainerDataCache extends YamlFileManager {
         addContainerToEffectList(lootContainerData);
     }
 
-    public void setParticleEffects(@NotNull final String containerDataName, @NotNull Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
-        LootContainerData lootContainerData = this.getCacheContainerData(containerDataName);
-        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
-        if (particleEffect == null) particleEffect = new HashMap<>();
-        particleEffect.put(particle, particleBuilder.build());
-        lootContainerData.setParticleEffects(particleEffect);
-        LootContainerData containerData = lootContainerData.build();
-        this.setContainerData(containerDataName, containerData);
-        addContainerToEffectList(containerData);
-    }
-
     public ContainerLocationCache getContainerLocationCache() {
         return containerLocationCache;
     }
@@ -238,14 +227,6 @@ public class ContainerDataCache extends YamlFileManager {
         }
 
         return new HashMap<>();
-    }
-
-    public LootContainerData getCacheContainerBuilder(final String container) {
-        final LootContainerData lootContainerData = this.getCacheContainerData(container);
-        if (lootContainerData != null)
-            return lootContainerData;
-
-        return null;
     }
 
     public KeysData getCacheKey(final String containerKey, final String keyName) {

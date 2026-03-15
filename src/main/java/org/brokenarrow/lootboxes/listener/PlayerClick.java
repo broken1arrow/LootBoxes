@@ -7,6 +7,7 @@ import org.brokenarrow.lootboxes.builder.LocationData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.LootContainerRandomCache;
 import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
@@ -216,7 +217,7 @@ public class PlayerClick implements Listener {
 
 	private void clearRandomSawedContainers(Block block) {
 		final Location location = block.getLocation();
-		String randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
+		LootContainerRandomCache.RandomLootData randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
 		if(randomLootContainer != null){
 			final Inventory inventory = getInventory(location);
 			if(inventory == null) return;

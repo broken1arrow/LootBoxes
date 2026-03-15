@@ -1,7 +1,6 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.BlockKey;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
@@ -153,9 +152,7 @@ public class SpawnContainerRandomLoc {
                 }, false);
             }
             DebugMessages.sendDebug("[SpawnContainerRandom] Spawned loot container at location: " + serializeLoc);
-            final Location finalLoc = loc;
-            Lootboxes.getInstance().getLootContainerRandomCache().putLootCachedLocation(BlockKey.of(loc), key);
-            Lootboxes.getInstance().getLootContainerRandomCache().save();
+            Lootboxes.getInstance().getLootContainerRandomCache().putLootCachedLocation(loc, key);
         } else {
             if (settings.isDebug())
                 logger.log(Level.INFO, "Could not find valid location for spawn random chest for this center location " + location + ".");
@@ -212,9 +209,9 @@ public class SpawnContainerRandomLoc {
         if (!lootboxes.getLandProtectingLoader().checkIfAllProvidersAllowSpawnContainer(locationSubtracted))
             return null;
         if (lootContainerData.isSpawnOnSurface()) {
-            World world = location.getWorld();
-            int highestBlock = world != null ? world.getHighestBlockAt(location).getLocation().getBlockY() : 0;
-            return new Location(location.getWorld(), locationSubtracted.getBlockX(), highestBlock + 1, locationSubtracted.getBlockZ());
+            final World world = location.getWorld();
+
+            return findSafeSpot(world, locationSubtracted);
         }
         if (checkIfLocationAreValid(locationSubtracted, locationSubtracted.getBlockY(), player))
             return locationSubtracted;
@@ -320,5 +317,70 @@ public class SpawnContainerRandomLoc {
                 }
 
         return hasNearbyPlayer;
+    }
+
+    public Location findSafeSpot(final World world, final Location loc) {
+        if (world == null) return null;
+
+        int highestY = world.getHighestBlockYAt(loc);
+        Location scanLoc = new Location(world, loc.getBlockX(), highestY, loc.getBlockZ());
+        Block candidate = getLowestBlock(highestY, scanLoc);
+
+        if (candidate == null) {
+            candidate = getHigherBlock(highestY, world.getMaxHeight(), scanLoc);
+        }
+
+        if (candidate == null) {
+            for (int y = highestY; y > 0; y--) {
+                scanLoc.setY(y);
+                Block current = scanLoc.getBlock();
+                if (!current.getType().isAir() && y < 100 || y < 10 && current.getType().isAir()) {
+                    Block above = scanLoc.clone().add(0, 1, 0).getBlock();
+                    if (above.isEmpty()) {
+                        candidate = current;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return candidate != null ? candidate.getLocation().add(0, 1, 0) : null;
+    }
+
+    private static Block getLowestBlock(int highestY, Location scanLoc) {
+        for (int y = highestY; y > 1; y--) {
+            scanLoc.setY(y);
+            Block current = scanLoc.getBlock();
+            Material type = current.getType();
+
+            if (y < 60) break;
+
+            if (type == Material.LAVA || type == Material.WATER) continue;
+
+            Block above = scanLoc.clone().add(0, 1, 0).getBlock();
+            if (type.isSolid() && type != Material.BEDROCK && above.isEmpty()) {
+                return current;
+            }
+
+            Block below = scanLoc.clone().add(0, -1, 0).getBlock();
+            if (!above.isEmpty() && below.getType().isSolid()) break;
+        }
+        return null;
+    }
+
+    private static Block getHigherBlock(int highestY, int maxHeight, Location scanLoc) {
+        for (int y = highestY; y < maxHeight; y++) {
+            scanLoc.setY(y);
+            Block current = scanLoc.getBlock();
+            Material type = current.getType();
+
+            if (type == Material.LAVA || type == Material.WATER) continue;
+
+            Block above = scanLoc.clone().add(0, 1, 0).getBlock();
+            if (type.isSolid() && type != Material.BEDROCK && above.isEmpty()) {
+                return current;
+            }
+        }
+        return null;
     }
 }

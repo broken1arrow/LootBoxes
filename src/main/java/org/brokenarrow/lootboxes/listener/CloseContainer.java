@@ -4,9 +4,10 @@ import org.broken.arrow.library.menu.utility.ServerVersion;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.LocationData;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.LootContainerRandomCache;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +49,7 @@ public class CloseContainer implements Listener {
 	}
 
 	private void clearRandomSawedContainers(Location location, Inventory inventory) {
-		String randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
+		LootContainerRandomCache.RandomLootData randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
 		if(randomLootContainer != null){
 			if (settings.getSettingsData().isRemoveContainerWhenPlayerClose()) {
 				location.getBlock().setType(Material.AIR);

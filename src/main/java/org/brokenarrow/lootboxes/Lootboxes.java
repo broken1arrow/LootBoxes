@@ -12,6 +12,7 @@ import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.commands.GetKeyCommand;
 import org.brokenarrow.lootboxes.commands.GuiCommand;
 import org.brokenarrow.lootboxes.commands.ReloadCommand;
+import org.brokenarrow.lootboxes.database.DatabaseManager;
 import org.brokenarrow.lootboxes.effects.SpawnContainerEffectsTask;
 import org.brokenarrow.lootboxes.hooks.landprotecting.LandProtectingLoader;
 import org.brokenarrow.lootboxes.listener.*;
@@ -62,6 +63,7 @@ public class Lootboxes extends JavaPlugin {
     private MenusSettingsHandler menusCache;
     private ContainerDataCache containerDataCache;
     private LootContainerRandomCache lootContainerRandomCache;
+    private DatabaseManager databaseManager;
 
     @Override
     public void onLoad() {
@@ -97,6 +99,7 @@ public class Lootboxes extends JavaPlugin {
         this.checkChunkLoadUnload = new CheckChunkLoadUnload(this);
         this.heavyTasks = new HeavyTasks();
         this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
+        this.databaseManager = new DatabaseManager(this);
         this.settings.reload();
         if (settings.getSettingsData().isSingleMenuFile())
             this.menusCache = new MenusSettingsHandler(this, "language/menus_" + this.settings.getSettingsData().getLanguage() + ".yml", true);
@@ -122,12 +125,15 @@ public class Lootboxes extends JavaPlugin {
         } else {
             placeholderAPIMissing = true;
         }
-        this.getLogger().log(Level.INFO, "Has loaded LootBoxes, have fun now.");
-
         Logger logger = Logger.getLogger("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer");
         logger.setUseParentHandlers(false);
         logger.setLevel(Level.OFF);
         transferToNewCache();
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
+            this.databaseManager.registerTable();
+            this.databaseManager.loadAll();
+            this.getLogger().log(Level.INFO, "Has loaded LootBoxes, have fun now.");
+        }, 10L);
         //Configurator.setAllLevels("org.brokenarrow.lootboxes.lib.library.menu.holder.utility.MenuRenderer", org.apache.logging.log4j.Level.OFF);
     }
 
@@ -140,8 +146,6 @@ public class Lootboxes extends JavaPlugin {
         this.settings.reload();
         this.menusCache.reload();
         this.containerDataCache.reload();
-        this.lootContainerRandomCache.reload();
-        ContainerDataCacheLegacy.getInstance().reload();
         File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
 
         if (file.exists()) {
@@ -161,7 +165,7 @@ public class Lootboxes extends JavaPlugin {
         LootItems.getInstance().save();
         ItemData.getInstance().save();
         KeyDropData.getInstance().save();
-        this.lootContainerRandomCache.save();
+        this.getDatabaseManager().saveAll(true);
     }
 
     public void registerCommands() {
@@ -184,6 +188,10 @@ public class Lootboxes extends JavaPlugin {
 
     public static Lootboxes getInstance() {
         return plugin;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     public HeavyTasks getHeavyTasks() {
@@ -290,6 +298,7 @@ public class Lootboxes extends JavaPlugin {
 
 
     private void transferToNewCache() {
+        ContainerDataCacheLegacy.getInstance().reload();
         Map<String, ContainerDataBuilder> map = ContainerDataCacheLegacy.getInstance().getCacheContainerData();
         if (map != null && !map.isEmpty()) {
             map.forEach((containerKey, containerData) -> {

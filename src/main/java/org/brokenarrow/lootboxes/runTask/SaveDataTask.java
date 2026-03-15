@@ -36,8 +36,8 @@ public class SaveDataTask extends BukkitRunnable {
 		if (amount >= 20)
 			task();
 		amount++;
-		if(time >= 60) {
-			this.lootboxes.getLootContainerRandomCache().tickTask();
+		if(time >= 120) {
+			this.lootboxes.getDatabaseManager().saveAll(false);
 			time = 0;
 		}
 		time++;

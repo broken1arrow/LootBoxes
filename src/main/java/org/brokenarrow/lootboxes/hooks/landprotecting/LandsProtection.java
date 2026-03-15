@@ -17,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +25,15 @@ public class LandsProtection implements ProtectingProvider {
     private LandsIntegration lands;
     private final Plugin plugin;
     private LandsFlag landsFlag;
+    private NaturalFlag flag;
 
     public LandsProtection(Plugin plugin) {
         lands = LandsIntegration.of(plugin);
         this.plugin = plugin;
         try {
+            flag = NaturalFlag.of(lands,FlagTarget.ADMIN,"LootBoxes");
             landsFlag = new LandsFlag(plugin);
-            lands.getFlagRegistry().register(landsFlag);
+            lands.getFlagRegistry().register(flag);
         } catch (FlagConflictException exception) {
             exception.printStackTrace();
         }
@@ -44,7 +47,23 @@ public class LandsProtection implements ProtectingProvider {
             return landsArea.hasNaturalFlag(landsFlag);
         } else*/ {
             LandWorld world = lands.getWorld(location.getWorld());
-            return world != null && world.hasNaturalFlag(location, landsFlag);
+            if(world != null) {
+                Method[] methods = flag.getClass().getDeclaredMethods();
+                for (Method method : methods) {
+                    try {
+                        // Vi anropar bara metoder som har 0 parametrar för att undvika fel
+                        if (method.getParameterCount() == 0 && !method.getName().equals("main")) {
+                            // Kör metoden på vår instans
+                            Object resultat = method.invoke(flag);
+                            System.out.println("Metod: " + method.getName() + " | Värde: " + resultat);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Kunde inte köra metod: " + method.getName());
+                    }
+                }
+                System.out.println("world.hasNaturalFlag(location, flag) " + world.hasNaturalFlag(location, flag));
+            }
+            return world != null && world.hasNaturalFlag(location, flag);
         }
     }
 

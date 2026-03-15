@@ -177,6 +177,12 @@
             <version>${utility-library}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.broken.arrow.library</groupId>
+            <artifactId>database</artifactId>
+            <version>${utility-library}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -226,6 +232,8 @@
                                     <include>org.broken.arrow.library:commands</include>
                                     <include>org.broken.arrow.library:serialize-utility</include>
                                     <include>org.broken.arrow.library:version</include>
+                                    <include>org.broken.arrow.library:database</include>
+
                                     <!--              <include>com.github.broken1arrow:MenuLibrary*</include>
                                                 <include>com.github.broken1arrow:*</include>
                                                 <include>de.tr7zw:*</include>

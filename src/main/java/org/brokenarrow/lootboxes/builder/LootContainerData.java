@@ -33,7 +33,7 @@ public class LootContainerData implements ConfigurationSerializable {
     private Set<String> worlds = new HashSet<>();
     private Map<Object, ParticleEffect> particleEffects;
     private Map<Location, ContainerData> containerData;
-    private Map<String, KeysData> keysData;
+    private Map<String, KeysData> keysData = new HashMap<>();
     private LocationWrapper spawnLocation;
     private boolean spawningContainerWithCooldown;
     private boolean enchant;
@@ -269,20 +269,20 @@ public class LootContainerData implements ConfigurationSerializable {
     }
 
     public LootContainerData setKeysData(final Map<String, KeysData> keysData) {
-        this.keysData = keysData;
+        if (keysData == null) {
+            this.keysData = new HashMap<>();
+        } else {
+            this.keysData = keysData;
+        }
         return this;
     }
 
     public LootContainerData setKeysData(final String keyName, final KeysData data) {
-        if (this.keysData == null)
-            this.keysData = new HashMap<>();
         this.keysData.put(keyName, data);
         return this;
     }
 
     public LootContainerData writeKeysData(final String keyName, final Consumer<KeysDataWrapper> callBack) {
-        if (this.keysData == null)
-            this.keysData = new HashMap<>();
         final KeysData keysData = this.keysData.getOrDefault(keyName, new KeysData(keyName, "", "", 1, Material.TRIPWIRE_HOOK, new ArrayList<>()));
         keysData.updateKeyData(callBack);
         return this.setKeysData(keyName, keysData);
@@ -382,7 +382,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("permission", this.permissionForRandomSpawn == null ? "" : this.permissionForRandomSpawn);
         keysData.put("Icon", this.icon + "");
         keysData.put("Random_loot_container", this.randomLootContainerItem + "");
-        keysData.put("Random_loot_faceing", this.randomLootContainerFacing + "");
+        keysData.put("Random_loot_facing", this.randomLootContainerFacing + "");
         keysData.put("Worlds_allow_spawn", new ArrayList<>(this.worlds));
         keysData.put("Display_name", this.displayName);
         keysData.put("Lore", this.lore);
@@ -395,7 +395,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Enchant", this.enchant);
         keysData.put("Random_spawn", this.randomSpawn);
         keysData.put("Cooldown", this.cooldown);
-        keysData.put("Random_loot_titel", this.showTitle);
+        keysData.put("Random_loot_title", this.showTitle);
         keysData.put("Random_loot_glow", this.containerShallGlow);
         keysData.put("Keys", this.keysData);
         keysData.put("Attempts", this.attempts);
@@ -404,8 +404,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Min_radius", this.minRadius);
         keysData.put("Max_radius", this.maxRadius);
         keysData.put("Spawn-point", this.spawnLocation != null ? this.spawnLocation.serialize() : new HashMap<>());
-        keysData.put("Containers", this.containerData);
-        keysData.put("Random_spawn_containers", this.containerData);
+        keysData.put("Containers", this.containerData != null ? this.containerData : new HashMap<>());
         return keysData;
     }
 
