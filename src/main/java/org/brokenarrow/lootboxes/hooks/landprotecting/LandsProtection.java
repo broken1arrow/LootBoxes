@@ -17,7 +17,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +29,24 @@ public class LandsProtection implements ProtectingProvider {
     public LandsProtection(Plugin plugin) {
         lands = LandsIntegration.of(plugin);
         this.plugin = plugin;
-        try {
-            flag = NaturalFlag.of(lands,FlagTarget.ADMIN,"LootBoxes");
-            landsFlag = new LandsFlag(plugin);
-            lands.getFlagRegistry().register(flag);
-        } catch (FlagConflictException exception) {
-            exception.printStackTrace();
+
+        NaturalFlag flag = lands.getFlagRegistry().getNatural("LootBoxes");
+        if (flag == null) {
+            flag = NaturalFlag.of(lands, FlagTarget.ADMIN, "LootBoxes");
+            try {
+                lands.getFlagRegistry().register(flag);
+            } catch (FlagConflictException exception) {
+                //exception.printStackTrace();
+            }
         }
+        List<String> description = new ArrayList<>();
+        description.add("Allow or disallow containers spawn here.");
+        flag.setDisplayName("Loot boxes")
+                .setIcon(new ItemStack(Material.CHEST))
+                .setDescription(description)
+                .setDefaultState(true);
+        this.flag = flag;
+
     }
 
     @Override
@@ -45,166 +55,10 @@ public class LandsProtection implements ProtectingProvider {
         if (landsArea != null) {
             //return false;//lands.getLandWorld(location.getWorld()).hasFlag(location, (LandFlag) flag);
             return landsArea.hasNaturalFlag(landsFlag);
-        } else*/ {
+        } else*/
+        {
             LandWorld world = lands.getWorld(location.getWorld());
-            if(world != null) {
-                Method[] methods = flag.getClass().getDeclaredMethods();
-                for (Method method : methods) {
-                    try {
-                        // Vi anropar bara metoder som har 0 parametrar för att undvika fel
-                        if (method.getParameterCount() == 0 && !method.getName().equals("main")) {
-                            // Kör metoden på vår instans
-                            Object resultat = method.invoke(flag);
-                            System.out.println("Metod: " + method.getName() + " | Värde: " + resultat);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Kunde inte köra metod: " + method.getName());
-                    }
-                }
-                System.out.println("world.hasNaturalFlag(location, flag) " + world.hasNaturalFlag(location, flag));
-            }
             return world != null && world.hasNaturalFlag(location, flag);
         }
     }
-
-    public class LandsFlag implements NaturalFlag {
-        private final Plugin plugin;
-
-        public LandsFlag(final Plugin plugin) {
-            this.plugin = plugin;
-        }
-
-        @Override
-        public boolean getDefaultState() {
-            return true;
-        }
-
-        @Override
-        public @NotNull DefaultStateFlag<NaturalFlag> setDefaultState(final boolean state) {
-            return this;
-        }
-
-        @Override
-        public boolean isAutoDisable() {
-            return false;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setAutoDisable(final boolean autoDisable) {
-            return this;
-        }
-
-        @Override
-        public @NotNull Plugin getPlugin() {
-            return plugin;
-        }
-
-        @Override
-        public boolean shouldDisplay(@Nullable final Area area, @Nullable final LandPlayer landPlayer) {
-            return false;
-        }
-
-        @Override
-        public @NotNull ItemStack getIcon() {
-            return new ItemStack(Material.CHEST);
-        }
-
-        @Override
-        public @NotNull NaturalFlag setIcon(@Nullable final ItemStack icon) {
-            return this;
-        }
-
-        @Override
-        public boolean isDisplayInWilderness() {
-            return false;
-        }
-
-        @Override
-        public boolean isAlwaysAllowInWilderness() {
-            return false;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setAlwaysAllowInWilderness(final boolean allow) {
-            return this;
-        }
-
-        @Override
-        public boolean isApplyInSubareas() {
-            return false;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setApplyInSubareas(final boolean set) {
-            return this;
-        }
-
-        @Override
-        public @Nullable List<String> getDescription() {
-            List<String> description = new ArrayList<>();
-            description.add("Allow or disallow containers spawn here.");
-            return description;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setDescription(@Nullable final List<String> description) {
-            return this;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setDescription(@Nullable final String description) {
-            return this;
-        }
-
-        @Override
-        public boolean isDisplay() {
-            return false;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setDisplay(final boolean display) {
-            return this;
-        }
-
-        @Override
-        public @NotNull String getDisplayName() {
-            return " ";
-        }
-
-        @Override
-        public @NotNull NaturalFlag setDisplayName(@Nullable final String displayName) {
-            return this;
-        }
-
-        @Override
-        public @NotNull String getName() {
-            return "LootBoxes";
-        }
-
-        @Override
-        public boolean isActiveInWar() {
-            return false;
-        }
-
-        @Override
-        public @NotNull NaturalFlag setActiveInWar(final boolean activeInWar) {
-            return this;
-        }
-
-        @Override
-        public @NotNull String getTogglePermission() {
-            return "";
-        }
-
-        @Override
-        public @NotNull FlagModule getModule() {
-            return FlagModule.LAND;
-        }
-
-        @Override
-        public @NotNull FlagTarget getTarget() {
-            return FlagTarget.ADMIN;
-        }
-    }
-
 }
