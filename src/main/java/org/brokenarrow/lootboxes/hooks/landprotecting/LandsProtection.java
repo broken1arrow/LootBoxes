@@ -1,21 +1,14 @@
 package org.brokenarrow.lootboxes.hooks.landprotecting;
 
-
 import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.exceptions.FlagConflictException;
-import me.angeschossen.lands.api.flags.enums.FlagModule;
 import me.angeschossen.lands.api.flags.enums.FlagTarget;
 import me.angeschossen.lands.api.flags.type.NaturalFlag;
-import me.angeschossen.lands.api.flags.type.parent.DefaultStateFlag;
-import me.angeschossen.lands.api.land.Area;
 import me.angeschossen.lands.api.land.LandWorld;
-import me.angeschossen.lands.api.player.LandPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +16,6 @@ import java.util.List;
 public class LandsProtection implements ProtectingProvider {
     private LandsIntegration lands;
     private final Plugin plugin;
-    private LandsFlag landsFlag;
     private NaturalFlag flag;
 
     public LandsProtection(Plugin plugin) {
