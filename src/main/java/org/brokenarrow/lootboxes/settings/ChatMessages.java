@@ -34,7 +34,7 @@ public class ChatMessages extends YamlFileManager {
 	public static ChatMessages SAVE_ENCHANTMENT_CONFIRM = new ChatMessages("SAVE_ENCHANTMENT.CONFIRM");
 	public static ChatMessages SEACH_FOR_ENCHANTMENT_TYPE_NAME = new ChatMessages("SEACH_FOR_ENCHANTMENT.TYPE_NAME");
 	public static ChatMessages SEACH_FOR_ITEM_TYPE_NAME = new ChatMessages("SEACH_FOR_ITEM.TYPE_NAME");
-	public static ChatMessages SET_NAME_ON_KEY_DUPLICATE = new ChatMessages("SET_NAME_ON_KEY. DUPLICATE");
+	public static ChatMessages SET_NAME_ON_KEY_DUPLICATE = new ChatMessages("SET_NAME_ON_KEY.DUPLICATE");
 	public static ChatMessages SET_NAME_ON_KEY_TYPE_NAME = new ChatMessages("SET_NAME_ON_KEY.TYPE_NAME");
 	public static ChatMessages SET_NAME_ON_KEY_CONFIRM = new ChatMessages("SET_NAME_ON_KEY.CONFIRM");
 	public static ChatMessages SET_NAME_ON_KEY_CONFIRM_FINISH = new ChatMessages("SET_NAME_ON_KEY.CONFIRM_FINISH");

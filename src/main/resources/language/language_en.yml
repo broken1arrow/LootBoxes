@@ -34,7 +34,7 @@ SEACH_FOR_ITEM:
   TYPE_NAME: "&fSeach for item or items, type in parts or whole name of item"
 
 SET_NAME_ON_KEY:
-  DUPLICATE: "&fIs exist alredy key with this name {0}"
+  DUPLICATE: "&fIt does already exist already key with this name {0}"
   TYPE_NAME: "&fType name on the key {0}"
   CONFIRM: "&fHave now set name: {0}"
   CONFIRM_FINISH: "&fHave now set name on all keys: {0}"
