@@ -277,6 +277,10 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
+    public boolean containsKey(final String keyName) {
+        return this.keysData.containsKey(keyName);
+    }
+
     public LootContainerData setKeysData(final String keyName, final KeysData data) {
         this.keysData.put(keyName, data);
         return this;
