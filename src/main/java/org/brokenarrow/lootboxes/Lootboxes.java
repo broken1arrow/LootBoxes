@@ -129,6 +129,7 @@ public class Lootboxes extends JavaPlugin {
         logger.setUseParentHandlers(false);
         logger.setLevel(Level.OFF);
         transferToNewCache();
+        transferKeDrops();
         Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
             this.databaseManager.registerTable();
             this.databaseManager.loadAll();
@@ -301,14 +302,22 @@ public class Lootboxes extends JavaPlugin {
         ContainerDataCacheLegacy.getInstance().reload();
         Map<String, ContainerDataBuilder> map = ContainerDataCacheLegacy.getInstance().getCacheContainerData();
         if (map != null && !map.isEmpty()) {
-            map.forEach((containerKey, containerData) -> {
-                this.containerDataCache.setContainerData(containerKey, containerData.convertToLootContainer());
-            });
+            map.forEach((containerKey, containerData) ->
+                    this.containerDataCache.setContainerData(containerKey, containerData.convertToLootContainer()));
             this.containerDataCache.save();
             File file = new File(plugin.getDataFolder(), "container_data.db");
             if (file.exists()) {
                 file.renameTo(new File(plugin.getDataFolder(), "container_data_backup.db"));
             }
+        }
+    }
+
+    private void transferKeDrops() {
+        File file = new File(plugin.getDataFolder(), "keys/keysDropData.yml");
+        if (file.exists()) {
+            KeyDropData.getInstance().getCachedKeyData().forEach((entityType, entityKeyData) ->
+                    KeyDropData.getInstance().save(entityType.name().toLowerCase()));
+            file.renameTo(new File(plugin.getDataFolder(), "keys/keysDropData_backup.ymlold"));
         }
     }
 }

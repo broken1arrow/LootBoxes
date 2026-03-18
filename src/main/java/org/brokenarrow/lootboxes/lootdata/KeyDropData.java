@@ -4,8 +4,8 @@ import com.google.common.base.Enums;
 import org.broken.arrow.library.yaml.YamlFileManager;
 import org.broken.arrow.library.yaml.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
+import org.brokenarrow.lootboxes.builder.KeysData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
@@ -30,13 +29,15 @@ public class KeyDropData extends YamlFileManager {
 
     private static final KeyDropData instance = new KeyDropData();
     private final Map<EntityType, Map<String, KeyMobDropData>> cachedKeyData = new HashMap<>();
-    private final Map<EntityType, EntityKeyData> entityCache = new HashMap<>();
 
     public KeyDropData() {
-        super(Lootboxes.getInstance(), "keys/keysDropData.yml");
-
+        //super(Lootboxes.getInstance(), "keys/keysDropData.yml");
+        super(Lootboxes.getInstance(), "keys", false, false);
     }
 
+    public Map<EntityType, Map<String, KeyMobDropData>> getCachedKeyData() {
+        return cachedKeyData;
+    }
 
     public Map<String, KeyMobDropData> getKeyMobDropValues(final EntityType entityType) {
         return cachedKeyData.get(entityType);
@@ -47,7 +48,7 @@ public class KeyDropData extends YamlFileManager {
         return this.cachedKeyData.get(entityType);
     }
 
-    public boolean createKeyData(final EntityType entityType,final String keyUniqueName) {
+    public boolean createMobLootData(final EntityType entityType, final String keyUniqueName) {
         Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(entityType);
         if (dropDataMap != null) {
             if (dropDataMap.containsKey(keyUniqueName)) {
@@ -72,20 +73,21 @@ public class KeyDropData extends YamlFileManager {
     }
 
     @Nonnull
-    public KeyMobDropData getKeyMobDropData(final EntityType entityType, final String fileName, final String keyName) {
+    public KeyMobDropData getOrCreateMobDropForKey(@Nonnull final EntityType entityType, @Nonnull final String lootContainerKey, @Nonnull final String keyName) {
         final Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(entityType);
         if (dropDataMap != null) {
             KeyMobDropData keyMobDropData = dropDataMap.get(keyName);
             if (keyMobDropData != null)
                 return keyMobDropData;
             else {
-                return new KeyMobDropData.Builder().setLootContainerKey(fileName).setKeyName(keyName).build();
+                return new KeyMobDropData.Builder().setLootContainerKey(lootContainerKey).setKeyName(keyName).build();
             }
         }
-        return new KeyMobDropData.Builder().setLootContainerKey(fileName).setKeyName(keyName).build();
+        return new KeyMobDropData.Builder().setLootContainerKey(lootContainerKey).setKeyName(keyName).build();
     }
 
-    public KeyMobDropData getKeyMobDropData(final String keyName) {
+    @Nullable
+    public KeyMobDropData getMobDropFromKeyName(final String keyName) {
         for (final Map<String, KeyMobDropData> dropDataMap : this.cachedKeyData.values()) {
             final KeyMobDropData keysData = dropDataMap.get(keyName);
             if (keysData != null)
@@ -94,14 +96,14 @@ public class KeyDropData extends YamlFileManager {
         return null;
     }
 
-    public void putCachedKeyData(final String fileName, final String keyName, final KeyMobDropData keyMobDropData) {
-        Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(fileName);
+    public void putCachedKeyData(final EntityType entityType, final String keyName, final KeyMobDropData keyMobDropData) {
+        Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(entityType);
         if (dropDataMap == null) {
             dropDataMap = new HashMap<>();
         }
         dropDataMap.put(keyName, keyMobDropData);
-        this.cachedKeyData.put(fileName, dropDataMap);
-        saveTask(fileName);
+        this.cachedKeyData.put(entityType, dropDataMap);
+        saveTask(entityType);
     }
 
     public boolean removeKey(final EntityType entityType) {
@@ -116,79 +118,104 @@ public class KeyDropData extends YamlFileManager {
 
     @Override
     protected void saveDataToFile(@NotNull final File file, @NotNull final ConfigurationWrapper configurationWrapper) {
-        FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-        configuration.set("Keys_Data", null);
-        for (final Entry<EntityType, Map<String, KeyMobDropData>> settings : this.cachedKeyData.entrySet()) {
-            for (final Entry<String, KeyMobDropData> mobDropDataEntry : settings.getValue().entrySet()) {
-                if (mobDropDataEntry == null) continue;
-                EntityType containerDataKey = settings.getKey();
-                if (containerDataKey == null) continue;
-                final String childrenKey = mobDropDataEntry.getKey();
-                final KeyMobDropData data = mobDropDataEntry.getValue();
-                if (data == null) {
-                    continue;
-                }
-                final String containerKey = data.getLootContainerKey();
-                configuration.set("Keys_Data." +   childrenKey + ".Chance", data.getChance());
-                configuration.set("Keys_Data." + childrenKey + ".Minimum", data.getMinimum());
-                configuration.set("Keys_Data." + childrenKey + ".Maximum", data.getMaximum());
-                if (data.getEntityTypes() == null || data.getEntityTypes().isEmpty()) {
-                    //configuration.set("Keys_Data." + containerDataKey + "." + childrenKey + ".Entity_list", new ArrayList<>());
-                } else {
-                    for (final EntityType entityType : data.getEntityTypes()) {
-                        if (entityType != null) {
-                            configuration.set("Keys_Data." + childrenKey + ".Entity_list", data.getEntityTypes().stream().map(Enum::name).collect(Collectors.toList()));
-                        }
-                    }
-                }
+        final String fileName = getNameOfFile(file.getName());
+        final EntityType entityType = Enums.getIfPresent(EntityType.class, fileName.toUpperCase()).orNull();
+        final Map<String, KeyMobDropData> dropDataMap = this.cachedKeyData.get(entityType);
+        if (dropDataMap == null) return;
+
+        FileConfiguration configuration = new YamlConfiguration();
+        for (final Entry<String, KeyMobDropData> mobDropDataEntry : dropDataMap.entrySet()) {
+            if (mobDropDataEntry == null) continue;
+            final String childrenKey = mobDropDataEntry.getKey();
+            final KeyMobDropData data = mobDropDataEntry.getValue();
+            if (data == null) {
+                continue;
             }
+            final String containerKey = data.getLootContainerKey();
+            configuration.set("Keys_Data." + childrenKey + ".Chance", data.getChance());
+            configuration.set("Keys_Data." + childrenKey + ".Minimum", data.getMinimum());
+            configuration.set("Keys_Data." + childrenKey + ".Maximum", data.getMaximum());
+            configuration.set("Keys_Data." + childrenKey + ".Loot_container_key", data.getLootContainerKey());
         }
         try {
             configuration.save(file);
         } catch (final IOException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
     protected void loadSettingsFromYaml(final File file, FileConfiguration configuration) {
-
         final String fileName = getNameOfFile(file.getName());
+
         final ConfigurationSection configs = configuration.getConfigurationSection("Keys_Data");
-        if (configs != null)
+
+        if (configs != null) {
             for (final String containerDataKey : configs.getKeys(false)) {
                 final ConfigurationSection keys = configuration.getConfigurationSection("Keys_Data." + containerDataKey);
                 if (keys == null) continue;
 
                 final Map<String, KeyMobDropData> data = new HashMap<>();
-                EntityType entityTypeFromList = null;
-                for (final String childrenKey : keys.getKeys(false)) {
-                    final int chance = configuration.getInt("Keys_Data." + containerDataKey + "." + childrenKey + ".Chance");
-                    final int minimum = configuration.getInt("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Minimum");
-                    final int maximum = configuration.getInt("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Maximum");
-                    final List<EntityType> entityList = convertStringToEntityType(configuration.getStringList("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Entity_list"));
-                    if (entityList != null && !entityList.isEmpty()) {
-                        entityTypeFromList = entityList.stream().findFirst().orElse(EntityType.fromName("ZOMBIE"));
-                    }
+                List<EntityType> entityTypeFromList = getEntityType(configuration, containerDataKey, fileName, keys, data);
+                if (entityTypeFromList == null) {
+                    final int chance = configuration.getInt("Keys_Data." + containerDataKey + ".Chance");
+                    final int minimum = configuration.getInt("Keys_Data." + containerDataKey + ".Minimum");
+                    final int maximum = configuration.getInt("Keys_Data." + containerDataKey + ".Maximum");
+                    final String containerKey = configuration.getString("Keys_Data." + containerDataKey + ".Loot_container_key");
 
                     final KeyMobDropData.Builder builder = new KeyMobDropData.Builder();
                     builder.setChance(chance)
                             .setMinimum(minimum)
                             .setMaximum(maximum)
-                            .setEntityTypes(entityList)
-                            .setKeyName(childrenKey)
-                            .setLootContainerKey(containerDataKey);
+                            .setKeyName(containerDataKey)
+                            .setLootContainerKey(containerKey);
                     data.put(containerDataKey, builder.build());
                 }
-                EntityType entityType = Enums.getIfPresent(EntityType.class, fileName).orNull();
+
+
+                EntityType entityType = Enums.getIfPresent(EntityType.class, fileName.toUpperCase()).orNull();
                 if (entityType == null) {
                     if (entityTypeFromList != null) {
-                        entityType = entityTypeFromList;
-                    } else
-                        continue;
+                        entityTypeFromList.forEach(entity -> cachedKeyData.put(entity, data));
+                    }
+                    continue;
                 }
                 cachedKeyData.put(entityType, data);
             }
+        }
+    }
+
+    private @Nullable List<EntityType> getEntityType(FileConfiguration configuration, String containerDataKey, String fileName, ConfigurationSection keys, Map<String, KeyMobDropData> data) {
+        List<EntityType> entityTypeFromList = null;
+        if (!fileName.equals("keysDropData"))
+            return entityTypeFromList;
+
+        for (final String childrenKey : keys.getKeys(false)) {
+            final int chance = configuration.getInt("Keys_Data." + containerDataKey + "." + childrenKey + ".Chance");
+            final int minimum = configuration.getInt("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Minimum");
+            final int maximum = configuration.getInt("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Maximum");
+            final List<EntityType> entityList = convertStringToEntityType(configuration.getStringList("Keys_Data." + containerDataKey + "." + "." + childrenKey + ".Entity_list"));
+
+            if (entityList != null && !entityList.isEmpty()) {
+                entityTypeFromList = entityList;
+                Lootboxes.getInstance().getContainerDataCache().write(containerDataKey, containerData -> {
+                    KeysData keyData = containerData.getKeysData(childrenKey);
+                    if (keyData != null) {
+                        keyData.setEntityTypes(entityList);
+                    }
+                });
+            }
+
+            final KeyMobDropData.Builder builder = new KeyMobDropData.Builder();
+            builder.setChance(chance)
+                    .setMinimum(minimum)
+                    .setMaximum(maximum)
+                    .setKeyName(childrenKey)
+                    .setLootContainerKey(containerDataKey);
+            data.put(childrenKey, builder.build());
+        }
+        return entityTypeFromList;
     }
 
     private List<EntityType> convertStringToEntityType(final List<String> entityList) {

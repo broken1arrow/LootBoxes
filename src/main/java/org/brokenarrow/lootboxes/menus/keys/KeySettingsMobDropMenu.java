@@ -6,7 +6,9 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
+import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
+import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -17,24 +19,27 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
 public class KeySettingsMobDropMenu extends MenuHolder {
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final KeyDropData keyDropData = KeyDropData.getInstance();
     private final SettingsData settingsData = Lootboxes.getInstance().getSettings().getSettingsData();
     private final EntityType entityType;
-    private final String containerData;
+    private final String containerKey;
     private final String keyName;
     private final MenuTemplate guiTemplate;
     private KeyMobDropData mobDropData;
 
-    public KeySettingsMobDropMenu(final EntityType entityType, final String containerData, final String keyName) {
+    public KeySettingsMobDropMenu(final EntityType entityType, final String containerKey, final String keyName) {
         this.entityType = entityType;
-        this.containerData = containerData;
+        this.containerKey = containerKey;
         this.keyName = keyName;
         //this.guiTemplets = new GuiTempletsYaml.Builder(getViewer(), "Key_Settings_MobDrop").placeholders(keyName, "");
         this.guiTemplate = Lootboxes.getInstance().getMenu("Key_settings_mob_drop");
-        mobDropData = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+        mobDropData = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
@@ -68,8 +73,17 @@ public class KeySettingsMobDropMenu extends MenuHolder {
 
                 Object[] placeholders = new Object[0];
 
-                if (button.isActionTypeEqual("Mob_drop_this_key"))
-                    placeholders = getPlaceholders(mobDropData != null && mobDropData.getEntityTypes() != null ? mobDropData.getEntityTypes() : "");
+                if (button.isActionTypeEqual("Mob_drop_this_key")) {
+                    java.util.List<EntityType> entityTypes = containerDataCache.read(containerKey, containerData -> {
+                        KeysData keysData = containerData.getKeysData(keyName);
+                        return keysData != null ? keysData.getEntityTypes() : new ArrayList<>();
+                    });
+
+                    if (entityTypes == null || entityTypes.isEmpty())
+                        placeholders = getPlaceholders("No entities set");
+                    else
+                        placeholders = getPlaceholders(entityTypes);
+                }
                 if (button.isActionTypeEqual("Change_chance"))
                     placeholders = getPlaceholders(mobDropData != null ? mobDropData.getChance() : 0, settingsData.getIncrease(), settingsData.getDecrease());
 
@@ -94,7 +108,7 @@ public class KeySettingsMobDropMenu extends MenuHolder {
             //new EntityTypeListMenu(KEY_SETTINGS_MOBDROP, containerData, keyName, "").menuOpen(player);
         }
         if (button.isActionTypeEqual("Change_minimum")) {
-            final KeyMobDropData data = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+            final KeyMobDropData data = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
             final KeyMobDropData.Builder builder = data.getBuilder();
 
             int amount = 0;
@@ -111,12 +125,12 @@ public class KeySettingsMobDropMenu extends MenuHolder {
             if (minimum < 0)
                 minimum = 0;
             builder.setMinimum(minimum);
-            keyDropData.putCachedKeyData(containerData, keyName, builder.build());
-            this.mobDropData = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+            keyDropData.putCachedKeyData(entityType, keyName, builder.build());
+            this.mobDropData = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
             return true;
         }
         if (button.isActionTypeEqual("Change_maximum")) {
-            final KeyMobDropData data = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+            final KeyMobDropData data = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
             final KeyMobDropData.Builder builder = data.getBuilder();
 
             int amount = 0;
@@ -133,12 +147,12 @@ public class KeySettingsMobDropMenu extends MenuHolder {
             if (maximum < 0)
                 maximum = 0;
             builder.setMaximum(maximum);
-            keyDropData.putCachedKeyData(containerData, keyName, builder.build());
-            this.mobDropData = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+            keyDropData.putCachedKeyData(entityType, keyName, builder.build());
+            this.mobDropData = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
             return true;
         }
         if (button.isActionTypeEqual("Change_chance")) {
-            final KeyMobDropData data = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+            final KeyMobDropData data = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
             final KeyMobDropData.Builder builder = data.getBuilder();
 
             int amount = 0;
@@ -156,8 +170,8 @@ public class KeySettingsMobDropMenu extends MenuHolder {
             if (chance < 0)
                 chance = 0;
             builder.setChance(chance);
-            keyDropData.putCachedKeyData(containerData, keyName, builder.build());
-            this.mobDropData = keyDropData.getKeyMobDropData(entityType, containerData, keyName);
+            keyDropData.putCachedKeyData(entityType, keyName, builder.build());
+            this.mobDropData = keyDropData.getOrCreateMobDropForKey(entityType, containerKey, keyName);
             return true;
         }
         if (button.isActionTypeEqual("Forward_button")) {
@@ -173,7 +187,7 @@ public class KeySettingsMobDropMenu extends MenuHolder {
         if (button.isActionTypeEqual("Search")) {
         }
         if (button.isActionTypeEqual("Back_button")) {
-            new EntityTypeCachedMenu(containerData, keyName,"").menuOpen(player);
+            new EntityTypeCachedMenu(containerKey, keyName, "").menuOpen(player);
         }
         return false;
     }

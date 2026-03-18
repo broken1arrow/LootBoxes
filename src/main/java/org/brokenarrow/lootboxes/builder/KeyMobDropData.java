@@ -95,4 +95,17 @@ public final class KeyMobDropData {
 			return new KeyMobDropData(this);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "KeyMobDropData{" +
+				"chance=" + chance +
+				", minimum=" + minimum +
+				", maximum=" + maximum +
+				", keyName='" + keyName + '\'' +
+				", lootContainerKey='" + lootContainerKey + '\'' +
+				", entityTypes=" + entityTypes +
+				", builder=" + builder +
+				'}';
+	}
 }

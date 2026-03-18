@@ -136,7 +136,7 @@ public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
                             }
                         }
                     });
-                    final boolean createdMob = keyDropData.createKeyData(entityType, value);
+                    final boolean createdMob = keyDropData.createMobLootData(entityType, value);
                     return ButtonUpdateAction.ALL;
                 }
             }
