@@ -10,7 +10,7 @@ public final class KeyMobDropData {
 	private final int minimum;
 	private final int maximum;
 	private final String keyName;
-	private final String containerDataFileName;
+	private final String lootContainerKey;
 	private final List<EntityType> entityTypes;
 	private final Builder builder;
 
@@ -19,7 +19,7 @@ public final class KeyMobDropData {
 		this.minimum = builder.minimum;
 		this.maximum = builder.maximum;
 		this.keyName = builder.keyName;
-		this.containerDataFileName = builder.containerDataFileName;
+		this.lootContainerKey = builder.lootContainerKey;
 		this.entityTypes = builder.entityTypes;
 		this.builder = builder;
 	}
@@ -41,8 +41,8 @@ public final class KeyMobDropData {
 		return keyName;
 	}
 
-	public String getContainerDataFileName() {
-		return containerDataFileName;
+	public String getLootContainerKey() {
+		return lootContainerKey;
 	}
 
 	public List<EntityType> getEntityTypes() {
@@ -58,7 +58,7 @@ public final class KeyMobDropData {
 		private int minimum = 1;
 		private int maximum = 2;
 		private String keyName;
-		private String containerDataFileName;
+		private String lootContainerKey;
 		public List<EntityType> entityTypes;
 
 		public Builder setChance(int chance) {
@@ -81,8 +81,8 @@ public final class KeyMobDropData {
 			return this;
 		}
 
-		public Builder setContainerDataFileName(String containerDataFileName) {
-			this.containerDataFileName = containerDataFileName;
+		public Builder setLootContainerKey(String containerDataFileName) {
+			this.lootContainerKey = containerDataFileName;
 			return this;
 		}
 

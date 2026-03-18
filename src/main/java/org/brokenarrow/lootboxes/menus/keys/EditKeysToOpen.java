@@ -136,8 +136,14 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
                     if (click.isLeftClick())
                         new EditKey(containerKey, keyName).menuOpen(player);
                     if (click.isRightClick()) {
+                        containerDataCache.read(containerKey, containerData -> {
+                            final KeysData keysData = containerData.getKeysData(keyName);
+                            if (click.isRightClick() && keysData != null) {
+                                keysData.getEntityTypes().forEach(entityType -> keyDropData.removeKeyFromMob(entityType, keyName));
+                            }
+                            containerData.removeKeysData(keyName);
+                        });
                         containerDataCache.removeCacheKey(containerKey, keyName);
-                        keyDropData.removeKeyMobDropData(containerKey, keyName);
                         new EditKeysToOpen(containerKey).menuOpen(player);
                     }
                     return ButtonUpdateAction.NONE;

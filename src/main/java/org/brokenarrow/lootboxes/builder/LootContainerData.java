@@ -113,6 +113,10 @@ public class LootContainerData implements ConfigurationSerializable {
         return keysData.get(keyName);
     }
 
+    public void removeKeysData(@NotNull final String keyName) {
+        keysData.remove(keyName);
+    }
+
     public LocationWrapper getSpawnLocation() {
         return spawnLocation;
     }

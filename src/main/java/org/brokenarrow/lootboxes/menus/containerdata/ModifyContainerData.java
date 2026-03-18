@@ -103,8 +103,12 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                 if (click.isLeftClick())
                     new AlterContainerDataMenu(containerKeyName).menuOpen(player);
                 if (click.isRightClick()) {
+                    containerDataCache.read(containerKeyName, containerData -> {
+                        containerData.getKeysData().forEach((keyName, data) ->
+                                data.getEntityTypes().forEach(entityType -> keyDropData.removeKeyFromMob(entityType, keyName)));
+                    });
                     containerDataCache.removeCacheContainerData(containerKeyName);
-                    keyDropData.removeKey(containerKeyName);
+
                     return ButtonUpdateAction.ALL;
                 }
             }

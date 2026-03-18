@@ -7,6 +7,7 @@ import org.brokenarrow.lootboxes.menus.EntityTypeListMenu;
 import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.menus.MenuKeys;
 import org.brokenarrow.lootboxes.menus.ParticleAnimation;
+import org.brokenarrow.lootboxes.menus.keys.EntityTypeCachedMenu;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.SEACH_FOR_ITEM_TYP
 
 public class SearchInMenu extends SimpleConversation {
 
-	private MenuKeys menuAccess;
+	private final MenuKeys menuAccess;
 	private final MenuKeys menuKey;
 	private final String lootTable;
 	private final Object itemToEdit;
@@ -55,6 +56,8 @@ public class SearchInMenu extends SimpleConversation {
 				new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
 			if (menuAccess == MenuKeys.ENTITY_TYPE_LISTMENU)
 				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
+			if (menuAccess == MenuKeys.ENTITY_CACHED_TYPE_LISTMENU)
+				new EntityTypeCachedMenu(lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
 			else
 				new MaterialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
 

@@ -5,12 +5,10 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.commandprompt.ChangeDisplayNameLore;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
-import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.MaterialList;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -77,8 +75,7 @@ public class EditKey extends MenuHolder {
                         if (button.isActionTypeEqual("Alter_lore"))
                             placeholders = getPlaceholders("", keysData.getLore());
                         if (button.isActionTypeEqual("Mob_drop_key")) {
-                            KeyMobDropData data = KeyDropData.getInstance().getKeyMobDropData(containerData, keyName);
-                            placeholders = getPlaceholders(data != null && data.getEntityTypes() != null ? data.getEntityTypes() : "");
+                            placeholders = getPlaceholders(keysData.getEntityTypes() != null ? keysData.getEntityTypes() : "Not set");
                         }
                     }
                     return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
@@ -128,7 +125,7 @@ public class EditKey extends MenuHolder {
 
         }
         if (button.isActionTypeEqual("Mob_drop_key")) {
-            new KeySettingsMobDrop(containerData, keyName).menuOpen(player);
+            new EntityTypeCachedMenu(containerData, keyName,"").menuOpen(player);
         }
         if (button.isActionTypeEqual("Forward_button")) {
         }

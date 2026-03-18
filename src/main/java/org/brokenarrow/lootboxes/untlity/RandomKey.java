@@ -1,7 +1,6 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.EntityKeyData;
 import org.brokenarrow.lootboxes.builder.KeyMobDropData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
@@ -11,7 +10,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
@@ -25,27 +27,24 @@ public class RandomKey {
 
 	public ItemStack[] makeRandomAmountOfItems(EntityType entity) {
 		List<ItemStack> itemStacks = new ArrayList<>();
-		Set<EntityKeyData> entityKeyDataSet = this.keyDropData.getEntityCache(entity);
+		Map<String, KeyMobDropData> entityKeyDataSet = this.keyDropData.getEntityCache(entity);
 		if (entityKeyDataSet != null && !entityKeyDataSet.isEmpty()) {
-			for (EntityKeyData entityKeyData : entityKeyDataSet)
-				itemStacks.add(makeRandomAmountOfItems(entityKeyData.getContainerDataFileName(), entityKeyData.getKeyName()));
+			for (KeyMobDropData keyMobDropData : entityKeyDataSet.values())
+				itemStacks.add(makeRandomAmountOfItems(keyMobDropData));
 		}
 		return itemStacks.toArray(new ItemStack[0]);
 	}
 
-	public ItemStack makeRandomAmountOfItems(String containerData, String keyName) {
-
-		KeyMobDropData keyMobDropData = this.keyDropData.getKeyMobDropData(containerData, keyName);
+	public ItemStack makeRandomAmountOfItems(final KeyMobDropData keyMobDropData) {
 		if (keyMobDropData == null) return null;
-
+		final String containerData = keyMobDropData.getLootContainerKey();
+		final String keyName = keyMobDropData.getKeyName();
 		int amountOfItems = randomNumber(keyMobDropData);
-
 		if (!random.chance(keyMobDropData.getChance()))
 			return null;
 		Map<String, Object> map = new HashMap<>();
-
 		KeysData keysData = this.containerDataCache.getCacheKey(containerData, keyName);
-		map.put(MOB_DROP_KEY_NAME.name(), keysData.getKeyName());
+		map.put(MOB_DROP_KEY_NAME.name(),  keyName);
 		map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
 		String lootTable = keysData.getLootTableLinked();
 		if (lootTable == null || lootTable.isEmpty()) {
