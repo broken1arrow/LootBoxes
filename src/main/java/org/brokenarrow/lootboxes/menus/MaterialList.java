@@ -79,7 +79,7 @@ public class MaterialList extends MenuHolderPage<Material> {
             public ItemStack getItem() {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
-                return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
+                return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
                                 TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
                                 TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
                         .makeItemStack();
@@ -127,7 +127,7 @@ public class MaterialList extends MenuHolderPage<Material> {
 
         return new FillMenuButton<>((player, menu, click, clickedItem, material) -> {
             if (material != null) {
-                openEditMenuKey(player,click, material);
+                openEditMenuKey(player, click, material);
             }
             return ButtonUpdateAction.NONE;
         }, (slot, material) -> {
@@ -140,7 +140,7 @@ public class MaterialList extends MenuHolderPage<Material> {
                 return null;
             String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(itemstack.getType()));
 
-            return CreateItemUtily.of(menuButton.isGlow(),itemstack,
+            return CreateItemUtily.of(menuButton.isGlow(), itemstack,
                             displayName,
                             TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
                     .makeItemStack();
@@ -165,7 +165,7 @@ public class MaterialList extends MenuHolderPage<Material> {
 
             if (menuKey == MenuKeys.PARTICLE_SETTINGS) {
                 final ParticleEffect particleEffect = data.getParticleEffect(value);
-                Map<Object, ParticleEffect> particleEffectList = data.getParticleEffects();
+                Map<String, ParticleEffect> particleEffectList = data.getParticleEffects();
                 if (particleEffectList == null)
                     particleEffectList = new HashMap<>();
 
@@ -176,7 +176,7 @@ public class MaterialList extends MenuHolderPage<Material> {
                     if (click.isRightClick())
                         particleBuilder.setMaterial(null);
 
-                    particleEffectList.put(value, particleBuilder.build());
+                    particleEffectList.put(value.toString(), particleBuilder.build());
                     builder.setParticleEffects(particleEffectList);
                 }
                 new ParticleSettings(containerKey, value).menuOpen(player);

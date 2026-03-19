@@ -43,9 +43,9 @@ public class ParticlesConversion {
 		return particleList;
 	}
 
-	public  Map<Object, ParticleEffect> convertToParticleEffect(List<?> objectList) {
+	public  Map<String, ParticleEffect> convertToParticleEffect(List<?> objectList) {
 		ServerVersion version = Lootboxes.getInstance().getServerVersion();
-		Map<Object, ParticleEffect> map = new HashMap<>();
+		Map<String, ParticleEffect> map = new HashMap<>();
 		if (objectList == null || objectList.isEmpty()) return map;
 
 		for (final Object particle : objectList) {
@@ -59,7 +59,7 @@ public class ParticlesConversion {
 				builder.setEffect(part).setDataType(part.getData());
 			}
 			if ((version.atLeast(Version.v1_9) && particle instanceof Particle) || particle instanceof Effect)
-				map.put(particle, builder.build());
+				map.put(((Enum<?>) particle).name(), builder.build());
 		}
 
 		return map;

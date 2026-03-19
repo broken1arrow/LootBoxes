@@ -97,7 +97,7 @@ public class ContainerDataCacheLegacy extends YamlFileManager {
 		ContainerDataBuilder lootContainerData = this.getCacheContainerData(containerKey);
 		if (lootContainerData != null) {
 
-			Map<Object, ParticleEffect> particleEffects = lootContainerData.getParticleEffects();
+			Map<String, ParticleEffect> particleEffects = lootContainerData.getParticleEffects();
 			if (particleEffects != null)
 				if (org.broken.arrow.library.menu.utility.ServerVersion.atLeast(13.0))
 					return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
@@ -111,60 +111,60 @@ public class ContainerDataCacheLegacy extends YamlFileManager {
 		ContainerDataBuilder lootContainerData = this.getCacheContainerData(container);
 		if (lootContainerData != null) {
 
-			Map<Object, ParticleEffect> list = lootContainerData.getParticleEffects();
+			Map<String, ParticleEffect> list = lootContainerData.getParticleEffects();
 			if (list != null)
 				return new ArrayList<>(list.values());
 		}
 		return new ArrayList<>();
 	}
 
-	public boolean containsParticleEffect(@NotNull final String containerData, Object particle) {
+	public boolean containsParticleEffect(@NotNull final String containerData, String particle) {
 		if (particle == null) return false;
 
 		ContainerDataBuilder lootContainerData = this.getCacheContainerData(containerData);
 		if (lootContainerData == null) return false;
 
-		Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+		Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
 		if (particleEffect == null || particleEffect.isEmpty()) return false;
 
 		return particleEffect.containsKey(particle);
 	}
 
-	public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData, Object particle) {
+	public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData, String particle) {
 		if (particle == null) return false;
 
-		Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+		@Nullable Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
 		if (particleEffect == null || particleEffect.isEmpty()) return false;
 
 		return particleEffect.containsKey(particle);
 	}
 
-	public void removeParticleEffect(@NotNull final String containerData, Object particle) {
+	public void removeParticleEffect(@NotNull final String containerData, final String particle) {
 		if (particle == null) return;
 
 		ContainerDataBuilder lootContainerData = this.getCacheContainerData(containerData);
 		if (lootContainerData == null) return;
 
-		Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+		Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
 		if (particleEffect.isEmpty()) return;
 
 		particleEffect.remove(particle);
 	}
 
-	public void removeParticleEffect(@NotNull final ContainerDataBuilder lootContainerData, Object particle) {
+	public void removeParticleEffect(@NotNull final ContainerDataBuilder lootContainerData, final String particle) {
 		if (particle == null) return;
 
-		Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+		Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
 		if (particleEffect == null || particleEffect.isEmpty()) return;
 
 		particleEffect.remove(particle);
 		addContainerToEffectList(lootContainerData);
 	}
 
-	public void setParticleEffects(@NotNull final String containerDataName, @NotNull Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
+	public void setParticleEffects(@NotNull final String containerDataName, @NotNull final String particle, @NotNull final ParticleEffect.Builder particleBuilder) {
 		ContainerDataBuilder lootContainerData = this.getCacheContainerData(containerDataName);
 		final ContainerDataBuilder.LootContainerBuilder lootContainerBuilder = lootContainerData.getBuilder();
-		Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+		Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
 		if (particleEffect == null) particleEffect = new HashMap<>();
 
 		particleEffect.put(particle, particleBuilder.build());

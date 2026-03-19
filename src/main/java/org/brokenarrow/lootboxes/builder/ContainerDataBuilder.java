@@ -30,7 +30,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
     String displayName;
     List<String> lore;
     Set<String> worlds;
-    Map<Object, ParticleEffect> particleEffects;
+    Map<String, ParticleEffect> particleEffects;
     Map<Location, ContainerData> containerData;
     Map<String, KeysData> keysData;
     LocationWrapper spawnLocation;
@@ -64,14 +64,14 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
     }
 
     @Nullable
-    public Map<Object, ParticleEffect> getParticleEffects() {
+    public Map<String, ParticleEffect> getParticleEffects() {
         return particleEffects;
     }
 
     @Nullable
     public ParticleEffect getParticleEffect(final Object o) {
         if (o == null) return null;
-        Map<Object, ParticleEffect> particleEffects = this.getParticleEffects();
+        Map<String, ParticleEffect> particleEffects = this.getParticleEffects();
         if (particleEffects == null || particleEffects.isEmpty()) return null;
 
         return particleEffects.get(o);
@@ -260,12 +260,12 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
             return this;
         }
 
-        public LootContainerBuilder setParticleEffects(final Map<Object, ParticleEffect> particleEffects) {
+        public LootContainerBuilder setParticleEffects(final Map<String, ParticleEffect> particleEffects) {
             this.particleEffects = particleEffects;
             return this;
         }
 
-        public LootContainerBuilder setParticleEffect(@NotNull final Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
+        public LootContainerBuilder setParticleEffect(@NotNull final String particle, @NotNull final ParticleEffect.Builder particleBuilder) {
             if (this.particleEffects == null)
                 this.particleEffects = new HashMap<>();
 
@@ -526,7 +526,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
                 .setContainerDataLinkedToLootTable(lootTableLinked)
                 .setSpawningContainerWithCooldown(spawningContainerWithCooldown)
                 .setCooldown(cooldown)
-                .setParticleEffects(particles != null ? particles.entrySet().stream().collect(Collectors.toMap(effectEntry -> particlesConversion.getParticleOrEffect(effectEntry.getKey()), Map.Entry::getValue)) :
+                .setParticleEffects(particles != null ? particles.entrySet().stream().collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)) :
                         particlesConversion.convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? particlesConversion.convertParticleEffectList(particleEffectList) : particlesConversion.convertStringList(particleEffect)))
                 .setRandomLootWorlds(worlds)
                 .setEnchant(enchant)
