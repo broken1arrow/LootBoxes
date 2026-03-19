@@ -143,18 +143,9 @@ public class SettingsContainerData extends MenuHolder {
                         buttonMatch = true;
                         break;
                     case "Spawn_center":
-                        containerBuilder.selectCenterMode(click);
-                        buttonMatch = true;
-                        break;
+                    case "Player_set_loc":
                     case "World_center":
                         containerBuilder.selectCenterMode(click);
-                        if (player.getLocation().getWorld() != null)
-                            containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation().getWorld().getSpawnLocation(), false));
-                        buttonMatch = true;
-                        break;
-                    case "Player_set_loc":
-                        containerBuilder.selectCenterMode(click);
-                        containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation(), false));
                         buttonMatch = true;
                         break;
                     case "Spawn_On_Surface":
