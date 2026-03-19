@@ -127,12 +127,12 @@ public final class ParticleEffect implements ConfigurationSerializable {
 	@Override
 	public Map<String, Object> serialize() {
 		final Map<String, Object> particleData = new LinkedHashMap<>();
-		if (this.spigotParticle != null)
-			particleData.put("Particle", this.spigotParticle.getParticle() + "");
+		if (this.spigotParticle != null && this.spigotParticle.getParticle() != null)
+			particleData.put("Particle", this.spigotParticle.getParticle());
 		else
-			particleData.put("Particle", "");
-		particleData.put("Effect", this.effect + "");
-		particleData.put("Material", this.material + "");
+			particleData.put("Particle", null);
+		particleData.put("Effect", this.effect != null ? this.effect.name(): null);
+		particleData.put("Material",this.material != null ? this.material.name() : null);
 		particleData.put("Data", this.data);
 		final ParticleDustOptions dustOptions = this.particleDustOptions;
 		if (dustOptions != null) {

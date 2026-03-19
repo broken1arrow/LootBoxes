@@ -9,8 +9,8 @@ Data:
     SMOKE_NORMAL:
       ==: org.brokenarrow.lootboxes.builder.ParticleEffect
       Particle: SMOKE_NORMAL
-      Effect: 'null'
-      Material: 'null'
+      Effect: null
+      Material: null
       Data: 0
   Keys:
     Example_key:
