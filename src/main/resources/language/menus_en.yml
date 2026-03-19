@@ -949,6 +949,66 @@ Menus:
         lore:
           - ""
   ######################################################
+  # Lists entity type that is set for the key.
+  Entity_type_select_list:
+    menu_settings:
+      name: "&1Entity cache list: {0}"
+      # slots you want to use to add fill items inside.
+      fill-space: 9-35
+      sound: null
+      size: 45
+    buttons:
+      "-1":
+        name: "&bEntity:&6 {0}"
+        glow: false
+        material: COMPASS
+        lore:
+          - "&aLeft-click to edit entity"
+          - "&aRight-Click to remove this entity."
+      "40":
+        name: "&bSearch for a entity"
+        glow: false
+        material: PAPER
+        lore:
+          - "&aLeft-click for search for a entity"
+          - "&aRight-Click for reset the search"
+      "42":
+        name: "&bForward"
+        glow: false
+        material: ARROW
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2forward."
+      "38":
+        name: "&bPrevious"
+        glow: false
+        material: ARROW
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "44":
+        name: "&bBack"
+        glow: false
+        material: RED_STAINED_GLASS_PANE
+        lore:
+          - ""
+          - "&aGo back to"
+          - "&akey settings."
+      "36-37,39-41,43":
+        name: "&b"
+        glow: false
+        material: BLACK_STAINED_GLASS_PANE
+        lore:
+          - ""
+      "0-8":
+        name: "&b"
+        glow: false
+        material: BLACK_STAINED_GLASS_PANE
+        lore:
+          - ""
+  ######################################################
   # Customize with mobs shall drop this key.
   Key_settings_mob_drop:
     menu_settings:
