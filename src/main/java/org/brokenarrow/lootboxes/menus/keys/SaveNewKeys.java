@@ -75,7 +75,7 @@ public class SaveNewKeys extends MenuHolder {
 		}
 
 		if (button.isActionTypeEqual("Back_button")) {
-			new EditKeysToOpen(containerData).menuOpen(player);
+			new EditKeysToOpenMenu(containerData).menuOpen(player);
 		}
 		return false;
 	}

@@ -13,7 +13,7 @@ import org.brokenarrow.lootboxes.commandprompt.ContainerDataLinkedLootTable;
 import org.brokenarrow.lootboxes.commandprompt.SpecifyTime;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.*;
-import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpen;
+import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpenMenu;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -127,7 +127,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 					new ChangeDisplayNameLore(ALTER_CONTAINER_DATA_MENU, containerKey, "", false).start(player);
 					break;
 				case "Keys_to_open_container":
-					new EditKeysToOpen(containerKey).menuOpen(player);
+					new EditKeysToOpenMenu(containerKey).menuOpen(player);
 					break;
 				case "Change_icon":
 					new MaterialList(ALTER_CONTAINER_DATA_MENU, "", containerKey, "").menuOpen(player);

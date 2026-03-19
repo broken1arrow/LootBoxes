@@ -37,32 +37,38 @@ public class RandomKey {
 
     public ItemStack makeRandomAmountOfItems(final KeyMobDropData keyMobDropData) {
         if (keyMobDropData == null) return null;
-        final String containerData = keyMobDropData.getLootContainerKey();
+        final String containerKey = keyMobDropData.getLootContainerKey();
         final String keyName = keyMobDropData.getKeyName();
         int amountOfItems = randomNumber(keyMobDropData);
         if (keyMobDropData.getChance() <= 0 || !random.chance(keyMobDropData.getChance()))
             return null;
-        Map<String, Object> map = new HashMap<>();
-        KeysData keysData = this.containerDataCache.getCacheKey(containerData, keyName);
-        map.put(MOB_DROP_KEY_NAME.name(), keyName);
-        map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerData);
-        String lootTable = keysData.getLootTableLinked();
-        if (lootTable == null || lootTable.isEmpty()) {
-            LootContainerData containerDataCache = this.containerDataCache.getCacheContainerData(containerData);
-            if (containerDataCache != null) {
-                lootTable = containerDataCache.getLootTableLinked();
-            }
-        }
-        final String lootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
-        String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
-                lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-        List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
-                lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+       return this.containerDataCache.read(containerKey,containerData -> {
+           Map<String, Object> map = new HashMap<>();
+           KeysData keysData = this.containerDataCache.getCacheKey(containerKey, keyName);
+           map.put(MOB_DROP_KEY_NAME.name(), keyName);
+           map.put(MOB_DROP_CONTAINER_DATA_NAME.name(), containerKey);
+           final String lootTable = keysData.getLootTableLinked();
+           final String lootTableName = getLootTableName(containerData, lootTable);
 
-        return CreateItemUtily.of(false, keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();
+           String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
+                   lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+           List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+                   lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+
+           return CreateItemUtily.of(false, keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();
+        });
     }
 
-	private int randomNumber(KeyMobDropData keyMobDropData) {
+    public String getLootTableName(final LootContainerData containerData, String lootTable) {
+        if (lootTable == null || lootTable.isEmpty()) {
+            if (containerData != null) {
+                lootTable = containerData.getLootTableLinked();
+            }
+        }
+        return lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
+    }
+
+    private int randomNumber(KeyMobDropData keyMobDropData) {
 		return Math.max(random.randomIntNumber(keyMobDropData.getMinimum(), keyMobDropData.getMaximum()), 0);
 	}
 

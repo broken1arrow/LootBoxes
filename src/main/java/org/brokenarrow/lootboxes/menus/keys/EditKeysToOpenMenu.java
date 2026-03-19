@@ -29,13 +29,13 @@ import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
 
-public class EditKeysToOpen extends MenuHolderPage<String> {
+public class EditKeysToOpenMenu extends MenuHolderPage<String> {
     private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final KeyDropData keyDropData = KeyDropData.getInstance();
     private final String containerKey;
     private final MenuTemplate guiTemplate;
 
-    public EditKeysToOpen(String containerKey) {
+    public EditKeysToOpenMenu(String containerKey) {
         super(Lootboxes.getInstance().getContainerDataCache().getListOfKeys(containerKey));
         this.containerKey = containerKey;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Edit_keys_to_open");
@@ -144,7 +144,7 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
                             containerData.removeKeysData(keyName);
                         });
                         containerDataCache.removeCacheKey(containerKey, keyName);
-                        new EditKeysToOpen(containerKey).menuOpen(player);
+                        new EditKeysToOpenMenu(containerKey).menuOpen(player);
                     }
                     return ButtonUpdateAction.NONE;
                 });
@@ -157,16 +157,10 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
                     if (keysData == null) return null;
 
                     String lootTable = keysData.getLootTableLinked();
-                    if (lootTable == null || lootTable.isEmpty()) {
-                        LootContainerData containerDataCache = this.containerDataCache.getCacheContainerData(containerKey);
-                        if (containerDataCache != null) {
-                            lootTable = containerDataCache.getLootTableLinked();
-                        }
-                    }
-                    final String LootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
+                    String lootTableName = getLootTableName(containerBuilder, lootTable);
 
-                    String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-                    List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keyName, LootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+                    String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+                    List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keyName, lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
                     org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                     String displayName = translatePlaceholders(player, menuButton.getDisplayName(), keyName, keysData.getAmountNeeded(), placeholderDisplayName,
@@ -182,5 +176,14 @@ public class EditKeysToOpen extends MenuHolderPage<String> {
             }
             return null;
         });
+    }
+
+    public String getLootTableName(final LootContainerData containerData, String lootTable) {
+        if (lootTable == null || lootTable.isEmpty()) {
+            if (containerData != null) {
+                lootTable = containerData.getLootTableLinked();
+            }
+        }
+        return lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
     }
 }
