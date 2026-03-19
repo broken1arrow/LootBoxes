@@ -1,6 +1,6 @@
 Keys_Data:
   Example_key:
-    Chance: 5
+    Chance: 0
     Minimum: 1
     Maximum: 2
     Loot_container_key: Global_Container
