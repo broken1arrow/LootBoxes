@@ -15,10 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.broken.arrow.library.serialize.utility.converters.PlaceholderTranslator.translatePlaceholdersLore;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
-import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
+
 
 public class GetKeyCommand extends CommandHolder {
 	private final ContainerDataCache containerDataCacheInstance = Lootboxes.getInstance().getContainerDataCache();

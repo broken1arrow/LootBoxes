@@ -1,79 +1,83 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.broken.arrow.library.serialize.utility.converters.PlaceholderTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TranslatePlaceHolders {
+    private static final Lootboxes plugin = Lootboxes.getInstance();
 
-	public static List<String> translatePlaceholdersLore(Player player, List<String> lore, Object... placeholders) {
-		if(lore == null)
-			return new ArrayList<>();
-		if (!Lootboxes.getInstance().isPlaceholderAPIMissing())
-			return translatePlaceholdersLore(PlaceholderAPI.setPlaceholders(player, lore), placeholders);
-		return translatePlaceholdersLore(lore, placeholders);
-	}
-	public static List<String> translatePlaceholdersLore(List<String> loreList, Object... placeholders) {
-		return PlaceholderTranslator.translatePlaceholdersLore(loreList,placeholders);
-	}
+    public static String getDisplayName(final Player player, final String text, final Object... placeholder) {
+        if (player != null)
+            if (!plugin.isPlaceholderAPIMissing())
+                return PlaceholderAPI.setPlaceholders(player, getDisplayName(text,  placeholder));
+        return getDisplayName(text, placeholder);
+    }
 
-	public static boolean checkListForPlaceholdersAndTranslate(List<String> lores, String lore, Object... placeholders) {
-		int number = containsList(placeholders);
-		if (number < 0) return false;
-		if (lore.contains("{" + number + "}")) {
-			for (Object text : (List<?>) placeholders[number]) {
-				lores.add(lore.replace(("{" + number + "}"), text + ""));
-			}
-			return true;
-		}
-		return false;
-	}
+    public static String getDisplayName(final String displayName, final Object... placeholders) {
+        if (displayName != null) {
+            return translatePlaceholders(displayName, placeholders);
+        }
+        return "";
+    }
 
-	public static Object[] getPlaceholders(Object... placeholder) {
-		return placeholder;
-	}
-	public static int containsList(Object... placeholders) {
-		if (placeholders != null)
-			for (int i = 0; i < placeholders.length; i++)
-				if (placeholders[i] instanceof List)
-					return i;
-		return -1;
-	}
+    public static List<String> getLore(final Player player, final List<String> stringList, final Object... placeholder) {
+        if (player != null)
+            if (!plugin.isPlaceholderAPIMissing())
+                return PlaceholderAPI.setPlaceholders(player, getLore(stringList, placeholder));
+        return getLore(stringList, placeholder);
+    }
 
-	public static String translatePlaceholders(Player player, String rawText, Object... placeholders) {
-		if(rawText == null)
-			return "";
-		if (!Lootboxes.getInstance().isPlaceholderAPIMissing())
-			return translatePlaceholders(PlaceholderAPI.setPlaceholders(player, rawText), placeholders);
-		return translatePlaceholders(rawText, placeholders);
-	}
+    public static List<String> getLore(List<String> stringList, final Object... placeholder) {
+        if(stringList == null)
+            return new ArrayList<>();
+        final List<String> loreList = new ArrayList<>();
+        for (final String lore : stringList) {
+            if (lore.contains("{" + containsList(placeholder) + "}") && containsList(placeholder) != -1)
+                for (final String text : (List<String>) placeholder[containsList(placeholder)])
+                    loreList.add(lore.replace("{" + containsList(placeholder) + "}", text));
+            else
+                loreList.add(translatePlaceholders(lore, placeholder));
+        }
+        return loreList;
+    }
 
-	public static String translatePlaceholders(String rawText, Object... placeholders) {
-		if(rawText == null)
-			return "";
-		if (placeholders != null)
-			for (int i = 0; i < placeholders.length; i++) {
-				if (placeholders[i] instanceof List)
-					continue;
-				if (rawText == null) continue;
-				rawText = rawText.replace("{" + i + "}", placeholders[i] != null ? placeholders[i].toString() : "");
-			}
-		return ifContainsBoolen(rawText);
-	}
+    public static int containsList(final Object... placeholder) {
+        if (placeholder != null)
+            for (int i = 0; i < placeholder.length; i++)
+                if (placeholder[i] instanceof List)
+                    return i;
+        return -1;
+    }
 
-	private static String ifContainsBoolen(String text) {
-		if (text != null)
-			if (text.contains("true"))
-				return text.replace("true", "yes");//ChatMessages.BOOLEAN_TRUE.languageMessages());
-			else if (text.contains("false"))
-				return text.replace("false", "no");//ChatMessages.BOOLEAN_FALSE.languageMessages());
-			else
-				return text;
-		return "";
-	}
+    public static String translatePlaceholders(String rawText, @Nullable final Object... placeholders) {
 
+        if (placeholders != null)
+            for (int i = 0; i < placeholders.length; i++) {
+                if (placeholders[i] instanceof List)
+                    continue;
+                rawText = rawText.replace("{" + i + "}", placeholders[i] != null ? placeholders[i].toString() : "");
+            }
+        return ChatColor.translateAlternateColorCodes('&', rawText);
+    }
+
+    public static String getTitle(final Player player, final String menuTitle, final Object... placeholders) {
+        if (menuTitle != null) {
+            if (player != null)
+                if (!plugin.isPlaceholderAPIMissing())
+                    return PlaceholderAPI.setPlaceholders(player, translatePlaceholders(menuTitle, placeholders));
+            return translatePlaceholders(menuTitle, placeholders);
+        }
+        return "";
+    }
+
+
+    public static Object[] getPlaceholders(Object... placeholders) {
+        return placeholders;
+    }
 }

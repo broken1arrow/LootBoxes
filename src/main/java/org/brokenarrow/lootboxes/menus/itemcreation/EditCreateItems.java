@@ -67,8 +67,8 @@ public class EditCreateItems extends MenuHolderPage<String> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };
@@ -148,13 +148,13 @@ public class EditCreateItems extends MenuHolderPage<String> {
                             data.getMinimum(),
                             data.getMaximum(),
                             data.isHaveMetadata());
-                    String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders);
+                    String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), placeholders);
                     final ItemMeta itemMeta = clonedItem.getItemMeta();
                     clonedItem.setItemMeta(itemMeta);
 
                     final ItemStack guiItem = CreateItemUtily.of(false, clonedItem,
                                     displayName,
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders)).makeItemStack();
+                                    TranslatePlaceHolders.getLore(player, menuButton.getLore(), placeholders)).makeItemStack();
                     return guiItem;
                 }
             }

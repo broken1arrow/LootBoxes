@@ -70,8 +70,8 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.getLore(player, menuButton.getLore()))
 						.makeItemStack();
 			}
 		};
@@ -140,11 +140,11 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
             if (location == null) return null;
 
 			org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-			String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+			String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
 			return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 							displayName,
-							TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+							TranslatePlaceHolders.getLore(player, menuButton.getLore()))
 					.makeItemStack();
 		});
 	}

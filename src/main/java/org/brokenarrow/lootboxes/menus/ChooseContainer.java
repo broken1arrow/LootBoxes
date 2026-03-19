@@ -68,8 +68,8 @@ public class ChooseContainer extends MenuHolderPage<Material> {
 				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.getLore(player, menuButton.getLore()))
 						.makeItemStack();
 			}
 		};
@@ -104,7 +104,7 @@ public class ChooseContainer extends MenuHolderPage<Material> {
 
 				TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
 				player.getInventory().addItem(CreateItemUtily.of(material,
-								TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(), WordUtils.capitalizeFully(material.toString().replace("_", " ").toLowerCase()), TranslatePlaceHolders.translatePlaceholdersLore(setting.getPlaceContainerLore())))
+								TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(), WordUtils.capitalizeFully(material.toString().replace("_", " ").toLowerCase()), TranslatePlaceHolders.getLore(setting.getPlaceContainerLore())))
 						.setItemMetaData(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), container).makeItemStack());
 				player.setMetadata(ADD_AND_REMOVE_CONTAINERS.name(), new FixedMetadataValue(Lootboxes.getInstance(), container));
 				player.closeInventory();
@@ -114,10 +114,10 @@ public class ChooseContainer extends MenuHolderPage<Material> {
 			if (material != null) {
 				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
-				String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(material.toString().replace("_", " ").toLowerCase()));
+				String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(material.toString().replace("_", " ").toLowerCase()));
 				return CreateItemUtily.of(menuButton.isGlow(), material,
 						displayName,
-						TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore())).makeItemStack();
+						TranslatePlaceHolders.getLore(player, menuButton.getLore())).makeItemStack();
 			}
 			return null;
 		});

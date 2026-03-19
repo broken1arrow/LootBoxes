@@ -80,8 +80,8 @@ public class MaterialList extends MenuHolderPage<Material> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };
@@ -138,11 +138,11 @@ public class MaterialList extends MenuHolderPage<Material> {
                 itemstack = new ItemStack(material);
             if (itemstack == null)
                 return null;
-            String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", bountifyCapitalized(itemstack.getType()));
+            String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), "", bountifyCapitalized(itemstack.getType()));
 
             return CreateItemUtily.of(menuButton.isGlow(), itemstack,
                             displayName,
-                            TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                            TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                     .makeItemStack();
         });
     }

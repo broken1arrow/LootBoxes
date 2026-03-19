@@ -78,8 +78,8 @@ public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .setGlow(menuButton.isGlow())
                         .makeItemStack();
             }
@@ -152,12 +152,12 @@ public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
                 final String material = plugin.getMobList().getSpawnEggType(entityType);
                 if (material == null) {
                     return CreateItemUtily.of(false, Material.SHEEP_SPAWN_EGG, "Entity: " + WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()),
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, new ArrayList<>()))
+                                    TranslatePlaceHolders.getLore(player, new ArrayList<>()))
                             .makeItemStack();
                 }
                 return containerDataCache.read(containerKey, containerData -> {
                     org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-                    String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
+                    String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
                     KeysData keysData = containerData.getKeysData(value);
 
                     if (keysData != null) {
@@ -168,12 +168,12 @@ public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
                         if (menuButton == null) {
                             menuButton = button.getPassiveButton();
                         }
-                        displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
-                        return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                        displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
+                        return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                                 .setGlow(contains)
                                 .makeItemStack();
                     }
-                    return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                    return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                             .setGlow(menuButton.isGlow())
                             .makeItemStack();
                 });

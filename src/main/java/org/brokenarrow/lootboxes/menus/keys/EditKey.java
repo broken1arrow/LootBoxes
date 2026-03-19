@@ -18,6 +18,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Collectors;
+
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDITKEY;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.EDIT_KEYS_FOR_OPEN_MENU;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
@@ -75,12 +77,12 @@ public class EditKey extends MenuHolder {
                         if (button.isActionTypeEqual("Alter_lore"))
                             placeholders = getPlaceholders("", keysData.getLore());
                         if (button.isActionTypeEqual("Mob_drop_key")) {
-                            placeholders = getPlaceholders(keysData.getEntityTypes() != null ? keysData.getEntityTypes() : "Not set");
+                            placeholders = getPlaceholders(keysData.getEntityTypes() != null ? keysData.getEntityTypes().stream().map(Enum::name).collect(Collectors.toList()) : "Not set");
                         }
                     }
                     return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                    TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+                                    TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), placeholders),
+                                    TranslatePlaceHolders.getLore(player, menuButton.getLore(), placeholders))
                             .makeItemStack();
                 });
             }

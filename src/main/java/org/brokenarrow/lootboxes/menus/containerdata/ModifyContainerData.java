@@ -37,7 +37,7 @@ public class ModifyContainerData extends MenuHolderPage<String> {
         if (guiTemplate != null) {
             setFillSpace(guiTemplate.getFillSlots());
             setMenuSize(guiTemplate.getinvSize("Containers_list"));
-            setTitle(() -> TranslatePlaceHolders.translatePlaceholders(player, guiTemplate.getMenuTitle(), ""));
+            setTitle(() -> TranslatePlaceHolders.getDisplayName(player, guiTemplate.getMenuTitle(), ""));
             setMenuOpenSound(guiTemplate.getSound());
             this.setUseColorConversion(true);
         } else {
@@ -62,8 +62,8 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };
@@ -120,7 +120,7 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                 if (data != null) {
                     String tableLinked = data.getLootTableLinked();
                     final String tableLink = tableLinked == null || tableLinked.isEmpty() ? "non" : tableLinked;
-                    String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), containerKeyName, tableLink, data.getCooldown(), data.getIcon());
+                    String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), containerKeyName, tableLink, data.getCooldown(), data.getIcon());
 
                     Material itemStack = null;
                     if (data.getIcon() == null || data.getIcon() == Material.AIR)
@@ -130,7 +130,7 @@ public class ModifyContainerData extends MenuHolderPage<String> {
 
                     return CreateItemUtily.of(false, itemStack,
                                     displayName,
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon(),
+                                    TranslatePlaceHolders.getLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon(),
                                             Lootboxes.getInstance().getSpawnLootContainer().haveCachedContainer(containerKeyName) ? "Active" : "Disable"))
                             .makeItemStack();
                 }

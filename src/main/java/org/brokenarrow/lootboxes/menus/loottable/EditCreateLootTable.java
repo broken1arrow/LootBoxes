@@ -62,8 +62,8 @@ public class EditCreateLootTable extends MenuHolderPage<String> {
 				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.getLore(player, menuButton.getLore()))
 						.makeItemStack();
 			}
 		};
@@ -112,8 +112,8 @@ public class EditCreateLootTable extends MenuHolderPage<String> {
 			if (lootTable != null) {
 				if (lootTable.equals("Global_Values")) return null;
 				final ItemStack itemStack = CreateItemUtily.of(false,menuButton.getMaterial(),
-						TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", lootTable),
-						TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore())).makeItemStack();
+						TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), "", lootTable),
+						TranslatePlaceHolders.getLore(player, menuButton.getLore())).makeItemStack();
 				data.put(itemStack, itemStack);
 				return itemStack;
 			}

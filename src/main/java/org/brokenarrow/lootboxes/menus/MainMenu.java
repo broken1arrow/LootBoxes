@@ -50,8 +50,8 @@ public class MainMenu extends MenuHolder {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow() && !menuButton.getMaterial().equalsIgnoreCase("chest"), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };

@@ -49,7 +49,7 @@ public final class AlterContainerDataMenu extends MenuHolder {
 		if (guiTemplate != null) {
 			//setFillSpace(guiTemplate.getFillSlots());
 			setMenuSize(guiTemplate.getinvSize("Alter_container_data"));
-			setTitle(() -> TranslatePlaceHolders.translatePlaceholders(player, guiTemplate.getMenuTitle(), containerKey));
+			setTitle(() -> TranslatePlaceHolders.getDisplayName(player, guiTemplate.getMenuTitle(), containerKey));
 			setMenuOpenSound(guiTemplate.getSound());
 			this.setUseColorConversion(true);
 		} else {
@@ -98,8 +98,8 @@ public final class AlterContainerDataMenu extends MenuHolder {
 					String material = menuButton.getMaterial().equals("AIR") || menuButton.getMaterial().isEmpty() ? Material.PAPER.name() : menuButton.getMaterial();
 
 					return CreateItemUtily.of(menuButton.isGlow(), material,
-									TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-									TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+									TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), placeholders),
+									TranslatePlaceHolders.getLore(player, menuButton.getLore(), placeholders))
 							.makeItemStack();
 				});
 			}

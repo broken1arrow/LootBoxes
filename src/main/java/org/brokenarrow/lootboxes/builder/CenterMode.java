@@ -4,15 +4,9 @@ import org.brokenarrow.lootboxes.settings.ChatMessages;
 import org.jetbrains.annotations.NotNull;
 
 public enum CenterMode {
-    PLAYER_FOLLOW(ChatMessages.CENTER_MODE_DESCRIPTION_PLAYER_FOLLOW.languageMessages()),
-    PLAYER_ORIGIN(ChatMessages.CENTER_MODE_DESCRIPTION_PLAYER_ORIGIN.languageMessages()),
-    WORLD_ORIGIN(ChatMessages.CENTER_MODE_DESCRIPTION_WORLD_ORIGIN.languageMessages());
-
-    private final String description;
-
-    CenterMode(String description) {
-        this.description = description;
-    }
+    PLAYER_FOLLOW,
+    PLAYER_ORIGIN,
+    WORLD_ORIGIN;
 
     @NotNull
     public static CenterMode of(String string) {
@@ -28,6 +22,15 @@ public enum CenterMode {
     }
 
     public String getDescription() {
-        return description;
+        switch (this) {
+            case PLAYER_FOLLOW:
+                return ChatMessages.CENTER_MODE_DESCRIPTION_PLAYER_FOLLOW.languageMessages();
+            case PLAYER_ORIGIN:
+                return ChatMessages.CENTER_MODE_DESCRIPTION_PLAYER_ORIGIN.languageMessages();
+            case WORLD_ORIGIN:
+                return ChatMessages.CENTER_MODE_DESCRIPTION_WORLD_ORIGIN.languageMessages();
+            default:
+                return "";
+        }
     }
 }

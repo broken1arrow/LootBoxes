@@ -65,8 +65,8 @@ public class ListOfLootTables extends MenuHolderPage<String> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };
@@ -128,10 +128,10 @@ public class ListOfLootTables extends MenuHolderPage<String> {
                 return null;
 
             org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-            String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), lootTable);
+            String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), lootTable);
             return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
                             displayName,
-                            TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), lootTable))
+                            TranslatePlaceHolders.getLore(player, menuButton.getLore(), lootTable))
                     .setGlow(menuButton.isGlow())
                     .makeItemStack();
         });

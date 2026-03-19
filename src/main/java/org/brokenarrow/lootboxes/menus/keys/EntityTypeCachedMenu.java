@@ -78,8 +78,8 @@ public class EntityTypeCachedMenu extends MenuHolderPage<EntityType> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .setGlow(menuButton.isGlow())
                         .makeItemStack();
             }
@@ -143,9 +143,9 @@ public class EntityTypeCachedMenu extends MenuHolderPage<EntityType> {
                     final String material = plugin.getMobList().getSpawnEggType(entityType);
 
                     org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-                    String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
+                    String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
 
-                    return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                    return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                             .setGlow(menuButton.isGlow())
                             .makeItemStack();
                 });

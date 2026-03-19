@@ -66,8 +66,8 @@ public class WorldsAllowed extends MenuHolderPage<String> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow() && !menuButton.getMaterial().equalsIgnoreCase("chest"), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };
@@ -116,8 +116,8 @@ public class WorldsAllowed extends MenuHolderPage<String> {
                 final boolean hasWorldSet = containerBuilder.contains(worldName);
                 if (hasWorldSet)
                     return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                    TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-                                    TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+                                    TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), placeholders),
+                                    TranslatePlaceHolders.getLore(player, menuButton.getLore(), placeholders))
                             .makeItemStack();
                 return null;
             });

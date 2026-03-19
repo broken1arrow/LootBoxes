@@ -432,7 +432,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Spawn_player_center", this.spawnContainerFromPlayerCenter);
         keysData.put("Min_radius", this.minRadius);
         keysData.put("Max_radius", this.maxRadius);
-        keysData.put("Center_mode", this.centerMode);
+        keysData.put("Center_mode", this.centerMode.name());
         keysData.put("Spawn-point", this.spawnLocation != null ? this.spawnLocation.serialize() : new HashMap<>());
         keysData.put("Containers", this.containerData != null ? this.containerData : new HashMap<>());
         return keysData;

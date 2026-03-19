@@ -23,6 +23,7 @@ import java.util.Map;
 import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
 
+
 public class CustomizeItem extends MenuHolder {
 
 	private final LootItems lootItems = LootItems.getInstance();
@@ -80,8 +81,8 @@ public class CustomizeItem extends MenuHolder {
 
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(),placeholders),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(),placeholders))
+								TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(),placeholders),
+								TranslatePlaceHolders.getLore(player, menuButton.getLore(),placeholders))
 						.makeItemStack();
 			}
 		};

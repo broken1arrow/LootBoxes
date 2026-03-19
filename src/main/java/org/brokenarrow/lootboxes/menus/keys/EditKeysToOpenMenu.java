@@ -26,8 +26,7 @@ import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
-import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
-import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.*;
 
 public class EditKeysToOpenMenu extends MenuHolderPage<String> {
     private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
@@ -71,8 +70,8 @@ public class EditKeysToOpenMenu extends MenuHolderPage<String> {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
                 return CreateItemUtily.of(menuButton.isGlow(), menuButton.getMaterial(),
-                                TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-                                TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                                TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+                                TranslatePlaceHolders.getLore(player, menuButton.getLore()))
                         .makeItemStack();
             }
         };
@@ -127,7 +126,7 @@ public class EditKeysToOpenMenu extends MenuHolderPage<String> {
                         final String lootTableName = lootTable != null && !lootTable.isEmpty() ? lootTable : "No table linked";
                         String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
                                 lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-                        List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+                        List<String> placeholdersLore = getLore(keysData.getLore(), keysData.getKeyName(),
                                 lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 
                         player.getInventory().addItem(CreateItemUtily.of(false, keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(1).makeItemStack());
@@ -160,12 +159,12 @@ public class EditKeysToOpenMenu extends MenuHolderPage<String> {
                     String lootTableName = getLootTableName(containerBuilder, lootTable);
 
                     String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keyName, lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-                    List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keyName, lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
+                    List<String> placeholdersLore = getLore(keysData.getLore(), keyName, lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
                     org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
-                    String displayName = translatePlaceholders(player, menuButton.getDisplayName(), keyName, keysData.getAmountNeeded(), placeholderDisplayName,
+                    String displayName = getDisplayName(player, menuButton.getDisplayName(), keyName, keysData.getAmountNeeded(), placeholderDisplayName,
                             placeholdersLore);
-                    List<String> lore = translatePlaceholdersLore(player, menuButton.getLore(), keyName, keysData.getAmountNeeded(), placeholderDisplayName,
+                    List<String> lore = getLore(player, menuButton.getLore(), keyName, keysData.getAmountNeeded(), placeholderDisplayName,
                             placeholdersLore);
 
                     return CreateItemUtily.of(menuButton.isGlow(), keysData.getItemType(),

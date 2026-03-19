@@ -116,8 +116,8 @@ public class ParticleSettings extends MenuHolder {
 				}
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), placeholders),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), placeholders))
+								TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), placeholders),
+								TranslatePlaceHolders.getLore(player, menuButton.getLore(), placeholders))
 						.makeItemStack();
 			}
 		};

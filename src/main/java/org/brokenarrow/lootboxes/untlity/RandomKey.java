@@ -17,8 +17,9 @@ import java.util.Map;
 
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
+import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getLore;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
-import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholdersLore;
+
 
 public class RandomKey {
 	private final KeyDropData keyDropData = KeyDropData.getInstance();
@@ -52,7 +53,7 @@ public class RandomKey {
 
            String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
                    lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-           List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+           List<String> placeholdersLore = getLore(keysData.getLore(), keysData.getKeyName(),
                    lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 
            return CreateItemUtily.of(false, keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amountOfItems).makeItemStack();

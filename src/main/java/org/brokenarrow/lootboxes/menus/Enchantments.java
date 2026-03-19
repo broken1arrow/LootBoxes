@@ -71,8 +71,8 @@ public class Enchantments extends MenuHolderPage<Enchantment> {
 				org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
 				return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
-								TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName()),
-								TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+								TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName()),
+								TranslatePlaceHolders.getLore(player, menuButton.getLore()))
 						.makeItemStack();
 			}
 		};
@@ -151,11 +151,11 @@ public class Enchantments extends MenuHolderPage<Enchantment> {
 			List<String> lore;
 			String enchanted = enchantment != null ? enchantment.getName() : "";
 			if (haveEnchant) {
-				displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), "", enchanted, item.getItemMeta().getEnchants().get(enchantment).shortValue());
-				lore = TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), "", enchanted, item.getItemMeta().getEnchants().get(enchantment).shortValue());
+				displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), "", enchanted, item.getItemMeta().getEnchants().get(enchantment).shortValue());
+				lore = TranslatePlaceHolders.getLore(player, menuButton.getLore(), "", enchanted, item.getItemMeta().getEnchants().get(enchantment).shortValue());
 			} else {
-				displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), enchanted, enchanted, "");
-				lore = TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore(), enchanted, enchanted, "not set");
+				displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), enchanted, enchanted, "");
+				lore = TranslatePlaceHolders.getLore(player, menuButton.getLore(), enchanted, enchanted, "not set");
 			}
 
 			ItemStack itemStack = CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(), displayName, lore).makeItemStack();
