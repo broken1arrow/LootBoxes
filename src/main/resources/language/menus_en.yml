@@ -889,17 +889,27 @@ Menus:
   # The menu you choose the entity to spawn the key.
   EntityType_list:
     menu_settings:
-      name: "&1Entity List. {0}"
+      name: "&1Entity list. Page {1}"
       fill-space: 9-35
       size: 45
     buttons:
       "-1":
-        material: COMPASS
-        name: "&bEntity:&6 {0}"
-        glow: false
-        lore:
-          - "&aLeft-click to add entity"
-          - "&aRight-click to remove this entity."
+        active:
+          material: COMPASS
+          name: "&bEntity:&6 {0}"
+          glow: true
+          lore:
+            - " "
+            - "&fAlready selected this entity."
+            - " "
+            - "&aRight-click to remove this entity."
+        passive:
+          material: COMPASS
+          name: "&bEntity:&6 {0}"
+          glow: false
+          lore:
+            - "&aLeft-click to add entity"
+            - "&aRight-click to remove this entity."
       "40":
         action_type: Search
         material: PAPER
@@ -965,7 +975,8 @@ Menus:
         lore:
           - "&aLeft-click to edit entity"
           - "&aRight-Click to remove this entity."
-      "40":
+      "41":
+        action_type: Search
         name: "&bSearch for a entity"
         glow: false
         material: PAPER
@@ -973,6 +984,7 @@ Menus:
           - "&aLeft-click for search for a entity"
           - "&aRight-Click for reset the search"
       "42":
+        action_type: Forward_button
         name: "&bForward"
         glow: false
         material: ARROW
@@ -981,6 +993,7 @@ Menus:
           - "&2Go one page"
           - "&2forward."
       "38":
+        action_type: Previous_button
         name: "&bPrevious"
         glow: false
         material: ARROW
@@ -988,7 +1001,17 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
+      "39":
+        action_type: Mob_drop_this_key
+        material: FIREWORK_STAR
+        name: "&bChange the mobs"
+        glow: true
+        lore:
+          - " "
+          - "&aSelect the mobs some drop this key"
+          - "&aor remove set ones."
       "44":
+        action_type: Back_button
         name: "&bBack"
         glow: false
         material: RED_STAINED_GLASS_PANE
@@ -996,7 +1019,7 @@ Menus:
           - ""
           - "&aGo back to"
           - "&akey settings."
-      "36-37,39-41,43":
+      "36-37,40,43":
         name: "&b"
         glow: false
         material: BLACK_STAINED_GLASS_PANE
@@ -1015,16 +1038,7 @@ Menus:
       name: "&1Edit mob drops: {0}"
       size: 45
     buttons:
-      "19":
-        action_type: Mob_drop_this_key
-        material: FIREWORK_STAR
-        name: "&bChange the mobs"
-        glow: true
-        lore:
-          - "&aChange the mobs some drop this key"
-          - "&aCurrent mobs drop this key: "
-          - "&6{0}"
-      "21":
+      "20":
         action_type: Change_chance
         material: GREEN_DYE
         name: "&bChange the chance {0}"

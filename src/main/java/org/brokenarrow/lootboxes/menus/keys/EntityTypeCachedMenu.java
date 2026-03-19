@@ -120,29 +120,35 @@ public class EntityTypeCachedMenu extends MenuHolderPage<EntityType> {
 
         return new FillMenuButton<>((player, menu, click, clickedItem, entityType) -> {
             if (entityType != null) {
-                containerCache.write(containerKey, containerData -> {
+                return containerCache.write(containerKey, containerData -> {
                     final KeysData keysData = containerData.getKeysData(this.keyUniqueName);
                     if (click.isRightClick() && keysData != null) {
                         keysData.removeEntityType(entityType);
                         keyDropData.removeKeyFromMob(entityType, keyUniqueName);
+                        return ButtonUpdateAction.ALL;
                     }
                     if (click.isLeftClick() && keysData != null) {
                         new KeySettingsMobDropMenu(entityType, containerKey, keyUniqueName).menuOpen(player);
                     }
+                    return ButtonUpdateAction.NONE;
                 });
-                return ButtonUpdateAction.ALL;
             }
             return ButtonUpdateAction.NONE;
         }, (slot, entityType) -> {
             if (entityType != null) {
-                final String material = plugin.getMobList().getSpawnEggType(entityType);
+                return containerCache.read(containerKey, containerData -> {
+                    KeysData keysData = containerData.getKeysData(keyUniqueName);
+                    if (keysData == null || !keysData.getEntityTypes().contains(entityType))
+                        return null;
+                    final String material = plugin.getMobList().getSpawnEggType(entityType);
 
-                org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-                String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
+                    org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
+                    String displayName = TranslatePlaceHolders.translatePlaceholders(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(entityType.toString().replace("_", " ").toLowerCase()), material);
 
-                return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
-                        .setGlow(menuButton.isGlow())
-                        .makeItemStack();
+                    return CreateItemUtily.of(false, material, displayName, TranslatePlaceHolders.translatePlaceholdersLore(player, menuButton.getLore()))
+                            .setGlow(menuButton.isGlow())
+                            .makeItemStack();
+                });
             }
             return null;
         });

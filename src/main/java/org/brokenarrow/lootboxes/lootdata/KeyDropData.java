@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
 import static org.brokenarrow.lootboxes.untlity.RunTimedTask.runtaskLater;
 
@@ -48,16 +47,17 @@ public class KeyDropData extends YamlFileManager {
         return this.cachedKeyData.get(entityType);
     }
 
-    public boolean createMobLootData(final EntityType entityType, final String keyUniqueName) {
+    public boolean createMobLootData(@Nonnull final EntityType entityType, @Nonnull final String lootContainerKey, @Nonnull final String keyUniqueName) {
         Map<String, KeyMobDropData> dropDataMap = cachedKeyData.get(entityType);
         if (dropDataMap != null) {
             if (dropDataMap.containsKey(keyUniqueName)) {
-                Lootboxes.getInstance().getLogger().log(Level.WARNING, "This key is duplicate " + keyUniqueName + ". chose different name");
+                // Lootboxes.getInstance().getLogger().log(Level.WARNING, "This key is duplicate " + keyUniqueName + ". chose different name");
                 return false;
             } else
-                dropDataMap.put(keyUniqueName, new KeyMobDropData.Builder().build());
+                dropDataMap.put(keyUniqueName, new KeyMobDropData.Builder().setLootContainerKey(lootContainerKey).setKeyName(keyUniqueName).build());
         } else {
             dropDataMap = new HashMap<>();
+            dropDataMap.put(keyUniqueName, new KeyMobDropData.Builder().setLootContainerKey(lootContainerKey).setKeyName(keyUniqueName).build());
         }
         cachedKeyData.put(entityType, dropDataMap);
         saveTask(entityType);
@@ -112,7 +112,7 @@ public class KeyDropData extends YamlFileManager {
     }
 
     public void saveTask(final EntityType entityType) {
-        Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, entityType.name());
+        Lootboxes.getInstance().getSaveDataTask().addToSaveCache(this, entityType.name().toLowerCase());
         //runtaskLater(5, () -> save(containerDataFileName), true);
     }
 

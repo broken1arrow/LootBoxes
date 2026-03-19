@@ -7,16 +7,7 @@ Menus:
       sound: null
       size: 45
     buttons:
-      "19":
-        action_type: Mob_drop_this_key
-        material: FIREWORK_STAR
-        name: "&bChange the mobs"
-        glow: true
-        lore:
-          - "&aChange the mobs some drop this key"
-          - "&aCurrent mobs drop this key: "
-          - "&6{0}"
-      "21":
+      "20":
         action_type: Change_chance
         material: GREEN_DYE
         name: "&bChange the chance {0}"

@@ -47,7 +47,7 @@ public class KeySettingsMobDropMenu extends MenuHolder {
         if (guiTemplate != null) {
             setFillSpace(guiTemplate.getFillSlots());
             setMenuSize(guiTemplate.getinvSize("Key_settings_mob_drop"));
-            setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), ""));
+            setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), keyName));
         } else {
             setMenuSize(36);
             setTitle(() -> "could not load menu 'Key_settings_mob_drop'.");

@@ -3,19 +3,29 @@
 Menus:
   menu:
     menu_settings:
-      name: "&1Entity list. {0}"
+      name: "&1Entity list. Page {1}"
       # slots you want to use to add fill items inside.
       fill-space: 9-35
       sound: null
       size: 45
     buttons:
       "-1":
-        material: COMPASS
-        name: "&bEntity:&6 {0}"
-        glow: false
-        lore:
-          - "&aLeft-click to add entity"
-          - "&aRight-click to remove this entity."
+        active:
+          material: COMPASS
+          name: "&bEntity:&6 {0}"
+          glow: true
+          lore:
+            - " "
+            - "&fAlready selected this entity."
+            - " "
+            - "&aRight-click to remove this entity."
+        passive:
+          material: COMPASS
+          name: "&bEntity:&6 {0}"
+          glow: false
+          lore:
+            - "&aLeft-click to add entity"
+            - "&aRight-click to remove this entity."
       "40":
         action_type: Search
         material: PAPER

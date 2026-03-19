@@ -13,55 +13,51 @@ import org.bukkit.conversations.Prompt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static org.brokenarrow.lootboxes.menus.MenuKeys.ENTITY_TYPE_LISTMENU;
 import static org.brokenarrow.lootboxes.menus.MenuKeys.PARTICLE_ANIMANTION;
 import static org.brokenarrow.lootboxes.settings.ChatMessages.SEACH_FOR_ITEM_TYPE_NAME;
 
 public class SearchInMenu extends SimpleConversation {
 
-	private final MenuKeys menuAccess;
-	private final MenuKeys menuKey;
-	private final String lootTable;
-	private final Object itemToEdit;
+    private final MenuKeys menuAccess;
+    private final MenuKeys menuKey;
+    private final String lootTable;
+    private final Object itemToEdit;
 
-	public SearchInMenu(final MenuKeys menuAccess, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
-		super(Lootboxes.getInstance());
-		this.menuAccess = menuAccess;
-		this.menuKey = menuKey;
-		this.lootTable = nameOfTableOrContainer;
-		this.itemToEdit = itemToEdit;
-	}
+    public SearchInMenu(final MenuKeys menuAccess, final MenuKeys menuKey, final String nameOfTableOrContainer, final Object itemToEdit) {
+        super(Lootboxes.getInstance());
+        this.menuAccess = menuAccess;
+        this.menuKey = menuKey;
+        this.lootTable = nameOfTableOrContainer;
+        this.itemToEdit = itemToEdit;
+    }
 
-	@Override
-	public Prompt getFirstPrompt() {
-		return new ItemSearch();
-	}
+    @Override
+    public Prompt getFirstPrompt() {
+        return new ItemSearch();
+    }
 
-	public class ItemSearch extends SimplePrompt {
-		public ItemSearch() {
+    public class ItemSearch extends SimplePrompt {
+        public ItemSearch() {
 
-		}
+        }
 
-		@Override
-		protected String getPrompt(final ConversationContext context) {
-			return SEACH_FOR_ITEM_TYPE_NAME.languageMessagePrefix();
-		}
+        @Override
+        protected String getPrompt(final ConversationContext context) {
+            return SEACH_FOR_ITEM_TYPE_NAME.languageMessagePrefix();
+        }
 
-		@Nullable
-		@Override
-		protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
-			if (menuAccess == ENTITY_TYPE_LISTMENU)
-				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
-			if (menuAccess == PARTICLE_ANIMANTION)
-				new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
-			if (menuAccess == MenuKeys.ENTITY_TYPE_LISTMENU)
-				new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
-			if (menuAccess == MenuKeys.ENTITY_CACHED_TYPE_LISTMENU)
-				new EntityTypeCachedMenu(lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
-			else
-				new MaterialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
-
-			return null;
-		}
-	}
+        @Nullable
+        @Override
+        protected Prompt acceptValidatedInput(@NotNull final ConversationContext context, @NotNull final String input) {
+            if (menuAccess == MenuKeys.ENTITY_TYPE_LISTMENU)
+                new EntityTypeListMenu(menuKey, lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
+            else if (menuAccess == PARTICLE_ANIMANTION)
+                new ParticleAnimation(lootTable, input).menuOpen(getPlayer(context));
+            else if (menuAccess == MenuKeys.ENTITY_CACHED_TYPE_LISTMENU)
+                new EntityTypeCachedMenu(lootTable, (String) itemToEdit, input).menuOpen(getPlayer(context));
+            else
+                new MaterialList(menuKey, itemToEdit, lootTable, input).menuOpen(getPlayer(context));
+            return null;
+        }
+    }
 }
