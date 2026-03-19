@@ -31,7 +31,7 @@ public class KeyDropData extends YamlFileManager {
 
     public KeyDropData() {
         //super(Lootboxes.getInstance(), "keys/keysDropData.yml");
-        super(Lootboxes.getInstance(), "keys", false, false);
+        super(Lootboxes.getInstance(), "keys", false, true);
     }
 
     public Map<EntityType, Map<String, KeyMobDropData>> getCachedKeyData() {

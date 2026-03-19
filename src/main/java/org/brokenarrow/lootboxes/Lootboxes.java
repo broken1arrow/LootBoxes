@@ -101,10 +101,11 @@ public class Lootboxes extends JavaPlugin {
         this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
         this.databaseManager = new DatabaseManager(this);
         this.settings.reload();
-        if (settings.getSettingsData().isSingleMenuFile())
+        if (settings.getSettingsData().isSingleMenuFile()) {
             this.menusCache = new MenusSettingsHandler(this, "language/menus_" + this.settings.getSettingsData().getLanguage() + ".yml", true);
-        else
+        } else {
             this.menusCache = new MenusSettingsHandler(this, "menus", false);
+        }
         reloadFiles();
         this.spawnContainerRandomLoc = new SpawnContainerRandomLoc();
 
