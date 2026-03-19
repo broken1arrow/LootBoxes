@@ -54,7 +54,7 @@ public class EntityTypeListMenu extends MenuHolderPage<EntityType> {
             this.setUseColorConversion(true);
         } else {
             setMenuSize(36);
-            setTitle(() -> "could not load menu 'EntityType_list'.");
+            setTitle(() -> "menu settings 'EntityType_list'.");
 
         }
     }

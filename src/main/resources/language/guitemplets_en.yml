@@ -1431,7 +1431,7 @@ Gui_Templets:
   # List of EntityType in this menu.
   EntityType_List_Menu:
     Menu_Size: 45
-    Menu_Title: "&1Container List. Page: {0}"
+    Menu_Title: "&1Entity list: {0}"
     # slots you want to use to add fill items inside.
     FillSpace: 9-35
     EntityType_list:
@@ -1477,6 +1477,70 @@ Gui_Templets:
         - ""
         - "&aGo back to"
         - "&amain Menu."
+    Placeholders:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 36-37,39-41,43
+      Lore:
+        - ""
+    Placeholders1:
+      Display_name: "&b"
+      Enchant: false
+      Icon: BLACK_STAINED_GLASS_PANE
+      Slot: 0-8
+      Lore:
+        - ""
+  ######################################################
+  # Lists entity type that is set.
+  Entity_type_select_list:
+    Menu_Size: 45
+    Menu_Title: "&1Entity cache list: {0}"
+    # slots you want to use to add fill items inside.
+    FillSpace: 9-35
+    EntityType_list:
+      Display_name: "&bEntity:&6 {0}"
+      Enchant: false
+      Icon: COMPASS
+      Slot: 0
+      Lore:
+        - "&aLeft-click to edit entity"
+        - "&aRight-Click to remove this entity."
+    Seach_button:
+      Display_name: "&bSearch for a entity"
+      Enchant: true
+      Icon: PAPER
+      Slot: 40
+      Lore:
+        - "&aLeft-click for search for a entity"
+        - "&aRight-Click for reset the search"
+    Forward_button:
+      Display_name: "&bForward"
+      Enchant: true
+      Slot: 42
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2forward."
+    Previous_button:
+      Display_name: "&bPrevious"
+      Enchant: true
+      Slot: 38
+      Icon: ARROW
+      Lore:
+        - ""
+        - "&2Go one page"
+        - "&2back."
+    Back_button:
+      Display_name: "&bBack"
+      Enchant: true
+      Icon: RED_STAINED_GLASS_PANE
+      Slot: 44
+      Lore:
+        - ""
+        - "&aGo back to"
+        - "&akey settings."
     Placeholders:
       Display_name: "&b"
       Enchant: false

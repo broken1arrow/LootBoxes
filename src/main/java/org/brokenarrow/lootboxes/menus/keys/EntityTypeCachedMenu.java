@@ -43,7 +43,7 @@ public class EntityTypeCachedMenu extends MenuHolderPage<EntityType> {
 
         this.containerKey = containerKey;
         this.keyUniqueName = keyUniqueName;
-        this.guiTemplate = Lootboxes.getInstance().getMenu("Entity_type_selected_list");
+        this.guiTemplate = Lootboxes.getInstance().getMenu("Entity_type_select_list");
 
         setUseColorConversion(true);
         setIgnoreItemCheck(true);
@@ -51,12 +51,12 @@ public class EntityTypeCachedMenu extends MenuHolderPage<EntityType> {
         if (guiTemplate != null) {
             setAutoTitleCurrentPage(false);
             setFillSpace(guiTemplate.getFillSlots());
-            setMenuSize(guiTemplate.getinvSize("Entity_type_selected_list"));
+            setMenuSize(guiTemplate.getinvSize("Entity_type_select_list"));
             setTitle(() -> TranslatePlaceHolders.translatePlaceholders(guiTemplate.getMenuTitle(), this.keyUniqueName));
             this.setUseColorConversion(true);
         } else {
             setMenuSize(36);
-            setTitle(() -> "could not load menu 'Entity_type_selected_list'.");
+            setTitle(() -> "Menu settings: 'Entity_type_select_list'.");
 
         }
     }
