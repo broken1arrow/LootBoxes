@@ -6,8 +6,10 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -146,7 +148,7 @@ public class ContainerDataCache extends YamlFileManager {
         LootContainerData lootContainerData = this.getCacheContainerData(containerKey);
         if (lootContainerData != null) {
 
-            Map<Object, ParticleEffect> particleEffects = lootContainerData.getParticleEffects();
+            Map<String, ParticleEffect> particleEffects = lootContainerData.getParticleEffects();
             if (particleEffects != null)
                 if (org.broken.arrow.library.menu.utility.ServerVersion.atLeast(13.0))
                     return particleEffects.values().stream().map(particle -> particle.getSpigotParticle().getParticle()).collect(Collectors.toList());
@@ -160,7 +162,7 @@ public class ContainerDataCache extends YamlFileManager {
         LootContainerData lootContainerData = this.getCacheContainerData(container);
         if (lootContainerData != null) {
 
-            Map<Object, ParticleEffect> list = lootContainerData.getParticleEffects();
+            Map<String, ParticleEffect> list = lootContainerData.getParticleEffects();
             if (list != null)
                 return new ArrayList<>(list.values());
         }
@@ -173,29 +175,34 @@ public class ContainerDataCache extends YamlFileManager {
         LootContainerData lootContainerData = this.getCacheContainerData(containerData);
         if (lootContainerData == null) return false;
 
-        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+        Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null || particleEffect.isEmpty()) return false;
 
-        return particleEffect.containsKey(particle);
+        if (particle instanceof Particle)
+            return particleEffect.containsKey(((Particle) particle).name());
+        if (particle instanceof Effect)
+            return particleEffect.containsKey(((Effect) particle).name());
+
+        return false;
     }
 
-    public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData, Object particle) {
+    public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData,final String particle) {
         if (particle == null) return false;
 
-        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+        @Nullable Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null || particleEffect.isEmpty()) return false;
 
         return particleEffect.containsKey(particle);
     }
 
-    public void removeParticleEffect(@NotNull final String containerData, Object particle) {
+    public void removeParticleEffect(@NotNull final String containerData,final String particle) {
         if (particle == null) return;
 
         LootContainerData lootContainerData = this.getCacheContainerData(containerData);
         if (lootContainerData == null) return;
 
-        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
-        if (particleEffect.isEmpty()) return;
+        Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+        if (particleEffect == null || particleEffect.isEmpty()) return;
 
         particleEffect.remove(particle);
     }
@@ -203,10 +210,14 @@ public class ContainerDataCache extends YamlFileManager {
     public void removeParticleEffect(@NotNull final LootContainerData lootContainerData, Object particle) {
         if (particle == null) return;
 
-        Map<Object, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
+        @Nullable Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
         if (particleEffect == null || particleEffect.isEmpty()) return;
 
-        particleEffect.remove(particle);
+        if (particle instanceof Particle)
+            particleEffect.remove(((Particle) particle).name());
+        if (particle instanceof Effect)
+             particleEffect.remove(((Effect) particle).name());
+
         addContainerToEffectList(lootContainerData);
     }
 
@@ -249,9 +260,10 @@ public class ContainerDataCache extends YamlFileManager {
         return new HashMap<>();
     }
 
-    public void removeCacheContainerData(final String container) {
-        cacheContainerData.remove(container);
-        this.removeFile(container);
+    public void removeCacheContainerData(final String containerKey) {
+        cacheContainerData.remove(containerKey);
+        final File folder = new File(plugin.getDataFolder(), this.getPath() + "/" + containerKey + "." + getExtension());
+        folder.delete();
     }
 
     public KeysData removeCacheKey(final String containerDataCacheName, final String keyName) {
@@ -348,7 +360,7 @@ public class ContainerDataCache extends YamlFileManager {
         for (final Location location : built.getLinkedContainerData().keySet()) {
             this.getChunkDataCache().setChunkData(location);
             this.getContainerLocationCache().put(location, new LocationData(containerKey, built.getKeysData()));
-            final Map<Object, ParticleEffect> particleEffects = built.getParticleEffects();
+            final Map<String, ParticleEffect> particleEffects = built.getParticleEffects();
             if (particleEffects != null && particleEffects.isEmpty())
                 Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
         }

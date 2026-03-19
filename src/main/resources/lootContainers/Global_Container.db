@@ -22,6 +22,8 @@ Data:
       lore:
         - "&aThis key open {1}"
         - "&aAmount of keys needed {2}."
+      entity_types:
+        - ZOMBIE
   Enchant: false
   Icon: CHEST
   Display_name: "Global_Container"

@@ -31,7 +31,7 @@ public class LootContainerData implements ConfigurationSerializable {
     private String displayName;
     private List<String> lore;
     private Set<String> worlds = new HashSet<>();
-    private Map<Object, ParticleEffect> particleEffects;
+    private Map<String, ParticleEffect> particleEffects;
     private Map<Location, ContainerData> containerData;
     private Map<String, KeysData> keysData = new HashMap<>();
     private LocationWrapper spawnLocation;
@@ -65,7 +65,7 @@ public class LootContainerData implements ConfigurationSerializable {
     }
 
     @Nullable
-    public Map<Object, ParticleEffect> getParticleEffects() {
+    public Map<String, ParticleEffect> getParticleEffects() {
         return particleEffects;
     }
 
@@ -229,7 +229,7 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
-    public LootContainerData setParticleEffects(final Map<Object, ParticleEffect> particleEffects) {
+    public LootContainerData setParticleEffects(final Map<String, ParticleEffect> particleEffects) {
         this.particleEffects = particleEffects;
         return this;
     }
@@ -395,10 +395,18 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Display_name", this.displayName);
         keysData.put("Lore", this.lore);
         keysData.put("Spawn_on_surface", this.spawnOnSurface + "");
+        this.particleEffects.values().forEach(particleEffect -> System.out.println("this.particleEffect " + particleEffect.getSpigotParticle().getParticle()));
         if (this.particleEffects == null)
             keysData.put("Particle_effect", new HashMap<>());
         else
-            keysData.put("Particle_effect", this.particleEffects.entrySet().stream().filter(effect -> effect.getKey() != null).collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
+            keysData.put("Particle_effect", this.particleEffects.entrySet().stream()
+                    .filter(effect -> effect.getKey() != null)
+                    .collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
+        if (this.particleEffects != null)
+            System.out.println("this.particleEffects serrilze " + this.particleEffects.entrySet().stream()
+                    .filter(effect -> effect.getKey() != null)
+                    .collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
+
         keysData.put("Spawn_with_cooldown", this.spawningContainerWithCooldown);
         keysData.put("Enchant", this.enchant);
         keysData.put("Random_spawn", this.randomSpawn);
@@ -434,8 +442,11 @@ public class LootContainerData implements ConfigurationSerializable {
                 particleEffectList = castList((List<?>) particleEffects, ParticleEffect.class);
         }
 
-        if (particleEffects instanceof Map && (particleEffectList == null || particleEffectList.isEmpty()))
+        if (particleEffects instanceof Map && (particleEffectList == null || particleEffectList.isEmpty())) {
+            System.out.println("particles befoire " + particleEffects);
             particles = castMap((Map<?, ?>) particleEffects, Object.class, ParticleEffect.class);
+            System.out.println("particles " + particles);
+        }
 
         final Object worldsObject = map.get("Worlds_allow_spawn");
         List<String> worlds = new ArrayList<>();
@@ -476,8 +487,7 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setContainerDataLinkedToLootTable(lootTableLinked)
                 .setSpawningContainerWithCooldown(spawningContainerWithCooldown)
                 .setCooldown(cooldown)
-                .setParticleEffects(particles != null ? particles.entrySet().stream().collect(Collectors.toMap(effectEntry -> particlesConversion.getParticleOrEffect(effectEntry.getKey()), Map.Entry::getValue)) :
-                        particlesConversion.convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? particlesConversion.convertParticleEffectList(particleEffectList) : particlesConversion.convertStringList(particleEffect)))
+                .setParticleEffects(getParticleEffects(particles, particlesConversion, particleEffect, particleEffectList))
                 .setRandomLootWorlds(worlds)
                 .setEnchant(enchant)
                 .setIcon(material)
@@ -499,6 +509,15 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setSpawnLocation(new LocationWrapper("Spawn-point", map, false))
                 .setPermissionForRandomSpawn(String.valueOf(map.get("permission")));
         return lootContainerData;
+    }
+
+    private static Map<String, ParticleEffect> getParticleEffects(Map<Object, ParticleEffect> particles, ParticlesConversion particlesConversion, List<String> particleEffect, List<ParticleEffect> particleEffectList) {
+        if (particles != null)
+            return particles.entrySet().stream().collect(Collectors.toMap(effectEntry ->
+                    effectEntry.getKey().toString(), Map.Entry::getValue)
+            );
+
+        return particlesConversion.convertToParticleEffect(particleEffect == null || particleEffect.isEmpty() ? particlesConversion.convertParticleEffectList(particleEffectList) : particlesConversion.convertStringList(particleEffect));
     }
 
 }
