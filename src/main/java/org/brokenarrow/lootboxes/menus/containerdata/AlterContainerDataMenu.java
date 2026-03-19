@@ -25,7 +25,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -85,11 +84,11 @@ public final class AlterContainerDataMenu extends MenuHolder {
 					if (button.isActionTypeEqual("Container_linked_to_loot_table"))
 						placeholders = new Object[]{containerData.getLootTableLinked()};
 					if (button.isActionTypeEqual("Particle_animation")) {
-						@Nullable Map<String, ParticleEffect> particleEffect = containerData.getParticleEffects();
+						final Map<String, ParticleEffect> particleEffect = containerData.getParticleEffects();
 						placeholders = getPlaceholders("",particleEffect != null && !particleEffect.isEmpty()? particleEffect.keySet() : "Not set");
 					}
 					if (button.isActionTypeEqual("Keys_to_open_container")) {
-						Map<String, KeysData> keysData = containerData.getKeysData();
+						final Map<String, KeysData> keysData = containerData.getKeysData();
 						placeholders = getPlaceholders("", keysData != null ? keysData.keySet()  : "");
 					}
 					if (button.isActionTypeEqual("Cooldown_container"))

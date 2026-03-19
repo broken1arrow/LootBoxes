@@ -69,7 +69,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
     }
 
     @Nullable
-    public ParticleEffect getParticleEffect(final Object o) {
+    public ParticleEffect getParticleEffect(final String o) {
         if (o == null) return null;
         Map<String, ParticleEffect> particleEffects = this.getParticleEffects();
         if (particleEffects == null || particleEffects.isEmpty()) return null;

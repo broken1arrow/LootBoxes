@@ -89,7 +89,7 @@ public class ContainerDataCacheLegacy extends YamlFileManager {
 	public ParticleEffect getParticleEffect(final String container, Object particle) {
 		ContainerDataBuilder lootContainerData = this.getCacheContainerData(container);
 		if (lootContainerData != null)
-			return lootContainerData.getParticleEffect(particle);
+			return lootContainerData.getParticleEffect(particle.toString());
 		return null;
 	}
 

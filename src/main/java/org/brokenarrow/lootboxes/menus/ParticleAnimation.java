@@ -136,7 +136,8 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
         } else {
             if (particleEffect == null)
                 particleEffect = new HashMap<>();
-            particleEffect.put(particleName, particleBuilder.build());
+            if (particleName != null)
+                particleEffect.put(particleName, particleBuilder.build());
         }
         return particleEffect;
     }

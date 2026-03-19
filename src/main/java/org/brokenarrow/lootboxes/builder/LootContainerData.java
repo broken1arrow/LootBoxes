@@ -70,12 +70,16 @@ public class LootContainerData implements ConfigurationSerializable {
     }
 
     @Nullable
-    public ParticleEffect getParticleEffect(final Object o) {
-        if (o == null) return null;
-        Map<Object, ParticleEffect> particleEffects = this.getParticleEffects();
+    public ParticleEffect getParticleEffect(final Object particle) {
+        if (particle == null) return null;
+        final Map<String, ParticleEffect> particleEffects = this.getParticleEffects();
         if (particleEffects == null || particleEffects.isEmpty()) return null;
 
-        return particleEffects.get(o);
+        if (particle instanceof Enum)
+            return particleEffects.get(((Enum<?>) particle).name());
+        if (particle instanceof String)
+            return particleEffects.get(particle);
+        return null;
     }
 
     public Material getIcon() {
@@ -234,7 +238,7 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
-    public LootContainerData setParticleEffect(@NotNull final Object particle, @NotNull final ParticleEffect.Builder particleBuilder) {
+    public LootContainerData setParticleEffect(@NotNull final String particle, @NotNull final ParticleEffect.Builder particleBuilder) {
         if (this.particleEffects == null)
             this.particleEffects = new HashMap<>();
 
