@@ -650,7 +650,7 @@ Menus:
           - "&2"
           - "&2Current lore:"
           - "&6{1}"
-      "28":
+      "10":
         action_type: Mob_drop_key
         material: BAT_SPAWN_EGG
         name: "&bSettings for drop key"
