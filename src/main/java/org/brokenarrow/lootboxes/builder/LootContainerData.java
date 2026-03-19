@@ -399,15 +399,11 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Display_name", this.displayName);
         keysData.put("Lore", this.lore);
         keysData.put("Spawn_on_surface", this.spawnOnSurface + "");
-        this.particleEffects.values().forEach(particleEffect -> System.out.println("this.particleEffect " + particleEffect.getSpigotParticle().getParticle()));
+  
         if (this.particleEffects == null)
             keysData.put("Particle_effect", new HashMap<>());
         else
             keysData.put("Particle_effect", this.particleEffects.entrySet().stream()
-                    .filter(effect -> effect.getKey() != null)
-                    .collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
-        if (this.particleEffects != null)
-            System.out.println("this.particleEffects serrilze " + this.particleEffects.entrySet().stream()
                     .filter(effect -> effect.getKey() != null)
                     .collect(Collectors.toMap(effectEntry -> effectEntry.getKey().toString(), Map.Entry::getValue)));
 
