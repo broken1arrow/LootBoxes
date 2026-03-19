@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.CenterMode;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
@@ -63,7 +64,7 @@ public class SpawnContainerRandomLoc {
                         continue;
                     }
 
-                    if (lootContainerData.isSpawnContainerFromWorldCenter()) {
+                    if (lootContainerData.getCenterMode() == CenterMode.WORLD_ORIGIN || lootContainerData.getCenterMode() == CenterMode.PLAYER_ORIGIN) {
                         if (lootContainerData.getSpawnLocation() != null)
                             spawnBlock(key, lootContainerData, lootContainerData.getSpawnLocation().getLocation(), null);
                     } else {

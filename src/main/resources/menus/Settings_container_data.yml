@@ -135,57 +135,31 @@ Menus:
           - ""
           - "&aMax radius: &6{1}"
       "28":
-        action_type: World_center
+        action_type: Spawn_center
         passive:
           material: BARRIER
           name: "&cNot work when random spawn is off"
           glow: false
           lore:
-          - "&aSet this to true if you want to use"
-          - "&athe world spawn. If false it will"
-          - "&atry spawn one around the player."
-          - ""
-          - "&aCurrently set to: &6{0}"
+            - "&aSet this to true if you want to use"
+            - "&aa fixed spawn point. As default it will"
+            - "&atry spawn loot chest around the player."
+            - ""
+            - "&aCurrently set to: &6{0}"
+            - "&aLocation: &6{1}"
+            - "&aDescription: &6{2}"
         active:
           material: MAP
-          name: "&bUse world center"
+          name: "&bUse fixed center"
           glow: false
           lore:
-          - "&aSet this to true if you want to use"
-          - "&athe world spawn. If false it will"
-          - "&atry spawn one around the player."
-          - ""
-          - "&aCurrently set to: &6{0}"
-      "30":
-        action_type: Player_set_loc
-        passive:
-          material: BARRIER
-          name: "&cNot work when random spawn is off"
-          glow: false
-          lore:
-            - "&aSet this to true to use your current"
-            - "&alocation as the spawn point."
-            - "&a"
-            - "&aIf set to false, the container will"
-            - "&aspawn randomly around the player"
-            - "&aor at the world spawn if enabled."
+            - "&aSet this to true if you want to use"
+            - "&aa fixed spawn point. As default it will"
+            - "&atry spawn loot chest around the player."
             - ""
             - "&aCurrently set to: &6{0}"
             - "&aLocation: &6{1}"
-        active:
-          material: ENDER_PEARL
-          name: "&bSet at player loc"
-          glow: false
-          lore:
-            - "&aSet this to true to use your current"
-            - "&alocation as the spawn point."
-            - "&a"
-            - "&aIf set to false, the container will"
-            - "&aspawn randomly around the player"
-            - "&aor at the world spawn if enabled."
-            - ""
-            - "&aCurrently set to: &6{0}"
-            - "&aLocation: &6{1}"
+            - "&aDescription: &6{2}"
       "32":
         action_type: Spawn_On_Surface
         passive:

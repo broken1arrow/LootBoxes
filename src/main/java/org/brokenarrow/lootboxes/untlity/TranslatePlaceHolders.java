@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.broken.arrow.library.serialize.utility.converters.PlaceholderTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.entity.Player;
 
@@ -17,14 +18,7 @@ public class TranslatePlaceHolders {
 		return translatePlaceholdersLore(lore, placeholders);
 	}
 	public static List<String> translatePlaceholdersLore(List<String> loreList, Object... placeholders) {
-		if (loreList == null) return new ArrayList<>();
-		List<String> clonedLore = new ArrayList<>(loreList);
-		List<String> list = new ArrayList<>();
-		for (String lore : clonedLore) {
-			if (!checkListForPlaceholdersAndTranslate(list, lore, placeholders))
-				list.add(translatePlaceholders(lore, placeholders));
-		}
-		return list;
+		return PlaceholderTranslator.translatePlaceholdersLore(loreList,placeholders);
 	}
 
 	public static boolean checkListForPlaceholdersAndTranslate(List<String> lores, String lore, Object... placeholders) {

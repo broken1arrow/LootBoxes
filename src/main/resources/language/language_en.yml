@@ -96,6 +96,12 @@ TELEPORT:
   CONTINER_IS_OBSTACLE_ON_ALL_SIDES: "&fYou get teleported to container pos, becuse the container is obstacle on all sides. Pos you get teleported to: &6 {0} {1} {2} {3}"
   CONTINER_IS_OBSTACLE_ON_SOME_SIDES: "&fYou get teleported to diffrent location, becuse container was obstacle some of the side´s of the container. Pos you get teleported to: &6 {0} {1} {2} {3}"
 
+CENTER_MODE_DESCRIPTION:
+  PLAYER_FOLLOW: "Set from the player as a spawn center point"
+  PLAYER_ORIGIN: "Fixed point from the player."
+  WORLD_ORIGIN: "Fixed point from the set world center."
+
+
 SELECT_WORLD_PROMPT: "&fType the world name you want top add, it must be valid world as it does not verify if the world exist."
 SELECT_WORLD_EXIST_PROMPT: "&fThe world is already added, to remove you click on the world and right-click."
 

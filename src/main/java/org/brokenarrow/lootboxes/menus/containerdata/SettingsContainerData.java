@@ -5,10 +5,12 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.CenterMode;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.commandprompt.SetPermission;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
+import org.brokenarrow.lootboxes.untlity.BountifyStrings;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.LocationWrapper;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -140,16 +142,18 @@ public class SettingsContainerData extends MenuHolder {
                         containerBuilder.setMaxRadius(maxRadius);
                         buttonMatch = true;
                         break;
+                    case "Spawn_center":
+                        containerBuilder.selectCenterMode(click);
+                        buttonMatch = true;
+                        break;
                     case "World_center":
-                        containerBuilder.setSpawnContainerFromWorldCenter(click.isLeftClick());
-                        containerBuilder.setSpawnContainerFromPlayerCenter(false);
+                        containerBuilder.selectCenterMode(click);
                         if (player.getLocation().getWorld() != null)
                             containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation().getWorld().getSpawnLocation(), false));
                         buttonMatch = true;
                         break;
                     case "Player_set_loc":
-                        containerBuilder.setSpawnContainerFromPlayerCenter(click.isLeftClick());
-                        containerBuilder.setSpawnContainerFromWorldCenter(false);
+                        containerBuilder.selectCenterMode(click);
                         containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation(), false));
                         buttonMatch = true;
                         break;
@@ -179,6 +183,14 @@ public class SettingsContainerData extends MenuHolder {
                     if (containerBuilder.isRandomSpawn()) {
                         Lootboxes.getInstance().getSpawnLootContainer().setRandomSpawnedContainer();
                     }
+                    if (player.getLocation().getWorld() != null) {
+                        if (containerBuilder.getCenterMode() == CenterMode.WORLD_ORIGIN)
+                            containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation().getWorld().getSpawnLocation(), false));
+                        else if (containerBuilder.getCenterMode() == CenterMode.PLAYER_ORIGIN)
+                            containerBuilder.setSpawnLocation(new LocationWrapper(player.getLocation(), false));
+                    } else
+                        containerBuilder.setSpawnLocation(null);
+
                     return true;
                 }
             }
@@ -206,10 +218,12 @@ public class SettingsContainerData extends MenuHolder {
                 case "Max_radius":
                 case "World_center":
                 case "Player_set_loc":
+                case "Spawn_center":
                 case "Spawn_On_Surface":
                     return button.getActiveButton();
                 case "Select_worlds":
-                    if (!lootContainerData.isSpawnContainerFromWorldCenter() && !lootContainerData.isSpawnContainerFromPlayerCenter())
+                    CenterMode centerMode = lootContainerData.getCenterMode();
+                    if (centerMode == CenterMode.PLAYER_FOLLOW)
                         return button.getActiveButton();
             }
         }
@@ -244,6 +258,10 @@ public class SettingsContainerData extends MenuHolder {
         if (button.isActionTypeEqual("Max_radius"))
             placeholders = getPlaceholders("", lootContainerData.getMaxRadius());
 
+        if (button.isActionTypeEqual("Spawn_center")) {
+            final CenterMode centerMode = lootContainerData.getCenterMode();
+            placeholders = getPlaceholders(BountifyStrings.bountifyCapitalized(centerMode), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "", centerMode.getDescription());
+        }
         if (button.isActionTypeEqual("World_center"))
             placeholders = getPlaceholders(lootContainerData.isSpawnContainerFromWorldCenter(), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
 

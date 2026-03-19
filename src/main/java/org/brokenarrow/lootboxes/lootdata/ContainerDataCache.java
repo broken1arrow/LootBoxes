@@ -117,8 +117,7 @@ public class ContainerDataCache extends YamlFileManager {
                 .setLore(new ArrayList<>())
                 .setContainerData(new HashMap<>())
                 .setKeysData(new HashMap<>())
-                .setSpawnContainerFromWorldCenter(false)
-                .setSpawnContainerFromPlayerCenter(false)
+                .setCenterMode(CenterMode.PLAYER_FOLLOW)
                 .build();
 
         cacheContainerData.put(container, builder);

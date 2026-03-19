@@ -76,6 +76,10 @@ public class ChatMessages extends YamlFileManager {
 	public static ChatMessages RANDOM_LOOT_MESAGE_TITEL = new ChatMessages("RANDOM_LOOT_MESAGE.TITEL");
 	public static ChatMessages RANDOM_LOOT_MESAGE = new ChatMessages("RANDOM_LOOT_MESAGE.MESSAGE");
 
+	public static ChatMessages CENTER_MODE_DESCRIPTION_PLAYER_FOLLOW = new ChatMessages("CENTER_MODE_DESCRIPTION.PLAYER_FOLLOW");
+	public static ChatMessages CENTER_MODE_DESCRIPTION_PLAYER_ORIGIN= new ChatMessages("CENTER_MODE_DESCRIPTION.PLAYER_ORIGIN");
+	public static ChatMessages CENTER_MODE_DESCRIPTION_WORLD_ORIGIN = new ChatMessages("CENTER_MODE_DESCRIPTION.WORLD_ORIGIN");
+
 	public static ChatMessages SELECT_WORLD_PROMPT = new ChatMessages("SELECT_WORLD_PROMPT");
 	public static ChatMessages SELECT_WORLD_EXIST_PROMPT = new ChatMessages("SELECT_WORLD_EXIST_PROMPT");
 
@@ -105,9 +109,11 @@ public class ChatMessages extends YamlFileManager {
 		if (this.messages != null && !this.messages.isEmpty()) {
 			String msg = this.messages;
 
-			for (int i = 0; i < objects.length; i++) {
-				Object object = convertObject(objects[i]);
-				msg = msg.replace("{" + i + "}", object.toString());
+			if(objects != null) {
+				for (int i = 0; i < objects.length; i++) {
+					Object object = convertObject(objects[i]);
+					msg = msg.replace("{" + i + "}", object.toString());
+				}
 			}
 			return msg;
 

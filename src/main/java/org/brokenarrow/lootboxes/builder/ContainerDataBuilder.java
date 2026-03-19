@@ -189,6 +189,14 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
 
     public LootContainerData convertToLootContainer() {
         LootContainerData lootContainerData = new LootContainerData();
+        CenterMode centerMode;
+        if (spawnContainerFromPlayerCenter)
+            centerMode = CenterMode.PLAYER_ORIGIN;
+        else if (spawnContainerFromWorldCenter)
+            centerMode = CenterMode.WORLD_ORIGIN;
+        else
+            centerMode = CenterMode.PLAYER_FOLLOW;
+
         lootContainerData
                 .setContainerData(this.containerData)
                 .setContainerDataLinkedToLootTable(lootTableLinked)
@@ -208,12 +216,11 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
                 .setContainerData(containerData)
                 .setKeysData(keysData)
                 .setAttempts(attempts)
-                .setSpawnContainerFromWorldCenter(spawnContainerFromWorldCenter)
-                .setSpawnContainerFromPlayerCenter(spawnContainerFromPlayerCenter)
                 .setSpawnOnSurface(spawnOnSurface)
                 .setMinRadius(minRadius)
                 .setMaxRadius(maxRadius)
                 .setSpawnLocation(spawnLocation)
+                .setCenterMode(centerMode)
                 .setPermissionForRandomSpawn(permissionForRandomSpawn);
         return lootContainerData;
     }

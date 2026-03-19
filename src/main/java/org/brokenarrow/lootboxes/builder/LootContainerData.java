@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +36,7 @@ public class LootContainerData implements ConfigurationSerializable {
     private Map<Location, ContainerData> containerData;
     private Map<String, KeysData> keysData = new HashMap<>();
     private LocationWrapper spawnLocation;
+    private CenterMode centerMode;
     private boolean spawningContainerWithCooldown;
     private boolean enchant;
     private boolean randomSpawn;
@@ -173,6 +175,10 @@ public class LootContainerData implements ConfigurationSerializable {
         return maxRadius;
     }
 
+    public CenterMode getCenterMode() {
+        return centerMode;
+    }
+
     public boolean contains(@Nullable final World world) {
         if (world == null) return false;
         return this.worlds.contains(world.getName());
@@ -192,7 +198,6 @@ public class LootContainerData implements ConfigurationSerializable {
         return contains(location.getWorld());
     }
 
-
     public LootContainerData setRandomLootWorlds(List<String> worlds) {
         this.worlds = new HashSet<>(worlds);
         return this;
@@ -208,18 +213,8 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
-    public LootContainerData setSpawnContainerFromWorldCenter(final boolean spawnContainerFromWorldCenter) {
-        this.spawnContainerFromWorldCenter = spawnContainerFromWorldCenter;
-        return this;
-    }
-
     public LootContainerData setPermissionForRandomSpawn(String permissionForRandomSpawn) {
         this.permissionForRandomSpawn = permissionForRandomSpawn;
-        return this;
-    }
-
-    public LootContainerData setSpawnContainerFromPlayerCenter(final boolean spawnContainerFromPlayerCenter) {
-        this.spawnContainerFromPlayerCenter = spawnContainerFromPlayerCenter;
         return this;
     }
 
@@ -350,6 +345,24 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
+    public LootContainerData  setCenterMode(@NotNull final CenterMode centerMode) {
+        this.centerMode = centerMode;
+        return this;
+    }
+
+    public LootContainerData selectCenterMode(@NotNull final ClickType click) {
+        int length = CenterMode.values().length;
+        int current = this.centerMode.ordinal();
+
+        if (click.isLeftClick()) {
+            current = (current + 1) % length;
+        } else if (click.isRightClick()) {
+            current = (current - 1 + length) % length;
+        }
+        this.centerMode = CenterMode.values()[current];
+        return this;
+    }
+
     public LootContainerData build() {
         return this;
     }
@@ -399,7 +412,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Display_name", this.displayName);
         keysData.put("Lore", this.lore);
         keysData.put("Spawn_on_surface", this.spawnOnSurface + "");
-  
+
         if (this.particleEffects == null)
             keysData.put("Particle_effect", new HashMap<>());
         else
@@ -419,6 +432,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Spawn_player_center", this.spawnContainerFromPlayerCenter);
         keysData.put("Min_radius", this.minRadius);
         keysData.put("Max_radius", this.maxRadius);
+        keysData.put("Center_mode", this.centerMode);
         keysData.put("Spawn-point", this.spawnLocation != null ? this.spawnLocation.serialize() : new HashMap<>());
         keysData.put("Containers", this.containerData != null ? this.containerData : new HashMap<>());
         return keysData;
@@ -467,9 +481,22 @@ public class LootContainerData implements ConfigurationSerializable {
         final boolean spawnContainerFromCenter = (boolean) map.getOrDefault("Spawn_world_center", false);
         final boolean spawnContainerFromPlayerCenter = (boolean) map.getOrDefault("Spawn_player_center", false);
         final boolean spawnOnSurface = getBoolean(map.getOrDefault("Spawn_on_surface", false));
+        final Object centerModeObject = map.get("Center_mode");
+        CenterMode centerMode;
+        if (centerModeObject == null) {
+            if (spawnContainerFromPlayerCenter)
+                centerMode = CenterMode.PLAYER_ORIGIN;
+            else if (spawnContainerFromCenter)
+                centerMode = CenterMode.WORLD_ORIGIN;
+            else
+                centerMode = CenterMode.PLAYER_FOLLOW;
+        }else {
+            centerMode = CenterMode.of(centerModeObject.toString());
+        }
 
-        final int minRadius = (int) map.getOrDefault("Min_radius", spawnContainerFromCenter || spawnContainerFromPlayerCenter ? 100 : 10);
-        final int maxRadius = (int) map.getOrDefault("Max_radius", spawnContainerFromCenter || spawnContainerFromPlayerCenter ? 1500 : 80);
+        final int minRadius = (int) map.getOrDefault("Min_radius", centerMode == CenterMode.WORLD_ORIGIN || centerMode == CenterMode.PLAYER_ORIGIN ? 100 : 10);
+        final int maxRadius = (int) map.getOrDefault("Max_radius", centerMode == CenterMode.WORLD_ORIGIN || centerMode == CenterMode.PLAYER_ORIGIN ? 1500 : 80);
+
         Facing blockFace = null;
         if (random_loot_facing != null)
             blockFace = Enums.getIfPresent(Facing.class, random_loot_facing).orNull();
@@ -501,11 +528,10 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setContainerData(containers)
                 .setKeysData(keys)
                 .setAttempts(attempts)
-                .setSpawnContainerFromWorldCenter(spawnContainerFromCenter)
-                .setSpawnContainerFromPlayerCenter(spawnContainerFromPlayerCenter)
                 .setSpawnOnSurface(spawnOnSurface)
                 .setMinRadius(minRadius)
                 .setMaxRadius(maxRadius)
+                .setCenterMode(centerMode)
                 .setSpawnLocation(new LocationWrapper("Spawn-point", map, false))
                 .setPermissionForRandomSpawn(String.valueOf(map.get("permission")));
         return lootContainerData;
