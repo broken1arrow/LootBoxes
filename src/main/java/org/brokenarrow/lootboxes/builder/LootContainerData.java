@@ -457,9 +457,7 @@ public class LootContainerData implements ConfigurationSerializable {
         }
 
         if (particleEffects instanceof Map && (particleEffectList == null || particleEffectList.isEmpty())) {
-            System.out.println("particles befoire " + particleEffects);
             particles = castMap((Map<?, ?>) particleEffects, Object.class, ParticleEffect.class);
-            System.out.println("particles " + particles);
         }
 
         final Object worldsObject = map.get("Worlds_allow_spawn");

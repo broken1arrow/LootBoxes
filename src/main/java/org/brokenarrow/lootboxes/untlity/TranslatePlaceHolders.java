@@ -38,9 +38,10 @@ public class TranslatePlaceHolders {
             return new ArrayList<>();
         final List<String> loreList = new ArrayList<>();
         for (final String lore : stringList) {
-            if (lore.contains("{" + containsList(placeholder) + "}") && containsList(placeholder) != -1)
-                for (final String text : (List<String>) placeholder[containsList(placeholder)])
-                    loreList.add(lore.replace("{" + containsList(placeholder) + "}", text));
+            final int index = containsList(placeholder);
+            if (index != -1 && lore.contains("{" + index + "}"))
+                for (final String text : (List<String>) placeholder[index])
+                    loreList.add(lore.replace("{" + index + "}", text));
             else
                 loreList.add(translatePlaceholders(lore, placeholder));
         }
