@@ -206,7 +206,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
                 .setRandomLootWorlds(worlds != null ? new ArrayList<>(worlds) : new ArrayList<>())
                 .setEnchant(enchant)
                 .setIcon(icon)
-                .setRandomLootContainerItem(randomLootContainerItem)
+                .setRandomLootContainer(randomLootContainerItem)
                 .setRandomLootContainerFacing(randomLootContainerFacing)
                 .setDisplayName(displayName)
                 .setLore(lore)

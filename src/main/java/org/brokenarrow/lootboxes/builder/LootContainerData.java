@@ -1,6 +1,7 @@
 package org.brokenarrow.lootboxes.builder;
 
 import com.google.common.base.Enums;
+import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.LocationWrapper;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
@@ -11,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +29,7 @@ public class LootContainerData implements ConfigurationSerializable {
     private String lootTableLinked;
     private String permissionForRandomSpawn;
     private Material icon;
-    private Material randomLootContainerItem;
+    private ItemStack randomLootContainer;
     private Facing randomLootContainerFacing;
     private String displayName;
     private List<String> lore;
@@ -42,8 +44,6 @@ public class LootContainerData implements ConfigurationSerializable {
     private boolean randomSpawn;
     private boolean showTitle;
     private boolean containerShallGlow;
-    private boolean spawnContainerFromWorldCenter;
-    private boolean spawnContainerFromPlayerCenter;
     private boolean spawnOnSurface;
     private long cooldown;
     private int attempts;
@@ -88,8 +88,8 @@ public class LootContainerData implements ConfigurationSerializable {
         return icon;
     }
 
-    public Material getRandomLootContainerItem() {
-        return randomLootContainerItem;
+    public ItemStack getRandomLootContainer() {
+        return randomLootContainer;
     }
 
     public Facing getRandomLootContainerFacing() {
@@ -147,13 +147,6 @@ public class LootContainerData implements ConfigurationSerializable {
         return randomSpawn;
     }
 
-    public boolean isSpawnContainerFromWorldCenter() {
-        return spawnContainerFromWorldCenter;
-    }
-
-    public boolean isSpawnContainerFromPlayerCenter() {
-        return spawnContainerFromPlayerCenter;
-    }
 
     public boolean isSpawnOnSurface() {
         return spawnOnSurface;
@@ -246,8 +239,8 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
-    public LootContainerData setRandomLootContainerItem(Material randomLootContainerItem) {
-        this.randomLootContainerItem = randomLootContainerItem;
+    public LootContainerData setRandomLootContainer(ItemStack randomLootContainer) {
+        this.randomLootContainer = randomLootContainer;
         return this;
     }
 
@@ -345,7 +338,7 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
-    public LootContainerData  setCenterMode(@NotNull final CenterMode centerMode) {
+    public LootContainerData setCenterMode(@NotNull final CenterMode centerMode) {
         this.centerMode = centerMode;
         return this;
     }
@@ -373,8 +366,8 @@ public class LootContainerData implements ConfigurationSerializable {
         return "ContainerDataBuilder{" +
                 "lootTableLinked='" + lootTableLinked + '\'' +
                 ", icon=" + icon +
-                ", randonLootContainerItem=" + randomLootContainerItem +
-                ", randonLootContainerFaceing=" + randomLootContainerFacing +
+                ", randonLootContainer=" + randomLootContainer +
+                ", randomLootContainerFacing=" + randomLootContainerFacing +
                 ", displayname='" + displayName + '\'' +
                 ", lore=" + lore +
                 ", particleEffects=" + particleEffects +
@@ -406,7 +399,8 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("LootTable_linked", this.lootTableLinked);
         keysData.put("permission", this.permissionForRandomSpawn == null ? "" : this.permissionForRandomSpawn);
         keysData.put("Icon", this.icon + "");
-        keysData.put("Random_loot_container", this.randomLootContainerItem + "");
+        if (this.randomLootContainer != null)
+            keysData.put("Random_loot_container", RegisterNbtAPI.serializeItemStack(new ItemStack[]{this.randomLootContainer}));
         keysData.put("Random_loot_facing", this.randomLootContainerFacing + "");
         keysData.put("Worlds_allow_spawn", new ArrayList<>(this.worlds));
         keysData.put("Display_name", this.displayName);
@@ -428,8 +422,6 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Random_loot_glow", this.containerShallGlow);
         keysData.put("Keys", this.keysData);
         keysData.put("Attempts", this.attempts);
-        keysData.put("Spawn_world_center", this.spawnContainerFromWorldCenter);
-        keysData.put("Spawn_player_center", this.spawnContainerFromPlayerCenter);
         keysData.put("Min_radius", this.minRadius);
         keysData.put("Max_radius", this.maxRadius);
         keysData.put("Center_mode", this.centerMode.name());
@@ -471,7 +463,7 @@ public class LootContainerData implements ConfigurationSerializable {
         final boolean enchant = (boolean) map.get("Enchant");
         final boolean randomSpawn = getBoolean(map.get("Random_spawn"));
         final long cooldown = (Integer) map.get("Cooldown");
-        final Material random_loot_container = Material.getMaterial(String.valueOf(map.get("Random_loot_container")));
+        final Object randomLootContainer = map.get("Random_loot_container");
         final String random_loot_facing = (String) map.get("Random_loot_faceing");
         final boolean random_loot_title = (boolean) map.getOrDefault("Random_loot_titel", false);
         final boolean random_loot_glow = (boolean) map.getOrDefault("Random_loot_glow", false);
@@ -488,8 +480,17 @@ public class LootContainerData implements ConfigurationSerializable {
                 centerMode = CenterMode.WORLD_ORIGIN;
             else
                 centerMode = CenterMode.PLAYER_FOLLOW;
-        }else {
+        } else {
             centerMode = CenterMode.of(centerModeObject.toString());
+        }
+
+        ItemStack lootContainer = null;
+        if (randomLootContainer instanceof byte[]) {
+            byte[] primitiveArray = (byte[]) randomLootContainer;
+            ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
+            if (itemStacks != null && itemStacks.length > 0) {
+                lootContainer = itemStacks[0];
+            }
         }
 
         final int minRadius = (int) map.getOrDefault("Min_radius", centerMode == CenterMode.WORLD_ORIGIN || centerMode == CenterMode.PLAYER_ORIGIN ? 100 : 10);
@@ -516,7 +517,7 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setRandomLootWorlds(worlds)
                 .setEnchant(enchant)
                 .setIcon(material)
-                .setRandomLootContainerItem(random_loot_container != null ? random_loot_container : Material.CHEST)
+                .setRandomLootContainer(lootContainer  != null ? lootContainer  : new ItemStack(Material.CHEST))
                 .setRandomLootContainerFacing(blockFace)
                 .setDisplayName(displayName)
                 .setLore(lore)

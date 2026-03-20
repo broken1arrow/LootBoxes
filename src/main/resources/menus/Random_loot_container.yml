@@ -30,6 +30,15 @@ Menus:
         - ""
         - "&2Go one page"
         - "&2forward."
+      "40":
+        action_type: Custom_container
+        material: CHEST
+        name: "&bAdd new container"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to add new"
+          - "&2container to the list."
       "38":
         action_type: Previous_button
         material: ARROW
@@ -48,7 +57,7 @@ Menus:
         - ""
         - "&2Go one page"
         - "&2back."
-      "36-37,39-41,43":
+      "36-37,39,41,43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false

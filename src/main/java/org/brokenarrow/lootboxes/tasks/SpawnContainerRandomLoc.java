@@ -169,10 +169,13 @@ public class SpawnContainerRandomLoc {
             if (stacks == null) {
                 return;
             }
-            location.getBlock().setType(containerData.getRandomLootContainerItem());
+            location.getBlock().setType(containerData.getRandomLootContainer().getType());
             if (containerData.getRandomLootContainerFacing() == Facing.RANDOM) {
-                Material material = containerData.getRandomLootContainerItem();
-                setRotation(location, Facing.getRandomFace(material == Material.CHEST || material == Material.TRAPPED_CHEST));
+                ItemStack itemStack = containerData.getRandomLootContainer();
+                if (itemStack != null) {
+                    Material material = itemStack.getType();
+                    setRotation(location, Facing.getRandomFace(material == Material.CHEST || material == Material.TRAPPED_CHEST));
+                }
             } else
                 setRotation(location, containerData.getRandomLootContainerFacing().getFace());
             setCustomName(location, containerData.getDisplayName());

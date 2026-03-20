@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,7 +109,7 @@ public class ContainerDataCache extends YamlFileManager {
                 .setContainerDataLinkedToLootTable("")
                 .setSpawningContainerWithCooldown(true)
                 .setRandomLootContainerFacing(Facing.RANDOM)
-                .setRandomLootContainerItem(Material.CHEST)
+                .setRandomLootContainer(new ItemStack(Material.CHEST))
                 .setCooldown(1800)
                 .setParticleEffects(new HashMap<>())
                 .setEnchant(false)
@@ -185,7 +186,7 @@ public class ContainerDataCache extends YamlFileManager {
         return false;
     }
 
-    public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData,final String particle) {
+    public boolean containsParticleEffect(@NotNull final LootContainerData lootContainerData, final String particle) {
         if (particle == null) return false;
 
         @Nullable Map<String, ParticleEffect> particleEffect = lootContainerData.getParticleEffects();
@@ -194,7 +195,7 @@ public class ContainerDataCache extends YamlFileManager {
         return particleEffect.containsKey(particle);
     }
 
-    public void removeParticleEffect(@NotNull final String containerData,final String particle) {
+    public void removeParticleEffect(@NotNull final String containerData, final String particle) {
         if (particle == null) return;
 
         LootContainerData lootContainerData = this.getCacheContainerData(containerData);
@@ -215,7 +216,7 @@ public class ContainerDataCache extends YamlFileManager {
         if (particle instanceof Particle)
             particleEffect.remove(((Particle) particle).name());
         if (particle instanceof Effect)
-             particleEffect.remove(((Effect) particle).name());
+            particleEffect.remove(((Effect) particle).name());
 
         addContainerToEffectList(lootContainerData);
     }

@@ -265,6 +265,15 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2forward."
+      "40":
+        action_type: Custom_container
+        material: CHEST
+        name: "&bAdd new container"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to add new"
+          - "&2container to the list."
       "38":
         action_type: Previous_button
         material: ARROW
@@ -283,7 +292,7 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
-      "36-37,39-41,43":
+      "36-37,39,41,43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false
@@ -1575,6 +1584,15 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2forward."
+      "40":
+        action_type: Custom_container
+        material: CHEST
+        name: "&bAdd new container"
+        glow: true
+        lore:
+          - ""
+          - "&2Click here to add new"
+          - "&2container to the list."
       "38":
         action_type: Previous_button
         material: ARROW
@@ -1593,7 +1611,7 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
-      "36-37,39-41,43":
+      "36-37,39,41,43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false
@@ -2093,3 +2111,49 @@ Menus:
         name: "&b"
         glow: false
         lore:
+          - ""
+  ######################################################
+  # Create new custom loot containers you want to add the loot too.
+  Create_container:
+    menu_settings:
+      name: "&1Save new containers"
+      sound: null
+      size: 45
+      # slots you want to use to add fill items inside.
+      fill-space: 9-26
+    buttons:
+      "-1":
+        material: ""
+        name: ""
+        glow: false
+        lore:
+          - ""
+      "40":
+        action_type: Save_items
+        material: BARRIER
+        name: "&bSave all items"
+        glow: false
+        lore:
+          - ""
+          - "&2Click to save the container items."
+      "44":
+        action_type: Back_button
+        material: RED_STAINED_GLASS_PANE
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

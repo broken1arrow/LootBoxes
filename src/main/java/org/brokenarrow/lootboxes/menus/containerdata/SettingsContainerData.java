@@ -225,7 +225,7 @@ public class SettingsContainerData extends MenuHolder {
         Object[] placeholders = getPlaceholders("");
         if (button.isActionTypeEqual("Container_type"))
             placeholders = getPlaceholders("",
-                    lootContainerData.getRandomLootContainerItem(),
+                    lootContainerData.getRandomLootContainer(),
                     lootContainerData.getRandomLootContainerFacing());
 
         if (button.isActionTypeEqual("Show_title"))
@@ -249,15 +249,15 @@ public class SettingsContainerData extends MenuHolder {
         if (button.isActionTypeEqual("Max_radius"))
             placeholders = getPlaceholders("", lootContainerData.getMaxRadius());
 
+        final CenterMode centerMode = lootContainerData.getCenterMode();
         if (button.isActionTypeEqual("Spawn_center")) {
-            final CenterMode centerMode = lootContainerData.getCenterMode();
             placeholders = getPlaceholders(BountifyStrings.bountifyCapitalized(centerMode), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "", centerMode.getDescription());
         }
         if (button.isActionTypeEqual("World_center"))
-            placeholders = getPlaceholders(lootContainerData.isSpawnContainerFromWorldCenter(), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
+            placeholders = getPlaceholders(BountifyStrings.bountifyCapitalized(centerMode), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
 
         if (button.isActionTypeEqual("Player_set_loc"))
-            placeholders = getPlaceholders(lootContainerData.isSpawnContainerFromPlayerCenter(), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
+            placeholders = getPlaceholders(BountifyStrings.bountifyCapitalized(centerMode), lootContainerData.getSpawnLocation() != null ? lootContainerData.getSpawnLocation().toString() : "");
 
         if (button.isActionTypeEqual("Spawn_On_Surface"))
             placeholders = getPlaceholders(lootContainerData.isSpawnOnSurface());

@@ -1,0 +1,46 @@
+######################################################
+# Create new custom loot containers you want to add the loot too.
+Menus:
+  menu:
+    menu_settings:
+      name: "&1Save new containers"
+      sound: null
+      size: 45
+      # slots you want to use to add fill items inside.
+      fill-space: 9-26
+    buttons:
+      "-1":
+        material:  ""
+        name:  ""
+        glow: false
+        lore:
+          - ""
+      "40":
+        action_type: Save_items
+        material: BARRIER
+        name: "&bSave all items"
+        glow: false
+        lore:
+          - ""
+          - "&2Click to save the container items."
+      "44":
+        action_type: Back_button
+        material: RED_STAINED_GLASS_PANE
+        name: "&bBack"
+        glow: true
+        lore:
+          - ""
+          - "&2Go one page"
+          - "&2back."
+      "36-37,39,41-43":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""
+      "0-8":
+        material: BLACK_STAINED_GLASS_PANE
+        name: "&b"
+        glow: false
+        lore:
+          - ""

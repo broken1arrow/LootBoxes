@@ -9,6 +9,8 @@ import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.menus.CreateNewContainerMenu;
+import org.brokenarrow.lootboxes.menus.MenuKeys;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
@@ -21,16 +23,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static org.brokenarrow.lootboxes.untlity.BountifyStrings.bountifyCapitalized;
-import static org.brokenarrow.lootboxes.untlity.ListOfContainers.containers;
 
-public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
+public class ChooseRandomLootContainer extends MenuHolderPage<ItemStack> {
 
     private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
     private final MenuTemplate guiTemplate;
     private final String containerName;
 
     public ChooseRandomLootContainer(String containerName) {
-        super(containers());
+        super(Lootboxes.getInstance().getCustomLootContainersCache().getContainerItems());
         this.containerName = containerName;
         this.guiTemplate = Lootboxes.getInstance().getMenu("Random_loot_container");
 
@@ -80,11 +81,17 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
                 nextPage();
             }
         }
+        
         if (button.isActionTypeEqual("Previous_button")) {
             if (click.isLeftClick()) {
                 previousPage();
             }
         }
+
+        if (button.isActionTypeEqual("Custom_container")) {
+            new CreateNewContainerMenu(MenuKeys.CHOOSE_RANDOM_LOOT_CONTAINER, containerName).menuOpen(player);
+        }
+
         if (button.isActionTypeEqual("Back_button")) {
             new SettingsContainerData(containerName).menuOpen(player);
         }
@@ -92,30 +99,30 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
     }
 
     @Override
-    public FillMenuButton<Material> createFillMenuButton() {
+    public FillMenuButton<ItemStack> createFillMenuButton() {
         MenuButtonData button = this.guiTemplate.getMenuButton(-1);
         if (button == null) return null;
 
-        return new FillMenuButton<>((player, menu, click, clickedItem, material) -> {
-            if (material != null) {
+        return new FillMenuButton<>((player, menu, click, clickedItem, itemStack) -> {
+            if (itemStack != null) {
                 containerDataCache.write(containerName, containerBuilder -> {
                     if (click == ClickType.SHIFT_LEFT) {
-                        containerBuilder.setRandomLootContainerItem(material);
+                        containerBuilder.setRandomLootContainer(itemStack);
                         return ButtonUpdateAction.ALL;
                     }
-                    Facing type = getContainerFacing(click, material, containerBuilder);
+                    Facing type = getContainerFacing(click, itemStack.getType(), containerBuilder);
                     containerBuilder.setRandomLootContainerFacing(type);
                     return ButtonUpdateAction.ALL;
                 });
                 return ButtonUpdateAction.ALL;
             }
             return ButtonUpdateAction.NONE;
-        }, (slot, material) -> containerDataCache.read(containerName, containerBuilder -> {
+        }, (slot, itemStack) -> containerDataCache.read(containerName, containerBuilder -> {
             org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
             ItemStack itemstack = null;
-            if (material != null)
-                itemstack = new ItemStack(material);
+            if (itemStack != null)
+                itemstack = new ItemStack(itemStack);
             if (itemstack == null)
                 return null;
             final LootContainerData lootContainerData = containerDataCache.getCacheContainerData(containerName);
@@ -127,7 +134,7 @@ public class ChooseRandomLootContainer extends MenuHolderPage<Material> {
                     TranslatePlaceHolders.getLore(player, menuButton.getLore(),
                             "",
                             lootContainerData.getRandomLootContainerFacing(),
-                            lootContainerData.getRandomLootContainerItem()
+                            lootContainerData.getRandomLootContainer()
                     )).makeItemStack();
         }));
     }

@@ -21,6 +21,7 @@ import org.brokenarrow.lootboxes.runTask.HeavyTasks;
 import org.brokenarrow.lootboxes.runTask.RunTask;
 import org.brokenarrow.lootboxes.runTask.SaveDataTask;
 import org.brokenarrow.lootboxes.settings.ChatMessages;
+import org.brokenarrow.lootboxes.settings.CustomLootContainersCache;
 import org.brokenarrow.lootboxes.settings.GuiTempletSettings;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.tasks.SpawnContainerRandomLoc;
@@ -64,6 +65,7 @@ public class Lootboxes extends JavaPlugin {
     private ContainerDataCache containerDataCache;
     private LootContainerRandomCache lootContainerRandomCache;
     private DatabaseManager databaseManager;
+    private CustomLootContainersCache customLootContainersCache;
 
     @Override
     public void onLoad() {
@@ -100,6 +102,8 @@ public class Lootboxes extends JavaPlugin {
         this.heavyTasks = new HeavyTasks();
         this.spawnContainerEffectsTask = new SpawnContainerEffectsTask(this);
         this.databaseManager = new DatabaseManager(this);
+        this.customLootContainersCache = new CustomLootContainersCache();
+
         this.settings.reload();
         if (settings.getSettingsData().isSingleMenuFile()) {
             this.menusCache = new MenusSettingsHandler(this, "language/menus_" + this.settings.getSettingsData().getLanguage() + ".yml", true);
@@ -148,6 +152,8 @@ public class Lootboxes extends JavaPlugin {
         this.settings.reload();
         this.menusCache.reload();
         this.containerDataCache.reload();
+        this.customLootContainersCache.reload();
+        this.customLootContainersCache.save();
         File file = new File(plugin.getDataFolder() + "/language/guitemplets_" + this.settings.getSettingsData().getLanguage() + ".yml");
 
         if (file.exists()) {
@@ -287,6 +293,10 @@ public class Lootboxes extends JavaPlugin {
     @Nullable
     public MenuTemplate getMenu(String menuName) {
         return menusCache.getTemplate(menuName);
+    }
+
+    public CustomLootContainersCache getCustomLootContainersCache() {
+        return customLootContainersCache;
     }
 
     @Nullable

@@ -6,6 +6,7 @@ import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
+import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
 import org.brokenarrow.lootboxes.untlity.command.TabUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.broken.arrow.library.serialize.utility.converters.PlaceholderTranslator.translatePlaceholdersLore;
+
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_CONTAINER_DATA_NAME;
 import static org.brokenarrow.lootboxes.untlity.KeyMeta.MOB_DROP_KEY_NAME;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
@@ -65,7 +66,7 @@ public class GetKeyCommand extends CommandHolder {
 
 				String placeholderDisplayName = translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(),
 						lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
-				List<String> placeholdersLore = translatePlaceholdersLore(keysData.getLore(), keysData.getKeyName(),
+				final List<String> placeholdersLore = TranslatePlaceHolders.getLore(keysData.getLore(), keysData.getKeyName(),
 						lootTableName, keysData.getAmountNeeded(), keysData.getItemType());
 				if (player != null)
 					player.getInventory().addItem(CreateItemUtily.of(false,keysData.getItemType(), placeholderDisplayName, placeholdersLore).setItemMetaDataList(map).setAmountOfItems(amount).makeItemStack());
