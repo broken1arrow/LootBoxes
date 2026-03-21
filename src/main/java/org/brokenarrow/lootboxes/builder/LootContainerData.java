@@ -1,7 +1,6 @@
 package org.brokenarrow.lootboxes.builder;
 
 import com.google.common.base.Enums;
-import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.LocationWrapper;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
@@ -90,7 +89,7 @@ public class LootContainerData implements ConfigurationSerializable {
     }
 
     public ContainerData getRandomLootData() {
-        return  lootContainer;
+        return lootContainer;
     }
 
     public Facing getRandomLootContainerFacing() {
@@ -111,7 +110,7 @@ public class LootContainerData implements ConfigurationSerializable {
         return containerDataCache;
     }
 
-    public  ContainerData getLinkedContainerData(@NotNull final Location location) {
+    public ContainerData getLinkedContainerData(@NotNull final Location location) {
         return containerDataCache.get(BlockKey.of(location));
     }
 
@@ -480,10 +479,10 @@ public class LootContainerData implements ConfigurationSerializable {
 
         final Map<BlockKey, ContainerData> containers;
         final Map<Location, ContainerData> containersOld = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
-        if(!containersOld.isEmpty()){
+        if (!containersOld.isEmpty()) {
             containers = new HashMap<>();
-            containersOld.forEach((location, containerData) -> containers.put(BlockKey.of(location),containerData));
-        }else {
+            containersOld.forEach((location, containerData) -> containers.put(BlockKey.of(location), containerData));
+        } else {
             containers = castMap((Map<?, ?>) map.get("Containers"), BlockKey.class, ContainerData.class);
         }
 
@@ -559,12 +558,12 @@ public class LootContainerData implements ConfigurationSerializable {
                 containerData.setContainer(lootContainer);
                 containerData.setBlockFace(finalBlockFace);
             });
-        else if (randomLootContainer instanceof ContainerData) {
-            lootContainerData.setRandomLootContainer((ContainerData) randomLootContainer);
-        }else {
+        else if (randomLootContainer instanceof Map) {
+            lootContainerData.setRandomLootContainer(ContainerData.deserialize((Map<String, Object>) randomLootContainer));
+        } else {
             System.out.println("not found randomLootContainer " + randomLootContainer);
-            if(randomLootContainer != null)
-            System.out.println("not found randomLootContainer class " + randomLootContainer.getClass());
+            if (randomLootContainer != null)
+                System.out.println("not found randomLootContainer class " + randomLootContainer.getClass());
         }
 
         return lootContainerData;
@@ -572,17 +571,9 @@ public class LootContainerData implements ConfigurationSerializable {
 
     private static @Nullable ItemStack getLootContainer(Object randomLootContainer) {
         ItemStack lootContainer = null;
-        if (randomLootContainer instanceof byte[]) {
-            byte[] primitiveArray = (byte[]) randomLootContainer;
-            ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
-            if (itemStacks != null && itemStacks.length > 0) {
-                lootContainer = itemStacks[0];
-            }
-        } else {
-            Material material = Material.getMaterial(String.valueOf(randomLootContainer));
-            if (material != null)
-                lootContainer = new ItemStack(material);
-        }
+        Material material = Material.getMaterial(String.valueOf(randomLootContainer));
+        if (material != null)
+            lootContainer = new ItemStack(material);
         return lootContainer;
     }
 

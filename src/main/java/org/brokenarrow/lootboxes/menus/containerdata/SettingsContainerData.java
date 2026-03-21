@@ -6,6 +6,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolder;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.CenterMode;
+import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.commandprompt.SetPermission;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -18,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.getPlaceholders;
@@ -223,10 +225,29 @@ public class SettingsContainerData extends MenuHolder {
 
     public Object[] setPlaceholders(MenuButtonData button, LootContainerData lootContainerData) {
         Object[] placeholders = getPlaceholders("");
-        if (button.isActionTypeEqual("Container_type"))
-            placeholders = getPlaceholders("",
-                    lootContainerData.getRandomLootData(),
-                    lootContainerData.getRandomLootContainerFacing());
+        if (button.isActionTypeEqual("Container_type")) {
+            ContainerData randomLootData = lootContainerData.getRandomLootData();
+            if (randomLootData == null) {
+                placeholders = getPlaceholders("", "", "");
+            } else {
+                org.bukkit.inventory.ItemStack container = randomLootData.getContainer();
+                String displayName = "";
+                if (container != null) {
+                    if (container.hasItemMeta()) {
+                        ItemMeta itemMeta = container.getItemMeta();
+                        if (itemMeta.hasDisplayName()) {
+                            displayName = itemMeta.getDisplayName();
+                        } else {
+                            displayName = BountifyStrings.bountifyCapitalized(container.getType());
+                        }
+                    } else {
+                        displayName = BountifyStrings.bountifyCapitalized(container.getType());
+                    }
+                }
+                placeholders = getPlaceholders("", displayName,
+                        BountifyStrings.bountifyCapitalized(randomLootData.getFacing()));
+            }
+        }
 
         if (button.isActionTypeEqual("Show_title"))
             placeholders = getPlaceholders("", lootContainerData.isShowTitle());

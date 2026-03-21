@@ -131,16 +131,15 @@ public class ChooseRandomLootContainer extends MenuHolderPage<ItemStack> {
             if (itemstack == null)
                 return null;
             final LootContainerData lootContainerData = containerDataCache.getCacheContainerData(containerName);
-
-            final String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), bountifyCapitalized(itemstack.getType()), lootContainerData.getRandomLootContainerFacing());
-
             ContainerData randomLootData = lootContainerData.getRandomLootData();
+            final String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), bountifyCapitalized(itemstack.getType()),  randomLootData != null? randomLootData.getFacing() :"");
+
             return CreateItemUtily.of(menuButton.isGlow(), itemstack,
                     displayName,
                     TranslatePlaceHolders.getLore(player, menuButton.getLore(),
                             "",
-                            randomLootData.getFacing(),
-                            randomLootData.getContainerType()
+                            randomLootData != null? randomLootData.getFacing() :"",
+                            randomLootData != null? randomLootData.getContainerType() :""
                     )).makeItemStack();
         }));
     }

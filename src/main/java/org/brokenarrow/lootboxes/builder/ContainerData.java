@@ -121,7 +121,7 @@ public final class ContainerData implements ConfigurationSerializable {
             if (material != null)
                 containerType = new ItemStack(material);
         }
-        
+
         ItemStack[] contents = null;
         if (containerContents instanceof byte[]) {
             byte[] primitiveArray = (byte[]) containerContents;

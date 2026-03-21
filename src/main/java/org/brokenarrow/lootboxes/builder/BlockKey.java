@@ -75,13 +75,21 @@ public final class BlockKey implements ConfigurationSerializable {
         return worldId != null;
     }
 
-    public @NotNull Map<String, Object> serialize(){
+    public @NotNull Map<String, Object> serialize() {
         Map<String, Object> primaryData = new HashMap<>();
-        primaryData.put("world_id", getWorldId()  != null ? getWorldId()  + "" : null);
+        primaryData.put("world_id", getWorldId() != null ? getWorldId() + "" : null);
         primaryData.put("loc_x", x);
         primaryData.put("loc_y", y);
         primaryData.put("loc_z", z);
         return primaryData;
+    }
+
+    public static BlockKey deserialize(final Map<String, Object> map) {
+        java.util.UUID worldId = UUID.fromString(map.get("world_id") + "");
+        int x = (int) map.get("loc_x");
+        int y = (int) map.get("loc_y");
+        int z = (int) map.get("loc_z");
+        return new BlockKey(worldId, x, y, z);
     }
 
     @Override
