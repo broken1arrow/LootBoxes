@@ -493,7 +493,7 @@ public class LootContainerData implements ConfigurationSerializable {
         final long cooldown = (Integer) map.get("Cooldown");
         final Object randomLootContainer = map.get("Random_loot_container");
         final String random_loot_facing = (String) map.get("Random_loot_faceing");
-        final boolean random_loot_title = (boolean) map.getOrDefault("Random_loot_titel", false);
+        final boolean randomLootTitel = (boolean) map.getOrDefault("Random_loot_title", false);
         final boolean random_loot_glow = (boolean) map.getOrDefault("Random_loot_glow", false);
         final int attempts = (Integer) map.getOrDefault("Attempts", 1);
         final boolean spawnContainerFromCenter = (boolean) map.getOrDefault("Spawn_world_center", false);
@@ -541,7 +541,7 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setDisplayName(displayName)
                 .setLore(lore)
                 .setContainerShallGlow(random_loot_glow)
-                .setShowTitle(random_loot_title)
+                .setShowTitle(randomLootTitel)
                 .setRandomSpawn(randomSpawn)
                 .setContainerData(containers)
                 .setKeysData(keys)

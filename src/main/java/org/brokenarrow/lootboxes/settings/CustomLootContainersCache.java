@@ -21,28 +21,17 @@ import java.util.stream.Collectors;
 
 public class CustomLootContainersCache extends YamlFileManager {
 
-    private final Set<CustomContainer> chests = new HashSet<>();
+
     private final Map<Material, List<CustomContainer>> chestsCache = new HashMap<>();
 
     public CustomLootContainersCache() {
         super(Lootboxes.getInstance(), "custom_loot_containers.yml", true, true);
-        addContainer(new ItemStack(Material.CHEST));
-        addContainer(new ItemStack(Material.TRAPPED_CHEST));
-        addContainer(new ItemStack(Material.SHULKER_BOX));
-        addContainer(new ItemStack(Material.HOPPER));
-        addContainer(new ItemStack(Material.DISPENSER));
-        addContainer(new ItemStack(Material.DROPPER));
-        if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_14))
-            addContainer(new ItemStack(Material.BARREL));
     }
 
     public boolean containsContainerType(Material type) {
         return chestsCache.containsKey(type);
     }
 
-    public Set<CustomContainer> getContainers() {
-        return chests;
-    }
 
     public Map<Material, List<CustomContainer>> getChestsCache() {
         return chestsCache;
@@ -79,7 +68,11 @@ public class CustomLootContainersCache extends YamlFileManager {
     }
 
     public void addContainer(final ItemStack itemStack) {
-        chestsCache.computeIfAbsent(itemStack.getType() ,material -> new ArrayList<>()).add(new CustomContainer(itemStack));
+        List<CustomContainer>  customContainers = chestsCache.computeIfAbsent(itemStack.getType() ,material -> new ArrayList<>());
+        CustomContainer container = new CustomContainer(itemStack);
+        if(!customContainers.contains(container)) {
+            customContainers.add(container);
+        }
     }
 
     @Override
@@ -98,8 +91,10 @@ public class CustomLootContainersCache extends YamlFileManager {
     @Override
     protected void loadSettingsFromYaml(File file, FileConfiguration loadedConfig) {
         ConfigurationSection configurationSection = loadedConfig.getConfigurationSection("chests");
-        if(configurationSection == null)
+        if(configurationSection == null) {
+            refreshCache();
             return;
+        }
 
         for(String section : configurationSection.getKeys(false)) {
             Object rawData = loadedConfig.get("chests." + section);
@@ -108,11 +103,25 @@ public class CustomLootContainersCache extends YamlFileManager {
                 ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
                 if (itemStacks != null) {
                     for (ItemStack stack : itemStacks) {
-                        chestsCache.computeIfAbsent(stack.getType() ,material -> new ArrayList<>()).add(new CustomContainer(stack));
+                        addContainer(stack);
                     }
                 }
             }
         }
+        if(chestsCache.isEmpty()){
+            refreshCache();
+        }
+    }
+
+    private void refreshCache() {
+        addContainer(new ItemStack(Material.CHEST));
+        addContainer(new ItemStack(Material.TRAPPED_CHEST));
+        addContainer(new ItemStack(Material.SHULKER_BOX));
+        addContainer(new ItemStack(Material.HOPPER));
+        addContainer(new ItemStack(Material.DISPENSER));
+        addContainer(new ItemStack(Material.DROPPER));
+        if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_14))
+            addContainer(new ItemStack(Material.BARREL));
     }
 
     private String getDisplayName(ItemStack item) {

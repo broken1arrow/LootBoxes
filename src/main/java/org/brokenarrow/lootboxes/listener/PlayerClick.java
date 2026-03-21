@@ -73,7 +73,7 @@ public class PlayerClick implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                if (addData(itemHand,blockPlaced, data, location, metadata)) {
+                if (addData(itemHand, blockPlaced, data, location, metadata)) {
                     ADD_CONTINERS_LEFT_CLICK_BLOCK.sendMessage(player, location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
                     if (player.getGameMode() == GameMode.SURVIVAL) {
                         player.getInventory().setItemInMainHand(CreateItemUtily.of(false, itemHand,
@@ -91,7 +91,7 @@ public class PlayerClick implements Listener {
         Block blockPlaced = event.getBlock();
         if (blockPlaced.getType() != Material.AIR) {
             Player player = event.getPlayer();
-            clearRandomSawedContainers(event.getBlock());
+            clearRandomSpawnedContainers(event.getBlock());
 
             if (!player.hasPermission("lootboxes.link.containers")) return;
             if (checkBlockIsContainer(blockPlaced)) {
@@ -168,14 +168,14 @@ public class PlayerClick implements Listener {
         containerDataCache.write(metadata, (Consumer<LootContainerData>) builder -> builder.setContainerData(containerDataMap));
     }
 
-    public boolean addData(@Nullable final ItemStack itemHand,final Block block,final LootContainerData data,final Location location,final String containerKey) {
+    public boolean addData(@Nullable final ItemStack itemHand, final Block block, final LootContainerData data, final Location location, final String containerKey) {
         return containerDataCache.write(containerKey, builder -> {
             Map<BlockKey, ContainerData> containerDataMap = data.getLinkedContainerData();
             if (lootboxes.getServerVersion().olderThan(Version.v1_13)) {
                 BlockState blockState = block.getState();
                 if (blockState.getData() instanceof DirectionalContainer) {
                     MaterialData materialData = blockState.getData();
-                    containerDataMap.put(BlockKey.of(location), new ContainerData(getFacing(materialData.getData()), itemHand != null? itemHand: new ItemStack(block.getType())));
+                    containerDataMap.put(BlockKey.of(location), new ContainerData(getFacing(materialData.getData()), itemHand != null ? itemHand : new ItemStack(block.getType())));
                     builder.setContainerData(containerDataMap);
                     if (data.getIcon() == null || data.getIcon() == Material.AIR)
                         builder.setIcon(block.getType());
@@ -185,7 +185,7 @@ public class PlayerClick implements Listener {
             }
             if (block.getBlockData() instanceof Directional) {
                 Directional container = (Directional) block.getBlockData();
-                containerDataMap.put(BlockKey.of(location), new ContainerData(container.getFacing(), itemHand != null? itemHand: new ItemStack(block.getType())));
+                containerDataMap.put(BlockKey.of(location), new ContainerData(container.getFacing(), itemHand != null ? itemHand : new ItemStack(block.getType())));
                 builder.setContainerData(containerDataMap);
                 if (data.getIcon() == null || data.getIcon() == Material.AIR)
                     builder.setIcon(block.getType());
@@ -214,22 +214,31 @@ public class PlayerClick implements Listener {
             player.removeMetadata(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), Lootboxes.getInstance());
     }
 
-    private void clearRandomSawedContainers(Block block) {
+    private void clearRandomSpawnedContainers(Block block) {
         final Location location = block.getLocation();
         LootContainerRandomCache.RandomLootData randomLootContainer = Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
         if (randomLootContainer != null) {
             final Inventory inventory = getInventory(location);
-            if (inventory == null) return;
+            if (inventory != null) {
+                if (inventory.getContents().length > 0) {
+                    for (ItemStack itemStack : inventory) {
+                        if (itemStack == null) continue;
+                        location.getWorld().dropItemNaturally(location, itemStack);
+                    }
+                }
+                inventory.clear();
+            } else {
+                final ItemStack[] containerContents = randomLootContainer.getContent();
+                if (containerContents != null) {
+                    for (ItemStack itemStack : containerContents) {
+                        if (itemStack == null) continue;
+                        location.getWorld().dropItemNaturally(location, itemStack);
+                    }
+                }
+            }
             if (settings.getSettingsData().isRemoveContainerWhenPlayerClose()) {
                 location.getBlock().setType(Material.AIR);
             }
-            if (inventory.getContents().length > 0) {
-                for (ItemStack itemStack : inventory) {
-                    if (itemStack == null) continue;
-                    location.getWorld().dropItemNaturally(location, itemStack);
-                }
-            }
-            inventory.clear();
             Lootboxes.getInstance().getLootContainerRandomCache().removeCachedLootContainerLocation(location);
         }
     }

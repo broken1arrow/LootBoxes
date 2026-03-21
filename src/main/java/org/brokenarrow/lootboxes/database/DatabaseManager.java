@@ -207,6 +207,7 @@ public class DatabaseManager {
                         .column("loc_y", DataType.dataInt(), SQLConstraints.primaryKey())
                         .column("loc_z", DataType.dataInt(), SQLConstraints.primaryKey())
                         .column("container_key", DataType.varchar(200))
+                        .column("container_contents", DataType.blob())
                         .build()
 
                 );

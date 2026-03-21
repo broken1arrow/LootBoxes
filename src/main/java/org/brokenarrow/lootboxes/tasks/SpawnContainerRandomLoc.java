@@ -122,7 +122,7 @@ public class SpawnContainerRandomLoc {
                 return;
             }
 
-            spawnContainer(lootContainerData, loc);
+            ItemStack[] stacks = spawnContainer(lootContainerData, loc);
             String serializeLoc = serilazeLoc(loc);
             String message = RANDOM_LOOT_MESAGE_TITEL.languageMessagePrefix(serializeLoc);
             if (lootContainerData.isShowTitle() && message != null && !message.isEmpty()) {
@@ -147,7 +147,7 @@ public class SpawnContainerRandomLoc {
                 }, false);
             }
             DebugMessages.sendDebug("[SpawnContainerRandom] Spawned loot container at location: " + serializeLoc);
-            Lootboxes.getInstance().getLootContainerRandomCache().putLootCachedLocation(loc, key);
+            Lootboxes.getInstance().getLootContainerRandomCache().putLootCachedLocation(loc, key, stacks);
         } else {
             if (settings.isDebug())
                 logger.log(Level.INFO, "Could not find valid location for spawn random chest for this center location " + location + ".");
@@ -155,7 +155,7 @@ public class SpawnContainerRandomLoc {
 
     }
 
-    public void spawnContainer(LootContainerData containerData, Location location) {
+    public ItemStack[] spawnContainer(LootContainerData containerData, Location location) {
         //  final Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
         final String lootTableLinked = containerData.getLootTableLinked();
         final Block block = location.getBlock();
@@ -163,11 +163,11 @@ public class SpawnContainerRandomLoc {
         if (containerData.isRandomSpawn()) {
             final ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
             if (stacks == null) {
-                return;
+                return stacks;
             }
             final ContainerData container = containerData.getRandomLootData();
             if (container == null) {
-                return;
+                return stacks;
             }
             ItemStack itemStack = container.getContainer();
             if (itemStack != null) {
@@ -189,15 +189,13 @@ public class SpawnContainerRandomLoc {
                         if (inventory != null) {
                             inventory.setContents(stacks);
                         }
-                    } else {
-                        container.setContents(stacks);
                     }
                 }
             } else {
                 if (settings.isDebug())
                     logger.log(Level.INFO, "Could not find valid container for spawn random chest for this center location " + location + ".");
             }
-            return;
+            return stacks;
         }
 
 /*        for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
@@ -233,6 +231,7 @@ public class SpawnContainerRandomLoc {
                 });
             }
         }*/
+        return null;
     }
 
     private Location checkLocation(Location location, Player player, LootContainerData lootContainerData) {

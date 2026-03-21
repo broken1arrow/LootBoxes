@@ -2,11 +2,11 @@ package org.brokenarrow.lootboxes.listener;
 
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.KeysData;
-import org.brokenarrow.lootboxes.builder.LocationData;
-import org.brokenarrow.lootboxes.builder.LootContainerData;
+import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
+import org.brokenarrow.lootboxes.lootdata.LootContainerRandomCache;
+import org.brokenarrow.lootboxes.untlity.LootContainer;
+import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,12 +14,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
@@ -30,151 +32,207 @@ import static org.brokenarrow.lootboxes.untlity.PlaySound.playSound;
 import static org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders.translatePlaceholders;
 
 public class OpenContainer implements Listener {
-	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
-	private final Lootboxes lootboxes = Lootboxes.getInstance();
-	private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
+    private final Map<UUID, Long> lastClick = new HashMap<>();
+    private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
+    private final Lootboxes lootboxes = Lootboxes.getInstance();
+    private final RegisterNbtAPI nbt = lootboxes.getNbtAPI();
 
 
-	@EventHandler
-	public void openLootContainer(PlayerInteractEvent event) {
-		Block block = event.getClickedBlock();
-		if (checkBlockIsContainer(block)) {
-			Location location = block.getLocation();
-			ItemStack itemStack = event.getItem();
-			Player player = event.getPlayer();
+    @EventHandler
+    public void openLootContainer(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
+        if (checkBlockIsContainer(block)) {
+            Location location = block.getLocation();
+            ItemStack itemStack = event.getItem();
+            Player player = event.getPlayer();
 
-			if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
-			if (player.hasPermission("lootboxes.bypass.open.requirement")) return;
+            LootContainerRandomCache.RandomLootData lootContainerLocation =
+                    Lootboxes.getInstance().getLootContainerRandomCache().getCachedLootContainerLocation(location);
+            if (lootContainerLocation != null) {
+                if (isValidInteract(event) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    event.setCancelled(true);
+                    containerDataCache.read(lootContainerLocation.getContainerKey(), lootContainerData -> {
+                        showLoot(lootContainerData, location, player, lootContainerLocation.getContent());
+                    });
+                }
+                return;
+            }
 
-			String key = null;
-			String containerDataName = null;
-			if (itemStack != null && itemStack.getType() != Material.AIR) {
-				key = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_KEY_NAME.name());
-				containerDataName = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
-			}
-			LocationData locationData = this.containerDataCache.getContainerLocationCache().getLocationData(location);
-			if (locationData == null) return;
+            if (player.hasMetadata(ADD_AND_REMOVE_CONTAINERS.name())) return;
+            if (player.hasPermission("lootboxes.bypass.open.requirement")) return;
+            openFixedLootContainer(event, itemStack, location, player, block);
+        }
+    }
 
-			if (key == null || containerDataName == null) {
-				List<String> list = new ArrayList<>();
-				for (KeysData keysData : locationData.getKeys().values()) {
-					if (keysData.getItemType() == null || keysData.getItemType() == Material.AIR)
-						continue;
-					String lootTable = keysData.getLootTableLinked();
-					if (lootTable == null || lootTable.isEmpty()) {
-						LootContainerData containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerKey());
-						if (containerDataCache != null) {
-							lootTable = containerDataCache.getLootTableLinked();
-						}
-					}
-					if (lootTable == null)
-						lootTable = "";
-					list.add(translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(), lootTable, keysData.getAmountNeeded(), keysData.getItemType()));
-				}
-				if (!list.isEmpty()) {
-					LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
+    private void openFixedLootContainer(PlayerInteractEvent event, ItemStack itemStack, Location location, Player player, Block block) {
+        String key = null;
+        String containerDataName = null;
+        if (itemStack != null && itemStack.getType() != Material.AIR) {
+            key = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_KEY_NAME.name());
+            containerDataName = nbt.getCompMetadata().getMetadata(itemStack, MOB_DROP_CONTAINER_DATA_NAME.name());
+        }
+        LocationData locationData = this.containerDataCache.getContainerLocationCache().getLocationData(location);
+        if (locationData == null) return;
 
-					event.setCancelled(true);
-					playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
-					return;
-				}
-			}
+        if (key == null || containerDataName == null) {
+            List<String> list = new ArrayList<>();
+            for (KeysData keysData : locationData.getKeys().values()) {
+                if (keysData.getItemType() == null || keysData.getItemType() == Material.AIR)
+                    continue;
+                String lootTable = keysData.getLootTableLinked();
+                if (lootTable == null || lootTable.isEmpty()) {
+                    LootContainerData containerDataCache = this.containerDataCache.getCacheContainerData(locationData.getContainerKey());
+                    if (containerDataCache != null) {
+                        lootTable = containerDataCache.getLootTableLinked();
+                    }
+                }
+                if (lootTable == null)
+                    lootTable = "";
+                list.add(translatePlaceholders(keysData.getDisplayName(), keysData.getKeyName(), lootTable, keysData.getAmountNeeded(), keysData.getItemType()));
+            }
+            if (!list.isEmpty()) {
+                LOOKED_CONTAINER_TRY_OPEN.sendMessage(player, itemStack != null ? itemStack.getType() : "AIR", list);
 
-			LootContainerData cacheContainerData = containerDataCache.getCacheContainerData(containerDataName);
-			if (cacheContainerData == null) {
-				cacheContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
-			}
+                event.setCancelled(true);
+                playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
+                return;
+            }
+        }
 
-			KeysData dataCacheCacheKey = cacheContainerData.getKeysData().get(key);
-			if (cacheContainerData.getLootTableLinked() == null || cacheContainerData.getLootTableLinked().isEmpty()) {
-				LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
-				event.setCancelled(true);
-				return;
-			}
+        LootContainerData cacheContainerData = containerDataCache.getCacheContainerData(containerDataName);
+        if (cacheContainerData == null) {
+            cacheContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
+        }
 
-			if (!checkIfPlayerHasItem(dataCacheCacheKey, key, player, itemStack)) {
-				event.setCancelled(true);
-			}
+        KeysData dataCacheCacheKey = cacheContainerData.getKeysData().get(key);
+        if (cacheContainerData.getLootTableLinked() == null || cacheContainerData.getLootTableLinked().isEmpty()) {
+            LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
+            event.setCancelled(true);
+            return;
+        }
 
-			if (cacheContainerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
-				String time = "0";
-				Long cachedTime = lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName);
-				if (cachedTime != null)
-					time = toTimeFromMillis(cachedTime - System.currentTimeMillis());
-				if (time.equals("0")) {
-					ContainerData containerData = cacheContainerData.getLinkedContainerData(location);
-					if (containerData == null)
-						return;
-				}
-				HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);
-				event.setCancelled(true);
-				return;
-			}
+        if (!checkIfPlayerHasItem(dataCacheCacheKey, key, player, itemStack)) {
+            event.setCancelled(true);
+        }
 
-			if (event.useInteractedBlock() == Event.Result.DENY) {
-				playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
-				return;
-			} else {
-				playSound(player, UNLOOKED_CONTAINER_SOUND.languageMessages());
-			}
+        if (cacheContainerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
+            String time = "0";
+            Long cachedTime = lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName);
+            if (cachedTime != null)
+                time = toTimeFromMillis(cachedTime - System.currentTimeMillis());
+            if (time.equals("0")) {
+                ContainerData containerData = cacheContainerData.getLinkedContainerData(location);
+                if (containerData == null)
+                    return;
+            }
+            HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);
+            event.setCancelled(true);
+            return;
+        }
 
-			if (!cacheContainerData.isSpawningContainerWithCooldown() && !spawnLootWhenClicking(cacheContainerData, location, block)) {
-				LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
-			} else {
-				OPEN_CONTAINER.sendMessage(player);
-			}
+        if (event.useInteractedBlock() == Event.Result.DENY) {
+            playSound(player, LOOKED_CONTAINER_SOUND.languageMessages());
+            return;
+        } else {
+            playSound(player, UNLOOKED_CONTAINER_SOUND.languageMessages());
+        }
 
-			lootboxes.getSpawnedContainers().setRefill(location, false);
-			if (key != null) {
-				int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
-				player.getInventory().remove(itemStack);
-				itemStack.setAmount(amount);
-				player.getInventory().addItem(itemStack);
-			}
-		}
-	}
+        if (!cacheContainerData.isSpawningContainerWithCooldown() && !spawnLootWhenClicking(cacheContainerData, location, block)) {
+            LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
+        } else {
+            final ContainerData randomLootContainer = cacheContainerData.getRandomLootData();
+            if (randomLootContainer != null && randomLootContainer.getContainerContents() != null) {
+                final ItemStack[] contents = randomLootContainer.getContainerContents();
+                event.setCancelled(true);
+                showLoot(cacheContainerData, location, player, contents);
+            }
+            OPEN_CONTAINER.sendMessage(player);
+        }
 
-	private boolean checkIfPlayerHasItem(KeysData dataCacheCacheKey, String key, Player player, ItemStack itemStack) {
-		boolean checkVaidItems = true;
-		if (dataCacheCacheKey == null) {
-			//lootboxes.getLogger().log(Level.WARNING, "Of some reson is key data null, this shold not hapend");
-			return true;
-		}
-		if (key != null) {
-			Material material = dataCacheCacheKey.getItemType();
-			if (material != null && material != Material.AIR/*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
-				if (dataCacheCacheKey.getAmountNeeded() <= 0) return true;
-				if (itemStack.getType() != material) {
-					LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), material);
-					checkVaidItems = false;
-				}
-				if (itemStack.getAmount() < dataCacheCacheKey.getAmountNeeded()) {
-					LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
-					checkVaidItems = false;
-				}
-			}
-		}
-		return checkVaidItems;
-	}
+        lootboxes.getSpawnedContainers().setRefill(location, false);
+        if (key != null) {
+            int amount = itemStack.getAmount() - dataCacheCacheKey.getAmountNeeded();
+            player.getInventory().remove(itemStack);
+            itemStack.setAmount(amount);
+            player.getInventory().addItem(itemStack);
+        }
+    }
 
-	private boolean spawnLootWhenClicking(LootContainerData containerData, Location location, Block block) {
-		String lootTableLinked = containerData.getLootTableLinked();
-		if (lootTableLinked != null && !lootTableLinked.isEmpty()) {
-			ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
-			if (stacks == null) {
-				return false;
-			}
-			ContainerData containerDataLinked = containerData.getLinkedContainerData().get(location);
-			block.setType(containerDataLinked.getContainer().getType());
-			setRotation(location, containerDataLinked.getFacing().getFace());
-			setCustomName(location, containerData.getDisplayName());
-			Inventory inventory = getInventory(location);
-			if (inventory != null) {
-				inventory.setContents(stacks);
-			}
-			return true;
-		}
-		return false;
-	}
+    private boolean checkIfPlayerHasItem(KeysData dataCacheCacheKey, String key, Player player, ItemStack itemStack) {
+        boolean checkVaidItems = true;
+        if (dataCacheCacheKey == null) {
+            //lootboxes.getLogger().log(Level.WARNING, "Of some reson is key data null, this shold not hapend");
+            return true;
+        }
+        if (key != null) {
+            Material material = dataCacheCacheKey.getItemType();
+            if (material != null && material != Material.AIR/*&& dataCacheCacheKey.getItemType() != Material.AIR*/) {
+                if (dataCacheCacheKey.getAmountNeeded() <= 0) return true;
+                if (itemStack.getType() != material) {
+                    LOOKED_CONTAINER_NOT_RIGHT_ITEM.sendMessage(player, itemStack.getType(), material);
+                    checkVaidItems = false;
+                }
+                if (itemStack.getAmount() < dataCacheCacheKey.getAmountNeeded()) {
+                    LOOKED_CONTAINER_NOT_RIGHT_AMOUNT.sendMessage(player, itemStack.getAmount(), dataCacheCacheKey.getAmountNeeded());
+                    checkVaidItems = false;
+                }
+            }
+        }
+        return checkVaidItems;
+    }
 
+    private boolean spawnLootWhenClicking(LootContainerData lootContainerData, Location location, Block block) {
+        String lootTableLinked = lootContainerData.getLootTableLinked();
+        if (lootTableLinked != null && !lootTableLinked.isEmpty()) {
+            ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
+            if (stacks == null) {
+                return false;
+            }
+            ContainerData containerData = lootContainerData.getLinkedContainerData(location);
+            ItemStack itemStack = containerData.getContainer();
+            block.setType(itemStack.getType());
+            setRotation(location, containerData.getFacing().getFace());
+            setCustomName(location, lootContainerData.getDisplayName());
+
+            final CustomContainer customContainer = Lootboxes.getInstance().getCustomLootContainersCache().getSimilarContainer(itemStack.getType(), itemStack);
+            if (customContainer != null) {
+                if (customContainer.isVanillaInventory()) {
+                    Inventory inventory = getInventory(location);
+                    if (inventory != null) {
+                        inventory.setContents(stacks);
+                    }
+                } else {
+                    containerData.setContents(stacks);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void showLoot(final LootContainerData lootContainer, final Location location, final Player player, @Nullable final ItemStack[] contents) {
+        final LootContainer inventory = new LootContainer(location, 54, lootContainer.getDisplayName());
+        inventory.getInventory().setContents(contents);
+        inventory.view(player);
+    }
+
+    private boolean isValidInteract(PlayerInteractEvent event) {
+        if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_9)) {
+            if (event.getHand() != null && event.getHand() != EquipmentSlot.HAND) {
+                return false;
+            }
+        }
+        return !isDoubleClick(event.getPlayer());
+    }
+
+    private boolean isDoubleClick(Player player) {
+        long now = System.currentTimeMillis();
+        UUID id = player.getUniqueId();
+        Long last = lastClick.get(id);
+        if (last != null && now - last < 75){
+            return true;
+        }
+        lastClick.put(id, now);
+        return false;
+    }
 }

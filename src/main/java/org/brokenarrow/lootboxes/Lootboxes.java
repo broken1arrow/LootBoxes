@@ -174,6 +174,7 @@ public class Lootboxes extends JavaPlugin {
         ItemData.getInstance().save();
         KeyDropData.getInstance().save();
         this.getDatabaseManager().saveAll(true);
+        this.customLootContainersCache.save();
     }
 
     public void registerCommands() {
