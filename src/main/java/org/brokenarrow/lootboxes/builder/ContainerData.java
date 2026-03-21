@@ -2,13 +2,19 @@ package org.brokenarrow.lootboxes.builder;
 
 import com.google.common.base.Enums;
 import de.tr7zw.changeme.nbtapi.NBT;
+import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.untlity.Facing;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,19 +25,17 @@ public final class ContainerData implements ConfigurationSerializable {
     private ItemStack containerType;
     private ItemStack[] containerContents;
 
-    public ContainerData(final BlockFace facing, final Material containerType) {
-        this.facing = Facing.getFace(facing);
-        this.containerType = new ItemStack(containerType);
-    }
-
     public ContainerData() {
-        this.facing = Facing.RANDOM;
-        this.containerType = new ItemStack(Material.CHEST);
+        this(Facing.RANDOM, new ItemStack(Material.CHEST));
     }
 
-    public ContainerData(final String facing, final String containerType) {
-        //this.facing = addBlockFace(facing);
-        this.containerType = new ItemStack(addMaterial(containerType));
+    public ContainerData(final Facing facing, final ItemStack containerType) {
+        this.facing = facing;
+        this.containerType = containerType;
+    }
+
+    public ContainerData(final BlockFace facing, final ItemStack containerType) {
+        this(Facing.getFace(facing), new ItemStack(containerType));
     }
 
     public void setBlockFace(final Facing facing) {
@@ -42,6 +46,10 @@ public final class ContainerData implements ConfigurationSerializable {
         this.containerType = containerType;
     }
 
+    public void setContents(@Nullable final ItemStack[] contents) {
+        this.containerContents = contents;
+    }
+
     public Facing getFacing() {
         return facing;
     }
@@ -50,11 +58,24 @@ public final class ContainerData implements ConfigurationSerializable {
         return containerType;
     }
 
+    public Material getContainerType() {
+        if(containerType == null)
+            return Material.AIR;
+        return containerType.getType();
+    }
+
+    @Nullable
+    public ItemStack[] getContainerContents() {
+        return containerContents;
+    }
+
+
     @Override
     public String toString() {
-        return "ContainerDataCache{" +
+        return "ContainerData{" +
                 "facing=" + facing +
                 ", containerType=" + containerType +
+                ", containerContents=" + Arrays.toString(containerContents) +
                 '}';
     }
 
@@ -71,17 +92,52 @@ public final class ContainerData implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         final Map<String, Object> keysData = new LinkedHashMap<>();
         keysData.put("facing", facing.name());
-        keysData.put("containerType", NBT.itemStackToNBT(containerType));
+        if (containerType != null) {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                NBT.itemStackToNBT(containerType).writeCompound(outputStream);
+                keysData.put("containerType", outputStream.toByteArray());
+            } catch (IOException e) {
+            }
+        }
+        if (containerContents != null)
+            keysData.put("container_contents", RegisterNbtAPI.serializeItemStack(containerContents));
         return keysData;
     }
 
     public static ContainerData deserialize(final Map<String, Object> map) {
         final String facing = (String) map.get("facing");
-        final String containerType = (String) map.get("containerType");
+        final Object lootContainerType = map.get("containerType");
+        final Object containerContents = map.get("container_contents");
 
-        return new ContainerData(facing,
+        ItemStack containerType = null;
+        if (lootContainerType instanceof byte[]) {
+            byte[] primitiveArray = (byte[]) lootContainerType;
+            try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(primitiveArray)) {
+                containerType = NBT.itemStackFromNBT(NBT.readNBT(byteArrayInputStream));
+            } catch (IOException e) {
+            }
+        } else {
+            Material material = Material.getMaterial(lootContainerType + "");
+            if (material != null)
+                containerType = new ItemStack(material);
+        }
+
+        System.out.println("lootContainerType " + lootContainerType);
+        if (lootContainerType != null)
+            System.out.println("lootContainerType getClass " + lootContainerType.getClass());
+
+        ItemStack[] contents = null;
+        if (containerContents instanceof byte[]) {
+            byte[] primitiveArray = (byte[]) containerContents;
+            contents = RegisterNbtAPI.deserializeItemStack(primitiveArray);
+        }
+
+        ContainerData containerData = new ContainerData(Facing.getFace(facing),
                 containerType);
+        containerData.setContents(contents);
+        return containerData;
     }
+
 
     private BlockFace addBlockFace(final String facing) {
         checkNotNull(facing, "This block face are null.");

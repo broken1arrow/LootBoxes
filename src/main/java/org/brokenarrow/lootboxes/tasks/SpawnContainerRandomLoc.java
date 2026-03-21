@@ -7,10 +7,7 @@ import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.SettingsData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
-import org.brokenarrow.lootboxes.untlity.DebugMessages;
-import org.brokenarrow.lootboxes.untlity.Facing;
-import org.brokenarrow.lootboxes.untlity.RandomUntility;
-import org.brokenarrow.lootboxes.untlity.RunTimedTask;
+import org.brokenarrow.lootboxes.untlity.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,7 +29,6 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.RANDOM_LOOT_MESAGE
 import static org.brokenarrow.lootboxes.settings.ChatMessages.RANDOM_LOOT_MESAGE_TITEL;
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
 import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.serilazeLoc;
-import static org.brokenarrow.lootboxes.untlity.SkullUtility.applySkullFromItem;
 import static org.brokenarrow.lootboxes.untlity.blockVisualization.BlockVisualize.visulizeBlock;
 
 public class SpawnContainerRandomLoc {
@@ -163,18 +159,22 @@ public class SpawnContainerRandomLoc {
     }
 
     public void spawnContainer(LootContainerData containerData, Location location) {
-        final Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
+      //  final Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
         final String lootTableLinked = containerData.getLootTableLinked();
         final Block block = location.getBlock();
 
         if (containerData.isRandomSpawn()) {
-            ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
+            final ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
             if (stacks == null) {
                 return;
             }
-            ItemStack itemStack = containerData.getRandomLootContainer();
+            final ContainerData container = containerData.getRandomLootData();
+            if (container == null) {
+                return;
+            }
+            ItemStack itemStack = container.getContainer();
             if (itemStack != null) {
-                if (!applySkullFromItem(block, itemStack))
+                if (!SkullUtility.applySkullFromItem(block, itemStack))
                     block.setType(itemStack.getType());
                 final Facing facing = containerData.getRandomLootContainerFacing();
                 if (facing == Facing.RANDOM) {
@@ -193,30 +193,50 @@ public class SpawnContainerRandomLoc {
                                 inventory.setContents(stacks);
                             }
                         } else {
-                            containerData.getLinkedContainerData();
+                            container.setContents(stacks);
                         }
                     }
                 });
+            } else {
+                if (settings.isDebug())
+                    logger.log(Level.INFO, "Could not find valid container for spawn random chest for this center location " + location + ".");
             }
             return;
         }
-        for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
+
+/*        for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
             ContainerData container = entry.getValue();
-            if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
+            if (lootTableLinked != null && !lootTableLinked.isEmpty()) {
                 ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
                 if (stacks == null) {
                     return;
                 }
-                block.setType(container.getContainer().getType());
+                final ItemStack itemStack = container.getContainer();
+                if (itemStack == null) {
+                    if (settings.isDebug())
+                        logger.log(Level.INFO, "Could not find valid container for spawn chest for this location " + location + ".");
+                    return;
+                }
+
+                if (!SkullUtility.applySkullFromItem(block, itemStack))
+                    block.setType(itemStack.getType());
                 setRotation(location, container.getFacing().getFace());
                 setCustomName(location, containerData.getDisplayName());
 
-                Inventory inventory = getInventory(location);
-                if (inventory != null) {
-                    inventory.setContents(stacks);
-                }
+                Lootboxes.getInstance().getCustomLootContainersCache().getContainers().forEach(customContainer -> {
+                    if (customContainer.getContainer().isSimilar(itemStack)) {
+                        if (customContainer.isVanillaInventory()) {
+                            Inventory inventory = getInventory(location);
+                            if (inventory != null) {
+                                inventory.setContents(stacks);
+                            }
+                        } else {
+                            container.setContents(stacks);
+                        }
+                    }
+                });
             }
-        }
+        }*/
     }
 
     private Location checkLocation(Location location, Player player, LootContainerData lootContainerData) {

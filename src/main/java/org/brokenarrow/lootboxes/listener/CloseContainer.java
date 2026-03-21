@@ -21,8 +21,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.getInventory;
 
 public class CloseContainer implements Listener {
@@ -70,8 +68,8 @@ public class CloseContainer implements Listener {
 		if (locationData == null) return;
 		LootContainerData lootContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
 		if (lootContainerData == null) return;
-		Map<Location, ContainerData> containerData = lootContainerData.getLinkedContainerData();
-		if (containerData == null || containerData.get(location) == null) {
+		ContainerData containerData = lootContainerData.getLinkedContainerData(location);
+		if (containerData == null) {
 			return;
 		}
 

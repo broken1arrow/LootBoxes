@@ -1,6 +1,5 @@
 package org.brokenarrow.lootboxes.builder;
 
-import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.untlity.errors.Valid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public final class BlockKey implements ConfigurationSerializable {
     private final UUID worldId;
@@ -77,28 +75,13 @@ public final class BlockKey implements ConfigurationSerializable {
         return worldId != null;
     }
 
-    public @NotNull Map<String, Object> serialize() {
+    public @NotNull Map<String, Object> serialize(){
         Map<String, Object> primaryData = new HashMap<>();
-        primaryData.put("world_id", getWorldId() != null ? getWorldId() + "" : null);
+        primaryData.put("world_id", getWorldId()  != null ? getWorldId()  + "" : null);
         primaryData.put("loc_x", x);
         primaryData.put("loc_y", y);
         primaryData.put("loc_z", z);
         return primaryData;
-    }
-
-    public static BlockKey deserialize(@NotNull Map<String, Object> map) {
-        UUID worldId = UUID.fromString(map.get("world_id") + "");
-        int x = 0;
-        int y = 0;
-        int z = 0;
-        try {
-            x = Integer.parseInt(map.get("loc_x") + "");
-            y = Integer.parseInt(map.get("loc_y") + "");
-            z = Integer.parseInt(map.get("loc_z") + "");
-        } catch (NumberFormatException exception) {
-            Lootboxes.getInstance().getLogger().log(Level.WARNING, exception, () -> "Could not set the location for this block key");
-        }
-        return new BlockKey(worldId, x, y, z);
     }
 
     @Override
@@ -118,6 +101,7 @@ public final class BlockKey implements ConfigurationSerializable {
         return "worldId=" + worldId +
                 " x=" + x +
                 " y=" + y +
-                " z=" + z;
+                " z=" + z +
+                " cachedLocation=" + cachedLocation;
     }
 }

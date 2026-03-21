@@ -3,9 +3,9 @@ package org.brokenarrow.lootboxes.listener;
 import org.broken.arrow.library.nbt.RegisterNbtAPI;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.builder.LocationData;
+import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 import static org.brokenarrow.lootboxes.untlity.BlockChecks.checkBlockIsContainer;
@@ -103,8 +102,8 @@ public class OpenContainer implements Listener {
 				if (cachedTime != null)
 					time = toTimeFromMillis(cachedTime - System.currentTimeMillis());
 				if (time.equals("0")) {
-					Map<Location, ContainerData> containerData = cacheContainerData.getLinkedContainerData();
-					if (containerData == null || containerData.get(location) == null)
+					ContainerData containerData = cacheContainerData.getLinkedContainerData(location);
+					if (containerData == null)
 						return;
 				}
 				HAS_NOT_REFILL_CONTAINER.sendMessage(player, time);

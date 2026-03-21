@@ -225,7 +225,7 @@ public class SettingsContainerData extends MenuHolder {
         Object[] placeholders = getPlaceholders("");
         if (button.isActionTypeEqual("Container_type"))
             placeholders = getPlaceholders("",
-                    lootContainerData.getRandomLootContainer(),
+                    lootContainerData.getRandomLootData(),
                     lootContainerData.getRandomLootContainerFacing());
 
         if (button.isActionTypeEqual("Show_title"))

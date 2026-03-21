@@ -4,7 +4,6 @@ import org.broken.arrow.library.yaml.YamlFileManager;
 import org.broken.arrow.library.yaml.utillity.ConfigurationWrapper;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.*;
-import org.brokenarrow.lootboxes.untlity.Facing;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -12,7 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,9 +43,9 @@ public class ContainerDataCache extends YamlFileManager {
             addContainerToSpawnTask(containerData, lootContainerData.getCooldown());
         final LootContainerData data = this.getCacheContainerData(containerData);
         if (data != null) {
-            for (final Location location : data.getLinkedContainerData().keySet()) {
-                this.getChunkDataCache().setChunkData(location);
-                Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+            for (final BlockKey location : data.getLinkedContainerData().keySet()) {
+                this.getChunkDataCache().setChunkData(location.getLocation());
+                Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location.getLocation());
             }
         }
         saveTask();
@@ -83,8 +81,8 @@ public class ContainerDataCache extends YamlFileManager {
         return this.getCacheContainerData().keySet().stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public void addCachedLocation(final String containerDataName, final Map<Location, ContainerData> map, final Map<String, KeysData> keysDataMap) {
-        final Set<Location> linkedContainerData;
+    public void addCachedLocation(final String containerDataName, final Map<BlockKey, ContainerData> map, final Map<String, KeysData> keysDataMap) {
+        final Set<BlockKey> linkedContainerData;
         final Map<String, KeysData> cacheKeysData;
         if (map == null || map.isEmpty()) {
             linkedContainerData = this.getLinkedContainers(containerDataName).keySet();
@@ -94,10 +92,10 @@ public class ContainerDataCache extends YamlFileManager {
             cacheKeysData = this.getCacheKeysData(containerDataName);
         } else
             cacheKeysData = keysDataMap;
-        for (final Location location : linkedContainerData) {
+        for (final BlockKey location : linkedContainerData) {
             if (location != null) {
-                this.getContainerLocationCache().put(location, new LocationData(containerDataName, cacheKeysData));
-                this.getChunkDataCache().setChunkData(location);
+                this.getContainerLocationCache().put(location.getLocation(), new LocationData(containerDataName, cacheKeysData));
+                this.getChunkDataCache().setChunkData(location.getLocation());
             }
         }
     }
@@ -108,8 +106,7 @@ public class ContainerDataCache extends YamlFileManager {
         final LootContainerData builder = new LootContainerData()
                 .setContainerDataLinkedToLootTable("")
                 .setSpawningContainerWithCooldown(true)
-                .setRandomLootContainerFacing(Facing.RANDOM)
-                .setRandomLootContainer(new ItemStack(Material.CHEST))
+                .setRandomLootContainer(new ContainerData())
                 .setCooldown(1800)
                 .setParticleEffects(new HashMap<>())
                 .setEnchant(false)
@@ -229,7 +226,7 @@ public class ContainerDataCache extends YamlFileManager {
         return chunkDataCache;
     }
 
-    public Map<Location, ContainerData> getLinkedContainerData(final String container) {
+    public Map<BlockKey, ContainerData> getLinkedContainerData(final String container) {
         final LootContainerData lootContainerData = this.getCacheContainerData(container);
         if (lootContainerData != null) {
             if (lootContainerData.getLinkedContainerData() != null)
@@ -252,7 +249,7 @@ public class ContainerDataCache extends YamlFileManager {
     }
 
 
-    public Map<Location, ContainerData> getLinkedContainers(final String containerDataCacheName) {
+    public Map<BlockKey, ContainerData> getLinkedContainers(final String containerDataCacheName) {
         final LootContainerData lootContainerData = this.getCacheContainerData(containerDataCacheName);
         if (lootContainerData != null)
             return lootContainerData.getLinkedContainerData();
@@ -308,11 +305,11 @@ public class ContainerDataCache extends YamlFileManager {
     }
 
     public void addContainerToEffectList(final LootContainerData lootContainerData) {
-        Map<Location, ContainerData> linkedContainerData = lootContainerData.getLinkedContainerData();
+        Map<BlockKey, ContainerData> linkedContainerData = lootContainerData.getLinkedContainerData();
         if (linkedContainerData == null || linkedContainerData.isEmpty()) return;
 
-        for (Location location : linkedContainerData.keySet())
-            Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+        for (BlockKey location : linkedContainerData.keySet())
+            Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location.getLocation());
     }
 
     public void saveTask() {
@@ -357,9 +354,9 @@ public class ContainerDataCache extends YamlFileManager {
 
         if (!built.isSpawningContainerWithCooldown())
             addContainerToSpawnTask(containerKey, built.getCooldown());
-        for (final Location location : built.getLinkedContainerData().keySet()) {
-            this.getChunkDataCache().setChunkData(location);
-            this.getContainerLocationCache().put(location, new LocationData(containerKey, built.getKeysData()));
+        for (final BlockKey location : built.getLinkedContainerData().keySet()) {
+            this.getChunkDataCache().setChunkData(location.getLocation());
+            this.getContainerLocationCache().put(location.getLocation(), new LocationData(containerKey, built.getKeysData()));
             final Map<String, ParticleEffect> particleEffects = built.getParticleEffects();
             if (particleEffects != null && particleEffects.isEmpty())
                 Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);

@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +31,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
     List<String> lore;
     Set<String> worlds;
     Map<String, ParticleEffect> particleEffects;
-    Map<Location, ContainerData> containerData;
+    Map<BlockKey, ContainerData> containerData;
     Map<String, KeysData> keysData;
     LocationWrapper spawnLocation;
     boolean spawningContainerWithCooldown;
@@ -100,7 +99,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
         return lore;
     }
 
-    public Map<Location, ContainerData> getLinkedContainerData() {
+    public Map<BlockKey, ContainerData> getLinkedContainerData() {
         return containerData;
     }
 
@@ -207,8 +206,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
                 .setRandomLootWorlds(worlds != null ? new ArrayList<>(worlds) : new ArrayList<>())
                 .setEnchant(enchant)
                 .setIcon(icon)
-                .setRandomLootContainer(new ItemStack(randomLootContainerItem))
-                .setRandomLootContainerFacing(randomLootContainerFacing)
+                .setRandomLootContainer(new ContainerData())
                 .setDisplayName(displayName)
                 .setLore(lore)
                 .setContainerShallGlow(containerShallGlow)
@@ -306,7 +304,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
             return this;
         }
 
-        public LootContainerBuilder setContainerData(final Map<Location, ContainerData> containerData) {
+        public LootContainerBuilder setContainerData(final Map<BlockKey, ContainerData> containerData) {
             this.containerData = containerData;
             return this;
         }
@@ -500,7 +498,14 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
         if (worldsObject != null)
             worlds = castList((List<?>) worldsObject, String.class);
 
-        final Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
+        final Map<BlockKey, ContainerData> containers;
+        final Map<Location, ContainerData> containersOld = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
+        if (!containersOld.isEmpty()) {
+            containers = new HashMap<>();
+            containersOld.forEach((location, containerData) -> containers.put(BlockKey.of(location), containerData));
+        } else {
+            containers = castMap((Map<?, ?>) map.get("Containers"), BlockKey.class, ContainerData.class);
+        }
         final Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
         final boolean spawningContainerWithCooldown = (boolean) map.get("Spawn_with_cooldown");
         final boolean enchant = (boolean) map.get("Enchant");

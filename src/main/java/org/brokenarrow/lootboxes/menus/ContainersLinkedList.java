@@ -7,6 +7,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.BlockKey;
 import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
@@ -111,11 +112,11 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 				if (click.isRightClick()) {
 					containerDataCache.write(containerName, builder -> {
 						final LootContainerData lootContainerData = containerDataCache.getCacheContainerData(containerName);
-						Map<Location, ContainerData> containerDataMap = lootContainerData != null ? lootContainerData.getLinkedContainerData() : null;
+						Map<BlockKey, ContainerData> containerDataMap = lootContainerData != null ? lootContainerData.getLinkedContainerData() : null;
 						if (containerDataMap == null)
 							containerDataMap = new HashMap<>();
 						if (click.isRightClick()) {
-							containerDataMap.remove(location);
+							containerDataMap.remove(BlockKey.of(location));
 							builder.setContainerData(containerDataMap);
 						}
 					});

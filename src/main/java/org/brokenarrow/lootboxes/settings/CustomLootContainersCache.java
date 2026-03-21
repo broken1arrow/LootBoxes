@@ -7,21 +7,22 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.CustomContainer;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CustomLootContainersCache extends YamlFileManager {
 
     private final Set<CustomContainer> chests = new HashSet<>();
+    private final Map<Material, List<CustomContainer>> chestsCache = new HashMap<>();
 
     public CustomLootContainersCache() {
         super(Lootboxes.getInstance(), "custom_loot_containers.yml", true, true);
@@ -35,16 +36,42 @@ public class CustomLootContainersCache extends YamlFileManager {
             addContainer(new ItemStack(Material.BARREL));
     }
 
-    public boolean containsContainer(final ItemStack itemStack) {
-        return chests.contains(new CustomContainer(itemStack));
-    }
-
-    public boolean containsContainerType(final Material material) {
-        return chests.stream().anyMatch(customContainer -> customContainer.getContainer().getType() == material);
+    public boolean containsContainerType(Material type) {
+        return chestsCache.containsKey(type);
     }
 
     public Set<CustomContainer> getContainers() {
         return chests;
+    }
+
+    public Map<Material, List<CustomContainer>> getChestsCache() {
+        return chestsCache;
+    }
+
+    public CustomContainer getSimilarContainer(Material material, ItemStack itemStack) {
+        List<CustomContainer> materialType = chestsCache.get(material);
+        if (materialType == null) return null;
+
+        CustomContainer fallback = null;
+        String targetName = getDisplayName(itemStack);
+
+        for (CustomContainer container : materialType) {
+            ItemStack cItem = container.getContainer();
+
+            if (cItem.isSimilar(itemStack)) {
+                return container;
+            }
+
+            if (fallback == null && Objects.equals(getDisplayName(cItem), targetName)) {
+                fallback = container;
+            }
+
+            if (fallback == null) {
+                fallback = container;
+            }
+        }
+
+        return fallback;
     }
 
     public List<ItemStack> getContainerItems() {
@@ -52,13 +79,15 @@ public class CustomLootContainersCache extends YamlFileManager {
     }
 
     public void addContainer(final ItemStack itemStack) {
-        chests.add(new CustomContainer(itemStack));
+        chestsCache.computeIfAbsent(itemStack.getType() ,material -> new ArrayList<>()).add(new CustomContainer(itemStack));
     }
 
     @Override
     protected void saveDataToFile(@NotNull File file, @NotNull ConfigurationWrapper configurationWrapper) {
         YamlConfiguration yamlConfiguration = new YamlConfiguration();
-        yamlConfiguration.set("chests", RegisterNbtAPI.serializeItemStack(chests.stream().map(CustomContainer::getContainer).toArray(ItemStack[]::new)));
+        for (Map.Entry<Material, List<CustomContainer>> custom : chestsCache.entrySet()) {
+            yamlConfiguration.set("chests." + custom.getKey().name(), RegisterNbtAPI.serializeItemStack(custom.getValue().stream().map(CustomContainer::getContainer).toArray(ItemStack[]::new)));
+        }
         try {
             yamlConfiguration.save(file);
         } catch (IOException e) {
@@ -68,20 +97,30 @@ public class CustomLootContainersCache extends YamlFileManager {
 
     @Override
     protected void loadSettingsFromYaml(File file, FileConfiguration loadedConfig) {
-        Object rawData = loadedConfig.get("chests");
-        if (rawData instanceof byte[]) {
-            byte[] primitiveArray = (byte[]) rawData;
-            ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
-            if(itemStacks != null) {
-                for (ItemStack stack : itemStacks) {
-                    chests.add(new CustomContainer(stack));
+        ConfigurationSection configurationSection = loadedConfig.getConfigurationSection("chests");
+        if(configurationSection == null)
+            return;
+
+        for(String section : configurationSection.getKeys(false)) {
+            Object rawData = loadedConfig.get("chests." + section);
+            if (rawData instanceof byte[]) {
+                byte[] primitiveArray = (byte[]) rawData;
+                ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
+                if (itemStacks != null) {
+                    for (ItemStack stack : itemStacks) {
+                        chestsCache.computeIfAbsent(stack.getType() ,material -> new ArrayList<>()).add(new CustomContainer(stack));
+                    }
                 }
             }
-            }
         }
+    }
 
-        // final ItemStack[] itemStack = RegisterNbtAPI.deserializeItemStack(primitiveArray);
+    private String getDisplayName(ItemStack item) {
+        if (!item.hasItemMeta()) return null;
+        ItemMeta meta = item.getItemMeta();
+        return meta != null && meta.hasDisplayName() ? meta.getDisplayName() : null;
     }
 
 
 }
+

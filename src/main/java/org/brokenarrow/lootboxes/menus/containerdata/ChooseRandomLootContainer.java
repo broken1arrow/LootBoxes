@@ -7,6 +7,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.ContainerData;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.menus.CreateNewContainerMenu;
@@ -107,11 +108,15 @@ public class ChooseRandomLootContainer extends MenuHolderPage<ItemStack> {
             if (itemStack != null) {
                 containerDataCache.write(containerName, containerBuilder -> {
                     if (click == ClickType.SHIFT_LEFT) {
-                        containerBuilder.setRandomLootContainer(itemStack);
+                        containerBuilder.setRandomLootContainer(containerData ->
+                                containerData.setContainer(itemStack)
+                        );
                         return ButtonUpdateAction.ALL;
                     }
                     Facing type = getContainerFacing(click, itemStack.getType(), containerBuilder);
-                    containerBuilder.setRandomLootContainerFacing(type);
+                    containerBuilder.setRandomLootContainer(containerData ->
+                            containerData.setBlockFace(type)
+                    );
                     return ButtonUpdateAction.ALL;
                 });
                 return ButtonUpdateAction.ALL;
@@ -129,12 +134,13 @@ public class ChooseRandomLootContainer extends MenuHolderPage<ItemStack> {
 
             final String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), bountifyCapitalized(itemstack.getType()), lootContainerData.getRandomLootContainerFacing());
 
+            ContainerData randomLootData = lootContainerData.getRandomLootData();
             return CreateItemUtily.of(menuButton.isGlow(), itemstack,
                     displayName,
                     TranslatePlaceHolders.getLore(player, menuButton.getLore(),
                             "",
-                            lootContainerData.getRandomLootContainerFacing(),
-                            lootContainerData.getRandomLootContainer()
+                            randomLootData.getFacing(),
+                            randomLootData.getContainerType()
                     )).makeItemStack();
         }));
     }

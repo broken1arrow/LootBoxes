@@ -20,11 +20,12 @@ public enum Facing {
         return blockFaces[pos];
     }
 
-    public static BlockFace getFace(String face) {
-        BlockFace[] blockFaces = BlockFace.values();
-        for (BlockFace blockFace : blockFaces)
+    public static Facing getFace(String face) {
+        Facing[] blockFaces = Facing.values();
+        for (Facing blockFace : blockFaces) {
             if (blockFace.name().equalsIgnoreCase(face))
                 return blockFace;
+        }
         return null;
     }
 
@@ -48,7 +49,10 @@ public enum Facing {
     public static BlockFace getRandomFace(boolean isChest) {
         RandomUntility random = Lootboxes.getInstance().getRandomUntility();
         int number = random.nextRandomInt(Facing.values().length);
-        return getFace(getFacingFromIndex(number, isChest).name());
+        Facing face = getFace(getFacingFromIndex(number, isChest).name());
+        if(face == null)
+            return BlockFace.WEST;
+        return face.getFace();
     }
 
     public static Facing getFacingFromIndex(int number, boolean isChest) {

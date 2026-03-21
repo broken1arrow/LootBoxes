@@ -36,7 +36,7 @@ public class LootContainerData implements ConfigurationSerializable {
     private List<String> lore;
     private Set<String> worlds = new HashSet<>();
     private Map<String, ParticleEffect> particleEffects;
-    private Map<Location, ContainerData> containerDataCache;
+    private Map<BlockKey, ContainerData> containerDataCache;
     private Map<String, KeysData> keysData = new HashMap<>();
     private LocationWrapper spawnLocation;
     private CenterMode centerMode;
@@ -89,8 +89,8 @@ public class LootContainerData implements ConfigurationSerializable {
         return icon;
     }
 
-    public ItemStack getRandomLootContainer() {
-        return randomLootContainer;
+    public ContainerData getRandomLootData() {
+        return  lootContainer;
     }
 
     public Facing getRandomLootContainerFacing() {
@@ -107,8 +107,12 @@ public class LootContainerData implements ConfigurationSerializable {
         return lore;
     }
 
-    public Map<Location, ContainerData> getLinkedContainerData() {
+    public Map<BlockKey, ContainerData> getLinkedContainerData() {
         return containerDataCache;
+    }
+
+    public  ContainerData getLinkedContainerData(@NotNull final Location location) {
+        return containerDataCache.get(BlockKey.of(location));
     }
 
     public Map<String, KeysData> getKeysData() {
@@ -242,10 +246,15 @@ public class LootContainerData implements ConfigurationSerializable {
 
     public LootContainerData setRandomLootContainer(final Consumer<ContainerData> randomLootContainer) {
         ContainerData container = this.lootContainer;
-        if(container == null)
+        if (container == null)
             container = new ContainerData();
         this.lootContainer = container;
         randomLootContainer.accept(container);
+        return this;
+    }
+
+    public LootContainerData setRandomLootContainer(@NotNull final ContainerData randomLootContainer) {
+        this.lootContainer = randomLootContainer;
         return this;
     }
 
@@ -269,7 +278,7 @@ public class LootContainerData implements ConfigurationSerializable {
         return this;
     }
 
-    public LootContainerData setContainerData(final Map<Location, ContainerData> containerData) {
+    public LootContainerData setContainerData(final Map<BlockKey, ContainerData> containerData) {
         this.containerDataCache = containerData;
         return this;
     }
@@ -411,7 +420,7 @@ public class LootContainerData implements ConfigurationSerializable {
         keysData.put("Icon", this.icon + "");
 
         if (this.lootContainer != null) {
-            keysData.put("Random_loot_container", this.lootContainer);
+            keysData.put("Random_loot_container", this.lootContainer.serialize());
         }
 
         keysData.put("Worlds_allow_spawn", new ArrayList<>(this.worlds));
@@ -469,7 +478,15 @@ public class LootContainerData implements ConfigurationSerializable {
         if (worldsObject != null)
             worlds = castList((List<?>) worldsObject, String.class);
 
-        final Map<Location, ContainerData> containers = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
+        final Map<BlockKey, ContainerData> containers;
+        final Map<Location, ContainerData> containersOld = castMap((Map<?, ?>) map.get("Containers"), Location.class, ContainerData.class);
+        if(!containersOld.isEmpty()){
+            containers = new HashMap<>();
+            containersOld.forEach((location, containerData) -> containers.put(BlockKey.of(location),containerData));
+        }else {
+            containers = castMap((Map<?, ?>) map.get("Containers"), BlockKey.class, ContainerData.class);
+        }
+
         final Map<String, KeysData> keys = castMap((Map<?, ?>) map.get("Keys"), String.class, KeysData.class);
         final boolean spawningContainerWithCooldown = (boolean) map.get("Spawn_with_cooldown");
         final boolean enchant = (boolean) map.get("Enchant");
@@ -495,19 +512,7 @@ public class LootContainerData implements ConfigurationSerializable {
         } else {
             centerMode = CenterMode.of(centerModeObject.toString());
         }
-
-        ItemStack lootContainer;
-        if (randomLootContainer instanceof byte[]) {
-            byte[] primitiveArray = (byte[]) randomLootContainer;
-            ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
-            if (itemStacks != null && itemStacks.length > 0) {
-                lootContainer = itemStacks[0];
-            } else {
-                lootContainer = null;
-            }
-        } else {
-            lootContainer = null;
-        }
+        ItemStack lootContainer = getLootContainer(randomLootContainer);
 
         final int minRadius = (int) map.getOrDefault("Min_radius", centerMode == CenterMode.WORLD_ORIGIN || centerMode == CenterMode.PLAYER_ORIGIN ? 100 : 10);
         final int maxRadius = (int) map.getOrDefault("Max_radius", centerMode == CenterMode.WORLD_ORIGIN || centerMode == CenterMode.PLAYER_ORIGIN ? 1500 : 80);
@@ -534,10 +539,6 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setRandomLootWorlds(worlds)
                 .setEnchant(enchant)
                 .setIcon(material)
-                .setRandomLootContainer(containerData -> {
-                    containerData.setContainer(lootContainer != null ? lootContainer : new ItemStack(Material.CHEST));
-                    containerData.setBlockFace(finalBlockFace);
-                })
                 .setDisplayName(displayName)
                 .setLore(lore)
                 .setContainerShallGlow(random_loot_glow)
@@ -552,7 +553,37 @@ public class LootContainerData implements ConfigurationSerializable {
                 .setCenterMode(centerMode)
                 .setSpawnLocation(new LocationWrapper("Spawn-point", map, false))
                 .setPermissionForRandomSpawn(String.valueOf(map.get("permission")));
+
+        if (lootContainer != null)
+            lootContainerData.setRandomLootContainer(containerData -> {
+                containerData.setContainer(lootContainer);
+                containerData.setBlockFace(finalBlockFace);
+            });
+        else if (randomLootContainer instanceof ContainerData) {
+            lootContainerData.setRandomLootContainer((ContainerData) randomLootContainer);
+        }else {
+            System.out.println("not found randomLootContainer " + randomLootContainer);
+            if(randomLootContainer != null)
+            System.out.println("not found randomLootContainer class " + randomLootContainer.getClass());
+        }
+
         return lootContainerData;
+    }
+
+    private static @Nullable ItemStack getLootContainer(Object randomLootContainer) {
+        ItemStack lootContainer = null;
+        if (randomLootContainer instanceof byte[]) {
+            byte[] primitiveArray = (byte[]) randomLootContainer;
+            ItemStack[] itemStacks = RegisterNbtAPI.deserializeItemStack(primitiveArray);
+            if (itemStacks != null && itemStacks.length > 0) {
+                lootContainer = itemStacks[0];
+            }
+        } else {
+            Material material = Material.getMaterial(String.valueOf(randomLootContainer));
+            if (material != null)
+                lootContainer = new ItemStack(material);
+        }
+        return lootContainer;
     }
 
     private static Map<String, ParticleEffect> getParticleEffects(Map<Object, ParticleEffect> particles, ParticlesConversion particlesConversion, List<String> particleEffect, List<ParticleEffect> particleEffectList) {

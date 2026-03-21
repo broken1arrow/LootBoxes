@@ -19,6 +19,7 @@ public class ChunkDataCache {
      * @param location were the container is placed.
      */
     public void setChunkData(final Location location) {
+        if (location == null) return;
 
         final int x = location.getBlockX() >> 4;
         final int z = location.getBlockZ() >> 4;
