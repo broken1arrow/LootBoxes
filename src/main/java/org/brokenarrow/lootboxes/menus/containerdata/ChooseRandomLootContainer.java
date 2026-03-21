@@ -81,7 +81,7 @@ public class ChooseRandomLootContainer extends MenuHolderPage<ItemStack> {
                 nextPage();
             }
         }
-        
+
         if (button.isActionTypeEqual("Previous_button")) {
             if (click.isLeftClick()) {
                 previousPage();

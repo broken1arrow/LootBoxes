@@ -39,6 +39,10 @@ public class CustomLootContainersCache extends YamlFileManager {
         return chests.contains(new CustomContainer(itemStack));
     }
 
+    public boolean containsContainerType(final Material material) {
+        return chests.stream().anyMatch(customContainer -> customContainer.getContainer().getType() == material);
+    }
+
     public Set<CustomContainer> getContainers() {
         return chests;
     }

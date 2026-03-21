@@ -1,9 +1,12 @@
 package org.brokenarrow.lootboxes.builder;
 
 import com.google.common.base.Enums;
+import de.tr7zw.changeme.nbtapi.NBT;
+import org.brokenarrow.lootboxes.untlity.Facing;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -12,75 +15,87 @@ import java.util.Map;
 import static org.brokenarrow.lootboxes.untlity.errors.Valid.checkNotNull;
 
 public final class ContainerData implements ConfigurationSerializable {
+    private Facing facing;
+    private ItemStack containerType;
+    private ItemStack[] containerContents;
 
-	private final BlockFace facing;
-	private final Material containerType;
+    public ContainerData(final BlockFace facing, final Material containerType) {
+        this.facing = Facing.getFace(facing);
+        this.containerType = new ItemStack(containerType);
+    }
 
-	public ContainerData(final BlockFace facing, final Material containerType) {
-		this.facing = facing;
-		this.containerType = containerType;
-	}
+    public ContainerData() {
+        this.facing = Facing.RANDOM;
+        this.containerType = new ItemStack(Material.CHEST);
+    }
 
-	public ContainerData(final String facing, final String containerType) {
-		this.facing = addBlockFace(facing);
-		this.containerType = addMatrial(containerType);
-	}
+    public ContainerData(final String facing, final String containerType) {
+        //this.facing = addBlockFace(facing);
+        this.containerType = new ItemStack(addMaterial(containerType));
+    }
 
+    public void setBlockFace(final Facing facing) {
+        this.facing = facing;
+    }
 
-	public BlockFace addBlockFace(final String facing) {
-		checkNotNull(facing, "This block face are null.");
-		final BlockFace blockFace = Enums.getIfPresent(BlockFace.class, facing).orNull();
-		checkNotNull(blockFace, "This " + facing + " are not valid");
+    public void setContainer(final ItemStack containerType) {
+        this.containerType = containerType;
+    }
 
-		return blockFace;
-	}
+    public Facing getFacing() {
+        return facing;
+    }
 
-	public Material addMatrial(final String containerType) {
-		checkNotNull(containerType, "This containerType are null.");
-		final Material material = Material.getMaterial(containerType);
-		checkNotNull(material, "This material " + containerType + " are not valid");
+    public ItemStack getContainer() {
+        return containerType;
+    }
 
-		return material;
-	}
+    @Override
+    public String toString() {
+        return "ContainerDataCache{" +
+                "facing=" + facing +
+                ", containerType=" + containerType +
+                '}';
+    }
 
-	public BlockFace getFacing() {
-		return facing;
-	}
+    /**
+     * Creates a Map representation of this class.
+     * <p>
+     * This class must provide a method to restore this class, as defined in
+     * the {@link ConfigurationSerializable} interface javadocs.
+     *
+     * @return Map containing the current state of this class
+     */
+    @NotNull
+    @Override
+    public Map<String, Object> serialize() {
+        final Map<String, Object> keysData = new LinkedHashMap<>();
+        keysData.put("facing", facing.name());
+        keysData.put("containerType", NBT.itemStackToNBT(containerType));
+        return keysData;
+    }
 
-	public Material getContainerType() {
-		return containerType;
-	}
+    public static ContainerData deserialize(final Map<String, Object> map) {
+        final String facing = (String) map.get("facing");
+        final String containerType = (String) map.get("containerType");
 
-	@Override
-	public String toString() {
-		return "ContainerDataCache{" +
-				"facing=" + facing +
-				", containerType=" + containerType +
-				'}';
-	}
+        return new ContainerData(facing,
+                containerType);
+    }
 
-	/**
-	 * Creates a Map representation of this class.
-	 * <p>
-	 * This class must provide a method to restore this class, as defined in
-	 * the {@link ConfigurationSerializable} interface javadocs.
-	 *
-	 * @return Map containing the current state of this class
-	 */
-	@NotNull
-	@Override
-	public Map<String, Object> serialize() {
-		final Map<String, Object> keysData = new LinkedHashMap<>();
-		keysData.put("facing", facing + "");
-		keysData.put("containerType", containerType + "");
-		return keysData;
-	}
+    private BlockFace addBlockFace(final String facing) {
+        checkNotNull(facing, "This block face are null.");
+        final BlockFace blockFace = Enums.getIfPresent(BlockFace.class, facing).orNull();
+        checkNotNull(blockFace, "This " + facing + " are not valid");
 
-	public static ContainerData deserialize(final Map<String, Object> map) {
-		final String facing = (String) map.get("facing");
-		final String containerType = (String) map.get("containerType");
+        return blockFace;
+    }
 
-		return new ContainerData(facing,
-				containerType);
-	}
+    private Material addMaterial(final String containerType) {
+        checkNotNull(containerType, "This containerType are null.");
+        final Material material = Material.getMaterial(containerType);
+        checkNotNull(material, "This material " + containerType + " are not valid");
+
+        return material;
+    }
 }

@@ -53,23 +53,23 @@ public class SpawnedContainers {
 		}
 	}
 
-	public boolean spawnContainer(LootContainerData containerData) {
-		Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
-		String lootTableLinked = containerData.getLootTableLinked();
+	public boolean spawnContainer(LootContainerData lootContainerData) {
+		Map<Location, ContainerData> containerDataMap = lootContainerData.getLinkedContainerData();
+		String lootTableLinked = lootContainerData.getLootTableLinked();
 		for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
-			ContainerData containerData1 = entry.getValue();
+			ContainerData containerData = entry.getValue();
 			Location location = entry.getKey();
 			sendDebug("spawnContainer, loottable: " + lootTableLinked, this.getClass());
 			sendDebug("spawnContainer, location: " + location, this.getClass());
-			sendDebug("spawnContainer, containerData: " + containerData1, this.getClass());
+			sendDebug("spawnContainer, containerData: " + containerData, this.getClass());
 			if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
 				ItemStack[] item = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
 				if (item == null) {
 					return false;
 				}
-				location.getBlock().setType(containerData1.getContainerType());
-				setRotation(location, containerData1.getFacing());
-				setCustomName(location, containerData.getDisplayName());
+				location.getBlock().setType(containerData.getContainer().getType());
+				setRotation(location, containerData.getFacing().getFace());
+				setCustomName(location, lootContainerData.getDisplayName());
 
 				lootboxes.getSpawnContainerEffectsTask().addLocationInList(location);
 				this.setRefill(location, true);

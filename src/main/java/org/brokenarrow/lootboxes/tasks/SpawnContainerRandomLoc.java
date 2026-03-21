@@ -32,6 +32,7 @@ import static org.brokenarrow.lootboxes.settings.ChatMessages.RANDOM_LOOT_MESAGE
 import static org.brokenarrow.lootboxes.settings.ChatMessages.RANDOM_LOOT_MESAGE_TITEL;
 import static org.brokenarrow.lootboxes.untlity.ModifyBlock.*;
 import static org.brokenarrow.lootboxes.untlity.SerializeUtlity.serilazeLoc;
+import static org.brokenarrow.lootboxes.untlity.SkullUtility.applySkullFromItem;
 import static org.brokenarrow.lootboxes.untlity.blockVisualization.BlockVisualize.visulizeBlock;
 
 public class SpawnContainerRandomLoc {
@@ -162,27 +163,40 @@ public class SpawnContainerRandomLoc {
     }
 
     public void spawnContainer(LootContainerData containerData, Location location) {
-        Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
-        String lootTableLinked = containerData.getLootTableLinked();
+        final Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
+        final String lootTableLinked = containerData.getLootTableLinked();
+        final Block block = location.getBlock();
+
         if (containerData.isRandomSpawn()) {
             ItemStack[] stacks = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
             if (stacks == null) {
                 return;
             }
-            location.getBlock().setType(containerData.getRandomLootContainer().getType());
-            if (containerData.getRandomLootContainerFacing() == Facing.RANDOM) {
-                ItemStack itemStack = containerData.getRandomLootContainer();
-                if (itemStack != null) {
-                    Material material = itemStack.getType();
+            ItemStack itemStack = containerData.getRandomLootContainer();
+            if (itemStack != null) {
+                if (!applySkullFromItem(block, itemStack))
+                    block.setType(itemStack.getType());
+                final Facing facing = containerData.getRandomLootContainerFacing();
+                if (facing == Facing.RANDOM) {
+                    final Material material = itemStack.getType();
                     setRotation(location, Facing.getRandomFace(material == Material.CHEST || material == Material.TRAPPED_CHEST));
+                } else {
+                    setRotation(location, facing.getFace());
                 }
-            } else
-                setRotation(location, containerData.getRandomLootContainerFacing().getFace());
-            setCustomName(location, containerData.getDisplayName());
+                setCustomName(location, containerData.getDisplayName());
 
-            Inventory inventory = getInventory(location);
-            if (inventory != null) {
-                inventory.setContents(stacks);
+                Lootboxes.getInstance().getCustomLootContainersCache().getContainers().forEach(customContainer -> {
+                    if (customContainer.getContainer().isSimilar(itemStack)) {
+                        if (customContainer.isVanillaInventory()) {
+                            Inventory inventory = getInventory(location);
+                            if (inventory != null) {
+                                inventory.setContents(stacks);
+                            }
+                        } else {
+                            containerData.getLinkedContainerData();
+                        }
+                    }
+                });
             }
             return;
         }
@@ -193,8 +207,8 @@ public class SpawnContainerRandomLoc {
                 if (stacks == null) {
                     return;
                 }
-                location.getBlock().setType(container.getContainerType());
-                setRotation(location, container.getFacing());
+                block.setType(container.getContainer().getType());
+                setRotation(location, container.getFacing().getFace());
                 setCustomName(location, containerData.getDisplayName());
 
                 Inventory inventory = getInventory(location);

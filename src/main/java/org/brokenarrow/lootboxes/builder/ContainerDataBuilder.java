@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -206,7 +207,7 @@ public class ContainerDataBuilder implements ConfigurationSerializable {
                 .setRandomLootWorlds(worlds != null ? new ArrayList<>(worlds) : new ArrayList<>())
                 .setEnchant(enchant)
                 .setIcon(icon)
-                .setRandomLootContainer(randomLootContainerItem)
+                .setRandomLootContainer(new ItemStack(randomLootContainerItem))
                 .setRandomLootContainerFacing(randomLootContainerFacing)
                 .setDisplayName(displayName)
                 .setLore(lore)

@@ -2,10 +2,15 @@ package org.brokenarrow.lootboxes.untlity;
 
 
 import org.broken.arrow.library.itemcreator.SkullCreator;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.UUID;
+
+import static org.broken.arrow.library.itemcreator.SkullCreator.getSkullUrl;
 
 /**
  * A library for the Bukkit API to create player skulls
@@ -147,6 +152,27 @@ public class SkullUtility {
      */
     public static void blockWithBase64(Block block, String base64) {
         SkullCreator.blockWithBase64(block, base64);
+    }
+
+
+    public static boolean applySkullFromItem(Block block, ItemStack item) {
+        ItemMeta itemMeta = item.getItemMeta();
+        if (!(itemMeta instanceof SkullMeta)) return false;
+
+        SkullMeta meta = (SkullMeta) itemMeta;
+        String url = getSkullUrl(meta);
+        if (url != null) {
+            blockWithUrl(block, url);
+            return true;
+        }
+
+        if (meta.hasOwner()) {
+            OfflinePlayer player = meta.getOwningPlayer();
+            if (player != null) {
+                blockWithUuid(block, player.getUniqueId());
+            }
+        }
+        return true;
     }
 
 }

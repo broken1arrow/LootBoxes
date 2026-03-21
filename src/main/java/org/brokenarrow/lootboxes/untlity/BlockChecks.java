@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.untlity;
 
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Location;
 import org.bukkit.block.*;
 import org.bukkit.inventory.Inventory;
@@ -82,18 +83,6 @@ public class BlockChecks {
 	 */
 	public static boolean checkBlockIsContainer(Block block) {
 		if (block == null) return false;
-
-		switch (block.getType()) {
-			case HOPPER:
-			case DISPENSER:
-			case DROPPER:
-			case BARREL:
-			case CHEST:
-			case TRAPPED_CHEST:
-				return true;
-			default:
-				return false;
-		}
-
+		return Lootboxes.getInstance().getCustomLootContainersCache().containsContainerType(block.getType());
 	}
 }
