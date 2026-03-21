@@ -101,7 +101,6 @@ public final class BlockKey implements ConfigurationSerializable {
         return "worldId=" + worldId +
                 " x=" + x +
                 " y=" + y +
-                " z=" + z +
-                " cachedLocation=" + cachedLocation;
+                " z=" + z;
     }
 }

@@ -7,6 +7,7 @@ import org.broken.arrow.library.menu.button.manager.utility.MenuButtonData;
 import org.broken.arrow.library.menu.button.manager.utility.MenuTemplate;
 import org.broken.arrow.library.menu.holder.MenuHolderPage;
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.BlockKey;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.builder.ParticleEffect;
 import org.brokenarrow.lootboxes.commandprompt.SearchInMenu;
@@ -157,8 +158,11 @@ public class ParticleAnimation extends MenuHolderPage<Object> {
                         containerBuilder.setParticleEffects(setParticleData(player, containerBuilder, container, particle));
                     }
                     if (click.isLeftClick()) {
-                        for (final Location location : containerBuilder.getLinkedContainerData().keySet())
-                            spawnContainerEffectsTask.addLocationInList(location);
+                        for (final BlockKey blockKey : containerBuilder.getLinkedContainerData().keySet()) {
+                            Location location = blockKey.getLocation();
+                            if (location != null)
+                                spawnContainerEffectsTask.addLocationInList(location);
+                        }
                     }
                 });
                 return ButtonUpdateAction.ALL;

@@ -1,10 +1,7 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
-import org.brokenarrow.lootboxes.builder.CenterMode;
-import org.brokenarrow.lootboxes.builder.ContainerData;
-import org.brokenarrow.lootboxes.builder.LootContainerData;
-import org.brokenarrow.lootboxes.builder.SettingsData;
+import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.settings.Settings;
 import org.brokenarrow.lootboxes.untlity.*;
@@ -159,7 +156,7 @@ public class SpawnContainerRandomLoc {
     }
 
     public void spawnContainer(LootContainerData containerData, Location location) {
-      //  final Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
+        //  final Map<Location, ContainerData> containerDataMap = containerData.getLinkedContainerData();
         final String lootTableLinked = containerData.getLootTableLinked();
         final Block block = location.getBlock();
 
@@ -185,18 +182,17 @@ public class SpawnContainerRandomLoc {
                 }
                 setCustomName(location, containerData.getDisplayName());
 
-                Lootboxes.getInstance().getCustomLootContainersCache().getContainers().forEach(customContainer -> {
-                    if (customContainer.getContainer().isSimilar(itemStack)) {
-                        if (customContainer.isVanillaInventory()) {
-                            Inventory inventory = getInventory(location);
-                            if (inventory != null) {
-                                inventory.setContents(stacks);
-                            }
-                        } else {
-                            container.setContents(stacks);
+                final CustomContainer customContainer = Lootboxes.getInstance().getCustomLootContainersCache().getSimilarContainer(itemStack.getType(), itemStack);
+                if (customContainer != null) {
+                    if (customContainer.isVanillaInventory()) {
+                        Inventory inventory = getInventory(location);
+                        if (inventory != null) {
+                            inventory.setContents(stacks);
                         }
+                    } else {
+                        container.setContents(stacks);
                     }
-                });
+                }
             } else {
                 if (settings.isDebug())
                     logger.log(Level.INFO, "Could not find valid container for spawn random chest for this center location " + location + ".");

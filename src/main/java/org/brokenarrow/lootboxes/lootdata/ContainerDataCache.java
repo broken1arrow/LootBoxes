@@ -6,7 +6,6 @@ import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.builder.*;
 import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -354,12 +353,12 @@ public class ContainerDataCache extends YamlFileManager {
 
         if (!built.isSpawningContainerWithCooldown())
             addContainerToSpawnTask(containerKey, built.getCooldown());
-        for (final BlockKey location : built.getLinkedContainerData().keySet()) {
-            this.getChunkDataCache().setChunkData(location.getLocation());
-            this.getContainerLocationCache().put(location.getLocation(), new LocationData(containerKey, built.getKeysData()));
+        for (final BlockKey blockKey : built.getLinkedContainerData().keySet()) {
+            this.getChunkDataCache().setChunkData(blockKey.getLocation());
+            this.getContainerLocationCache().put(blockKey.getLocation(), new LocationData(containerKey, built.getKeysData()));
             final Map<String, ParticleEffect> particleEffects = built.getParticleEffects();
             if (particleEffects != null && particleEffects.isEmpty())
-                Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(location);
+                Lootboxes.getInstance().getSpawnContainerEffectsTask().addLocationInList(blockKey.getLocation());
         }
         save(containerKey);
         //saveTask();

@@ -15,7 +15,9 @@ import org.brokenarrow.lootboxes.menus.containerdata.AlterContainerDataMenu;
 import org.brokenarrow.lootboxes.untlity.CreateItemUtily;
 import org.brokenarrow.lootboxes.untlity.TeleportPlayer;
 import org.brokenarrow.lootboxes.untlity.TranslatePlaceHolders;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
@@ -28,7 +30,7 @@ import java.util.Map;
 
 import static org.brokenarrow.lootboxes.settings.ChatMessages.*;
 
-public class ContainersLinkedList extends MenuHolderPage<Location> {
+public class ContainersLinkedList extends MenuHolderPage<BlockKey> {
 	private final ContainerDataCache containerDataCache = Lootboxes.getInstance().getContainerDataCache();
 	private final MenuTemplate guiTemplate;
 	private final String containerName;
@@ -103,12 +105,12 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 	}
 
 	@Override
-	public FillMenuButton<Location> createFillMenuButton() {
+	public FillMenuButton<BlockKey> createFillMenuButton() {
 		MenuButtonData button = this.guiTemplate.getMenuButton(-1);
 		if (button == null) return null;
 
-		return new FillMenuButton<>((player, menu, click, clickedItem, location ) -> {
-			if (location != null) {
+		return new FillMenuButton<>((player, menu, click, clickedItem, blockKey ) -> {
+			if (blockKey != null) {
 				if (click.isRightClick()) {
 					containerDataCache.write(containerName, builder -> {
 						final LootContainerData lootContainerData = containerDataCache.getCacheContainerData(containerName);
@@ -116,32 +118,34 @@ public class ContainersLinkedList extends MenuHolderPage<Location> {
 						if (containerDataMap == null)
 							containerDataMap = new HashMap<>();
 						if (click.isRightClick()) {
-							containerDataMap.remove(BlockKey.of(location));
+							containerDataMap.remove(blockKey);
 							builder.setContainerData(containerDataMap);
 						}
 					});
 					return ButtonUpdateAction.ALL;
 				}
 				if (click.isLeftClick()) {
-					final TeleportPlayer teleport = new TeleportPlayer(player, location);
+					final TeleportPlayer teleport = new TeleportPlayer(player, blockKey.getLocation());
 					if (teleport.teleportPlayer()) {
 						final Location teleportLoc = teleport.getFinalTeleportLoc();
 
-						if (teleportLoc.getZ() - 0.5 == location.getZ() && teleportLoc.getX() - 0.5 == location.getX())
-							CONTINER_IS_NOT_OBSTACLE.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
-						else if (teleportLoc.equals(location))
-							CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
+						final String name = teleportLoc.getWorld().getName();
+						if (teleportLoc.getZ() - 0.5 == blockKey.getZ() && teleportLoc.getX() - 0.5 == blockKey.getX())
+							CONTINER_IS_NOT_OBSTACLE.sendMessage(player, name, teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+						else if (teleportLoc.equals(blockKey))
+							CONTINER_IS_OBSTACLE_ON_ALL_SIDES.sendMessage(player, name, teleportLoc.getX() - 0.5, teleportLoc.getY(), teleportLoc.getZ() - 0.5);
 						else
-							CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, teleportLoc.getWorld().getName(), teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
+							CONTINER_IS_OBSTACLE_ON_SOME_SIDES.sendMessage(player, name, teleportLoc.getX(), teleportLoc.getY(), teleportLoc.getZ());
 					}
 				}
 			}
 			return ButtonUpdateAction.NONE;
-		}, (slot, location) -> {
-            if (location == null) return null;
+		}, (slot, blockKey) -> {
+            if (blockKey == null) return null;
 
 			org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
-			String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), location.getWorld() != null ? location.getWorld().getName() : location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+			World world = Bukkit.getWorld(blockKey.getWorldId());
+			String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), (world != null ? world.getName() : "world not loaded"), blockKey.getX(), blockKey.getY(), blockKey.getZ());
 
 			return CreateItemUtily.of(menuButton.isGlow(),menuButton.getMaterial(),
 							displayName,

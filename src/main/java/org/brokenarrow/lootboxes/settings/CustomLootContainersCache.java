@@ -75,7 +75,7 @@ public class CustomLootContainersCache extends YamlFileManager {
     }
 
     public List<ItemStack> getContainerItems() {
-        return chests.stream().map(CustomContainer::getContainer).collect(Collectors.toList());
+        return chestsCache.values().stream().flatMap(customContainers -> customContainers.stream().map(CustomContainer::getContainer)).collect(Collectors.toList());
     }
 
     public void addContainer(final ItemStack itemStack) {

@@ -121,11 +121,7 @@ public final class ContainerData implements ConfigurationSerializable {
             if (material != null)
                 containerType = new ItemStack(material);
         }
-
-        System.out.println("lootContainerType " + lootContainerType);
-        if (lootContainerType != null)
-            System.out.println("lootContainerType getClass " + lootContainerType.getClass());
-
+        
         ItemStack[] contents = null;
         if (containerContents instanceof byte[]) {
             byte[] primitiveArray = (byte[]) containerContents;

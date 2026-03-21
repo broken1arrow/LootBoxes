@@ -1,7 +1,9 @@
 package org.brokenarrow.lootboxes.tasks;
 
 import org.brokenarrow.lootboxes.Lootboxes;
+import org.brokenarrow.lootboxes.builder.BlockKey;
 import org.brokenarrow.lootboxes.builder.ContainerData;
+import org.brokenarrow.lootboxes.builder.CustomContainer;
 import org.brokenarrow.lootboxes.builder.LootContainerData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.untlity.SkullUtility;
@@ -56,24 +58,30 @@ public class SpawnedContainers {
     }
 
     public boolean spawnContainer(LootContainerData lootContainerData) {
-        Map<Location, ContainerData> containerDataMap = lootContainerData.getLinkedContainerData();
+        Map<BlockKey, ContainerData> containerDataMap = lootContainerData.getLinkedContainerData();
         String lootTableLinked = lootContainerData.getLootTableLinked();
-        for (Map.Entry<Location, ContainerData> entry : containerDataMap.entrySet()) {
+        for (Map.Entry<BlockKey, ContainerData> entry : containerDataMap.entrySet()) {
             ContainerData containerData = entry.getValue();
-            Location location = entry.getKey();
+            BlockKey blockKey = entry.getKey();
             sendDebug("spawnContainer, loottable: " + lootTableLinked, this.getClass());
-            sendDebug("spawnContainer, location: " + location, this.getClass());
+            sendDebug("spawnContainer, location: " + blockKey, this.getClass());
             sendDebug("spawnContainer, containerData: " + containerData, this.getClass());
-            if (location != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
+            if (blockKey != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
                 ItemStack[] item = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
                 if (item == null) {
                     return false;
                 }
+                Location location = blockKey.getLocation();
+                if (location == null) {
+                    sendDebug("Could not resolve the location set for spawn chest for this stored location " + blockKey + ".", this.getClass());
+                    return false;
+                }
+
                 final Block block = location.getBlock();
                 final ItemStack itemStack = containerData.getContainer();
 
                 if (itemStack == null) {
-                    sendDebug("Could not find valid container set for spawn chest for this center location " + location + ".", this.getClass());
+                    sendDebug("Could not find valid container set for spawn chest for this center location " + blockKey + ".", this.getClass());
                     return false;
                 }
 
@@ -86,18 +94,17 @@ public class SpawnedContainers {
 
                 lootboxes.getSpawnContainerEffectsTask().addLocationInList(location);
                 this.setRefill(location, true);
-                Lootboxes.getInstance().getCustomLootContainersCache().getContainers().forEach(customContainer -> {
-                    if (customContainer.getContainer().isSimilar(itemStack)) {
-                        if (customContainer.isVanillaInventory()) {
-                            Inventory inventory = getInventory(location);
-                            if (inventory != null) {
-                                inventory.setContents(item);
-                            }
-                        } else {
-                            containerData.setContents(item);
+                final CustomContainer customContainer = Lootboxes.getInstance().getCustomLootContainersCache().getSimilarContainer(itemStack.getType(), itemStack);
+                if (customContainer != null) {
+                    if (customContainer.isVanillaInventory()) {
+                        Inventory inventory = getInventory(location);
+                        if (inventory != null) {
+                            inventory.setContents(item);
                         }
+                    } else {
+                        containerData.setContents(item);
                     }
-                });
+                }
             }
         }
         return true;
