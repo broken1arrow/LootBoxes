@@ -106,10 +106,7 @@ public class ChooseContainer extends MenuHolderPage<ItemStack> {
                 final SettingsData setting = settings.getSettingsData();
 
                 TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
-                player.getInventory().addItem(CreateItemUtily.of(false,itemStack,
-                                TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(),
-                                        WordUtils.capitalizeFully(itemStack.getType().toString().replace("_", " ").toLowerCase())),
-                                 TranslatePlaceHolders.getLore(setting.getPlaceContainerLore()))
+                player.getInventory().addItem(CreateItemUtily.of(itemStack)
                         .setItemMetaData(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), containerKey)
                         .setCopyOfItem(true)
                         .makeItemStack());
