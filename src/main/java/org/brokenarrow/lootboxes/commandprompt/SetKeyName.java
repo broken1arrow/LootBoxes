@@ -79,7 +79,7 @@ public class SetKeyName extends SimpleConversation {
 
             int placeInList = chachedPlayer.get(player).getNumber();
             ItemStack item = itemStacks[placeInList];
-
+            Prompt prompt = null;
             if (item != null) {
                 if (item.hasItemMeta()) {
                     ItemMeta meta = item.getItemMeta();
@@ -91,7 +91,7 @@ public class SetKeyName extends SimpleConversation {
                                 item.getAmount(),
                                 item.getType(),
                                 meta.hasLore() ? meta.getLore() : new ArrayList<>());
-                        return containerCache.write(containerKey, builder -> {
+                        prompt = containerCache.write(containerKey, builder -> {
                             if (builder.containsKey(input)) {
                                 SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
                                 return getFirstPrompt();
@@ -108,7 +108,7 @@ public class SetKeyName extends SimpleConversation {
                             item.getAmount(),
                             item.getType(),
                             new ArrayList<>());
-                    return containerCache.write(containerKey, builder -> {
+                    prompt = containerCache.write(containerKey, builder -> {
                         if (builder.containsKey(input)) {
                             SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
                             return getFirstPrompt();
@@ -118,11 +118,14 @@ public class SetKeyName extends SimpleConversation {
                     });
                 }
             }
+            if (prompt != null)
+                return getFirstPrompt();
+
             if (!checkAllItems(player)) {
                 SET_NAME_ON_KEY_CONFIRM.sendMessage(player, input);
                 return getFirstPrompt();
             }
-            SET_NAME_ON_KEY_CONFIRM_FINISH.sendMessage(player, item);
+            SET_NAME_ON_KEY_CONFIRM_FINISH.sendMessage(player, item != null ? item.getType() : "Item null");
             new EditKeysToOpenMenu(containerKey).menuOpen(getPlayer(context));
             return null;
         }

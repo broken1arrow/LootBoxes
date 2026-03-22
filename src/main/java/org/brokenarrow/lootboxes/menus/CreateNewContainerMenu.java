@@ -79,6 +79,10 @@ public class CreateNewContainerMenu extends MenuHolder {
                 if (item == null) continue;
                 customLootContainer.addContainer(item);
             }
+            if (menuKey == MenuKeys.CHOOSE_RANDOM_LOOT_CONTAINER)
+                new ChooseRandomLootContainer(containerKey).menuOpen(player);
+            if (menuKey == MenuKeys.CHOOSE_CONTAINER)
+                new ChooseContainer(containerKey).menuOpen(player);
         }
         if (button.isActionTypeEqual("Back_button")) {
             if (menuKey == MenuKeys.CHOOSE_RANDOM_LOOT_CONTAINER)

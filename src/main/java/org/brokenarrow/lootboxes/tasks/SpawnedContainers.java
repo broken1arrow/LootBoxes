@@ -57,9 +57,16 @@ public class SpawnedContainers {
         }
     }
 
+    public boolean haveCachedContainer(String containerKey) {
+        return cachedTimeMap.containsKey(containerKey);
+    }
+
     public boolean spawnContainer(LootContainerData lootContainerData) {
         Map<BlockKey, ContainerData> containerDataMap = lootContainerData.getLinkedContainerData();
         String lootTableLinked = lootContainerData.getLootTableLinked();
+        if(lootTableLinked == null || lootTableLinked.isEmpty())
+            return false;
+
         for (Map.Entry<BlockKey, ContainerData> entry : containerDataMap.entrySet()) {
             ContainerData containerData = entry.getValue();
             BlockKey blockKey = entry.getKey();

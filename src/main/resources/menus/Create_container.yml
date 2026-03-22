@@ -17,7 +17,7 @@ Menus:
           - ""
       "40":
         action_type: Save_items
-        material: BARRIER
+        material: GOLD_BLOCK
         name: "&bSave all items"
         glow: false
         lore:
@@ -32,7 +32,7 @@ Menus:
           - ""
           - "&2Go one page"
           - "&2back."
-      "36-37,39,41-43":
+      "36-38,39,41-43":
         material: BLACK_STAINED_GLASS_PANE
         name: "&b"
         glow: false

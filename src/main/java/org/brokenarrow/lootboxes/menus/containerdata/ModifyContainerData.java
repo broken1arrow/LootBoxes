@@ -128,10 +128,15 @@ public class ModifyContainerData extends MenuHolderPage<String> {
                     else
                         itemStack = data.getIcon();
 
+                    boolean container = Lootboxes.getInstance().getSpawnLootContainer().haveCachedContainer(containerKeyName);
+                    if (!container)
+                        container = Lootboxes.getInstance().getSpawnedContainers().haveCachedContainer(containerKeyName);
+                    String currentlyRunning = container ? "Active" : "Disable";
+
                     return CreateItemUtily.of(false, itemStack,
                                     displayName,
                                     TranslatePlaceHolders.getLore(player, menuButton.getLore(), containerKeyName, tableLink, data.getCooldown(), data.getIcon(),
-                                            Lootboxes.getInstance().getSpawnLootContainer().haveCachedContainer(containerKeyName) ? "Active" : "Disable"))
+                                            currentlyRunning))
                             .makeItemStack();
                 }
             }

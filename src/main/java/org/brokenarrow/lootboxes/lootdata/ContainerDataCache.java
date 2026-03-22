@@ -353,6 +353,7 @@ public class ContainerDataCache extends YamlFileManager {
 
         if (!built.isSpawningContainerWithCooldown())
             addContainerToSpawnTask(containerKey, built.getCooldown());
+
         for (final BlockKey blockKey : built.getLinkedContainerData().keySet()) {
             this.getChunkDataCache().setChunkData(blockKey.getLocation());
             this.getContainerLocationCache().put(blockKey.getLocation(), new LocationData(containerKey, built.getKeysData()));
