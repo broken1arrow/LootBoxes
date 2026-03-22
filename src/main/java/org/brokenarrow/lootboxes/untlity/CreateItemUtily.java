@@ -34,8 +34,14 @@ public final class CreateItemUtily {
      * @return CreateItemUtily class or class with air item (if item are null).
      */
     public static CreateItemStack of(final Object item) {
-        CreateItemStack createItemStack = itemCreator.of(item + "");
-        if (createItemStack.isGlow())
+        CreateItemStack createItemStack = null;
+        if (item instanceof ItemStack)
+            createItemStack = itemCreator.of((ItemStack) item);
+        if (item instanceof Material)
+            createItemStack = itemCreator.of((Material) item);
+        if (createItemStack == null && item != null)
+            createItemStack = itemCreator.of(item.toString());
+        if (createItemStack != null && createItemStack.isGlow())
             createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
         return createItemStack;
     }
@@ -50,7 +56,14 @@ public final class CreateItemUtily {
      * @return CreateItemUtily class or class with air item (if item are null).
      */
     public static CreateItemStack of(final Object item, final String itemMetaKey, String itemMetaValue) {
-        CreateItemStack createItemStack = itemCreator.of(item + "").setItemMetaData(itemMetaKey, itemMetaValue);
+        CreateItemStack createItemStack = null;
+        if (item instanceof ItemStack)
+            createItemStack = itemCreator.of((ItemStack) item);
+        if (item instanceof Material)
+            createItemStack = itemCreator.of((Material) item);
+        if (createItemStack == null)
+            createItemStack = itemCreator.of(item.toString());
+        createItemStack.setItemMetaData(itemMetaKey, itemMetaValue);
         if (createItemStack.isGlow())
             createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
         return createItemStack;
@@ -68,7 +81,13 @@ public final class CreateItemUtily {
      * @return CreateItemUtily class or class with air item (if item are null).
      */
     public static CreateItemStack of(final Object item, final String displayName, final String... lore) {
-        CreateItemStack createItemStack = itemCreator.of(item + "", displayName, Arrays.asList(lore));
+        CreateItemStack createItemStack = null;
+        if (item instanceof ItemStack)
+            createItemStack = itemCreator.of((ItemStack) item, displayName, lore);
+        if (item instanceof Material)
+            createItemStack = itemCreator.of((Material) item, displayName, lore);
+        if (createItemStack == null)
+            createItemStack = itemCreator.of(item.toString(), displayName, lore);
         if (createItemStack.isGlow())
             createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
 
