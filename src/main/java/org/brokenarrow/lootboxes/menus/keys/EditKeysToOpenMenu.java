@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.menus.keys;
 
+import org.broken.arrow.library.itemcreator.SkullCreator;
 import org.broken.arrow.library.menu.button.MenuButton;
 import org.broken.arrow.library.menu.button.logic.ButtonUpdateAction;
 import org.broken.arrow.library.menu.button.logic.FillMenuButton;
@@ -166,10 +167,20 @@ public class EditKeysToOpenMenu extends MenuHolderPage<String> {
                             placeholdersLore);
                     List<String> lore = getLore(player, menuButton.getLore(), keyName, keysData.getAmountNeeded(), placeholderDisplayName,
                             placeholdersLore);
-
+                    if (keysData.getUrl() != null) {
+                        ItemStack itemstack = SkullCreator.itemFromUrl(keysData.getUrl());
+                        return CreateItemUtily.of(menuButton.isGlow(), itemstack,
+                                        displayName,
+                                        lore)
+                                .setCustomModelData(keysData.getModelData())
+                                .setData(keysData.getDamage())
+                                .makeItemStack();
+                    }
                     return CreateItemUtily.of(menuButton.isGlow(), keysData.getItemType(),
                                     displayName,
                                     lore)
+                            .setCustomModelData(keysData.getModelData())
+                            .setData(keysData.getDamage())
                             .makeItemStack();
                 });
             }

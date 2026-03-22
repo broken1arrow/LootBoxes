@@ -1,5 +1,6 @@
 package org.brokenarrow.lootboxes.commandprompt;
 
+import org.broken.arrow.library.itemcreator.SkullCreator;
 import org.broken.arrow.library.prompt.SimpleConversation;
 import org.broken.arrow.library.prompt.SimplePrompt;
 import org.brokenarrow.lootboxes.Lootboxes;
@@ -7,12 +8,15 @@ import org.brokenarrow.lootboxes.builder.KeysData;
 import org.brokenarrow.lootboxes.lootdata.ContainerDataCache;
 import org.brokenarrow.lootboxes.lootdata.KeyDropData;
 import org.brokenarrow.lootboxes.menus.keys.EditKeysToOpenMenu;
+import org.brokenarrow.lootboxes.untlity.ServerVersion;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,6 +100,16 @@ public class SetKeyName extends SimpleConversation {
                                 SET_NAME_ON_KEY_DUPLICATE.sendMessage(player, input);
                                 return getFirstPrompt();
                             }
+                            if (meta instanceof SkullMeta) {
+                                data.setUrl(SkullCreator.getSkullUrl((SkullMeta) meta));
+                            }
+                            if(Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_16)){
+                                if(meta.hasCustomModelData()){
+                                    data.setModelData(meta.getCustomModelData());
+                                }
+                            }
+                            if (meta instanceof Damageable)
+                                data.setDamage((byte) ((Damageable) meta).getDamage());
                             builder.setKeysData(input, data);
                             return null;
                         });
