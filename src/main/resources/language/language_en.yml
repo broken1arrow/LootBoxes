@@ -1,5 +1,5 @@
 # You can change language in Settings.yml and make new file here with your language name.
-# like this name example language_swe for swedish (some language not exist inside the plugin so you need to translate self).
+# like this name example language_swe for Swedish (some language not exist inside the plugin so you need to translate self).
 
 PREFIX: "&8[&6Lootbox&8] "
 
@@ -60,9 +60,9 @@ NOT_VALID_NUMBER: "&fThis {0} is not a valid number."
 SET_PERMISSION: "&fSet the permission for the container; only players with permission will have containers spawn around their location when set."
 
 ADD_CONTINERS:
-  TURNED_ON_ADD_CONTAINERS: "&fLeftclick to add location and rightclick to remove location,turn off while leftclicking air and sneaking."
-  TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "&fLeftclick to add location and rightclick to remove location, for turn it off dropp item or switch slot."
-  TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER: "&fPlace continer to add location and rightclick to remove location, for turn it off dropp item or switch slot."
+  TURNED_ON_ADD_CONTAINERS: "&fLeftclick to add location and right-click to remove location,turn off while left-clicking air and sneaking."
+  TURNED_ON_ADD_CONTAINERS_WITH_TOOL: "&fLeft-click to add location and right-click to remove location, for turn it off drop item or switch slot."
+  TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER: "&fPlace container to add location and right-click to remove location, for turn it off drop item or switch slot."
   TURN_OFF_ADD_CONTAINERS: "&fYou have now turn now off add and remove mode."
   LEFT_CLICK_BLOCK: "&fyou have now added this container to loottable.&6 {0} {1} {2} {3}"
   RIGHT_CLICK_BLOCK: "&fyou have now removed this container from loottable."

@@ -4,14 +4,7 @@ import org.broken.arrow.library.color.TextTranslator;
 import org.brokenarrow.lootboxes.Lootboxes;
 import org.brokenarrow.lootboxes.untlity.ServerVersion.Version;
 import org.bukkit.Location;
-import org.bukkit.block.Barrel;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Dropper;
-import org.bukkit.block.Hopper;
+import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.inventory.Inventory;
@@ -59,6 +52,11 @@ public class ModifyBlock {
 				Chest chest = ((Chest) block.getState());
 				chest.setCustomName(text);
 				chest.update();
+				break;
+			case SHULKER_BOX:
+				ShulkerBox shulker = ((ShulkerBox) block.getState());
+				shulker.setCustomName(text);
+				shulker.update();
 				break;
 			default:
 				break;

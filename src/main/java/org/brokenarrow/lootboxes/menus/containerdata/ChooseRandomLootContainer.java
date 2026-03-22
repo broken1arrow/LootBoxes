@@ -140,7 +140,9 @@ public class ChooseRandomLootContainer extends MenuHolderPage<ItemStack> {
                             "",
                             randomLootData != null? randomLootData.getFacing() :"",
                             randomLootData != null? randomLootData.getContainerType() :""
-                    )).makeItemStack();
+                    ))
+                    .setCopyOfItem(true)
+                    .makeItemStack();
         }));
     }
 

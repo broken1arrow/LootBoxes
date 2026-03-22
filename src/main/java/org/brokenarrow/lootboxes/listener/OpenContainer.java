@@ -65,6 +65,8 @@ public class OpenContainer implements Listener {
     }
 
     private void openFixedLootContainer(PlayerInteractEvent event, ItemStack itemStack, Location location, Player player, Block block) {
+        if(!isValidInteract(event)) return;
+
         String key = null;
         String containerDataName = null;
         if (itemStack != null && itemStack.getType() != Material.AIR) {
@@ -114,14 +116,13 @@ public class OpenContainer implements Listener {
         if (!checkIfPlayerHasItem(dataCacheCacheKey, key, player, itemStack)) {
             event.setCancelled(true);
         }
-
+        ContainerData containerData = cacheContainerData.getLinkedContainerData(location);
         if (cacheContainerData.isSpawningContainerWithCooldown() && !lootboxes.getSpawnedContainers().isRefill(location)) {
             String time = "0";
             Long cachedTime = lootboxes.getSpawnedContainers().getCachedTimeMap().get(containerDataName);
             if (cachedTime != null)
                 time = toTimeFromMillis(cachedTime - System.currentTimeMillis());
             if (time.equals("0")) {
-                ContainerData containerData = cacheContainerData.getLinkedContainerData(location);
                 if (containerData == null)
                     return;
             }
@@ -140,11 +141,12 @@ public class OpenContainer implements Listener {
         if (!cacheContainerData.isSpawningContainerWithCooldown() && !spawnLootWhenClicking(cacheContainerData, location, block)) {
             LOOKED_CONTAINER_NO_LOOTTABLE_LINKED.sendMessage(player, containerDataName);
         } else {
-            final ContainerData randomLootContainer = cacheContainerData.getRandomLootData();
-            if (randomLootContainer != null && randomLootContainer.getContainerContents() != null) {
-                final ItemStack[] contents = randomLootContainer.getContainerContents();
-                event.setCancelled(true);
-                showLoot(cacheContainerData, location, player, contents);
+            if (containerData != null) {
+                ItemStack[] contents = containerData.getContainerContents();
+                if (contents != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    showLoot(cacheContainerData, location, player, contents);
+                    event.setCancelled(true);
+                }
             }
             OPEN_CONTAINER.sendMessage(player);
         }

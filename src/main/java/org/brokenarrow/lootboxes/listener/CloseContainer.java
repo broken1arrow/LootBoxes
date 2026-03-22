@@ -42,9 +42,6 @@ public class CloseContainer implements Listener {
         } else
             location = this.getLocation(event);
         if (location == null) return;
-        System.out.println("InventoryCloseEvent ");
-        System.out.println("inventory " + inventory);
-        System.out.println("inventory " + inventory.getViewers());
         clearRandomSawedContainers(location, inventory);
         clearFixedContainer(location, inventory);
 
@@ -85,15 +82,20 @@ public class CloseContainer implements Listener {
 
         if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && lootContainerData.isSpawningContainerWithCooldown()) {
             location.getBlock().setType(Material.AIR);
-
         }
-        containerData.setContents(null);
-        if (inventory.getContents().length > 0) {
-            for (ItemStack itemStack : inventory) {
+
+        ItemStack[] contents = inventory.getContents();
+        if (containerData.getContainerContents() != null) {
+            contents = containerData.getContainerContents();
+        }
+
+        if (contents != null) {
+            for (ItemStack itemStack : contents) {
                 if (itemStack == null) continue;
                 location.getWorld().dropItemNaturally(location, itemStack);
             }
         }
+        containerData.setContents(null);
         inventory.clear();
     }
 

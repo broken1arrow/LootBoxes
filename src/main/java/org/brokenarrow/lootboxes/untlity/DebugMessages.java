@@ -8,7 +8,7 @@ public class DebugMessages {
 
 	public static void sendDebug(String message, Class<?> clazz) {
 		if (settings.getSettingsData().isDebug()) {
-			System.out.println("[Lootboxes] " + clazz + " >" + message);
+			System.out.println("[Lootboxes] " + clazz.getName() + " >" + message);
 		}
 	}
 	public static void sendDebug(String message) {

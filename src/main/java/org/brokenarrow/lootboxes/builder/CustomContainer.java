@@ -33,7 +33,6 @@ public class CustomContainer {
             case DROPPER:
             case CHEST:
             case TRAPPED_CHEST:
-            case SHULKER_BOX:
                 return true;
             default:
                 if (Lootboxes.getInstance().getServerVersion().atLeast(ServerVersion.Version.v1_14))

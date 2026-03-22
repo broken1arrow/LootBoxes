@@ -145,9 +145,16 @@ public final class CreateItemUtily {
      * @return CreateItemUtily class or class with air item (if item are null).
      */
     public static <T> CreateItemStack of(final Object item, final String color) {
-        CreateItemStack createItemStack = itemCreator.of(item + "", color);
+        CreateItemStack createItemStack = null;
+        if (item instanceof ItemStack)
+            createItemStack = itemCreator.of((ItemStack) item);
+        if (item instanceof Material)
+            createItemStack = itemCreator.of((Material) item);
+        if (createItemStack == null)
+            createItemStack = itemCreator.of(item.toString());
         if (createItemStack.isGlow())
             createItemStack.setItemFlags(Collections.singletonList(ItemFlag.HIDE_ENCHANTS));
+        createItemStack.setColor(color);
         return createItemStack;
     }
 }

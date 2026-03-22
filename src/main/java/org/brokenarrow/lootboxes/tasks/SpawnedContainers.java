@@ -63,9 +63,9 @@ public class SpawnedContainers {
         for (Map.Entry<BlockKey, ContainerData> entry : containerDataMap.entrySet()) {
             ContainerData containerData = entry.getValue();
             BlockKey blockKey = entry.getKey();
-            sendDebug("spawnContainer, loottable: " + lootTableLinked, this.getClass());
-            sendDebug("spawnContainer, location: " + blockKey, this.getClass());
-            sendDebug("spawnContainer, containerData: " + containerData, this.getClass());
+            sendDebug("Set loot table: " + lootTableLinked, this.getClass());
+            sendDebug("Location: " + blockKey, this.getClass());
+            sendDebug("Container type: " + containerData.getContainerType(), this.getClass());
             if (blockKey != null && lootTableLinked != null && !lootTableLinked.isEmpty()) {
                 ItemStack[] item = this.lootboxes.getMakeLootTable().makeLootTable(lootTableLinked);
                 if (item == null) {
@@ -88,6 +88,8 @@ public class SpawnedContainers {
                 if (!SkullUtility.applySkullFromItem(block, itemStack)) {
                     block.setType(itemStack.getType());
                 }
+
+                sendDebug("Spawn the container with the loot length: " +  item.length, this.getClass());
 
                 setRotation(location, containerData.getFacing().getFace());
                 setCustomName(location, lootContainerData.getDisplayName());

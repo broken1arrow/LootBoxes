@@ -92,7 +92,7 @@ public class PlayerClick implements Listener {
         if (blockPlaced.getType() != Material.AIR) {
             Player player = event.getPlayer();
             clearRandomSpawnedContainers(event.getBlock());
-
+            clearFixedContainer(event.getBlock());
             if (!player.hasPermission("lootboxes.link.containers")) return;
             if (checkBlockIsContainer(blockPlaced)) {
                 Location location = blockPlaced.getLocation();
@@ -241,5 +241,38 @@ public class PlayerClick implements Listener {
             }
             Lootboxes.getInstance().getLootContainerRandomCache().removeCachedLootContainerLocation(location);
         }
+    }
+
+    private void clearFixedContainer(final Block block) {
+        final Location location = block.getLocation();
+
+        LocationData locationData = containerDataCache.getContainerLocationCache().getLocationData(location);
+        if (locationData == null) return;
+        LootContainerData lootContainerData = containerDataCache.getCacheContainerData(locationData.getContainerKey());
+        if (lootContainerData == null) return;
+        ContainerData containerData = lootContainerData.getLinkedContainerData(location);
+        if (containerData == null) {
+            return;
+        }
+        final Inventory inventory = getInventory(location);
+        if (settings.getSettingsData().isRemoveContainerWhenPlayerClose() && lootContainerData.isSpawningContainerWithCooldown()) {
+            location.getBlock().setType(Material.AIR);
+        }
+        ItemStack[] contents = null;
+        if (inventory != null)
+            contents = inventory.getContents();
+        if (containerData.getContainerContents() != null) {
+            contents = containerData.getContainerContents();
+        }
+
+        if (contents != null) {
+            for (ItemStack itemStack : contents) {
+                if (itemStack == null) continue;
+                location.getWorld().dropItemNaturally(location, itemStack);
+            }
+        }
+        containerData.setContents(null);
+        if (inventory != null)
+            inventory.clear();
     }
 }

@@ -106,8 +106,10 @@ public class ChooseContainer extends MenuHolderPage<ItemStack> {
                 final SettingsData setting = settings.getSettingsData();
 
                 TURNED_ON_ADD_CONTAINERS_WHEN_PLACE_CONTAINER.sendMessage(player);
-                player.getInventory().addItem(CreateItemUtily.of(itemStack,
-                                TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(), WordUtils.capitalizeFully(itemStack.toString().replace("_", " ").toLowerCase()), TranslatePlaceHolders.getLore(setting.getPlaceContainerLore())))
+                player.getInventory().addItem(CreateItemUtily.of(false,itemStack,
+                                TranslatePlaceHolders.translatePlaceholders(setting.getPlaceContainerDisplayName(),
+                                        WordUtils.capitalizeFully(itemStack.getType().toString().replace("_", " ").toLowerCase())),
+                                 TranslatePlaceHolders.getLore(setting.getPlaceContainerLore()))
                         .setItemMetaData(ADD_AND_REMOVE_CONTAINERS_ALLOW_PLACECONTAINER.name(), containerKey)
                         .setCopyOfItem(true)
                         .makeItemStack());
@@ -119,10 +121,13 @@ public class ChooseContainer extends MenuHolderPage<ItemStack> {
             if (itemStack != null) {
                 org.broken.arrow.library.menu.button.manager.utility.MenuButton menuButton = button.getPassiveButton();
 
-                String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(), WordUtils.capitalizeFully(itemStack.getType().toString().replace("_", " ").toLowerCase()));
+                String displayName = TranslatePlaceHolders.getDisplayName(player, menuButton.getDisplayName(),
+                        WordUtils.capitalizeFully(itemStack.getType().toString().replace("_", " ").toLowerCase()));
                 return CreateItemUtily.of(menuButton.isGlow(), itemStack,
                         displayName,
-                        TranslatePlaceHolders.getLore(player, menuButton.getLore())).makeItemStack();
+                        TranslatePlaceHolders.getLore(player, menuButton.getLore()))
+                        .setCopyOfItem(true)
+                        .makeItemStack();
             }
             return null;
         });
