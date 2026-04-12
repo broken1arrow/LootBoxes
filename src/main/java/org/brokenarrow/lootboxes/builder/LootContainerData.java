@@ -561,9 +561,6 @@ public class LootContainerData implements ConfigurationSerializable {
         else if (randomLootContainer instanceof Map) {
             lootContainerData.setRandomLootContainer(ContainerData.deserialize((Map<String, Object>) randomLootContainer));
         } else {
-            System.out.println("not found randomLootContainer " + randomLootContainer);
-            if (randomLootContainer != null)
-                System.out.println("not found randomLootContainer class " + randomLootContainer.getClass());
         }
 
         return lootContainerData;

@@ -14,7 +14,7 @@
         <release>17</release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>org.brokenarrow.lootboxes.Lootboxes</main.class>
-        <utility-library>0.130</utility-library>
+        <utility-library>0.134</utility-library>
     </properties>
     <repositories>
         <!--
