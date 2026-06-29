@@ -123,7 +123,7 @@ public class SpawnContainerEffects implements HeavyLoad {
         public void run() {
 
             boolean refill = plugin.getSpawnedContainers().isRefill(containerLocation);
-            if (!reschedule() || !refill) {
+            if (containerLocation == null || !reschedule() || !refill) {
                 cancel();
                 return;
             }
