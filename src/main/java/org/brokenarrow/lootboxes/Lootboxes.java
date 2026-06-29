@@ -178,20 +178,24 @@ public class Lootboxes extends JavaPlugin {
     }
 
     public void registerCommands() {
-        commandRegister.registerMainCommand(this.getName(), "lootboxes|loot");
-        commandRegister.registerSubCommand(
-                new GuiCommand()
-                        .setPermission("lootboxes.command.menu")
-                        .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
-        );
-        commandRegister.registerSubCommand(new ReloadCommand()
-                .setPermission("lootboxes.command.reload")
-                .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
-        );
-        commandRegister.registerSubCommand(new GetKeyCommand()
-                .setPermission("lootboxes.command.key")
-                .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
-        );
+        commandRegister.registerCommand(this, "lootboxes|loot", commandBuilder -> {
+            commandBuilder.registerSubCommandGroup(subcommandWrapper -> {
+                subcommandWrapper.registerSubCommand(
+                        new GuiCommand()
+                                .setPermission("lootboxes.command.menu")
+                                .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.menu' permission.")
+                );
+                subcommandWrapper.registerSubCommand(new ReloadCommand()
+                        .setPermission("lootboxes.command.reload")
+                        .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.reload' permission.")
+                );
+                subcommandWrapper.registerSubCommand(new GetKeyCommand()
+                        .setPermission("lootboxes.command.key")
+                        .setPermissionMessage("you don´t have lootboxes.admin.* or the 'lootboxes.command.key' permission.")
+                );
+            });
+        });
+
     }
 
 

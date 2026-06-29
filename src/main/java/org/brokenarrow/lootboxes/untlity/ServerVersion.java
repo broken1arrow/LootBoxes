@@ -1,55 +1,27 @@
 package org.brokenarrow.lootboxes.untlity;
 
+
+import org.broken.arrow.library.version.VersionUtil;
 import org.bukkit.plugin.Plugin;
 
 public final class ServerVersion {
-
-	private final float currentServerVersion;
-
-	public boolean equals(Version version) {
-		return serverVersion(version) == 0;
-	}
+	private final VersionUtil VERSION;
 
 	public boolean newerThan(Version version) {
-		return serverVersion(version) > 0;
+		return VERSION.versionNewer(version.version);
 	}
 
 	public boolean atLeast(Version version) {
-		return equals(version) || newerThan(version);
+		return VERSION.versionAtLeast(version.version);
 	}
 
 	public boolean olderThan(Version version) {
-		return serverVersion(version) < 0;
+		return VERSION.versionOlder(version.version);
 	}
 
-	public float serverVersion(Version version) {
-		return currentServerVersion - version.getVersion();
-	}
-
-	public float getCurrentServerVersion() {
-		return currentServerVersion;
-	}
 
 	public ServerVersion(Plugin plugin) {
-		String[] strings = plugin.getServer().getBukkitVersion().split("\\.");
-		String firstNumber;
-		String secondNumber;
-		String firstString = strings[1];
-		if (firstString.contains("-")) {
-			firstNumber = firstString.substring(0, firstString.lastIndexOf("-"));
-
-			secondNumber = firstString.substring(firstString.lastIndexOf("-") + 1);
-			int index = secondNumber.toUpperCase().indexOf("R");
-			if (index >= 0)
-				secondNumber = secondNumber.substring(index + 1);
-		} else {
-			String secondString = strings[2];
-			firstNumber = firstString;
-			secondNumber = secondString.substring(0, secondString.lastIndexOf("-"));
-		}
-		float version = Float.parseFloat(firstNumber + "." + secondNumber);
-		currentServerVersion = (float) Math.floor(version);
-
+		VERSION = new VersionUtil();
 	}
 
 	public enum Version {
