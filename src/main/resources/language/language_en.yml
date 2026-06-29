@@ -88,7 +88,7 @@ CONTAINER_OPEN:
   LOOKED_CONTAINER_NO_KEY_ADDED: "&fNo key is added to this container."
   HAS_NOT_REFILL_CONTAINER: "&fYou need to want {0} before next refill."
   OPEN_CONTAINER: "&fYou have now open container, hope you get some nice candy!!!."
-  LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED."
+  LOOKED_CONTAINER_SOUND: "BLOCK_CHEST_LOCKED"
   UNLOOKED_CONTAINER_SOUND: "ENTITY_VILLAGER_CELEBRATE"
 
 TELEPORT:

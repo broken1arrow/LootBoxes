@@ -1,8 +1,11 @@
 package org.brokenarrow.lootboxes.untlity;
 
 import com.google.common.base.Enums;
+import org.brokenarrow.lootboxes.Lootboxes;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+
+import java.util.logging.Level;
 
 public class PlaySound {
 
@@ -14,8 +17,8 @@ public class PlaySound {
         } catch (ClassCastException ignore) {
             try {
                 player.playSound(player.getLocation(), Sound.valueOf(stringSound.toUpperCase()), 0.5F, 1.0F);
-            } catch (NoSuchMethodError |IllegalArgumentException e){
-                e.printStackTrace();
+            } catch (NoSuchMethodError | IllegalArgumentException e) {
+                Lootboxes.getInstance().getLogger().log(Level.INFO, "Did not found the sound: `" + stringSound + "' you set in the config.");
             }
         }
     }
