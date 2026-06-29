@@ -178,6 +178,7 @@ public class Lootboxes extends JavaPlugin {
     }
 
     public void registerCommands() {
+
         commandRegister.registerCommand(this, "lootboxes|loot", commandBuilder -> {
             commandBuilder.registerSubCommandGroup(subcommandWrapper -> {
                 subcommandWrapper.registerSubCommand(
